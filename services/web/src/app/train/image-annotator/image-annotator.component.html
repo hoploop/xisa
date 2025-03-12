@@ -1,0 +1,23 @@
+<div class="card m-1">
+  <div class="card-header">
+    Annotate image
+  </div>
+  <div class="card-body">
+    <div class="d-flex">
+      <div class="canvas-container">
+        <canvas #canvasElement (mousedown)="onMouseDown($event)" (mouseleave)="onMouseLeave($event)" (keyup)="onKeyUp($event)" (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)"></canvas>
+      </div>
+      <div class="controls">
+        <button class="btn btn-sm btn-secondary" [disabled]="selectedBoxIndex==-1" (click)="deleteSelectedBox()">
+          Delete Selected Box
+        </button>
+        <button class="btn btn-sm btn-secondary" [disabled]="selectedBoxIndex==-1" (click)="labelSelectedBox()">
+          Labels
+        </button>
+
+      </div>
+  </div>
+  </div>
+</div>
+
+<app-image-labeler *ngIf="label" [box]="label" (close)="label=undefined"></app-image-labeler>

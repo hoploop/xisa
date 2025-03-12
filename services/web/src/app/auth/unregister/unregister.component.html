@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-header">
+    <app-fa-icon [icon]="FAIconType.userMinus"></app-fa-icon>
+    <span class="ms-1" translate>auth.unregister</span>
+  </div>
+  <div class="card-body">
+    <div class="btn btn-primary" (click)="unregister()">
+      <app-fa-icon [icon]="FAIconType.userMinus"></app-fa-icon>
+      <span class="ms-2" translate>auth.unregister</span>
+    </div>
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>

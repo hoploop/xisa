@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+    <app-fa-icon [icon]="FAIconType.videoCamera"></app-fa-icon>
+    <span class="ms-1" *ngIf="!running" translate>workspace.record.new</span>
+    <span class="ms-1" *ngIf="running" translate>workspace.record.manage</span>
+  </div>
+  <div class="card-body">
+    <div class="d-flex flex-column">
+      <input type="text" class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.name'|translate" [(ngModel)]="name"/>
+      <textarea class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.description'|translate" [(ngModel)]="description"></textarea>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="start()"
+        *ngIf="!running"
+      >
+        <app-b-icon [icon]="BIconType.play"></app-b-icon>
+        <span class="ms-2" translate>workspace.record.start</span>
+      </button>
+      <button
+        class="btn btn-danger btn-sm"
+        (click)="stop()"
+        *ngIf="running"
+      >
+        <app-b-icon [icon]="BIconType.stop"></app-b-icon>
+        <span class="ms-2" translate>workspace.record.stop</span>
+      </button>
+      <button class="btn btn-sm btn-secondary mt-1" (click)="cancel()">
+        <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+        <span class="ms-1" translate>workspace.record.cancel</span>
+      </button>
+
+      <!-- Pause button -->
+      <!--
+      <button
+        class="btn btn-primary btn-sm ms-1"
+        (click)="pause()"
+        [disabled]="running"
+      >
+        <app-b-icon [icon]="BIconType.pause"></app-b-icon>
+        <span class="ms-2" translate>workspace.record.pause</span>
+      </button>
+      -->
+    </div>
+
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>

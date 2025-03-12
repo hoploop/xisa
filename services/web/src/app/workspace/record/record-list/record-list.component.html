@@ -1,0 +1,48 @@
+
+<div class="card">
+  <div class="card-header">
+    <app-b-icon [icon]="BIconType.recordCircle"></app-b-icon>
+    <span class="ms-1" translate>workspace.record.list</span>
+  </div>
+  <div class="card-body">
+    <div class="d-flex">
+      <span *ngIf="running != undefined">
+        <button class="btn btn-primary btn-sm" (click)="create()" *ngIf="!running">
+          <app-b-icon [icon]="BIconType.record"></app-b-icon>
+          <span class="ms-2" translate>workspace.record.new</span>
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="create()" *ngIf="running">
+          <app-b-icon [icon]="BIconType.record"></app-b-icon>
+          <span class="ms-2" translate>workspace.record.manage</span>
+        </button>
+      </span>
+      <span class="ms-auto">
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'workspace.record.search'"></app-search>
+      </span>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="records.length == 0" translate>workspace.record.empty</div>
+    <div class="d-flex flex-column" *ngIf="records.length > 0">
+      <div  class="card mt-1" *ngFor="let record of records">
+        <div class="d-flex card-body">
+          <div class="d-flex flex-column">
+            <div>{{record.name}}</div>
+            <div><span>Duration: </span><span>{{record|recordDuration}}</span></div>
+            <div><span>Events: </span><span>{{record._id|recordEventsCount|async}}</span></div>
+            <div><span>Frames: </span><span>{{record._id|recordFramesCount|async}}</span></div>
+            <div><span>Size: </span><span>{{record._id|recordSize|async}}</span></div>
+          </div>
+          <span class="ms-auto">
+            <button class="btn btn-primary btn-sm ms-1" (click)="studio(record)">
+              <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+            </button>
+          <button class="btn btn-primary btn-sm ms-1" (click)="edit(record)">
+            <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
+          </button>
+        </span>
+      </div>
+      </div>
+    </div>
+
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>

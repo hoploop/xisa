@@ -1,0 +1,45 @@
+
+<div class="card">
+  <div class="card-header">
+    <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+    <span class="ms-1" translate>workspace.detector.list</span>
+  </div>
+  <div class="card-body">
+    <div class="d-flex">
+      <span>
+        <button class="btn btn-primary btn-sm" (click)="create()">
+          <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
+          <span class="ms-2" translate>workspace.detector.create</span>
+        </button>
+      </span>
+      <span class="ms-auto">
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'workspace.detector.search'"></app-search>
+      </span>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="detectors.length == 0" translate>workspace.detector.empty</div>
+    <div class="d-flex mt-2 flex-column" *ngIf="detectors.length > 0" >
+      <div  class="card mt-1" *ngFor="let detector of detectors">
+        <div class="card-body">
+          <div class="d-flex">
+            <div class="d-flex flex-column">
+              <span><strong>{{detector.name}}</strong></span>
+              <div><span>Images: </span><span>{{detector._id|detectorImageCount|async}}</span></div>
+              <div><span>Classes: </span><span>{{detector._id|detectorClassCount|async}}</span></div>
+            </div>
+            <span class="ms-auto">
+              <button class="btn btn-primary btn-sm ms-1" (click)="learn(detector)">
+                <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+              </button>
+              <button class="btn btn-primary btn-sm ms-1" (click)="edit(detector)">
+                <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
+              </button>
+            </span>
+          </div>
+      </div>
+      </div>
+    </div>
+
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>
+

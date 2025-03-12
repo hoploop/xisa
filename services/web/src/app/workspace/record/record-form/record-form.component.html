@@ -1,0 +1,40 @@
+<div class="card">
+
+    <div class="card-header">
+      <app-fa-icon [icon]="FAIconType.videoCamera"></app-fa-icon>
+      <span class="ms-1" translate>workspace.record.edit</span>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column">
+        <input
+          type="text"
+          class="form-control mb-1"
+          [placeholder]="'workspace.record.name' | translate"
+          [(ngModel)]="name"
+        />
+        <textarea
+          class="form-control mb-1"
+          [placeholder]="'workspace.record.description' | translate"
+          [(ngModel)]="description"
+        ></textarea>
+        <button class="btn btn-primary mt-1" (click)="save()">
+          <app-fa-icon [icon]="FAIconType.save"></app-fa-icon>
+          <span class="ms-1" translate>workspace.record.save</span>
+        </button>
+        <button class="btn btn-danger mt-1" (click)="remove()">
+          <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
+          <span class="ms-1" translate>workspace.record.remove</span>
+        </button>
+        <button class="btn btn-secondary mt-1" (click)="cancel()">
+          <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+          <span class="ms-1" translate>workspace.record.cancel</span>
+        </button>
+      </div>
+    </div>
+    <app-loader
+      [cardFooter]="true"
+      [error]="error"
+      [loading]="loading"
+    ></app-loader>
+  </div>
+

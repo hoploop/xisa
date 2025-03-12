@@ -1,0 +1,21 @@
+<div class="mt-2">
+  <div
+      class="w-100 d-flex justify-content-center align-items-center"
+      *ngIf="(loading | async) as msg"
+    >
+      <app-fa-icon
+        [icon]="FAIconType.circleNotch"
+        [animation]="'spin'"
+      ></app-fa-icon>
+      <span class="ms-1">{{ msg }}</span>
+    </div>
+
+    <div
+      class="text-danger w-100 d-flex justify-content-center align-items-center"
+      *ngIf="(error | async) as msg"
+    >
+      <app-fa-icon [icon]="FAIconType.warning"></app-fa-icon>
+      <span class="ms-1">{{ msg }}</span>
+    </div>
+  <img class="image" *ngIf="imageUrl" [style.width.px]="width" [style.height]="'auto'" [src]="'data:image/jpeg;base64,' + imageUrl"  alt="Fetched Image">
+</div>

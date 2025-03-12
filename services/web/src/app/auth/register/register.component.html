@@ -1,0 +1,37 @@
+  <div class="card">
+    <div class="card-header">
+      <app-fa-icon [icon]="FAIconType.userPlus"></app-fa-icon>
+      <span class="ms-1" translate>auth.register</span>
+    </div>
+    <div class="card-body">
+      <input
+        class="form-control"
+        type="email"
+        [ngModel]="email"
+        (keyup.enter)="register()"
+        (ngModelChange)="onEmailChange($event)"
+        [placeholder]="'auth.email' | translate"
+      />
+      <input
+        class="form-control mt-1"
+        type="text"
+        [ngModel]="username"
+        (keyup.enter)="register()"
+        (ngModelChange)="onUsernameChange($event)"
+        [placeholder]="'auth.username' | translate"
+      />
+      <input
+        class="form-control mt-1"
+        type="password"
+        [ngModel]="password"
+        (keyup.enter)="register()"
+        (ngModelChange)="onPasswordChange($event)"
+        [placeholder]="'auth.password' | translate"
+      />
+      <button class="btn btn-primary mt-1" (click)="register()" [disabled]="(valid|async) == false">
+        <app-b-icon [icon]="BIconType.boxArrowInRight"></app-b-icon>
+        <span class="ms-1" translate>auth.register</span>
+      </button>
+    </div>
+    <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+  </div>

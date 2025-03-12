@@ -1,0 +1,13 @@
+<button class="btn btn-sm w-100" [ngClass]="{'btn-secondary':frame.event==undefined,'btn-primary':frame.event!=undefined && frame.resolved,'btn-danger':frame.event!=undefined && !frame.resolved}">
+  <ng-container *ngIf="frame.event">
+    <ng-container [ngSwitch]="frame.event.type">
+      <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyComboPress" [icon]="FAIconType.keyboard"></app-fa-icon>
+      <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyPress" [icon]="FAIconType.keyboard"></app-fa-icon>
+      <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyRelease" [icon]="FAIconType.keyboard"></app-fa-icon>
+      <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="frame.event==undefined">
+    <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
+  </ng-container>
+</button>

@@ -1,0 +1,49 @@
+<div class="card">
+
+  <div class="card-header">
+    <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+    <span class="ms-1" translate>workspace.record.studio</span>
+    <span class="ms-1">|</span>
+    <span class="ms-1">{{record?.name}}</span>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-3">
+          <div class="d-flex" *ngIf="projectId">
+            <button class="btn w-100 btn-sm" [class.btn-secondary]="!detector" [class.btn-primary]="detector" (click)="selectDetector()">
+            <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+            <span class="ms-2" *ngIf="!detector" translate>workspace.detector.select</span>
+            <span class="ms-2" *ngIf="detector">{{detector.name}}</span>
+          </button>
+          </div>
+          <div class="d-flex justify-content-center flex-wrap">
+            <app-record-event-picker (click)="selectFrame(frame)" class="mt-1 me-1" *ngFor="let frame of frames; let i=index;" [frame]="frame"></app-record-event-picker>
+          </div>
+        </div>
+        <div class="col-9">
+          <ng-container  *ngIf="recordId && detector">
+            <app-record-frame [recordId]="recordId" [detectorId]="detector._id || undefined" [frame]="frame" *ngIf="frame"></app-record-frame>
+          </ng-container>
+        </div>
+      </div>
+
+
+
+    <!--
+    <video class="mt-2" width="300" controls>
+      <source [src]="'http://localhost:8000/workspace/record/video/'+recordId" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    -->
+
+
+  </div>
+</div>
+  <app-loader
+    [cardFooter]="true"
+    [error]="error"
+    [loading]="loading"
+  ></app-loader>
+</div>
+

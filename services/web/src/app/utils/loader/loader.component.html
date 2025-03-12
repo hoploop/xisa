@@ -1,0 +1,22 @@
+<ng-container *ngIf="(loading | async)!=undefined || (error | async)!=undefined" >
+  <div [ngClass]="{'card-footer':cardFooter,'modal-footer':modalFooter}">
+    <div
+      class="w-100 d-flex justify-content-center align-items-center"
+      *ngIf="loading | async as msg"
+    >
+      <app-fa-icon
+        [icon]="FAIconType.circleNotch"
+        [animation]="'spin'"
+      ></app-fa-icon>
+      <span class="ms-1">{{ msg }}</span>
+    </div>
+
+    <div
+      class="text-danger w-100 d-flex justify-content-center align-items-center"
+      *ngIf="error | async as msg"
+    >
+      <app-fa-icon [icon]="FAIconType.warning"></app-fa-icon>
+      <span class="ms-1">{{ msg }}</span>
+    </div>
+  </div>
+</ng-container>

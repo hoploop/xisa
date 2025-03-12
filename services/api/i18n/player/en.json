@@ -1,0 +1,10 @@
+{
+  "player": {
+    "errors": {
+      "scenario_not_found": "Scenario not found",
+      "scenario_no_steps":"Scenario has no steps, at least one step is required",
+      "detector_not_found":"Detector not found",
+      "detector_not_trained":"Detector has not been trained"
+    }
+  }
+}

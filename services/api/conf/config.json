@@ -1,0 +1,58 @@
+{
+    "database":{
+        "uri": "${DATABASE_URI}",
+        "name": "pin",
+        "filesystem":"fs"
+    },
+    "player":{
+        "detectors":"data/detectors"
+    },
+    "project":{},
+    "recorder":{
+        "video":"data/videos",
+        "fps":8.0
+    },
+    "detector":{
+        "video":"data/videos",
+        "path":"data/detectors",
+        "original":"yolo11n.pt",
+        "name":"model.pt",
+        "data":"data.yaml",
+        "runs":"runs",
+        "classes":"classes.yaml"
+    },
+    "translations": "${TRANSLATIONS_PATH}",
+    "api": {
+        
+        "version": "3.0.0",
+        "title": "API",
+        "description": "Personal Intelligent Network",
+        "summary": "Your AI Assistant",
+        "swagger_persistent": true,
+        "openapi_url": "/openapi.yaml",
+        "cors": {
+            "origins": ["*"],
+            "allow_credentials": true,
+            "allow_methods": ["*"],
+            "allow_headers": ["*"]
+        },
+        "tags":[
+            {"name": "ws", "description": "WebSocket management"},
+            {"name": "auth", "description": "Auth management"},
+            {"name": "detector", "description": "Detector management"},
+            {"name": "record", "description": "Record management"},
+            {"name": "project", "description": "Project management"},
+            {"name": "ui", "description": "UI management"},
+            {"name": "player", "description": "Player management"},
+            {"name": "core", "description": "Core management"},
+            {"name": "audio", "description": "Audio management"},
+            {"name": "utils", "description": "Utils management"},
+            {"name": "store", "description": "Store management"},
+            {"name": "prompt", "description": "Prompt management"},
+            {"name":"language","description":"Language management"},
+            {"name": "vision", "description": "Vision management"},
+            {"name": "theme", "description": "Theme management"}
+        ]
+        
+    }
+}

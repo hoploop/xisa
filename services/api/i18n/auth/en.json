@@ -1,0 +1,16 @@
+{
+    "auth":{
+        "checking":"Checking login...",
+        "login":"Login",
+        "logging":"Logging in...",
+        "username":"Username",
+        "password":"Password",
+        "email":"Email",
+        "register":"Register",
+        "unregistering":"Unregistering...",
+        "unregister":"Unregister",
+        "registering":"Registering...",
+        "logging_out":"Logging out...",
+        "logout":"Logout"
+    }
+}

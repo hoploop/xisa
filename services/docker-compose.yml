@@ -1,0 +1,40 @@
+version: '3.4'
+services:
+
+  rabbit:
+    build:
+      context: rabbitmq/
+    container_name: "rabbit"
+    volumes:
+      #- ./services/rabbitmq/conf/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+      - ./rabbitmq/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - ./rabbitmq/data:/var/lib/rabbitmq
+      - ./rabbitmq/logs:/var/log/rabbitmq
+#      - ./services/rabbitmq/bin/entrypoint.sh:/entrypoint.sh
+    ports:
+      - 15672:15672
+      - 15671:15671
+      - 15674:15674
+      - 5672:5672
+      - 61613:61613
+    environment:
+      - RABBITMQ_DEFAULT_USER=xisa
+      - RABBITMQ_DEFAULT_PASS=xisa
+      - RABBITMQ_DEFAULT_VHOST=xisa
+    networks:
+      - xisa
+#    command: /entrypoint.sh
+    restart: always
+    healthcheck:
+      timeout: 5s
+      interval: 5s
+      retries: 10
+      test:
+        - "CMD"
+        - "rabbitmqctl"
+        - "status"
+
+
+networks:
+  xisa:
+    driver: bridge        
