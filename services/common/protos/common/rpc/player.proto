@@ -1,0 +1,8 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Player {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+}

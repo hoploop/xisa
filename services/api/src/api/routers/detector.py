@@ -1,18 +1,17 @@
 # PYTHON IMPORTS
 import logging
-from typing import List, Optional
+from typing import Annotated, List, Optional
 from beanie import PydanticObjectId
 import base64
 
 # LIBRARY IMPORTS
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends, Request
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
-from api.controllers.recorder import GetRecorderController
 from api.routers import GetSession
 from api.models.detector import (
-    Detector,
+    Detector as DetectorDocument,
     DetectorClassListResponse,
     DetectorImage,
     DetectorImageLabel,
@@ -22,13 +21,27 @@ from api.models.detector import (
     DetectorImageMode,
     DetectorListResponse,
 )
-from api.controllers.detector import GetDetectorController
+from common.rpc.detector_pb2_grpc import DetectorStub
+from common.service import secure_channel_factory
+from api.routers.recorder import Recorder
 
 
 # INITIALIZATION
 router = APIRouter()
 log = logging.getLogger(__name__)
 
+
+async def get_detector(request: Request) -> DetectorStub:
+    if not hasattr(request.app.state, "detector"):
+        config = request.app.state.config.detector
+        channel = secure_channel_factory(
+            security_config=config.security, client_config=config
+        )
+        request.app.state.detector = DetectorStub(channel)
+    return request.app.state.detector
+
+
+Detector = Annotated[DetectorStub, Depends(get_detector)]
 
 
 @router.get(
@@ -38,7 +51,7 @@ log = logging.getLogger(__name__)
 )
 async def list(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+    detector: Detector,
     project_id: str,
     skip: int = 0,
     limit: int = 10,
@@ -53,7 +66,7 @@ async def list(
 @router.get(
     "/count/{project_id}",  response_model=int
 )
-async def count(user: CurrentUser, detectorController: GetDetectorController, project_id: str):
+async def count(user: CurrentUser, detector: Detector,, project_id: str):
     return await detectorController.count(user.id, PydanticObjectId(project_id))
 
 
@@ -61,7 +74,7 @@ async def count(user: CurrentUser, detectorController: GetDetectorController, pr
     "/update",  response_model=Detector
 )
 async def update(
-    user: CurrentUser, detectorController: GetDetectorController, id: str, name: str, description: str
+    user: CurrentUser, detector: Detector,, id: str, name: str, description: str
 ):
     return await detectorController.update(
         user.id, PydanticObjectId(id), name, description
@@ -72,9 +85,9 @@ async def update(
     "/load/{id}",
     
     description="Performs the loading of a Detector",
-    response_model=Detector,
+    response_model=DetectorDocument,
 )
-async def load(user: CurrentUser, detectorController: GetDetectorController, id: str):
+async def load(user: CurrentUser, detector: Detector,, id: str):
     return await detectorController.load(user.id, PydanticObjectId(id))
 
 
@@ -86,7 +99,7 @@ async def load(user: CurrentUser, detectorController: GetDetectorController, id:
 )
 async def create(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+    detector: Detector,
     project_id: str,
     name: str,
     origin: Optional[str] = None,
@@ -104,7 +117,7 @@ async def create(
 )
 async def train(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+    detector: Detector,
     backgroundTasks: BackgroundTasks,
     id: str,
     session: GetSession,
@@ -122,7 +135,7 @@ async def train(
     response_model=DetectorImageListResponse,
 )
 async def image_list(
-    user: CurrentUser, detectorController: GetDetectorController, id: str, skip: int = 0, limit: int = 10
+    user: CurrentUser, detector: Detector,, id: str, skip: int = 0, limit: int = 10
 ):
     total, images = await detectorController.list_image(
         user.id, PydanticObjectId(id), skip, limit
@@ -137,7 +150,7 @@ async def image_list(
 )
 async def image_label_list(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+   detector: Detector,
     image_id: str,
     skip: int = 0,
     limit: int = 10,
@@ -156,7 +169,7 @@ async def image_label_list(
 )
 async def class_list(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+    detector: Detector,
     id: str,
     skip: int = 0,
     limit: int = 10,
@@ -172,7 +185,7 @@ async def class_list(
     "/class/count/{id}",
     response_model=int,
 )
-async def class_count(user: CurrentUser, detectorController: GetDetectorController, id: str):
+async def class_count(user: CurrentUser, detector: Detector, id: str):
     total = await detectorController.count_class(user.id, PydanticObjectId(id))
     return total
 
@@ -182,7 +195,7 @@ async def class_count(user: CurrentUser, detectorController: GetDetectorControll
     
     response_model=int,
 )
-async def image_list(user: CurrentUser, detectorController: GetDetectorController, image_id: str):
+async def image_list(user: CurrentUser, detector: Detector, image_id: str):
     total = await detectorController.count_image_label(user.id, PydanticObjectId(image_id))
     return total
 
@@ -194,7 +207,7 @@ async def image_list(user: CurrentUser, detectorController: GetDetectorControlle
     response_model=DetectorImageLabel,
 )
 async def image_label_add(
-    user: CurrentUser, detectorController: GetDetectorController, req: DetectorImageLabelAdd
+    user: CurrentUser,detector: Detector, req: DetectorImageLabelAdd
 ):
     return await detectorController.add_image_label(
         user.id, req.image_id, req.xstart, req.xend, req.ystart, req.yend, req.classes
@@ -207,7 +220,7 @@ async def image_label_add(
     description="Removes a label to an image of a detector",
     response_model=bool,
 )
-async def image_label_remove(user: CurrentUser, detectorController: GetDetectorController, id: str):
+async def image_label_remove(user: CurrentUser, detector: Detector,id: str):
     return await detectorController.remove_image_label(user.id, PydanticObjectId(id))
 
 
@@ -216,7 +229,7 @@ async def image_label_remove(user: CurrentUser, detectorController: GetDetectorC
     
     response_model=int,
 )
-async def image_count(user: CurrentUser, detectorController: GetDetectorController, id: str):
+async def image_count(user: CurrentUser, detector: Detector, id: str):
     return await detectorController.count_image(user.id, PydanticObjectId(id))
 
 
@@ -226,7 +239,7 @@ async def image_count(user: CurrentUser, detectorController: GetDetectorControll
     description="Performs the removal of a Detector Image",
     response_model=bool,
 )
-async def image_remove(image: str, user: CurrentUser, detectorController: GetDetectorController):
+async def image_remove(image: str, user: CurrentUser, detector: Detector):
     return await detectorController.remove_image(user.id, PydanticObjectId(image))
 
 
@@ -238,7 +251,7 @@ async def image_remove(image: str, user: CurrentUser, detectorController: GetDet
 )
 async def image_upload(
     user: CurrentUser,
-    detectorController: GetDetectorController,
+  detector: Detector,
     id: str,
     data: str,
     modes: List[DetectorImageMode],
@@ -256,8 +269,8 @@ async def image_upload(
 )
 async def frame_upload(
     user: CurrentUser,
-    detectorController: GetDetectorController,
-    recorderController: GetRecorderController,
+    detector: Detector,
+    recorder: Recorder,
     record_id: str,
     id: str,
     frame: int,
@@ -280,5 +293,5 @@ async def frame_upload(
     description="Performs the removal of a Detector",
     response_model=bool,
 )
-async def remove(detector: str, user: CurrentUser, detectorController: GetDetectorController):
-    return await detectorController.remove(user.id, PydanticObjectId(detector))
+async def remove(detector_id: str, user: CurrentUser, detector: Detector,):
+    return await detectorController.remove(user.id, PydanticObjectId(detector_id))

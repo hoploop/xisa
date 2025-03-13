@@ -8,16 +8,14 @@ import signal
 import grpc
 from grpc_health.v1._async import HealthServicer
 from grpc_health.v1.health_pb2_grpc import add_HealthServicer_to_server
-from fastapi import FastAPI
 import grpc
-from contextlib import asynccontextmanager
 
 # LOCAL IMPORTS
 from common.service import ExceptionInterceptor
 from common.utils.log import Logger
 from common.utils.environment import Environment
-from common.rpc.vision_pb2_grpc import add_VisionServicer_to_server
-from vision.service import VisionService, VisionServiceConfig
+from common.rpc.recorder_pb2_grpc import add_RecorderServicer_to_server
+from recorder.service import RecorderService, RecorderServiceConfig
  
 # CONSTANTS
 ENV_CONF = '../.env'
@@ -31,17 +29,17 @@ os.chdir("../")
 env = Environment(ENV_CONF)
 logger = Logger.initialize(LOGGING_CONF)
 log = logger.getLogger(__name__)
-config = VisionServiceConfig.factory(SERVICE_CONF,env)
+config = RecorderServiceConfig.factory(SERVICE_CONF,env)
 
 
 
 async def main():    
     # Initting and loading the API RPC Service, to be used mainly for async ws calls
     log.info('Initting and starting up API RPC Service')
-    service = VisionService(config)
+    service = RecorderService(config)
     await service.start() 
     server = grpc.aio.server(interceptors=[ExceptionInterceptor(log)],options=service.options)
-    add_VisionServicer_to_server(service, server)
+    add_RecorderServicer_to_server(service, server)
     add_HealthServicer_to_server(HealthServicer(), server)
     log.info('Starting rpc service on address: {0}'.format(config.address)) 
     server.add_secure_port(config.address,service.secure_credentials(config.security)) 

@@ -1,0 +1,88 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Auth {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+    rpc check(CheckRequest) returns (CheckResponse);
+    rpc login(LoginRequest) returns (LoginResponse);
+    rpc user(UserRequest) returns (UserResponse);
+    rpc logout(LogoutRequest) returns (LogoutResponse);
+    rpc register(RegisterRequest) returns (RegisterResponse);
+    rpc unregister(UnregisterRequest) returns (UnregisterResponse);
+    rpc resetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+}
+
+message UserRequest {
+    string token = 1;
+}
+
+message UserResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized user = 3;
+}
+
+message CheckRequest {
+    string token = 1;
+}
+
+message CheckResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+    string host = 3;
+}
+
+message LoginResponse {
+    bool status = 1;
+    optional string message = 2;
+    optional string token = 3;
+}
+
+
+message LogoutRequest {
+    string token = 1;
+}
+
+message LogoutResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+    string email = 3;
+}
+
+message RegisterResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message UnregisterRequest {
+    string token = 1;
+}
+
+message UnregisterResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message ResetPasswordRequest {
+    string token = 1;
+    string host = 2;
+    string old = 3;
+    string new = 4;
+}
+
+message ResetPasswordResponse {
+     bool status = 1;
+    optional string message = 2;
+}

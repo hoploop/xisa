@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 # LOCAL IMPORTS
+from common.service import ClientConfig
 from common.utils.environment import Environment
 from common.utils.log import Logger
 from common.utils.config import Config
@@ -23,10 +24,10 @@ from api.routers import detector
 from api.routers import train
 from api.models import MODELS
 from api.controllers.detector import DetectorControllerConfig
-from api.controllers.recorder import RecorderControllerConfig
 from api.controllers.project import ProjectControllerConfig
-from api.routers import project, record
+from api.routers import project
 from api.controllers.player import PlayerControllerConfig
+from services.api.src.api.routers import recorder
 
 # CONSTANTS
 ENV_CONF = '../.env'
@@ -36,12 +37,13 @@ API_CONF = 'conf/config.json'
 # CONFIG
 class MainConfig(Config):
     database: MongodbConfig
+    auth: ClientConfig
     api: ApiConfig 
-    recorder: RecorderControllerConfig
+    recorder: ClientConfig
     translations: str
-    detector: DetectorControllerConfig
+    detector: ClientConfig
     project: ProjectControllerConfig
-    player: PlayerControllerConfig
+    player: ClientConfig
     
 
 # INITIALIZATION
@@ -122,7 +124,7 @@ app.include_router(ws.router, tags=["ws"], prefix="/ws")
 app.include_router(auth.router, tags=["auth"], prefix="/auth")
 app.include_router(detector.router, tags=["detector"], prefix="/detector")
 app.include_router(project.router, tags=["project"], prefix="/project")
-app.include_router(record.router, tags=["record"], prefix="/record")
+app.include_router(recorder.router, tags=["record"], prefix="/record")
 app.include_router(player.router, tags=["player"], prefix="/player")
 app.include_router(train.router, tags=["train"], prefix="/train")
 

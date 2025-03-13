@@ -38,7 +38,7 @@
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "standard",
-            "filename": "logs/pin.log",
+            "filename": "logs/xisa.log",
             "mode": "a",
             "maxBytes": 10485,
             "backupCount": 5
@@ -52,11 +52,11 @@
             "maxBytes": 10485,
             "backupCount": 5
         },
-        "vision": {
+        "detector": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "standard",
-            "filename": "logs/vision.log",
+            "filename": "logs/detector.log",
             "mode": "a",
             "maxBytes": 10485,
             "backupCount": 5
@@ -77,8 +77,8 @@
             "level": "DEBUG",
             "propagate": false
         },
-        "vision": {
-            "handlers": ["vision"],
+        "detector": {
+            "handlers": ["detector"],
             "level": "DEBUG",
             "propagate": false
         },

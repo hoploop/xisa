@@ -1,7 +1,7 @@
 syntax = "proto3";
 import "common/rpc/base.proto";
 
-service Vision {
+service Detector {
     
     // Performs synchronous ping of service
     rpc ping(Ping) returns (Pong);

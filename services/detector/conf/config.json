@@ -1,0 +1,22 @@
+{
+  "address": "${DETECTOR_RPC_HOST}:${DETECTOR_RPC_PORT}",
+  "video": "data/videos",
+  "path": "data/detectors",
+  "original": "yolo11n.pt",
+  "name": "model.pt",
+  "data": "data.yaml",
+  "runs": "runs",
+  "classes": "classes.yaml",
+  "security": {
+    "key": "${SERVER_KEY}",
+    "cert": "${SERVER_CERT}",
+    "chain": "${SERVER_PEM}",
+    "cn": "pin"
+  },
+  "database": {
+    "uri": "${DATABASE_URI}",
+    "name": "pin",
+    "filesystem": "fs"
+  }
+ 
+}

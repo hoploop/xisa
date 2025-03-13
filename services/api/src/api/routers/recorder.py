@@ -2,20 +2,21 @@
 import io
 import logging
 import os
-from typing import List, Optional
+from typing import Annotated, List, Optional
 from beanie import PydanticObjectId
 
 # LIBRARY IMPORTS
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 from starlette.responses import Response
 import aiofiles
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
-from api.controllers.recorder import GetRecorderController
 from api.models.recorder import EVENTS, Record, RecordListResponse
 from api.routers import GetApp
+from common.rpc.recorder_pb2_grpc import RecorderStub
+from common.service import secure_channel_factory
 
 
 # INITIALIZATION
@@ -24,9 +25,21 @@ log = logging.getLogger(__name__)
 
 
 
+async def get_recorder(request: Request) -> RecorderStub:
+    if not hasattr(request.app.state, "recorder"):
+        config = request.app.state.config.recorder
+        channel = secure_channel_factory(
+            security_config=config.security, client_config=config
+        )
+        request.app.state.recorder = RecorderStub(channel)
+    return request.app.state.recorder
+
+
+Recorder = Annotated[RecorderStub, Depends(get_recorder)]
+
 @router.get("/load/{id}",  response_model=Record)
 async def load(
-    user: CurrentUser, recorderController: GetRecorderController, id: str
+    user: CurrentUser, recorder: Recorder, id: str
 ):
     return await recorderController.load_record(user.id, PydanticObjectId(id))
 
@@ -34,7 +47,7 @@ async def load(
 @router.post("/edit",  response_model=Record)
 async def edit(
     user: CurrentUser,
-    recorderController: GetRecorderController,
+    recorder: Recorder,
     id: str,
     name: str,
     description: str,
@@ -53,7 +66,7 @@ async def edit(
 async def start(
     project: str,
     user: CurrentUser,
-    recorderController: GetRecorderController,
+    recorder: Recorder,
     name: str,
     description: Optional[str] = "",
 ):
@@ -68,7 +81,7 @@ async def start(
     description="Performs the stop of a Recording",
     response_model=bool,
 )
-async def stop(user: CurrentUser, recorderController: GetRecorderController):
+async def stop(user: CurrentUser, recorder: Recorder):
     return await recorderController.stop()
 
 
@@ -79,7 +92,7 @@ async def stop(user: CurrentUser, recorderController: GetRecorderController):
     response_model=bool,
 )
 async def stop(
-    record: str, user: CurrentUser, recorderController: GetRecorderController
+    record: str, user: CurrentUser, recorder: Recorder
 ):
     return await recorderController.delete_record(user.id, PydanticObjectId(record))
 
@@ -90,7 +103,7 @@ async def stop(
     description="Checks if a recorder is running",
     response_model=bool,
 )
-async def running(user: CurrentUser, recorderController: GetRecorderController):
+async def running(user: CurrentUser, recorder: Recorder):
     return await recorderController.running()
 
 
@@ -101,7 +114,7 @@ async def running(user: CurrentUser, recorderController: GetRecorderController):
     response_model=int,
 )
 async def event_count(
-    record_id: str, user: CurrentUser, recorderController: GetRecorderController
+    record_id: str, user: CurrentUser, recorder: Recorder
 ):
     return await recorderController.count_record_events(
         user.id, PydanticObjectId(record_id)
@@ -115,7 +128,7 @@ async def event_count(
     response_model=List[EVENTS],
 )
 async def event_list(
-    record_id: str, user: CurrentUser, recorderController: GetRecorderController
+    record_id: str, user: CurrentUser, recorder: Recorder
 ):
     return await recorderController.load_record_events(
         user.id, PydanticObjectId(record_id)
@@ -129,7 +142,7 @@ async def event_list(
     response_model=int,
 )
 async def frame_count(
-    record_id: str, user: CurrentUser, recorderController: GetRecorderController
+    record_id: str, user: CurrentUser, recorder: Recorder
 ):
     return await recorderController.count_record_frames(
         user.id, PydanticObjectId(record_id)
@@ -143,14 +156,14 @@ async def frame_count(
     response_model=int,
 )
 async def size(
-    record_id: str, user: CurrentUser, recorderController: GetRecorderController
+    record_id: str, user: CurrentUser, recorder: Recorder
 ):
     return await recorderController.size_of_record(user.id, PydanticObjectId(record_id))
 
 
 @router.get("/frame/{record_id}/{frame_number}", operation_id="frame")
 async def frame(
-    record_id: str, frame_number: int, recorderController: GetRecorderController
+    record_id: str, frame_number: int, recorder: Recorder
 ):
     """API endpoint to serve a specific frame."""
     frame_bytes = await recorderController.load_record_frame(
@@ -201,7 +214,7 @@ async def video(video_id: str, app: GetApp, request: Request):
 )
 async def list(
     user: CurrentUser,
-    recorderController: GetRecorderController,
+    recorder: Recorder,
     project_id: str,
     skip: int = 0,
     limit: int = 10,
