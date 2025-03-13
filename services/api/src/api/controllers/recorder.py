@@ -23,7 +23,7 @@ import numpy as np
 import pyautogui
 
 # LOCAL IMPORTS
-from api.models.recorder import (
+from common.models.recorder import (
     EVENTS,
     OS,
     Event,

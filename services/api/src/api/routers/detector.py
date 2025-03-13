@@ -11,16 +11,16 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
 from api.models.detector import (
-    Detector as DetectorDocument,
+    
     DetectorClassListResponse,
-    DetectorImage,
-    DetectorImageLabel,
+    
     DetectorImageLabelAdd,
     DetectorImageLabelListResponse,
     DetectorImageListResponse,
-    DetectorImageMode,
     DetectorListResponse,
 )
+from common.models.detector import Detector as DetectorDocument
+from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
 from common.rpc.detector_pb2_grpc import DetectorStub
 from common.service import secure_channel_factory
 from api.routers.recorder import Recorder
@@ -66,15 +66,15 @@ async def list(
 @router.get(
     "/count/{project_id}",  response_model=int
 )
-async def count(user: CurrentUser, detector: Detector,, project_id: str):
+async def count(user: CurrentUser, detector: Detector, project_id: str):
     return await detectorController.count(user.id, PydanticObjectId(project_id))
 
 
 @router.post(
-    "/update",  response_model=Detector
+    "/update",  response_model=DetectorDocument
 )
 async def update(
-    user: CurrentUser, detector: Detector,, id: str, name: str, description: str
+    user: CurrentUser, detector: Detector, id: str, name: str, description: str
 ):
     return await detectorController.update(
         user.id, PydanticObjectId(id), name, description
@@ -87,7 +87,7 @@ async def update(
     description="Performs the loading of a Detector",
     response_model=DetectorDocument,
 )
-async def load(user: CurrentUser, detector: Detector,, id: str):
+async def load(user: CurrentUser, detector: Detector, id: str):
     return await detectorController.load(user.id, PydanticObjectId(id))
 
 
@@ -95,7 +95,7 @@ async def load(user: CurrentUser, detector: Detector,, id: str):
     "/create/{project_id}",
     
     description="Creates a new detector",
-    response_model=Detector,
+    response_model=DetectorDocument,
 )
 async def create(
     user: CurrentUser,
@@ -135,7 +135,7 @@ async def train(
     response_model=DetectorImageListResponse,
 )
 async def image_list(
-    user: CurrentUser, detector: Detector,, id: str, skip: int = 0, limit: int = 10
+    user: CurrentUser, detector: Detector, id: str, skip: int = 0, limit: int = 10
 ):
     total, images = await detectorController.list_image(
         user.id, PydanticObjectId(id), skip, limit

@@ -8,13 +8,14 @@ from beanie import PydanticObjectId
 # LIBRARY IMPORTS
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 from starlette.responses import Response
 import aiofiles
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
-from api.models.recorder import EVENTS, Record, RecordListResponse
-from api.routers import GetApp
+from common.models.recorder import EVENTS, Record
+from api.routers import GetApp 
 from common.rpc.recorder_pb2_grpc import RecorderStub
 from common.service import secure_channel_factory
 
@@ -205,6 +206,11 @@ async def video(video_id: str, app: GetApp, request: Request):
         return Response(chunk, status_code=206, headers=headers)
 
     return StreamingResponse(video_stream(), media_type="video/mp4")
+
+
+class RecordListResponse(BaseModel):
+    records: List[Record]
+    total: int
 
 
 @router.get(

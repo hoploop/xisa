@@ -10,8 +10,8 @@ from fastapi import Depends, HTTPException, Request, status
 from pydantic import BaseModel
 
 # LOCAL IMPORTS
-from api.models.workspace import Project
-from api.models.auth import Group
+from common.models.workspace import Project
+from common.models.auth import Group
 
 # INITIALIZATION
 log = logging.getLogger(__name__)

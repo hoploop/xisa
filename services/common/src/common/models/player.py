@@ -9,7 +9,7 @@ from beanie import Delete, Document, PydanticObjectId, before_event, Update,Save
 from pydantic import Field
 
 # LOCAL IMPORTS
-from api.models.defaults import empty_list, utc_now
+from common.models.defaults import empty_list, utc_now
 
 class Run(Document):
     detector: PydanticObjectId

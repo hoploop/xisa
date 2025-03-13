@@ -8,7 +8,7 @@ from beanie import Delete, Document, PydanticObjectId, SaveChanges, Update, befo
 from pydantic import Field, BaseModel
 
 # LOCAL IMPORTS
-from api.models.defaults import empty_list, utc_now
+from common.models.defaults import empty_list, utc_now
 
 
 class OS(Document):
@@ -132,7 +132,3 @@ class Record(Document):
     async def remove_related(self):
         await Event.find_many(Event.record == self.id, with_children=True).delete()
 
-
-class RecordListResponse(BaseModel):
-    records: List[Record]
-    total: int
