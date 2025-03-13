@@ -10,10 +10,10 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 # LOCAL IMPORTS
-from api.utils.environment import Environment
-from api.utils.log import Logger
-from api.utils.config import Config
-from api.controllers.mongodb import Mongodb, MongodbConfig
+from common.utils.environment import Environment
+from common.utils.log import Logger
+from common.utils.config import Config
+from common.utils.mongodb import Mongodb, MongodbConfig
 from api.controllers.api import Api, ApiConfig
 from api.routers.ws import manager as ws_manager
 from api.routers import ws

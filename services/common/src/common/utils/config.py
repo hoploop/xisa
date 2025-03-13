@@ -7,7 +7,7 @@ import logging
 from pydantic import BaseModel
 
 # LOCAL IMPORTS
-from api.utils.environment import Environment
+from common.utils.environment import Environment
 
 # INITIALIZATION
 log = logging.getLogger(__name__)

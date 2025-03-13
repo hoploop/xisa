@@ -23,7 +23,7 @@ from api.routers.ws import Websocket
 from api.models.detector import Detector
 from api.models.defaults import utc_now
 from api.models.recorder import Event
-from api.utils.imaging import ImageGrid
+from common.utils.imaging import ImageGrid
 
 # INITIALIZATION
 log = logging.getLogger(__name__)

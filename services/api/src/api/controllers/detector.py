@@ -32,7 +32,7 @@ from api.models.detector import (
 )
 from api.routers.ws import Websocket, WsManager
 from api.models.recorder import Record
-from api.utils.imaging import ImageGrid
+from common.utils.imaging import ImageGrid
 
 # INITIALIZATION
 log = logging.getLogger(__name__)

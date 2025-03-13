@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message Ping {
+  bool status = 1;
+}
+
+message Pong {
+  bool status = 2;
+}
+
+
+message Serialized {
+  string signature = 1;
+  string data = 2;
+}
