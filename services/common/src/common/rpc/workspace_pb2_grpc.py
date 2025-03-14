@@ -4,6 +4,7 @@ import grpc
 import warnings
 
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
+from common.rpc import workspace_pb2 as common_dot_rpc_dot_workspace__pb2
 
 GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
@@ -39,6 +40,31 @@ class WorkspaceStub(object):
                 request_serializer=common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_base__pb2.Pong.FromString,
                 _registered_method=True)
+        self.loadProject = channel.unary_unary(
+                '/Workspace/loadProject',
+                request_serializer=common_dot_rpc_dot_workspace__pb2.LoadProjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_workspace__pb2.LoadProjectResponse.FromString,
+                _registered_method=True)
+        self.createProject = channel.unary_unary(
+                '/Workspace/createProject',
+                request_serializer=common_dot_rpc_dot_workspace__pb2.CreateProjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_workspace__pb2.CreateProjectResponse.FromString,
+                _registered_method=True)
+        self.updateProject = channel.unary_unary(
+                '/Workspace/updateProject',
+                request_serializer=common_dot_rpc_dot_workspace__pb2.UpdateProjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_workspace__pb2.UpdateProjectResponse.FromString,
+                _registered_method=True)
+        self.deleteProject = channel.unary_unary(
+                '/Workspace/deleteProject',
+                request_serializer=common_dot_rpc_dot_workspace__pb2.DeleteProjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_workspace__pb2.DeleteProjectResponse.FromString,
+                _registered_method=True)
+        self.listProject = channel.unary_unary(
+                '/Workspace/listProject',
+                request_serializer=common_dot_rpc_dot_workspace__pb2.ListProjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_workspace__pb2.ListProjectResponse.FromString,
+                _registered_method=True)
 
 
 class WorkspaceServicer(object):
@@ -51,6 +77,36 @@ class WorkspaceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def loadProject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createProject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def updateProject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def deleteProject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listProject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_WorkspaceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -58,6 +114,31 @@ def add_WorkspaceServicer_to_server(servicer, server):
                     servicer.ping,
                     request_deserializer=common_dot_rpc_dot_base__pb2.Ping.FromString,
                     response_serializer=common_dot_rpc_dot_base__pb2.Pong.SerializeToString,
+            ),
+            'loadProject': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadProject,
+                    request_deserializer=common_dot_rpc_dot_workspace__pb2.LoadProjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_workspace__pb2.LoadProjectResponse.SerializeToString,
+            ),
+            'createProject': grpc.unary_unary_rpc_method_handler(
+                    servicer.createProject,
+                    request_deserializer=common_dot_rpc_dot_workspace__pb2.CreateProjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_workspace__pb2.CreateProjectResponse.SerializeToString,
+            ),
+            'updateProject': grpc.unary_unary_rpc_method_handler(
+                    servicer.updateProject,
+                    request_deserializer=common_dot_rpc_dot_workspace__pb2.UpdateProjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_workspace__pb2.UpdateProjectResponse.SerializeToString,
+            ),
+            'deleteProject': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteProject,
+                    request_deserializer=common_dot_rpc_dot_workspace__pb2.DeleteProjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_workspace__pb2.DeleteProjectResponse.SerializeToString,
+            ),
+            'listProject': grpc.unary_unary_rpc_method_handler(
+                    servicer.listProject,
+                    request_deserializer=common_dot_rpc_dot_workspace__pb2.ListProjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_workspace__pb2.ListProjectResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -87,6 +168,141 @@ class Workspace(object):
             '/Workspace/ping',
             common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
             common_dot_rpc_dot_base__pb2.Pong.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadProject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Workspace/loadProject',
+            common_dot_rpc_dot_workspace__pb2.LoadProjectRequest.SerializeToString,
+            common_dot_rpc_dot_workspace__pb2.LoadProjectResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def createProject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Workspace/createProject',
+            common_dot_rpc_dot_workspace__pb2.CreateProjectRequest.SerializeToString,
+            common_dot_rpc_dot_workspace__pb2.CreateProjectResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def updateProject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Workspace/updateProject',
+            common_dot_rpc_dot_workspace__pb2.UpdateProjectRequest.SerializeToString,
+            common_dot_rpc_dot_workspace__pb2.UpdateProjectResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def deleteProject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Workspace/deleteProject',
+            common_dot_rpc_dot_workspace__pb2.DeleteProjectRequest.SerializeToString,
+            common_dot_rpc_dot_workspace__pb2.DeleteProjectResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listProject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Workspace/listProject',
+            common_dot_rpc_dot_workspace__pb2.ListProjectRequest.SerializeToString,
+            common_dot_rpc_dot_workspace__pb2.ListProjectResponse.FromString,
             options,
             channel_credentials,
             insecure,

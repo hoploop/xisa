@@ -230,3 +230,22 @@ async def list(
         user.id, PydanticObjectId(project_id), skip, limit, search
     )
     return RecordListResponse(total=total, records=records)
+
+
+@router.get(
+    "/record/count/{project_id}",
+    
+    response_model=int,
+)
+async def record_count(
+    project_id: str,
+    user: CurrentUser,
+    projectController: GetProjectController,
+    recorderController: GetRecorderController,
+):
+    return await recorderController.count_records(user.id, PydanticObjectId(project_id))
+
+
+@router.get("/load",  response_model=Project)
+async def load(user: CurrentUser, projectController: GetProjectController, id: str):
+    return await projectController.load(PydanticObjectId(id))

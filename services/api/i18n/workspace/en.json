@@ -13,7 +13,12 @@
             "remove":"Remove",
             "cancel":"Cancel",
             "name":"Name",
-            "description":"Description"
+            "description":"Description",
+            "errors":{
+                "already_existing":"Project already exists",
+                "not_found":"Project not found",
+                "delete_not_allowed":"You cannot remove this project"
+            }
         },
         "detector":{
             "errors":{

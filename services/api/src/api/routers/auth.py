@@ -1,9 +1,9 @@
 # PYTHON IMPORTS
 import logging
 from typing import Annotated, Optional
+from pydantic import BaseModel
 
 # LIBRARY IMPORTS
-from api.models.auth import RegisterRequest
 
 from fastapi import (
     APIRouter,
@@ -141,7 +141,11 @@ async def logout(host: GetHost, token: TokenOrNone, session: GetSession, auth: A
     req = LogoutRequest(token=token)
     res = await auth.logout(res)
     return res.status
-
+class RegisterRequest(BaseModel):
+    username: str
+    email: str
+    password: str
+    name: str = ""
 
 @router.put("/register", response_model=bool)
 async def register(req: RegisterRequest, auth: Auth):

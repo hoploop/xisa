@@ -20,7 +20,6 @@ from api.routers import auth
 from api.routers import player
 from api.routers import detector
 from api.routers import train
-from api.routers import project
 from api.routers import recorder, workspace
 
 # CONSTANTS
@@ -37,7 +36,6 @@ class MainConfig(Config):
     recorder: ClientConfig
     translations: str
     detector: ClientConfig
-    workspace: ClientConfig
     player: ClientConfig
 
 
@@ -123,7 +121,6 @@ app.mount("/i18n", StaticFilesCache(directory=config.translations), name="static
 app.include_router(ws.router, tags=["ws"], prefix="/ws")
 app.include_router(auth.router, tags=["auth"], prefix="/auth")
 app.include_router(detector.router, tags=["detector"], prefix="/detector")
-app.include_router(project.router, tags=["project"], prefix="/project")
 app.include_router(workspace.router, tags=["workspace"], prefix="/workspace")
 app.include_router(recorder.router, tags=["record"], prefix="/record")
 app.include_router(player.router, tags=["player"], prefix="/player")
