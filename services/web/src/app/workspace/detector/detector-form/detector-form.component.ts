@@ -56,7 +56,7 @@ export class DetectorFormComponent {
     if (!this.id) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.loading"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorLoadId(this.id).subscribe({
+    this.ctx.api.detector.detectorLoadDetectorid(this.id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.name = result.name;
@@ -83,7 +83,7 @@ export class DetectorFormComponent {
     if (!this.projectId) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorCreateProjectId(this.projectId,this.name,undefined,this.description).subscribe({
+    this.ctx.api.detector.detectorCreateProjectid(this.projectId,this.name,undefined,this.description).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.name = result.name;

@@ -113,16 +113,16 @@ export class DetectorService implements DetectorServiceInterface {
 
     /**
      * Class Count
-     * @param id 
+     * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorClassCountId(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public detectorClassCountId(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public detectorClassCountId(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public detectorClassCountId(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorClassCountId.');
+    public detectorClassCountDetectorid(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public detectorClassCountDetectorid(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public detectorClassCountDetectorid(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public detectorClassCountDetectorid(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorClassCountDetectorid.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -168,7 +168,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/class/count/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/class/count/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<number>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -184,19 +184,19 @@ export class DetectorService implements DetectorServiceInterface {
 
     /**
      * Class List
-     * @param id 
+     * @param detectorId 
      * @param skip 
      * @param limit 
      * @param search 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorClassListId(id: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorClassListResponse>;
-    public detectorClassListId(id: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorClassListResponse>>;
-    public detectorClassListId(id: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorClassListResponse>>;
-    public detectorClassListId(id: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorClassListId.');
+    public detectorClassListDetectorid(detectorId: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorClassListResponse>;
+    public detectorClassListDetectorid(detectorId: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorClassListResponse>>;
+    public detectorClassListDetectorid(detectorId: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorClassListResponse>>;
+    public detectorClassListDetectorid(detectorId: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorClassListDetectorid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -256,7 +256,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/class/list/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/class/list/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<DetectorClassListResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -277,12 +277,12 @@ export class DetectorService implements DetectorServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorCountProjectId(projectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public detectorCountProjectId(projectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public detectorCountProjectId(projectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public detectorCountProjectId(projectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorCountProjectid(projectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public detectorCountProjectid(projectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public detectorCountProjectid(projectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public detectorCountProjectid(projectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling detectorCountProjectId.');
+            throw new Error('Required parameter projectId was null or undefined when calling detectorCountProjectid.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -352,15 +352,15 @@ export class DetectorService implements DetectorServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorCreateProjectId(projectId: string, name: string, origin?: string, description?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
-    public detectorCreateProjectId(projectId: string, name: string, origin?: string, description?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
-    public detectorCreateProjectId(projectId: string, name: string, origin?: string, description?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
-    public detectorCreateProjectId(projectId: string, name: string, origin?: string, description?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
+    public detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
+    public detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
+    public detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling detectorCreateProjectId.');
+            throw new Error('Required parameter projectId was null or undefined when calling detectorCreateProjectid.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling detectorCreateProjectId.');
+            throw new Error('Required parameter name was null or undefined when calling detectorCreateProjectid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -439,21 +439,21 @@ export class DetectorService implements DetectorServiceInterface {
      * Frame Upload
      * Uploads an image from a recording frame to a detector
      * @param recordId 
-     * @param id 
+     * @param detectorId 
      * @param frame 
      * @param detectorImageMode 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorFrameUpload(recordId: string, id: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DetectorImage>>;
-    public detectorFrameUpload(recordId: string, id: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DetectorImage>>>;
-    public detectorFrameUpload(recordId: string, id: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DetectorImage>>>;
-    public detectorFrameUpload(recordId: string, id: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DetectorImage>>;
+    public detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DetectorImage>>>;
+    public detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DetectorImage>>>;
+    public detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (recordId === null || recordId === undefined) {
             throw new Error('Required parameter recordId was null or undefined when calling detectorFrameUpload.');
         }
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorFrameUpload.');
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorFrameUpload.');
         }
         if (frame === null || frame === undefined) {
             throw new Error('Required parameter frame was null or undefined when calling detectorFrameUpload.');
@@ -465,11 +465,11 @@ export class DetectorService implements DetectorServiceInterface {
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (recordId !== undefined && recordId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>recordId, 'record_id');
+            <any>recordId, 'recordId');
         }
-        if (id !== undefined && id !== null) {
+        if (detectorId !== undefined && detectorId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>detectorId, 'detectorId');
         }
         if (frame !== undefined && frame !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -546,16 +546,16 @@ export class DetectorService implements DetectorServiceInterface {
 
     /**
      * Image Count
-     * @param id 
+     * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageCountId(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public detectorImageCountId(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public detectorImageCountId(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public detectorImageCountId(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorImageCountId.');
+    public detectorImageCountDetectorid(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public detectorImageCountDetectorid(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public detectorImageCountDetectorid(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public detectorImageCountDetectorid(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorImageCountDetectorid.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -601,7 +601,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/image/count/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/image/count/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<number>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -703,12 +703,12 @@ export class DetectorService implements DetectorServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageLabelCountImageId(imageId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public detectorImageLabelCountImageId(imageId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public detectorImageLabelCountImageId(imageId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public detectorImageLabelCountImageId(imageId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorImageLabelCountImageid(imageId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public detectorImageLabelCountImageid(imageId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public detectorImageLabelCountImageid(imageId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public detectorImageLabelCountImageid(imageId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (imageId === null || imageId === undefined) {
-            throw new Error('Required parameter imageId was null or undefined when calling detectorImageLabelCountImageId.');
+            throw new Error('Required parameter imageId was null or undefined when calling detectorImageLabelCountImageid.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -777,12 +777,12 @@ export class DetectorService implements DetectorServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageLabelListImageId(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorImageLabelListResponse>;
-    public detectorImageLabelListImageId(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorImageLabelListResponse>>;
-    public detectorImageLabelListImageId(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorImageLabelListResponse>>;
-    public detectorImageLabelListImageId(imageId: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorImageLabelListImageid(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorImageLabelListResponse>;
+    public detectorImageLabelListImageid(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorImageLabelListResponse>>;
+    public detectorImageLabelListImageid(imageId: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorImageLabelListResponse>>;
+    public detectorImageLabelListImageid(imageId: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (imageId === null || imageId === undefined) {
-            throw new Error('Required parameter imageId was null or undefined when calling detectorImageLabelListImageId.');
+            throw new Error('Required parameter imageId was null or undefined when calling detectorImageLabelListImageid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -860,22 +860,22 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Image Label Remove
      * Removes a label to an image of a detector
-     * @param id 
+     * @param labelId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageLabelRemove(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public detectorImageLabelRemove(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public detectorImageLabelRemove(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public detectorImageLabelRemove(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorImageLabelRemove.');
+    public detectorImageLabelRemove(labelId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public detectorImageLabelRemove(labelId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public detectorImageLabelRemove(labelId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public detectorImageLabelRemove(labelId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (labelId === null || labelId === undefined) {
+            throw new Error('Required parameter labelId was null or undefined when calling detectorImageLabelRemove.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (labelId !== undefined && labelId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>labelId, 'labelId');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -938,18 +938,18 @@ export class DetectorService implements DetectorServiceInterface {
 
     /**
      * Image List
-     * @param id 
+     * @param detectorId 
      * @param skip 
      * @param limit 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageListId(id: string, skip?: number, limit?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorImageListResponse>;
-    public detectorImageListId(id: string, skip?: number, limit?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorImageListResponse>>;
-    public detectorImageListId(id: string, skip?: number, limit?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorImageListResponse>>;
-    public detectorImageListId(id: string, skip?: number, limit?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorImageListId.');
+    public detectorImageListDetectorid(detectorId: string, skip?: number, limit?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorImageListResponse>;
+    public detectorImageListDetectorid(detectorId: string, skip?: number, limit?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorImageListResponse>>;
+    public detectorImageListDetectorid(detectorId: string, skip?: number, limit?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorImageListResponse>>;
+    public detectorImageListDetectorid(detectorId: string, skip?: number, limit?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorImageListDetectorid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -1005,7 +1005,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/image/list/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/image/list/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<DetectorImageListResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -1023,22 +1023,22 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Image Remove
      * Performs the removal of a Detector Image
-     * @param image 
+     * @param imageId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageRemove(image: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public detectorImageRemove(image: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public detectorImageRemove(image: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public detectorImageRemove(image: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (image === null || image === undefined) {
-            throw new Error('Required parameter image was null or undefined when calling detectorImageRemove.');
+    public detectorImageRemove(imageId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public detectorImageRemove(imageId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public detectorImageRemove(imageId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public detectorImageRemove(imageId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (imageId === null || imageId === undefined) {
+            throw new Error('Required parameter imageId was null or undefined when calling detectorImageRemove.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (image !== undefined && image !== null) {
+        if (imageId !== undefined && imageId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>image, 'image');
+            <any>imageId, 'imageId');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -1102,18 +1102,18 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Image Upload
      * Uploads an image to a detector
-     * @param id 
+     * @param detectorId 
      * @param data 
      * @param detectorImageMode 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorImageUpload(id: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DetectorImage>>;
-    public detectorImageUpload(id: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DetectorImage>>>;
-    public detectorImageUpload(id: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DetectorImage>>>;
-    public detectorImageUpload(id: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorImageUpload.');
+    public detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DetectorImage>>;
+    public detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DetectorImage>>>;
+    public detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DetectorImage>>>;
+    public detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorImageUpload.');
         }
         if (data === null || data === undefined) {
             throw new Error('Required parameter data was null or undefined when calling detectorImageUpload.');
@@ -1123,9 +1123,9 @@ export class DetectorService implements DetectorServiceInterface {
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (detectorId !== undefined && detectorId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>detectorId, 'detectorId');
         }
         if (data !== undefined && data !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -1209,12 +1209,12 @@ export class DetectorService implements DetectorServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorListProjectId(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorListResponse>;
-    public detectorListProjectId(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorListResponse>>;
-    public detectorListProjectId(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorListResponse>>;
-    public detectorListProjectId(projectId: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public detectorListProjectid(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorListResponse>;
+    public detectorListProjectid(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorListResponse>>;
+    public detectorListProjectid(projectId: string, skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorListResponse>>;
+    public detectorListProjectid(projectId: string, skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling detectorListProjectId.');
+            throw new Error('Required parameter projectId was null or undefined when calling detectorListProjectid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -1292,16 +1292,16 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Load
      * Performs the loading of a Detector
-     * @param id 
+     * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorLoadId(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
-    public detectorLoadId(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
-    public detectorLoadId(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
-    public detectorLoadId(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorLoadId.');
+    public detectorLoadDetectorid(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
+    public detectorLoadDetectorid(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
+    public detectorLoadDetectorid(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
+    public detectorLoadDetectorid(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorLoadDetectorid.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -1347,7 +1347,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/load/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/load/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<Detector>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -1364,22 +1364,22 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Remove
      * Performs the removal of a Detector
-     * @param detector 
+     * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorRemove(detector: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public detectorRemove(detector: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public detectorRemove(detector: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public detectorRemove(detector: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (detector === null || detector === undefined) {
-            throw new Error('Required parameter detector was null or undefined when calling detectorRemove.');
+    public detectorRemove(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public detectorRemove(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public detectorRemove(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public detectorRemove(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorRemove.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (detector !== undefined && detector !== null) {
+        if (detectorId !== undefined && detectorId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>detector, 'detector');
+            <any>detectorId, 'detectorId');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -1443,18 +1443,18 @@ export class DetectorService implements DetectorServiceInterface {
     /**
      * Train
      * Trains a detector
-     * @param id 
+     * @param detectorId 
      * @param epoch 
      * @param size 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorTrainId(id: string, epoch?: number, size?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public detectorTrainId(id: string, epoch?: number, size?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public detectorTrainId(id: string, epoch?: number, size?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public detectorTrainId(id: string, epoch?: number, size?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorTrainId.');
+    public detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorTrainDetectorid.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -1510,7 +1510,7 @@ export class DetectorService implements DetectorServiceInterface {
             }
         }
 
-        let localVarPath = `/detector/train/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/detector/train/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<boolean>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -1527,18 +1527,18 @@ export class DetectorService implements DetectorServiceInterface {
 
     /**
      * Update
-     * @param id 
+     * @param detectorId 
      * @param name 
      * @param description 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public detectorUpdate(id: string, name: string, description: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
-    public detectorUpdate(id: string, name: string, description: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
-    public detectorUpdate(id: string, name: string, description: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
-    public detectorUpdate(id: string, name: string, description: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling detectorUpdate.');
+    public detectorUpdate(detectorId: string, name: string, description: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Detector>;
+    public detectorUpdate(detectorId: string, name: string, description: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Detector>>;
+    public detectorUpdate(detectorId: string, name: string, description: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Detector>>;
+    public detectorUpdate(detectorId: string, name: string, description: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling detectorUpdate.');
         }
         if (name === null || name === undefined) {
             throw new Error('Required parameter name was null or undefined when calling detectorUpdate.');
@@ -1548,9 +1548,9 @@ export class DetectorService implements DetectorServiceInterface {
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (detectorId !== undefined && detectorId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>detectorId, 'detectorId');
         }
         if (name !== undefined && name !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

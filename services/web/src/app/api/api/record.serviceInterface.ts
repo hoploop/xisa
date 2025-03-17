@@ -13,7 +13,7 @@ import { Observable }                                        from 'rxjs';
 
 import { HTTPValidationError } from '../model/models';
 import { Record } from '../model/models';
-import { RecordEventListRecordId200ResponseInner } from '../model/models';
+import { RecordEventListRecordid200ResponseInner } from '../model/models';
 import { RecordListResponse } from '../model/models';
 
 
@@ -28,40 +28,40 @@ export interface RecordServiceInterface {
     /**
      * Edit
      * 
-     * @param id 
+     * @param recordId 
      * @param name 
      * @param description 
      */
-    recordEdit(id: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
+    recordEdit(recordId: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
      * Event List
      * List events in the recording
      * @param recordId 
      */
-    recordEventListRecordId(recordId: string, extraHttpRequestParams?: any): Observable<Array<RecordEventListRecordId200ResponseInner>>;
+    recordEventListRecordid(recordId: string, extraHttpRequestParams?: any): Observable<Array<RecordEventListRecordid200ResponseInner>>;
 
     /**
      * Event Count
      * Counts how many events in the recording
      * @param recordId 
      */
-    recordEventsCountRecordId(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recordEventsCountRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Frame Count
      * Counts how many frames in the recording
      * @param recordId 
      */
-    recordFrameCountRecordId(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recordFrameCountRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Frame
-     * API endpoint to serve a specific frame.
+     * 
      * @param recordId 
-     * @param frameNumber 
+     * @param frame 
      */
-    recordFrameRecordIdFrameNumber(recordId: string, frameNumber: number, extraHttpRequestParams?: any): Observable<any>;
+    recordFrameRecordidFrame(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<any>;
 
     /**
      * List
@@ -71,21 +71,28 @@ export interface RecordServiceInterface {
      * @param limit 
      * @param search 
      */
-    recordListProjectId(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordListResponse>;
+    recordListProjectid(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordListResponse>;
 
     /**
      * Load
      * 
-     * @param id 
+     * @param recorderId 
      */
-    recordLoadId(id: string, extraHttpRequestParams?: any): Observable<Record>;
+    recordLoadRecorderid(recorderId: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
-     * Stop
-     * Performs the removal of a Recording
-     * @param record 
+     * Record Count
+     * 
+     * @param projectId 
      */
-    recordRemove(record: string, extraHttpRequestParams?: any): Observable<boolean>;
+    recordRecordCountProjectid(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
+     * Remove
+     * Performs the removal of a Recording
+     * @param recordId 
+     */
+    recordRemove(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Running
@@ -98,16 +105,16 @@ export interface RecordServiceInterface {
      * Size in bytes of the recording
      * @param recordId 
      */
-    recordSizeRecordId(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recordSizeRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Start
      * Performs the start of a new Recording
-     * @param project 
+     * @param projectId 
      * @param name 
      * @param description 
      */
-    recordStart(project: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Record>;
+    recordStart(projectId: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
      * Stop
@@ -118,8 +125,8 @@ export interface RecordServiceInterface {
     /**
      * Video
      * 
-     * @param videoId 
+     * @param recordId 
      */
-    recordVideoVideoId(videoId: string, extraHttpRequestParams?: any): Observable<any>;
+    recordVideoRecordid(recordId: string, extraHttpRequestParams?: any): Observable<any>;
 
 }

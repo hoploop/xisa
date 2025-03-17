@@ -34,26 +34,26 @@ export interface DetectorServiceInterface {
     /**
      * Class Count
      * 
-     * @param id 
+     * @param detectorId 
      */
-    detectorClassCountId(id: string, extraHttpRequestParams?: any): Observable<number>;
+    detectorClassCountDetectorid(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Class List
      * 
-     * @param id 
+     * @param detectorId 
      * @param skip 
      * @param limit 
      * @param search 
      */
-    detectorClassListId(id: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorClassListResponse>;
+    detectorClassListDetectorid(detectorId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorClassListResponse>;
 
     /**
      * Count
      * 
      * @param projectId 
      */
-    detectorCountProjectId(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+    detectorCountProjectid(projectId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Create
@@ -63,24 +63,24 @@ export interface DetectorServiceInterface {
      * @param origin 
      * @param description 
      */
-    detectorCreateProjectId(projectId: string, name: string, origin?: string, description?: string, extraHttpRequestParams?: any): Observable<Detector>;
+    detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, extraHttpRequestParams?: any): Observable<Detector>;
 
     /**
      * Frame Upload
      * Uploads an image from a recording frame to a detector
      * @param recordId 
-     * @param id 
+     * @param detectorId 
      * @param frame 
      * @param detectorImageMode 
      */
-    detectorFrameUpload(recordId: string, id: string, frame: number, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
+    detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
 
     /**
      * Image Count
      * 
-     * @param id 
+     * @param detectorId 
      */
-    detectorImageCountId(id: string, extraHttpRequestParams?: any): Observable<number>;
+    detectorImageCountDetectorid(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Image Label Add
@@ -94,7 +94,7 @@ export interface DetectorServiceInterface {
      * 
      * @param imageId 
      */
-    detectorImageLabelCountImageId(imageId: string, extraHttpRequestParams?: any): Observable<number>;
+    detectorImageLabelCountImageid(imageId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Image Label List
@@ -104,39 +104,39 @@ export interface DetectorServiceInterface {
      * @param limit 
      * @param search 
      */
-    detectorImageLabelListImageId(imageId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorImageLabelListResponse>;
+    detectorImageLabelListImageid(imageId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorImageLabelListResponse>;
 
     /**
      * Image Label Remove
      * Removes a label to an image of a detector
-     * @param id 
+     * @param labelId 
      */
-    detectorImageLabelRemove(id: string, extraHttpRequestParams?: any): Observable<boolean>;
+    detectorImageLabelRemove(labelId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Image List
      * 
-     * @param id 
+     * @param detectorId 
      * @param skip 
      * @param limit 
      */
-    detectorImageListId(id: string, skip?: number, limit?: number, extraHttpRequestParams?: any): Observable<DetectorImageListResponse>;
+    detectorImageListDetectorid(detectorId: string, skip?: number, limit?: number, extraHttpRequestParams?: any): Observable<DetectorImageListResponse>;
 
     /**
      * Image Remove
      * Performs the removal of a Detector Image
-     * @param image 
+     * @param imageId 
      */
-    detectorImageRemove(image: string, extraHttpRequestParams?: any): Observable<boolean>;
+    detectorImageRemove(imageId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Image Upload
      * Uploads an image to a detector
-     * @param id 
+     * @param detectorId 
      * @param data 
      * @param detectorImageMode 
      */
-    detectorImageUpload(id: string, data: string, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
+    detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
 
     /**
      * List
@@ -146,38 +146,38 @@ export interface DetectorServiceInterface {
      * @param limit 
      * @param search 
      */
-    detectorListProjectId(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorListResponse>;
+    detectorListProjectid(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorListResponse>;
 
     /**
      * Load
      * Performs the loading of a Detector
-     * @param id 
+     * @param detectorId 
      */
-    detectorLoadId(id: string, extraHttpRequestParams?: any): Observable<Detector>;
+    detectorLoadDetectorid(detectorId: string, extraHttpRequestParams?: any): Observable<Detector>;
 
     /**
      * Remove
      * Performs the removal of a Detector
-     * @param detector 
+     * @param detectorId 
      */
-    detectorRemove(detector: string, extraHttpRequestParams?: any): Observable<boolean>;
+    detectorRemove(detectorId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Train
      * Trains a detector
-     * @param id 
+     * @param detectorId 
      * @param epoch 
      * @param size 
      */
-    detectorTrainId(id: string, epoch?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
+    detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Update
      * 
-     * @param id 
+     * @param detectorId 
      * @param name 
      * @param description 
      */
-    detectorUpdate(id: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Detector>;
+    detectorUpdate(detectorId: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Detector>;
 
 }

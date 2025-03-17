@@ -31,7 +31,7 @@ export class DetectorLearnComponent implements OnInit, OnDestroy {
     this.progress = 0;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.detector.training'));
-    this.ctx.api.detector.detectorTrainId(this.detectorId,3).subscribe({
+    this.ctx.api.detector.detectorTrainDetectorid(this.detectorId,3).subscribe({
       next: (result)=>{},
       error: (result)=>{
         this.loading.next(undefined);

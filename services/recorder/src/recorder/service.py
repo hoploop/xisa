@@ -3,19 +3,27 @@ import logging
 import os
 
 # LIBRARY IMPORTS
+import aiofiles
 from beanie import PydanticObjectId
 from beanie.operators import In,And,Or,RegEx
+import platform
+import cv2
+import grpc
 
 # LOCAL IMPORTS
 from common.models import MODELS
-from common.models.recorder import Record
-from common.rpc.recorder_pb2 import CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordRequest, ListRecordResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, UpdateRecordRequest, UpdateRecordResponse
+from common.models.defaults import utc_now
+from common.models.recorder import OS, Event, Record
+from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
 from common.rpc.recorder_pb2_grpc import RecorderServicer
 from common.service import Service
 from common.service import ServiceConfig
 from common.utils.conversions import Conversions
 from common.utils.mongodb import Mongodb, MongodbConfig
 from recorder.constants import VIDEO_EXT
+from recorder.mouse import MouseListener
+from recorder.keyboard import KeyboardListener
+from recorder.screen import ScreenListener
 
 # INITIALIZATION
 log = logging.getLogger(__name__)
@@ -133,3 +141,202 @@ class RecorderService(Service, RecorderServicer):
             log.warning(str(e))
             return DeleteRecordResponse(status=False,message=str(e))
         
+    
+    
+    def update_frame(self,value:int):
+        self.keyboard_listener.set_frame(value)
+        self.mouse_listener.set_frame(value)
+    
+    def collect_event(self,evt):
+        self.events.append(evt)
+
+        
+    async def startRecord(self, request:StartRecordRequest, context) -> StartRecordResponse:
+        try:
+            user_id = PydanticObjectId(request.user)
+            project_id = PydanticObjectId(request.project)
+            name = request.name
+            description = request.description
+            if self.is_running:
+                return StartRecordResponse(status=False,message="workspace.record.errors.already_running")
+            self.is_running = True
+            self.events = []
+            os = OS(name=platform.system(), version=platform.release())
+            self.record = Record(
+                users=[user_id],
+                name=name,
+                description=description,
+                start=utc_now(),
+                project=project_id,
+                os=os,
+            )
+            await self.record.insert()
+            self.mouse_listener = MouseListener(self.record.id,self.collect_event)
+            self.keyboard_listener = KeyboardListener(self.record.id,self.collect_event)
+            self.screen_listener = ScreenListener(self.config, self.record.id,self.update_frame)
+            self.mouse_listener.start()
+            self.keyboard_listener.start()
+            self.screen_listener.start()
+            return StartRecordResponse(status=True,record=Conversions.serialize(self.record))
+        except Exception as e:
+            log.warning(str(e))
+            return StartRecordResponse(status=False,message=str(e))
+        
+        
+    async def stopRecord(self, request: StopRecordRequest, context) -> StopRecordResponse:
+        try:
+            if not self.is_running:
+                return StopRecordResponse(status=False,message="workspace.record.errors.not_running")
+            self.mouse_listener.stop()
+            self.keyboard_listener.stop()
+            self.screen_listener.stop()
+            self.record.end = utc_now()
+            await self.record.save()
+            for evt in self.events:
+                await evt.insert()
+            self.is_running = False
+            self.record = None
+            return StopRecordResponse(status=True)
+        except Exception as e:
+            log.warning(str(e))
+            return StopRecordResponse(status=False,message=str(e))
+        
+    async def countRecordEvent(self, request:CountRecordEventRequest, context) -> CountRecordEventResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            total = await Event.find_many(Event.record==record_id,with_children=True).count() 
+            return CountRecordEventResponse(status=True,total=total) 
+        except Exception as e:
+            return CountRecordEventResponse(status=False,message=str(e))
+        
+    async def listRecordEvent(self, request:ListRecordEventRequest, context) -> ListRecordEventResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            found = await Record.find_many(Record.id == record_id).first_or_none()
+            if not found:
+                raise Exception("workspace.record.errors.not_found")
+            events = await Event.find_many(Event.record == record_id,with_children=True).sort(Event.frame).to_list()
+            ret = []
+            for event in events:
+                ret.append(Conversions.serialize(event))
+            return ListRecordEventResponse(status=False,events=ret)
+        except Exception as e:
+            log.warning(str(e))
+            return ListRecordEventResponse(status=False,message=str(e))
+        
+    async def countRecordFrame(self, request:CountRecordFrameRequest, context) -> CountRecordFrameResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            filename = os.path.join(self.config.video,str(record_id)+VIDEO_EXT)
+            cap = cv2.VideoCapture(filename)
+            length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            return CountRecordFrameResponse(status=True,total=length)
+        except Exception as e:
+            log.warning(str(e))
+            return CountRecordFrameResponse(status=False,message=str(e))
+        
+    async def loadRecordFrame(self, request:LoadRecordFrameRequest, context) -> LoadRecordFrameResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            frame_number = request.frame
+            filename = os.path.join(self.config.video,str(record_id)+VIDEO_EXT)
+            cap = cv2.VideoCapture(filename)
+
+            if not cap.isOpened():
+                raise("Error: Could not open video file.")
+                
+            cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+            
+            # Read the specific frame
+            ret, frame = cap.read()
+            
+            if not ret:
+                raise Exception(f"Error: Could not read frame {frame_number}.")
+            
+            # Check if frame was successfully read
+            # Convert BGR to RGB
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            # Encode the frame as PNG image in memory
+            _, encoded_image = cv2.imencode(".png", frame_rgb)
+            
+            # Convert the image to bytes
+            frame_bytes = encoded_image.tobytes()
+            
+            cap.release()
+            
+            return LoadRecordFrameResponse(status=True,frame=frame_bytes)
+        except Exception as e:
+            log.warning(str(e))
+            return LoadRecordFrameResponse(status=False,message=str(e))
+        
+    async def sizeRecord(self, request:SizeRecordRequest, context) -> SizeRecordResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            record = await Record.find_many(Record.id == record_id).first_or_none()
+            if record:
+                filename = os.path.join(self.config.video,str(record.id)+VIDEO_EXT)
+                file_stats = os.stat(filename)
+                return SizeRecordResponse(status=True,size=file_stats.st_size)
+            return SizeRecordResponse(status=True,size=0)
+        except Exception as e:
+            log.warning(str(e))
+            return SizeRecordResponse(status=False,message=str(e))
+            
+    async def sizeRecordVideo(self, request: SizeRecordVideoRequest, context) -> SizeRecordVideoResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            video_id = str(record_id)
+            video_path = os.path.join(self.config.video, video_id + ".mp4")
+            if not os.path.exists(video_path):
+                return SizeRecordResponse(status=False,message="workspace.record.errors.video_not_found")
+            file_size = os.path.getsize(video_path)
+            return SizeRecordVideoResponse(status=True,size=file_size)
+        except Exception as e:
+            log.warning(str(e))
+            return SizeRecordVideoResponse(status=False,message=str(e))
+            
+    async def streamRecordVideo(self, request: StreamRecordVideoRequest, context) -> StreamRecordVideoResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            video_id = str(record_id)
+            video_path = os.path.join(self.config.video, video_id + ".mp4")
+            
+            if not os.path.exists(video_path):
+                context.abort(grpc.StatusCode.NOT_FOUND, "workspace.record.errors.video_not_found")
+
+
+            """Async generator to read video in chunks."""
+            async with aiofiles.open(video_path, "rb") as video_file:
+                while chunk := await video_file.read(1024):  # Read 1MB chunks
+                    yield StreamRecordVideoResponse(status=True,data=chunk)
+
+        except Exception as e:
+            log.warning(str(e))
+            
+    
+    async def streamRangeRecordVideo(self, request: StreamRangeRecordVideoRequest, context) -> StreamRangeRecordVideoResponse:
+        try:
+            record_id = PydanticObjectId(request.record)
+            video_id = str(record_id)
+            video_path = os.path.join(self.config.video, video_id + ".mp4")
+            start = request.start_byte
+            end = request.end_byte
+
+            
+            if not os.path.exists(video_path):
+                context.abort(grpc.StatusCode.NOT_FOUND, "workspace.record.errors.video_not_found")
+                
+            file_size = os.path.getsize(video_path)
+            start = int(start)
+            end = int(end) if end else file_size - 1
+            chunk_size = end - start + 1
+
+            """Async generator to read video in chunks."""
+            async with aiofiles.open(video_path, "rb") as video_file:
+                await video_file.seek(start)
+                chunk = await video_file.read(chunk_size)
+                return StreamRangeRecordVideoResponse(status=True,data=chunk)
+
+        except Exception as e:
+            log.warning(str(e))

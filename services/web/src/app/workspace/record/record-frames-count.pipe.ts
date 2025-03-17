@@ -15,7 +15,7 @@ export class RecordFramesCountPipe implements PipeTransform {
        if (value==undefined || value == null){
          observer.next(0);
        }else{
-       this.ctx.api.record.recordFrameCountRecordId(value).subscribe({
+       this.ctx.api.record.recordFrameCountRecordid(value).subscribe({
          next: (result)=>{
            observer.next(result);
          },

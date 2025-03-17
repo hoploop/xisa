@@ -5,24 +5,15 @@ from beanie import PydanticObjectId
 import base64
 
 # LIBRARY IMPORTS
-from fastapi import APIRouter, BackgroundTasks, Depends, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from pydantic import BaseModel
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
-from api.models.detector import (
-    
-    DetectorClassListResponse,
-    
-    DetectorImageLabelAdd,
-    DetectorImageLabelListResponse,
-    DetectorImageListResponse,
-    DetectorListResponse,
-)
-from common.models.detector import Detector as DetectorDocument
+from common.clients.detector import DetectorClient
+from common.models.detector import Detector as DetectorDocument, DetectorClass
 from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
-from common.rpc.detector_pb2_grpc import DetectorStub
-from common.service import secure_channel_factory
 from api.routers.recorder import Recorder
 
 
@@ -31,68 +22,82 @@ router = APIRouter()
 log = logging.getLogger(__name__)
 
 
-async def get_detector(request: Request) -> DetectorStub:
+async def get_detector(request: Request) -> DetectorClient:
     if not hasattr(request.app.state, "detector"):
         config = request.app.state.config.detector
-        channel = secure_channel_factory(
-            security_config=config.security, client_config=config
-        )
-        request.app.state.detector = DetectorStub(channel)
+        request.app.state.detector = DetectorClient(config)
     return request.app.state.detector
 
 
-Detector = Annotated[DetectorStub, Depends(get_detector)]
+Detector = Annotated[DetectorClient, Depends(get_detector)]
 
+
+class DetectorListResponse(BaseModel):
+    detectors: List[DetectorDocument] 
+    total: int
+                
 
 @router.get(
-    "/list/{project_id}",
+    "/list/{projectId}",
     
     response_model=DetectorListResponse,
 )
 async def list(
     user: CurrentUser,
     detector: Detector,
-    project_id: str,
+    projectId: PydanticObjectId,
     skip: int = 0,
     limit: int = 10,
     search: str = None,
 ):
-    total, detectors = await detectorController.list(
-        user.id, PydanticObjectId(project_id), skip, limit, search
-    )
-    return DetectorListResponse(total=total, detectors=detectors)
+    try:
+        total, detectors = await detector.listDetector(user,projectId,skip,limit,search)
+        return DetectorListResponse(total=total,detectors=detectors)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.get(
-    "/count/{project_id}",  response_model=int
+    "/count/{projectId}",  response_model=int
 )
-async def count(user: CurrentUser, detector: Detector, project_id: str):
-    return await detectorController.count(user.id, PydanticObjectId(project_id))
+async def count(user: CurrentUser, detector: Detector, projectId: PydanticObjectId):
+    try:
+        return await detector.countDetector(user,projectId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 @router.post(
     "/update",  response_model=DetectorDocument
 )
 async def update(
-    user: CurrentUser, detector: Detector, id: str, name: str, description: str
+    user: CurrentUser, detector: Detector, detectorId: PydanticObjectId, name: str, description: str
 ):
-    return await detectorController.update(
-        user.id, PydanticObjectId(id), name, description
-    )
+    try:
+        return await detector.updateDetector(user,detectorId,name,description)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
 
 
 @router.get(
-    "/load/{id}",
+    "/load/{detectorId}",
     
     description="Performs the loading of a Detector",
     response_model=DetectorDocument,
 )
-async def load(user: CurrentUser, detector: Detector, id: str):
-    return await detectorController.load(user.id, PydanticObjectId(id))
+async def load(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
+    try:
+        return await detector.loadDetector(user,detectorId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.post(
-    "/create/{project_id}",
+    "/create/{projectId}",
     
     description="Creates a new detector",
     response_model=DetectorDocument,
@@ -100,18 +105,20 @@ async def load(user: CurrentUser, detector: Detector, id: str):
 async def create(
     user: CurrentUser,
     detector: Detector,
-    project_id: str,
+    projectId: PydanticObjectId,
     name: str,
     origin: Optional[str] = None,
     description: Optional[str] = "",
 ):
-    return await detectorController.create(
-        user.id, PydanticObjectId(project_id), name, description, origin
-    )
+    try:
+        return await detector.createDetector(user,projectId,name,description,origin)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.post(
-    "/train/{id}",
+    "/train/{detectorId}",
     description="Trains a detector",
     response_model=bool,
 )
@@ -119,128 +126,173 @@ async def train(
     user: CurrentUser,
     detector: Detector,
     backgroundTasks: BackgroundTasks,
-    id: str,
+    detectorId: PydanticObjectId,
     session: GetSession,
     epoch: Optional[int] = 100,
     size: Optional[int] = 640
     
 ):
-    await detectorController.train(session,user.id, PydanticObjectId(id), epoch, size)
-    return True
+    try:
+        return await detector.trainDetector(user,detectorId,session,epochs=epoch,image_size=size)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
+
+class DetectorImageListResponse(BaseModel):
+    images: List[DetectorImage]
+    total: int
+                          
 
 @router.get(
-    "/image/list/{id}",
-    
+    "/image/list/{detectorId}",
     response_model=DetectorImageListResponse,
 )
 async def image_list(
-    user: CurrentUser, detector: Detector, id: str, skip: int = 0, limit: int = 10
+    user: CurrentUser, detector: Detector, detectorId: PydanticObjectId, skip: int = 0, limit: int = 10
 ):
-    total, images = await detectorController.list_image(
-        user.id, PydanticObjectId(id), skip, limit
-    )
-    return DetectorImageListResponse(total=total, images=images)
+    
+    try:
+        total, images = await detector.listDetectorImage(user,detectorId,skip,limit)
+        return DetectorImageListResponse(total=total, images=images)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
+class DetectorImageLabelListResponse(BaseModel):
+    labels: List[DetectorImageLabel]
+    total: int
+                                                            
+                          
 
 @router.get(
-    "/image/label/list/{image_id}",
-    
+    "/image/label/list/{imageId}",
     response_model=DetectorImageLabelListResponse,
 )
 async def image_label_list(
     user: CurrentUser,
-   detector: Detector,
-    image_id: str,
+    detector: Detector,
+    imageId: PydanticObjectId,
     skip: int = 0,
     limit: int = 10,
     search: str = None,
 ):
-    total, labels = await detectorController.rename_image_label(
-        user.id, PydanticObjectId(image_id), skip, limit, search
-    )
-    return DetectorImageLabelListResponse(total=total, labels=labels)
+    try:
+        total, labels = await detector.listDetectorImageLabel(user,imageId,skip,limit,search)
+        return DetectorImageLabelListResponse(total=total, labels=labels)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+                                  
+class DetectorClassListResponse(BaseModel):
+    classes: List[DetectorClass]
+    total: int
+                      
 
 @router.get(
-    "/class/list/{id}",
+    "/class/list/{detectorId}",
     
     response_model=DetectorClassListResponse,
 )
 async def class_list(
     user: CurrentUser,
     detector: Detector,
-    id: str,
+    detectorId: PydanticObjectId,
     skip: int = 0,
     limit: int = 10,
     search: str = None,
 ):
-    total, classes = await detectorController.list_class(
-        user.id, PydanticObjectId(id), skip, limit, search
-    )
-    return DetectorClassListResponse(total=total, classes=classes)
+    try:
+        total, classes = await detector.listDetectorClass(user,detectorId,skip,limit,search)
+        return DetectorClassListResponse(total=total, classes=classes)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
-
-@router.get(
-    "/class/count/{id}",
-    response_model=int,
-)
-async def class_count(user: CurrentUser, detector: Detector, id: str):
-    total = await detectorController.count_class(user.id, PydanticObjectId(id))
-    return total
 
 
 @router.get(
-    "/image/label/count/{image_id}",
-    
+    "/class/count/{detectorId}",
     response_model=int,
 )
-async def image_list(user: CurrentUser, detector: Detector, image_id: str):
-    total = await detectorController.count_image_label(user.id, PydanticObjectId(image_id))
-    return total
+async def class_count(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
+    try:
+        return await detector.countDetectorClass(user,detectorId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
+@router.get(
+    "/image/label/count/{imageId}",
+    response_model=int,
+)
+async def image_list(user: CurrentUser, detector: Detector, imageId: PydanticObjectId):
+    try:
+        return await detector.countDetectorImageLabel(user,imageId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+              
+class DetectorImageLabelAdd(BaseModel):
+    image_id:PydanticObjectId
+    xstart:float
+    xend:float
+    ystart:float
+    yend:float
+    classes:List[str]  
 
 @router.post(
     "/image/label/add",
-    
     description="Adds a label to an image of a detector",
     response_model=DetectorImageLabel,
 )
 async def image_label_add(
     user: CurrentUser,detector: Detector, req: DetectorImageLabelAdd
 ):
-    return await detectorController.add_image_label(
-        user.id, req.image_id, req.xstart, req.xend, req.ystart, req.yend, req.classes
-    )
+    try:
+        return await detector.addDetectorImageLabel(user,req.image_id,req.xstart,req.xend,req.ystart,req.yend,req.classes)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.delete(
     "/image/label/remove",
-    
     description="Removes a label to an image of a detector",
     response_model=bool,
 )
-async def image_label_remove(user: CurrentUser, detector: Detector,id: str):
-    return await detectorController.remove_image_label(user.id, PydanticObjectId(id))
+async def image_label_remove(user: CurrentUser, detector: Detector,labelId: PydanticObjectId):
+    try:
+        return await detector.removeDetectorImageLabel(user,labelId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.get(
-    "/image/count/{id}",
-    
+    "/image/count/{detectorId}",
     response_model=int,
 )
-async def image_count(user: CurrentUser, detector: Detector, id: str):
-    return await detectorController.count_image(user.id, PydanticObjectId(id))
+async def image_count(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
+    try:
+        return await detector.countDetectorImage(user,detectorId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.delete(
     "/image/remove",
-    
     description="Performs the removal of a Detector Image",
     response_model=bool,
 )
-async def image_remove(image: str, user: CurrentUser, detector: Detector):
-    return await detectorController.remove_image(user.id, PydanticObjectId(image))
+async def image_remove(imageId: PydanticObjectId, user: CurrentUser, detector: Detector):
+    try:
+        return await detector.removeDetectorImage(user,imageId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 
 @router.post(
@@ -251,15 +303,16 @@ async def image_remove(image: str, user: CurrentUser, detector: Detector):
 )
 async def image_upload(
     user: CurrentUser,
-  detector: Detector,
-    id: str,
+    detector: Detector,
+    detectorId: PydanticObjectId,
     data: str,
     modes: List[DetectorImageMode],
 ):
-    return await detectorController.upload_image(
-        user.id, PydanticObjectId(id), data, modes
-    )
-
+    try:
+         return await detector.uploadDetectorImage(user,detectorId,data,modes)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+   
 
 @router.post(
     "/frame/upload",
@@ -271,27 +324,25 @@ async def frame_upload(
     user: CurrentUser,
     detector: Detector,
     recorder: Recorder,
-    record_id: str,
-    id: str,
+    recordId: PydanticObjectId,
+    detectorId: PydanticObjectId,
     frame: int,
     modes: List[DetectorImageMode],
 ):
-    frame_bytes = await recorderController.load_record_frame(
-        None, PydanticObjectId(record_id), frame
-    )
-    return await detectorController.upload_image(
-        user.id,
-        PydanticObjectId(id),
-        base64.b64encode(frame_bytes).decode(),
-        modes,
-    )
-
+    try:
+        frame_bytes = await recorder.loadRecordFrame(user,recordId,frame)
+        data = base64.b64encode(frame_bytes).decode()
+        return await detector.uploadDetectorImage(user,detectorId,data,modes)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 @router.delete(
     "/remove",
-    
     description="Performs the removal of a Detector",
     response_model=bool,
 )
-async def remove(detector_id: str, user: CurrentUser, detector: Detector,):
-    return await detectorController.remove(user.id, PydanticObjectId(detector_id))
+async def remove(detectorId: PydanticObjectId, user: CurrentUser, detector: Detector,):
+    try:
+        return await detector.removeDetector(user,detectorId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

@@ -17,7 +17,7 @@ export class ProjectDetectorCountPipe implements PipeTransform {
       if (value == undefined || value == null) {
         observer.next(0);
       } else {
-        this.ctx.api.detector.detectorCountProjectId(value).subscribe({
+        this.ctx.api.detector.detectorCountProjectid(value).subscribe({
           next: (result) => {
             observer.next(result);
           },

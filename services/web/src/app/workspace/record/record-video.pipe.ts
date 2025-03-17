@@ -12,7 +12,7 @@ export class RecordVideoPipe implements PipeTransform {
 
   transform(value: string, ...args: unknown[]): Observable<any> {
     return new Observable(observer=>{
-      this.ctx.api.record.recordVideoVideoId(value).subscribe({
+      this.ctx.api.record.recordVideoRecordid(value).subscribe({
         next: (result)=>{
           observer.next(result);
         },

@@ -70,6 +70,56 @@ class RecorderStub(object):
                 request_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordResponse.FromString,
                 _registered_method=True)
+        self.startRecord = channel.unary_unary(
+                '/Recorder/startRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.StartRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.StartRecordResponse.FromString,
+                _registered_method=True)
+        self.stopRecord = channel.unary_unary(
+                '/Recorder/stopRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.StopRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.StopRecordResponse.FromString,
+                _registered_method=True)
+        self.sizeRecord = channel.unary_unary(
+                '/Recorder/sizeRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordResponse.FromString,
+                _registered_method=True)
+        self.countRecordEvent = channel.unary_unary(
+                '/Recorder/countRecordEvent',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordEventRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordEventResponse.FromString,
+                _registered_method=True)
+        self.listRecordEvent = channel.unary_unary(
+                '/Recorder/listRecordEvent',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordEventRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordEventResponse.FromString,
+                _registered_method=True)
+        self.countRecordFrame = channel.unary_unary(
+                '/Recorder/countRecordFrame',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordFrameRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordFrameResponse.FromString,
+                _registered_method=True)
+        self.loadRecordFrame = channel.unary_unary(
+                '/Recorder/loadRecordFrame',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.FromString,
+                _registered_method=True)
+        self.streamRecordVideo = channel.unary_stream(
+                '/Recorder/streamRecordVideo',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.StreamRecordVideoRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.StreamRecordVideoResponse.FromString,
+                _registered_method=True)
+        self.streamRangeRecordVideo = channel.unary_unary(
+                '/Recorder/streamRangeRecordVideo',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoResponse.FromString,
+                _registered_method=True)
+        self.sizeRecordVideo = channel.unary_unary(
+                '/Recorder/sizeRecordVideo',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.FromString,
+                _registered_method=True)
 
 
 class RecorderServicer(object):
@@ -118,6 +168,66 @@ class RecorderServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def sizeRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countRecordEvent(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listRecordEvent(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countRecordFrame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def loadRecordFrame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def streamRecordVideo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def streamRangeRecordVideo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def sizeRecordVideo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RecorderServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -155,6 +265,56 @@ def add_RecorderServicer_to_server(servicer, server):
                     servicer.countRecord,
                     request_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordRequest.FromString,
                     response_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordResponse.SerializeToString,
+            ),
+            'startRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.startRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.StartRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.StartRecordResponse.SerializeToString,
+            ),
+            'stopRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.StopRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.StopRecordResponse.SerializeToString,
+            ),
+            'sizeRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.sizeRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordResponse.SerializeToString,
+            ),
+            'countRecordEvent': grpc.unary_unary_rpc_method_handler(
+                    servicer.countRecordEvent,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordEventRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordEventResponse.SerializeToString,
+            ),
+            'listRecordEvent': grpc.unary_unary_rpc_method_handler(
+                    servicer.listRecordEvent,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordEventRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordEventResponse.SerializeToString,
+            ),
+            'countRecordFrame': grpc.unary_unary_rpc_method_handler(
+                    servicer.countRecordFrame,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordFrameRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordFrameResponse.SerializeToString,
+            ),
+            'loadRecordFrame': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadRecordFrame,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.SerializeToString,
+            ),
+            'streamRecordVideo': grpc.unary_stream_rpc_method_handler(
+                    servicer.streamRecordVideo,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.StreamRecordVideoRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.StreamRecordVideoResponse.SerializeToString,
+            ),
+            'streamRangeRecordVideo': grpc.unary_unary_rpc_method_handler(
+                    servicer.streamRangeRecordVideo,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoResponse.SerializeToString,
+            ),
+            'sizeRecordVideo': grpc.unary_unary_rpc_method_handler(
+                    servicer.sizeRecordVideo,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -346,6 +506,276 @@ class Recorder(object):
             '/Recorder/countRecord',
             common_dot_rpc_dot_recorder__pb2.CountRecordRequest.SerializeToString,
             common_dot_rpc_dot_recorder__pb2.CountRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def startRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/startRecord',
+            common_dot_rpc_dot_recorder__pb2.StartRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.StartRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def stopRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/stopRecord',
+            common_dot_rpc_dot_recorder__pb2.StopRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.StopRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def sizeRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/sizeRecord',
+            common_dot_rpc_dot_recorder__pb2.SizeRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.SizeRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countRecordEvent(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/countRecordEvent',
+            common_dot_rpc_dot_recorder__pb2.CountRecordEventRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.CountRecordEventResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listRecordEvent(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/listRecordEvent',
+            common_dot_rpc_dot_recorder__pb2.ListRecordEventRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.ListRecordEventResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countRecordFrame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/countRecordFrame',
+            common_dot_rpc_dot_recorder__pb2.CountRecordFrameRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.CountRecordFrameResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadRecordFrame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/loadRecordFrame',
+            common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def streamRecordVideo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/Recorder/streamRecordVideo',
+            common_dot_rpc_dot_recorder__pb2.StreamRecordVideoRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.StreamRecordVideoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def streamRangeRecordVideo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/streamRangeRecordVideo',
+            common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.StreamRangeRecordVideoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def sizeRecordVideo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/sizeRecordVideo',
+            common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -11,7 +11,7 @@ import { DetectorImageLabel } from './detector-image-label';
 
 
 export interface DetectorImageLabelListResponse { 
-    images: Array<DetectorImageLabel>;
+    labels: Array<DetectorImageLabel>;
     total: number;
 }
 

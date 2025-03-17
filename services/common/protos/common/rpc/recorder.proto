@@ -11,6 +11,102 @@ service Recorder {
     rpc listRecord(ListRecordRequest) returns (ListRecordResponse);
     rpc deleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse);
     rpc countRecord(CountRecordRequest) returns (CountRecordResponse);
+    rpc startRecord(StartRecordRequest) returns (StartRecordResponse);
+    rpc stopRecord(StopRecordRequest) returns (StopRecordResponse);
+    rpc sizeRecord(SizeRecordRequest) returns (SizeRecordResponse);
+    rpc countRecordEvent(CountRecordEventRequest) returns (CountRecordEventResponse);
+    rpc listRecordEvent(ListRecordEventRequest) returns (ListRecordEventResponse);
+    rpc countRecordFrame(CountRecordFrameRequest) returns (CountRecordFrameResponse);
+    rpc loadRecordFrame(LoadRecordFrameRequest) returns (LoadRecordFrameResponse);
+    rpc streamRecordVideo(StreamRecordVideoRequest) returns (stream StreamRecordVideoResponse);
+    rpc streamRangeRecordVideo(StreamRangeRecordVideoRequest) returns (StreamRangeRecordVideoResponse);
+    rpc sizeRecordVideo(SizeRecordVideoRequest) returns (SizeRecordVideoResponse);
+
+}
+
+message SizeRecordVideoRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message SizeRecordVideoResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 size = 3;
+}
+
+
+
+message StreamRangeRecordVideoRequest {
+    string user = 1;
+    string record = 2;
+    int64 start_byte = 3;
+    int64 end_byte = 4;
+}
+
+message StreamRangeRecordVideoResponse {
+    bool status = 1;
+    optional string message = 2;
+    bytes data = 3;
+}
+
+message StreamRecordVideoRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message StreamRecordVideoResponse {
+    bool status = 1;
+    optional string message = 2;
+    bytes data = 3;
+}
+
+message SizeRecordRequest {
+    string user = 1;
+    string record = 2;
+}
+
+
+
+message SizeRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 size = 3;
+}
+
+message LoadRecordFrameRequest {
+    string user = 1;
+    string record = 2;
+    int32 frame = 3;
+}
+
+message LoadRecordFrameResponse {
+    bool status = 1;
+    optional string message = 2;
+    bytes frame = 3;
+}
+
+message CountRecordFrameRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message CountRecordFrameResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+}
+
+
+message ListRecordEventRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message ListRecordEventResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated Serialized events = 3;
 }
 
 message RunningRequest {
@@ -83,4 +179,38 @@ message DeleteRecordRequest {
 message DeleteRecordResponse {
     bool status = 1;
     optional string message = 2;
+}
+
+message StartRecordRequest {
+    string user = 1;
+    string project = 2;
+    string name = 3;
+    string description = 4;
+}
+
+message StartRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized record = 3;
+}   
+
+message StopRecordRequest {
+    string user = 1;
+}
+
+
+message StopRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+}   
+
+message CountRecordEventRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message CountRecordEventResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
 }

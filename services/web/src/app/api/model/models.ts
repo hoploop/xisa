@@ -27,7 +27,7 @@ export * from './os';
 export * from './project';
 export * from './project-list-response';
 export * from './record';
-export * from './record-event-list-record-id200-response-inner';
+export * from './record-event-list-recordid200-response-inner';
 export * from './record-list-response';
 export * from './register-request';
 export * from './validation-error';

@@ -38,7 +38,7 @@ export class ProjectListComponent implements OnInit {
   load(){
     this.loading.next(this.ctx.translate.instant("workspace.project.loadings"));
     this.error.next(undefined);
-    this.ctx.api.project.projectListUser(this.skip,this.limit,this.search).subscribe({
+    this.ctx.api.workspace.workspaceProjectList(this.skip,this.limit,this.search).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.total = result.total;

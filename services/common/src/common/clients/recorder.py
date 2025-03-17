@@ -6,9 +6,9 @@ from beanie import PydanticObjectId
 
 # LOCAL IMPORTS
 from common.models.auth import User
-from common.models.recorder import Record
+from common.models.recorder import EVENTS, Record
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.recorder_pb2 import CountRecordRequest, DeleteRecordRequest, ListRecordRequest, LoadRecordRequest, RunningRequest, UpdateRecordRequest
+from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordFrameRequest, CountRecordRequest, DeleteRecordRequest, ListRecordEventRequest, ListRecordRequest, LoadRecordFrameRequest, LoadRecordRequest, RunningRequest, SizeRecordRequest, SizeRecordVideoRequest, StartRecordRequest, StopRecordRequest, StreamRangeRecordVideoRequest, StreamRecordVideoRequest, UpdateRecordRequest
 from common.rpc.recorder_pb2_grpc import RecorderStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -72,3 +72,74 @@ class RecorderClient(Client):
         if res.status == False:
             raise Exception(res.message)
         return res.total
+    
+    
+    async def startRecord(self,user:User,projectId:PydanticObjectId,name:str,description:str)-> Record:
+        req = StartRecordRequest(user=str(user.id),project=str(projectId),name=name,description=description)
+        res = await self.client.startRecord(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.record)
+    
+    async def stopRecord(self,user:User) -> bool:
+        req = StopRecordRequest(user=str(user.id))
+        res = await self.client.stopRecord(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    async def countRecordEvent(self,user:User,recordId:PydanticObjectId) -> int:
+        req = CountRecordEventRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.countRecordEvent(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.total
+    
+    async def listRecordEvent(self,user:User,recordId:PydanticObjectId) -> List[EVENTS]:
+        req = ListRecordEventRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.listRecordEvent(req)
+        if res.status == False:
+            raise Exception(res.message)
+        ret = []
+        for event in res.events:
+            ret.append(Conversions.deserialize(event))
+        return ret
+    
+    async def countRecordFrame(self,user:User,recordId:PydanticObjectId) -> int:
+        req = CountRecordFrameRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.countRecordFrame(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.total
+    
+    async def loadRecordFrame(self,user:User,recordId:PydanticObjectId,frame:int)-> bytes:
+        req = LoadRecordFrameRequest(user=str(user.id),record=str(recordId),frame=frame)
+        res = await self.client.loadRecordFrame(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.frame
+    
+    async def sizeRecord(self,user:User,recordId:PydanticObjectId)-> int:
+        req = SizeRecordRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.sizeRecord(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.size
+    
+    async def sizeRecordVideo(self,user:User,recordId: PydanticObjectId)-> int:
+        req = SizeRecordVideoRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.sizeRecordVideo(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.size
+    
+    async def streamRecordVideo(self,user:User,recordId:PydanticObjectId):
+        req = StreamRecordVideoRequest(user=str(user.id),record=str(recordId))
+        return await self.client.streamRecordVideo(req)
+    
+    async def streamRangeRecordVideo(self,user:User,recordId:PydanticObjectId) -> bytes:
+        req = StreamRangeRecordVideoRequest(user=str(user.id),record=str(recordId))
+        res = await self.client.streamRangeRecordVideo(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.data

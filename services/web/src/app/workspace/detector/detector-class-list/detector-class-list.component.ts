@@ -45,7 +45,7 @@ export class DetectorClassListComponent {
     if (!this.detectorId) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.class.loadings"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorClassListId(this.detectorId,this.skip,this.limit,this.search).subscribe({
+    this.ctx.api.detector.detectorClassListDetectorid(this.detectorId,this.skip,this.limit,this.search).subscribe({
       next: (result)=>{
         this.total = result.total;
         this.classes = result.classes;

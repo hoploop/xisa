@@ -11,21 +11,9 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { Detector } from '../model/models';
-import { DetectorClassListResponse } from '../model/models';
-import { DetectorImage } from '../model/models';
-import { DetectorImageLabel } from '../model/models';
-import { DetectorImageLabelAdd } from '../model/models';
-import { DetectorImageLabelListResponse } from '../model/models';
-import { DetectorImageListResponse } from '../model/models';
-import { DetectorImageMode } from '../model/models';
-import { DetectorListResponse } from '../model/models';
 import { HTTPValidationError } from '../model/models';
 import { Project } from '../model/models';
 import { ProjectListResponse } from '../model/models';
-import { Record } from '../model/models';
-import { RecordEventsList200ResponseInner } from '../model/models';
-import { RecordListResponse } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -37,296 +25,43 @@ export interface WorkspaceServiceInterface {
     configuration: Configuration;
 
     /**
-     * Detector Class Count
-     * 
-     * @param detectorId 
-     */
-    detectorClassCount(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Detector Class List
-     * 
-     * @param detectorId 
-     * @param skip 
-     * @param limit 
-     * @param search 
-     */
-    detectorClassList(detectorId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorClassListResponse>;
-
-    /**
-     * Detector Count
-     * 
-     * @param projectId 
-     */
-    detectorCount(projectId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Detector Create
-     * Creates a new detector
-     * @param projectId 
-     * @param name 
-     * @param origin 
-     * @param description 
-     */
-    detectorCreate(projectId: string, name: string, origin?: string, description?: string, extraHttpRequestParams?: any): Observable<Detector>;
-
-    /**
-     * Detector Image Upload
-     * Uploads an image from a recording frame to a detector
-     * @param recordId 
-     * @param detectorId 
-     * @param frame 
-     * @param mode 
-     */
-    detectorFrameUpload(recordId: string, detectorId: string, frame: number, mode?: DetectorImageMode, extraHttpRequestParams?: any): Observable<DetectorImage>;
-
-    /**
-     * Detector Image Count
-     * 
-     * @param detectorId 
-     */
-    detectorImageCount(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Detector Image Label Add
-     * Adds a label to an image of a detector
-     * @param detectorImageLabelAdd 
-     */
-    detectorImageLabelAdd(detectorImageLabelAdd: DetectorImageLabelAdd, extraHttpRequestParams?: any): Observable<DetectorImageLabel>;
-
-    /**
-     * Detector Image List
-     * 
-     * @param imageId 
-     */
-    detectorImageLabelCount(imageId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Detector Image Label List
-     * 
-     * @param imageId 
-     * @param skip 
-     * @param limit 
-     * @param search 
-     */
-    detectorImageLabelList(imageId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorImageLabelListResponse>;
-
-    /**
-     * Detector Image Label Remove
-     * Removes a label to an image of a detector
-     * @param id 
-     */
-    detectorImageLabelRemove(id: string, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Detector Image List
-     * 
-     * @param detectorId 
-     * @param skip 
-     * @param limit 
-     */
-    detectorImageList(detectorId: string, skip?: number, limit?: number, extraHttpRequestParams?: any): Observable<DetectorImageListResponse>;
-
-    /**
-     * Detector Image Remove
-     * Performs the removal of a Detector Image
-     * @param image 
-     */
-    detectorImageRemove(image: string, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Detector Image Upload
-     * Uploads an image to a detector
-     * @param detectorId 
-     * @param data 
-     * @param mode 
-     */
-    detectorImageUpload(detectorId: string, data: string, mode?: DetectorImageMode, extraHttpRequestParams?: any): Observable<DetectorImage>;
-
-    /**
-     * Detector List
-     * 
-     * @param projectId 
-     * @param skip 
-     * @param limit 
-     * @param search 
-     */
-    detectorList(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<DetectorListResponse>;
-
-    /**
-     * Detector Load
-     * Performs the loading of a Detector
-     * @param detectorId 
-     */
-    detectorLoad(detectorId: string, extraHttpRequestParams?: any): Observable<Detector>;
-
-    /**
-     * Detector Remove
-     * Performs the removal of a Detector
-     * @param detector 
-     */
-    detectorRemove(detector: string, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Detector Train
-     * Trains a detector
-     * @param detectorId 
-     * @param epoch 
-     * @param size 
-     */
-    detectorTrain(detectorId: string, epoch?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Detector Update
-     * 
-     * @param id 
-     * @param name 
-     * @param description 
-     */
-    detectorUpdate(id: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Detector>;
-
-    /**
-     * Project Create
+     * Create Project
      * Performs the creation of a project
      * @param name 
      * @param description 
      */
-    projectCreate(name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
+    workspaceProjectCreate(name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Project Delete
-     * Performs the creation of a project
-     * @param id 
+     * Delete Project
+     * Performs the removal of a project
+     * @param projectId 
      */
-    projectDelete(id: string, extraHttpRequestParams?: any): Observable<boolean>;
+    workspaceProjectDelete(projectId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
-     * Project List By User
+     * List Project
      * 
      * @param skip 
      * @param limit 
      * @param search 
      */
-    projectListByUser(skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<ProjectListResponse>;
+    workspaceProjectList(skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<ProjectListResponse>;
 
     /**
-     * Project Load
-     * 
-     * @param id 
-     */
-    projectLoad(id: string, extraHttpRequestParams?: any): Observable<Project>;
-
-    /**
-     * Project Record Count
+     * Load Project
      * 
      * @param projectId 
      */
-    projectRecordCount(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+    workspaceProjectLoad(projectId: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Project Update
-     * Performs the creation of a project
-     * @param id 
-     * @param name 
-     * @param description 
-     */
-    projectUpdate(id: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
-
-    /**
-     * Record Events Count
-     * Counts how many events in the recording
-     * @param recordId 
-     */
-    recordEventsCount(recordId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Record Events List
-     * List events in the recording
-     * @param recordId 
-     */
-    recordEventsList(recordId: string, extraHttpRequestParams?: any): Observable<Array<RecordEventsList200ResponseInner>>;
-
-    /**
-     * Record Frame
-     * API endpoint to serve a specific frame.
-     * @param recordId 
-     * @param frameNumber 
-     */
-    recordFrame(recordId: string, frameNumber: number, extraHttpRequestParams?: any): Observable<any>;
-
-    /**
-     * Record Frames Count
-     * Counts how many frames in the recording
-     * @param recordId 
-     */
-    recordFramesCount(recordId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Record List
-     * 
+     * Update Project
+     * Performs the update of a project
      * @param projectId 
-     * @param skip 
-     * @param limit 
-     * @param search 
-     */
-    recordList(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordListResponse>;
-
-    /**
-     * Record Load
-     * 
-     * @param id 
-     */
-    recordLoad(id: string, extraHttpRequestParams?: any): Observable<Record>;
-
-    /**
-     * Record Stop
-     * Performs the removal of a Recording
-     * @param record 
-     */
-    recordRemove(record: string, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Record Running
-     * Checks if a recorder is running
-     */
-    recordRunning(extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Record Size
-     * Size in bytes of the recording
-     * @param recordId 
-     */
-    recordSize(recordId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Record Start
-     * Performs the start of a new Recording
-     * @param project 
      * @param name 
      * @param description 
      */
-    recordStart(project: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Record>;
-
-    /**
-     * Record Stop
-     * Performs the stop of a Recording
-     */
-    recordStop(extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Record Update
-     * 
-     * @param id 
-     * @param name 
-     * @param description 
-     */
-    recordUpdate(id: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
-
-    /**
-     * Record Video
-     * 
-     * @param videoId 
-     */
-    recordVideo(videoId: string, extraHttpRequestParams?: any): Observable<any>;
+    workspaceProjectUpdate(projectId: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<boolean>;
 
 }

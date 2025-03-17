@@ -73,7 +73,7 @@ export class RecordListComponent implements OnInit {
 
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loadings'));
-    this.ctx.api.record.recordListProjectId(this.projectId,this.skip,this.limit,this.search).subscribe(
+    this.ctx.api.record.recordListProjectid(this.projectId,this.skip,this.limit,this.search).subscribe(
      { next: (result)=>{
         this.loading.next(undefined);
         this.total = result.total;

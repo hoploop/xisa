@@ -18,7 +18,7 @@ from fastapi import (
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
-from api.models.ws import WS_MESSAGES
+from common.models.ws import WS_MESSAGES
 
 # INITIALIZATION
 router = APIRouter()

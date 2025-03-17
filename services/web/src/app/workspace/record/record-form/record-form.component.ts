@@ -35,7 +35,7 @@ export class RecordFormComponent {
     if (!this.recordId) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.record.recordLoadId(this.recordId).subscribe({
+    this.ctx.api.record.recordLoadRecorderid(this.recordId).subscribe({
       next: (result)=>{
         this.name = result.name;
         this.description = result.description;

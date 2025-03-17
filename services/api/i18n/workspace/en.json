@@ -22,7 +22,8 @@
     },
     "detector": {
       "errors": {
-        "not_found": "Detector not found"
+        "not_found": "Detector not found",
+        "already_existing": "Another detector with this username already found"
       },
       "class": {
         "loadings": "Loading detector classes..."
@@ -31,7 +32,11 @@
         "loadings": "Loading detector images...",
         "training": "Is training image",
         "evaluating": "Is eval image",
-        "testing": "Is testing image"
+        "testing": "Is testing image",
+        "errors": {
+          "not_found": "Detector Image not found",
+          "label_not_found": "Image label not found"
+        }
       },
       "select": "Select detector",
       "description": "Description",
@@ -54,7 +59,10 @@
     "record": {
       "errors": {
         "not_found": "Record not found",
-        "already_existing": "Another record with this username already found"
+        "already_existing": "Another record with this username already found",
+        "already_running": "Record is already running",
+        "not_running": "Record is not running",
+        "video_not_found": "Video not found for this record"
       },
       "list": "Recordings",
       "name": "Name",

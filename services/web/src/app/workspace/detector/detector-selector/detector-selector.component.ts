@@ -47,7 +47,7 @@ export class DetectorSelectorComponent extends BaseComponent implements OnInit{
     if (!this.projectId) return;
     this.setError(undefined);
     this.setLoading(this.ctx.translate.instant("workspace.detector.loadings"));
-    this.ctx.api.detector.detectorListProjectId(this.projectId,this.skip,this.limit,this.search).subscribe({
+    this.ctx.api.detector.detectorListProjectid(this.projectId,this.skip,this.limit,this.search).subscribe({
       next: (result)=>{
         this.total = result.total;
         this.detectors = result.detectors;

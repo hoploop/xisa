@@ -15,7 +15,7 @@ export class RecordSizePipe implements PipeTransform {
          if (value==undefined || value == null){
            observer.next('');
          }else{
-         this.ctx.api.record.recordSizeRecordId(value).subscribe({
+         this.ctx.api.record.recordSizeRecordid(value).subscribe({
            next: (result)=>{
              observer.next(this.formatSize(result));
            },

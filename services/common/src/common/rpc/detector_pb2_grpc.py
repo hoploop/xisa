@@ -4,6 +4,7 @@ import grpc
 import warnings
 
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
+from common.rpc import detector_pb2 as common_dot_rpc_dot_detector__pb2
 
 GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
@@ -39,6 +40,91 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_base__pb2.Pong.FromString,
                 _registered_method=True)
+        self.loadDetector = channel.unary_unary(
+                '/Detector/loadDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.LoadDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.LoadDetectorResponse.FromString,
+                _registered_method=True)
+        self.listDetector = channel.unary_unary(
+                '/Detector/listDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorResponse.FromString,
+                _registered_method=True)
+        self.removeDetector = channel.unary_unary(
+                '/Detector/removeDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorResponse.FromString,
+                _registered_method=True)
+        self.countDetector = channel.unary_unary(
+                '/Detector/countDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorResponse.FromString,
+                _registered_method=True)
+        self.updateDetector = channel.unary_unary(
+                '/Detector/updateDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.UpdateDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.UpdateDetectorResponse.FromString,
+                _registered_method=True)
+        self.createDetector = channel.unary_unary(
+                '/Detector/createDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CreateDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CreateDetectorResponse.FromString,
+                _registered_method=True)
+        self.trainDetector = channel.unary_unary(
+                '/Detector/trainDetector',
+                request_serializer=common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.FromString,
+                _registered_method=True)
+        self.uploadDetectorImage = channel.unary_unary(
+                '/Detector/uploadDetectorImage',
+                request_serializer=common_dot_rpc_dot_detector__pb2.UploadDetectorImageRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.UploadDetectorImageResponse.FromString,
+                _registered_method=True)
+        self.listDetectorImage = channel.unary_unary(
+                '/Detector/listDetectorImage',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageResponse.FromString,
+                _registered_method=True)
+        self.countDetectorImage = channel.unary_unary(
+                '/Detector/countDetectorImage',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageResponse.FromString,
+                _registered_method=True)
+        self.removeDetectorImage = channel.unary_unary(
+                '/Detector/removeDetectorImage',
+                request_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageResponse.FromString,
+                _registered_method=True)
+        self.removeDetectorImageLabel = channel.unary_unary(
+                '/Detector/removeDetectorImageLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelResponse.FromString,
+                _registered_method=True)
+        self.countDetectorImageLabel = channel.unary_unary(
+                '/Detector/countDetectorImageLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelResponse.FromString,
+                _registered_method=True)
+        self.addDetectorImageLabel = channel.unary_unary(
+                '/Detector/addDetectorImageLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.FromString,
+                _registered_method=True)
+        self.listDetectorImageLabel = channel.unary_unary(
+                '/Detector/listDetectorImageLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelResponse.FromString,
+                _registered_method=True)
+        self.listDetectorClass = channel.unary_unary(
+                '/Detector/listDetectorClass',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
+                _registered_method=True)
+        self.countDetectorClass = channel.unary_unary(
+                '/Detector/countDetectorClass',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.FromString,
+                _registered_method=True)
 
 
 class DetectorServicer(object):
@@ -51,6 +137,108 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def loadDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def updateDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def createDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def trainDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def uploadDetectorImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listDetectorImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countDetectorImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeDetectorImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeDetectorImageLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countDetectorImageLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def addDetectorImageLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listDetectorImageLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listDetectorClass(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countDetectorClass(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DetectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -58,6 +246,91 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.ping,
                     request_deserializer=common_dot_rpc_dot_base__pb2.Ping.FromString,
                     response_serializer=common_dot_rpc_dot_base__pb2.Pong.SerializeToString,
+            ),
+            'loadDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.LoadDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.LoadDetectorResponse.SerializeToString,
+            ),
+            'listDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorResponse.SerializeToString,
+            ),
+            'removeDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorResponse.SerializeToString,
+            ),
+            'countDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.countDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorResponse.SerializeToString,
+            ),
+            'updateDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.updateDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.UpdateDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.UpdateDetectorResponse.SerializeToString,
+            ),
+            'createDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.createDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CreateDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CreateDetectorResponse.SerializeToString,
+            ),
+            'trainDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainDetector,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.SerializeToString,
+            ),
+            'uploadDetectorImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.uploadDetectorImage,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.UploadDetectorImageRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.UploadDetectorImageResponse.SerializeToString,
+            ),
+            'listDetectorImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDetectorImage,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageResponse.SerializeToString,
+            ),
+            'countDetectorImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.countDetectorImage,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageResponse.SerializeToString,
+            ),
+            'removeDetectorImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeDetectorImage,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageResponse.SerializeToString,
+            ),
+            'removeDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeDetectorImageLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelResponse.SerializeToString,
+            ),
+            'countDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.countDetectorImageLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelResponse.SerializeToString,
+            ),
+            'addDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.addDetectorImageLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.SerializeToString,
+            ),
+            'listDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDetectorImageLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelResponse.SerializeToString,
+            ),
+            'listDetectorClass': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDetectorClass,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.SerializeToString,
+            ),
+            'countDetectorClass': grpc.unary_unary_rpc_method_handler(
+                    servicer.countDetectorClass,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -87,6 +360,465 @@ class Detector(object):
             '/Detector/ping',
             common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
             common_dot_rpc_dot_base__pb2.Pong.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/loadDetector',
+            common_dot_rpc_dot_detector__pb2.LoadDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.LoadDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/listDetector',
+            common_dot_rpc_dot_detector__pb2.ListDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ListDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def removeDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/removeDetector',
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/countDetector',
+            common_dot_rpc_dot_detector__pb2.CountDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CountDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def updateDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/updateDetector',
+            common_dot_rpc_dot_detector__pb2.UpdateDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.UpdateDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def createDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/createDetector',
+            common_dot_rpc_dot_detector__pb2.CreateDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CreateDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/trainDetector',
+            common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def uploadDetectorImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/uploadDetectorImage',
+            common_dot_rpc_dot_detector__pb2.UploadDetectorImageRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.UploadDetectorImageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listDetectorImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/listDetectorImage',
+            common_dot_rpc_dot_detector__pb2.ListDetectorImageRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ListDetectorImageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countDetectorImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/countDetectorImage',
+            common_dot_rpc_dot_detector__pb2.CountDetectorImageRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CountDetectorImageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def removeDetectorImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/removeDetectorImage',
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorImageRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorImageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def removeDetectorImageLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/removeDetectorImageLabel',
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorImageLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countDetectorImageLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/countDetectorImageLabel',
+            common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CountDetectorImageLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def addDetectorImageLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/addDetectorImageLabel',
+            common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listDetectorImageLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/listDetectorImageLabel',
+            common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listDetectorClass(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/listDetectorClass',
+            common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countDetectorClass(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/countDetectorClass',
+            common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.FromString,
             options,
             channel_credentials,
             insecure,

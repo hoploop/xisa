@@ -6,12 +6,12 @@ api/auth.service.ts
 api/auth.serviceInterface.ts
 api/detector.service.ts
 api/detector.serviceInterface.ts
-api/project.service.ts
-api/project.serviceInterface.ts
 api/record.service.ts
 api/record.serviceInterface.ts
 api/train.service.ts
 api/train.serviceInterface.ts
+api/workspace.service.ts
+api/workspace.serviceInterface.ts
 api/ws.service.ts
 api/ws.serviceInterface.ts
 configuration.ts
@@ -47,7 +47,7 @@ model/mouse-scroll-event.ts
 model/os.ts
 model/project-list-response.ts
 model/project.ts
-model/record-event-list-record-id200-response-inner.ts
+model/record-event-list-recordid200-response-inner.ts
 model/record-list-response.ts
 model/record.ts
 model/register-request.ts

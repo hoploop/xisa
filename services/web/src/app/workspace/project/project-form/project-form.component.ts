@@ -55,7 +55,7 @@ export class ProjectFormComponent implements OnInit{
     if (!this.id) return;
     this.loading.next(this.ctx.translate.instant("workspace.project.loadings"));
     this.error.next(undefined);
-    this.ctx.api.project.projectLoad(this.id).subscribe({
+    this.ctx.api.workspace.workspaceProjectLoad(this.id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.name = result.name;
@@ -81,7 +81,7 @@ export class ProjectFormComponent implements OnInit{
   create(){
     this.loading.next(this.ctx.translate.instant("workspace.project.saving"));
     this.error.next(undefined);
-    this.ctx.api.project.projectCreate(this.name,this.description).subscribe({
+    this.ctx.api.workspace.workspaceProjectCreate(this.name,this.description).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.name = result.name;
@@ -99,7 +99,7 @@ export class ProjectFormComponent implements OnInit{
     if (!this.id) return;
     this.loading.next(this.ctx.translate.instant("workspace.project.removing"));
     this.error.next(undefined);
-    this.ctx.api.project.projectDelete(this.id).subscribe({
+    this.ctx.api.workspace.workspaceProjectDelete(this.id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.router.navigateByUrl('/project/list');
@@ -115,11 +115,11 @@ export class ProjectFormComponent implements OnInit{
     if (!this.id) return;
     this.loading.next(this.ctx.translate.instant("workspace.project.saving"));
     this.error.next(undefined);
-    this.ctx.api.project.projectUpdate(this.id,this.name,this.description).subscribe({
+    this.ctx.api.workspace.workspaceProjectUpdate(this.id,this.name,this.description).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
-        this.name = result.name;
-        this.description = result.description;
+        //this.name = result.name;
+        //this.description = result.description;
         this.router.navigateByUrl('/project/list');
       },
       error: (result)=>{

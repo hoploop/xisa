@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ContextService } from '@services/context.service';
 import { Observable } from 'rxjs';
+import { RecordEventsCountPipe } from '../record/record-events-count.pipe';
 
 @Pipe({
   name: 'projectRecordCount',
@@ -15,7 +16,7 @@ export class ProjectRecordCountPipe implements PipeTransform {
       if (value==undefined || value == null){
         observer.next(0);
       }else{
-      this.ctx.api.project.projectRecordCountProjectId(value).subscribe({
+      this.ctx.api.record.recordRecordCountProjectid(value).subscribe({
         next: (result)=>{
           observer.next(result);
         },

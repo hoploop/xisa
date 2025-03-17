@@ -88,3 +88,15 @@ class Detector(Document):
         await DetectorImage.find_all(DetectorImage.detector == self.id).delete()
         await DetectorClass.find_all(DetectorClass.detector == self.id).delete()
      
+class DetectorTrainingSession(BaseModel):
+    type:Literal['detector.training.session'] = 'detector.training.session'
+    detector: PydanticObjectId
+    epoch_progress: int
+    epoch_total: int
+    box_loss: float
+    class_loss: float
+    object_loss: float 
+    created: datetime = Field(default_factory=utc_now)
+    updated: datetime = Field(default_factory=utc_now)
+    user: PydanticObjectId
+    

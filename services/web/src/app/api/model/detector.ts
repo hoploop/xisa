@@ -13,10 +13,14 @@ export interface Detector {
     _id?: string | null;
     project: string;
     name: string;
+    running?: boolean;
+    failed?: string | null;
     description?: string | null;
     created?: string;
     updated?: string;
     groups?: Array<string>;
     users?: Array<string>;
+    best?: string | null;
+    last?: string | null;
 }
 

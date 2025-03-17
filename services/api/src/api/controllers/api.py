@@ -9,7 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 
 # LOCAL IMPORTS
-from api.models.defaults import empty_list
+from common.models.defaults import empty_list
 
 class CORSConfig(BaseModel):
     origins: List[str] = []

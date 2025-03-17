@@ -25,13 +25,83 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/detector.proto\x1a\x15\x63ommon/rpc/base.proto2 \n\x08\x44\x65tector\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pongb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/detector.proto\x1a\x15\x63ommon/rpc/base.proto\"=\n\x1e\x43ountDetectorImageLabelRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\"b\n\x1f\x43ountDetectorImageLabelResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x42\n\n\x08_message\">\n\x1fRemoveDetectorImageLabelRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\r\n\x05label\x18\x02 \x01(\t\"T\n RemoveDetectorImageLabelResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\";\n\x19\x43ountDetectorClassRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x02 \x01(\t\"]\n\x1a\x43ountDetectorClassResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x42\n\n\x08_message\"g\n\x18ListDetectorClassRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0e\n\x06search\x18\x05 \x01(\t\"z\n\x19ListDetectorClassResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x12\x1c\n\x07\x63lasses\x18\x04 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message\"i\n\x1dListDetectorImageLabelRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0e\n\x06search\x18\x05 \x01(\t\"~\n\x1eListDetectorImageLabelResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x12\x1b\n\x06labels\x18\x04 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message\"m\n\x1aUploadDetectorImageRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\t\x12!\n\x05modes\x18\x04 \x03(\x0e\x32\x12.DetectorImageMode\"l\n\x1bUploadDetectorImageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1b\n\x06images\x18\x03 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message\"\x88\x01\n\x1c\x41\x64\x64\x44\x65tectorImageLabelRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\r\n\x05image\x18\x02 \x01(\t\x12\x0e\n\x06xstart\x18\x03 \x01(\x02\x12\x0c\n\x04xend\x18\x04 \x01(\x02\x12\x0e\n\x06ystart\x18\x05 \x01(\x02\x12\x0c\n\x04yend\x18\x06 \x01(\x02\x12\x0f\n\x07\x63lasses\x18\x07 \x03(\t\"m\n\x1d\x41\x64\x64\x44\x65tectorImageLabelResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1a\n\x05label\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"1\n\x15RemoveDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"J\n\x16RemoveDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"6\n\x1aRemoveDetectorImageRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"O\n\x1bRemoveDetectorImageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"X\n\x19\x43ountDetectorImageRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\"]\n\x1a\x43ountDetectorImageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x42\n\n\x08_message\"W\n\x18ListDetectorImageRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\"y\n\x19ListDetectorImageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x12\x1b\n\x06images\x18\x04 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message\"j\n\x14TrainDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07session\x18\x02 \x01(\t\x12\x10\n\x08\x64\x65tector\x18\x03 \x01(\t\x12\x0e\n\x06\x65pochs\x18\x04 \x01(\x05\x12\x11\n\timageSize\x18\x05 \x01(\x05\"I\n\x15TrainDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"y\n\x15\x43reateDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07project\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x13\n\x06origin\x18\x05 \x01(\tH\x00\x88\x01\x01\x42\t\n\x07_origin\"i\n\x16\x43reateDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1d\n\x08\x64\x65tector\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"/\n\x13LoadDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"g\n\x14LoadDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1d\n\x08\x64\x65tector\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"T\n\x15UpdateDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\"i\n\x16UpdateDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1d\n\x08\x64\x65tector\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"5\n\x14\x43ountDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07project\x18\x02 \x01(\t\"X\n\x15\x43ountDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x42\n\n\x08_message\"a\n\x13ListDetectorRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07project\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0e\n\x06search\x18\x05 \x01(\t\"w\n\x14ListDetectorResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x12\x1e\n\tdetectors\x18\x04 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message*1\n\x11\x44\x65tectorImageMode\x12\t\n\x05TRAIN\x10\x00\x12\x07\n\x03VAL\x10\x01\x12\x08\n\x04TEST\x10\x02\x32\xaf\n\n\x08\x44\x65tector\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12;\n\x0cloadDetector\x12\x14.LoadDetectorRequest\x1a\x15.LoadDetectorResponse\x12;\n\x0clistDetector\x12\x14.ListDetectorRequest\x1a\x15.ListDetectorResponse\x12\x41\n\x0eremoveDetector\x12\x16.RemoveDetectorRequest\x1a\x17.RemoveDetectorResponse\x12>\n\rcountDetector\x12\x15.CountDetectorRequest\x1a\x16.CountDetectorResponse\x12\x41\n\x0eupdateDetector\x12\x16.UpdateDetectorRequest\x1a\x17.UpdateDetectorResponse\x12\x41\n\x0e\x63reateDetector\x12\x16.CreateDetectorRequest\x1a\x17.CreateDetectorResponse\x12>\n\rtrainDetector\x12\x15.TrainDetectorRequest\x1a\x16.TrainDetectorResponse\x12P\n\x13uploadDetectorImage\x12\x1b.UploadDetectorImageRequest\x1a\x1c.UploadDetectorImageResponse\x12J\n\x11listDetectorImage\x12\x19.ListDetectorImageRequest\x1a\x1a.ListDetectorImageResponse\x12M\n\x12\x63ountDetectorImage\x12\x1a.CountDetectorImageRequest\x1a\x1b.CountDetectorImageResponse\x12P\n\x13removeDetectorImage\x12\x1b.RemoveDetectorImageRequest\x1a\x1c.RemoveDetectorImageResponse\x12_\n\x18removeDetectorImageLabel\x12 .RemoveDetectorImageLabelRequest\x1a!.RemoveDetectorImageLabelResponse\x12\\\n\x17\x63ountDetectorImageLabel\x12\x1f.CountDetectorImageLabelRequest\x1a .CountDetectorImageLabelResponse\x12V\n\x15\x61\x64\x64\x44\x65tectorImageLabel\x12\x1d.AddDetectorImageLabelRequest\x1a\x1e.AddDetectorImageLabelResponse\x12Y\n\x16listDetectorImageLabel\x12\x1e.ListDetectorImageLabelRequest\x1a\x1f.ListDetectorImageLabelResponse\x12J\n\x11listDetectorClass\x12\x19.ListDetectorClassRequest\x1a\x1a.ListDetectorClassResponse\x12M\n\x12\x63ountDetectorClass\x12\x1a.CountDetectorClassRequest\x1a\x1b.CountDetectorClassResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common.rpc.detector_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_DETECTOR']._serialized_start=52
-  _globals['_DETECTOR']._serialized_end=84
+  _globals['_DETECTORIMAGEMODE']._serialized_start=3242
+  _globals['_DETECTORIMAGEMODE']._serialized_end=3291
+  _globals['_COUNTDETECTORIMAGELABELREQUEST']._serialized_start=52
+  _globals['_COUNTDETECTORIMAGELABELREQUEST']._serialized_end=113
+  _globals['_COUNTDETECTORIMAGELABELRESPONSE']._serialized_start=115
+  _globals['_COUNTDETECTORIMAGELABELRESPONSE']._serialized_end=213
+  _globals['_REMOVEDETECTORIMAGELABELREQUEST']._serialized_start=215
+  _globals['_REMOVEDETECTORIMAGELABELREQUEST']._serialized_end=277
+  _globals['_REMOVEDETECTORIMAGELABELRESPONSE']._serialized_start=279
+  _globals['_REMOVEDETECTORIMAGELABELRESPONSE']._serialized_end=363
+  _globals['_COUNTDETECTORCLASSREQUEST']._serialized_start=365
+  _globals['_COUNTDETECTORCLASSREQUEST']._serialized_end=424
+  _globals['_COUNTDETECTORCLASSRESPONSE']._serialized_start=426
+  _globals['_COUNTDETECTORCLASSRESPONSE']._serialized_end=519
+  _globals['_LISTDETECTORCLASSREQUEST']._serialized_start=521
+  _globals['_LISTDETECTORCLASSREQUEST']._serialized_end=624
+  _globals['_LISTDETECTORCLASSRESPONSE']._serialized_start=626
+  _globals['_LISTDETECTORCLASSRESPONSE']._serialized_end=748
+  _globals['_LISTDETECTORIMAGELABELREQUEST']._serialized_start=750
+  _globals['_LISTDETECTORIMAGELABELREQUEST']._serialized_end=855
+  _globals['_LISTDETECTORIMAGELABELRESPONSE']._serialized_start=857
+  _globals['_LISTDETECTORIMAGELABELRESPONSE']._serialized_end=983
+  _globals['_UPLOADDETECTORIMAGEREQUEST']._serialized_start=985
+  _globals['_UPLOADDETECTORIMAGEREQUEST']._serialized_end=1094
+  _globals['_UPLOADDETECTORIMAGERESPONSE']._serialized_start=1096
+  _globals['_UPLOADDETECTORIMAGERESPONSE']._serialized_end=1204
+  _globals['_ADDDETECTORIMAGELABELREQUEST']._serialized_start=1207
+  _globals['_ADDDETECTORIMAGELABELREQUEST']._serialized_end=1343
+  _globals['_ADDDETECTORIMAGELABELRESPONSE']._serialized_start=1345
+  _globals['_ADDDETECTORIMAGELABELRESPONSE']._serialized_end=1454
+  _globals['_REMOVEDETECTORREQUEST']._serialized_start=1456
+  _globals['_REMOVEDETECTORREQUEST']._serialized_end=1505
+  _globals['_REMOVEDETECTORRESPONSE']._serialized_start=1507
+  _globals['_REMOVEDETECTORRESPONSE']._serialized_end=1581
+  _globals['_REMOVEDETECTORIMAGEREQUEST']._serialized_start=1583
+  _globals['_REMOVEDETECTORIMAGEREQUEST']._serialized_end=1637
+  _globals['_REMOVEDETECTORIMAGERESPONSE']._serialized_start=1639
+  _globals['_REMOVEDETECTORIMAGERESPONSE']._serialized_end=1718
+  _globals['_COUNTDETECTORIMAGEREQUEST']._serialized_start=1720
+  _globals['_COUNTDETECTORIMAGEREQUEST']._serialized_end=1808
+  _globals['_COUNTDETECTORIMAGERESPONSE']._serialized_start=1810
+  _globals['_COUNTDETECTORIMAGERESPONSE']._serialized_end=1903
+  _globals['_LISTDETECTORIMAGEREQUEST']._serialized_start=1905
+  _globals['_LISTDETECTORIMAGEREQUEST']._serialized_end=1992
+  _globals['_LISTDETECTORIMAGERESPONSE']._serialized_start=1994
+  _globals['_LISTDETECTORIMAGERESPONSE']._serialized_end=2115
+  _globals['_TRAINDETECTORREQUEST']._serialized_start=2117
+  _globals['_TRAINDETECTORREQUEST']._serialized_end=2223
+  _globals['_TRAINDETECTORRESPONSE']._serialized_start=2225
+  _globals['_TRAINDETECTORRESPONSE']._serialized_end=2298
+  _globals['_CREATEDETECTORREQUEST']._serialized_start=2300
+  _globals['_CREATEDETECTORREQUEST']._serialized_end=2421
+  _globals['_CREATEDETECTORRESPONSE']._serialized_start=2423
+  _globals['_CREATEDETECTORRESPONSE']._serialized_end=2528
+  _globals['_LOADDETECTORREQUEST']._serialized_start=2530
+  _globals['_LOADDETECTORREQUEST']._serialized_end=2577
+  _globals['_LOADDETECTORRESPONSE']._serialized_start=2579
+  _globals['_LOADDETECTORRESPONSE']._serialized_end=2682
+  _globals['_UPDATEDETECTORREQUEST']._serialized_start=2684
+  _globals['_UPDATEDETECTORREQUEST']._serialized_end=2768
+  _globals['_UPDATEDETECTORRESPONSE']._serialized_start=2770
+  _globals['_UPDATEDETECTORRESPONSE']._serialized_end=2875
+  _globals['_COUNTDETECTORREQUEST']._serialized_start=2877
+  _globals['_COUNTDETECTORREQUEST']._serialized_end=2930
+  _globals['_COUNTDETECTORRESPONSE']._serialized_start=2932
+  _globals['_COUNTDETECTORRESPONSE']._serialized_end=3020
+  _globals['_LISTDETECTORREQUEST']._serialized_start=3022
+  _globals['_LISTDETECTORREQUEST']._serialized_end=3119
+  _globals['_LISTDETECTORRESPONSE']._serialized_start=3121
+  _globals['_LISTDETECTORRESPONSE']._serialized_end=3240
+  _globals['_DETECTOR']._serialized_start=3294
+  _globals['_DETECTOR']._serialized_end=4621
 # @@protoc_insertion_point(module_scope)

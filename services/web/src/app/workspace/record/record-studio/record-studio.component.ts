@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Detector, Record,  RecordEventListRecordId200ResponseInner } from '@api/index';
+import { Detector, Record } from '@api/index';
 import { FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
 import { BehaviorSubject } from 'rxjs';
 import { Frame } from '../record-frame';
 import { DetectorSelectorComponent } from '@workspace/detector/detector-selector/detector-selector.component';
+import { RecordEventListRecordId200ResponseInner } from '@api/model/record-event-list-record-id200-response-inner';
 
 
 
@@ -47,7 +48,7 @@ export class RecordStudioComponent implements OnInit {
     if (!this.recordId) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.record.recordLoadId(this.recordId).subscribe({
+    this.ctx.api.record.recordLoadRecorderid(this.recordId).subscribe({
       next: (result)=>{
         this.record = result;
         this.projectId = result.project;
@@ -71,7 +72,7 @@ export class RecordStudioComponent implements OnInit {
 
   loadEvents(){
     if (!this.recordId) return;
-    this.ctx.api.record.recordEventListRecordId(this.recordId).subscribe({
+    this.ctx.api.record.recordEventListRecordid(this.recordId).subscribe({
       next: (result)=>{
         this.events = result;
         this.loading.next(undefined);
@@ -99,7 +100,7 @@ export class RecordStudioComponent implements OnInit {
 
   countFrames(){
     if (!this.recordId) return;
-    this.ctx.api.record.recordFrameCountRecordId(this.recordId).subscribe({
+    this.ctx.api.record.recordFrameCountRecordid(this.recordId).subscribe({
       next: (result)=>{
         this.frames_count = result;
         for (let i = 0; i < this.frames_count; i++){
