@@ -1,79 +1,80 @@
 {
-    "workspace":{
-        "project":{
-            "list":"Projects",
-            "create":"New project",
-            "update":"Update project",
-            "loadings":"Loading projects...",
-            "search":"Search project",
-            "loading":"Loading project...",
-            "save":"Save",
-            "saving":"Saving project...",
-            "removing":"Removing project...",
-            "remove":"Remove",
-            "cancel":"Cancel",
-            "name":"Name",
-            "description":"Description",
-            "errors":{
-                "already_existing":"Project already exists",
-                "not_found":"Project not found",
-                "delete_not_allowed":"You cannot remove this project"
-            }
-        },
-        "detector":{
-            "errors":{
-                "not_found":"Detector not found"
-            },
-            "class":{
-                "loadings":"Loading detector classes..."
-            },
-            "image":{
-                "loadings":"Loading detector images...", 
-                "training":"Is training image",
-                "evaluating":"Is eval image",
-                "testing":"Is testing image"
-            },
-            "select":"Select detector", 
-            "description":"Description",
-            "name":"Name",
-            "list":"Detectors",
-            "create":"New detector",
-            "loading":"Loading detector...",
-            "loadings":"Loading detectors...",
-            "search":"Search detector",
-            "empty":"No detectors",
-            "update":"Edit detector",
-            "saving":"Saving detector...",
-            "save":"Save",
-            "remove":"Delete",
-            "removing":"Removing detector...",
-            "cancel":"Cancel",
-            "learn":"Learn",
-            "training":"Training..."
-            
-            
-        },
-        "record":{
-            "list":"Recordings",
-            "name":"Name",
-            "studio":"Studio",
-            "description":"Description",
-            "loading":"Loading recording..",
-            "saving":"Saving recording...",
-            "save":"Save",
-            "loadings":"Loading recordings...",
-            "search":"Search recording",
-            "new":"New recording",
-            "edit":"Edit recording",
-            "removing":"Deleting record...",
-            "remove":"Delete",
-            "manage":"Current recording",
-            "start":"Start",
-            "stop":"Stop",
-            "pause":"Pause",
-            "empty":"No records",
-            "cancel":"Cancel"
-        }
-        
+  "workspace": {
+    "project": {
+      "list": "Projects",
+      "create": "New project",
+      "update": "Update project",
+      "loadings": "Loading projects...",
+      "search": "Search project",
+      "loading": "Loading project...",
+      "save": "Save",
+      "saving": "Saving project...",
+      "removing": "Removing project...",
+      "remove": "Remove",
+      "cancel": "Cancel",
+      "name": "Name",
+      "description": "Description",
+      "errors": {
+        "already_existing": "Project already exists",
+        "not_found": "Project not found",
+        "delete_not_allowed": "You cannot remove this project"
+      }
+    },
+    "detector": {
+      "errors": {
+        "not_found": "Detector not found"
+      },
+      "class": {
+        "loadings": "Loading detector classes..."
+      },
+      "image": {
+        "loadings": "Loading detector images...",
+        "training": "Is training image",
+        "evaluating": "Is eval image",
+        "testing": "Is testing image"
+      },
+      "select": "Select detector",
+      "description": "Description",
+      "name": "Name",
+      "list": "Detectors",
+      "create": "New detector",
+      "loading": "Loading detector...",
+      "loadings": "Loading detectors...",
+      "search": "Search detector",
+      "empty": "No detectors",
+      "update": "Edit detector",
+      "saving": "Saving detector...",
+      "save": "Save",
+      "remove": "Delete",
+      "removing": "Removing detector...",
+      "cancel": "Cancel",
+      "learn": "Learn",
+      "training": "Training..."
+    },
+    "record": {
+      "errors": {
+        "not_found": "Record not found",
+        "already_existing": "Another record with this username already found"
+      },
+      "list": "Recordings",
+      "name": "Name",
+      "studio": "Studio",
+      "description": "Description",
+      "loading": "Loading recording..",
+      "saving": "Saving recording...",
+      "save": "Save",
+      "loadings": "Loading recordings...",
+      "search": "Search recording",
+      "new": "New recording",
+      "edit": "Edit recording",
+      "removing": "Deleting record...",
+      "remove": "Delete",
+      "manage": "Current recording",
+      "start": "Start",
+      "stop": "Stop",
+      "pause": "Pause",
+      "empty": "No records",
+      "cancel": "Cancel"
     }
+  }
 }

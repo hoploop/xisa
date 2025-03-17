@@ -25,13 +25,37 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/recorder.proto\x1a\x15\x63ommon/rpc/base.proto2 \n\x08Recorder\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pongb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/recorder.proto\x1a\x15\x63ommon/rpc/base.proto\"\x10\n\x0eRunningRequest\"!\n\x0fRunningResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\"-\n\x11LoadRecordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"c\n\x12LoadRecordResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1b\n\x06record\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"R\n\x13UpdateRecordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\"e\n\x14UpdateRecordResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x1b\n\x06record\x18\x03 \x01(\x0b\x32\x0b.SerializedB\n\n\x08_message\"_\n\x11ListRecordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07project\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0e\n\x06search\x18\x05 \x01(\t\"s\n\x12ListRecordResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x12\x1c\n\x07records\x18\x04 \x03(\x0b\x32\x0b.SerializedB\n\n\x08_message\"`\n\x12\x43ountRecordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0f\n\x07project\x18\x02 \x01(\t\x12\x0c\n\x04skip\x18\x03 \x01(\x05\x12\r\n\x05limit\x18\x04 \x01(\x05\x12\x0e\n\x06search\x18\x05 \x01(\t\"V\n\x13\x43ountRecordResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05total\x18\x03 \x01(\x05\x42\n\n\x08_message\"3\n\x13\x44\x65leteRecordRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"H\n\x14\x44\x65leteRecordResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message2\xf0\x02\n\x08Recorder\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12,\n\x07running\x12\x0f.RunningRequest\x1a\x10.RunningResponse\x12\x35\n\nloadRecord\x12\x12.LoadRecordRequest\x1a\x13.LoadRecordResponse\x12;\n\x0cupdateRecord\x12\x14.UpdateRecordRequest\x1a\x15.UpdateRecordResponse\x12\x35\n\nlistRecord\x12\x12.ListRecordRequest\x1a\x13.ListRecordResponse\x12;\n\x0c\x64\x65leteRecord\x12\x14.DeleteRecordRequest\x1a\x15.DeleteRecordResponse\x12\x38\n\x0b\x63ountRecord\x12\x13.CountRecordRequest\x1a\x14.CountRecordResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common.rpc.recorder_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_RECORDER']._serialized_start=52
-  _globals['_RECORDER']._serialized_end=84
+  _globals['_RUNNINGREQUEST']._serialized_start=52
+  _globals['_RUNNINGREQUEST']._serialized_end=68
+  _globals['_RUNNINGRESPONSE']._serialized_start=70
+  _globals['_RUNNINGRESPONSE']._serialized_end=103
+  _globals['_LOADRECORDREQUEST']._serialized_start=105
+  _globals['_LOADRECORDREQUEST']._serialized_end=150
+  _globals['_LOADRECORDRESPONSE']._serialized_start=152
+  _globals['_LOADRECORDRESPONSE']._serialized_end=251
+  _globals['_UPDATERECORDREQUEST']._serialized_start=253
+  _globals['_UPDATERECORDREQUEST']._serialized_end=335
+  _globals['_UPDATERECORDRESPONSE']._serialized_start=337
+  _globals['_UPDATERECORDRESPONSE']._serialized_end=438
+  _globals['_LISTRECORDREQUEST']._serialized_start=440
+  _globals['_LISTRECORDREQUEST']._serialized_end=535
+  _globals['_LISTRECORDRESPONSE']._serialized_start=537
+  _globals['_LISTRECORDRESPONSE']._serialized_end=652
+  _globals['_COUNTRECORDREQUEST']._serialized_start=654
+  _globals['_COUNTRECORDREQUEST']._serialized_end=750
+  _globals['_COUNTRECORDRESPONSE']._serialized_start=752
+  _globals['_COUNTRECORDRESPONSE']._serialized_end=838
+  _globals['_DELETERECORDREQUEST']._serialized_start=840
+  _globals['_DELETERECORDREQUEST']._serialized_end=891
+  _globals['_DELETERECORDRESPONSE']._serialized_start=893
+  _globals['_DELETERECORDRESPONSE']._serialized_end=965
+  _globals['_RECORDER']._serialized_start=968
+  _globals['_RECORDER']._serialized_end=1336
 # @@protoc_insertion_point(module_scope)

@@ -6,7 +6,7 @@ from typing import Annotated, List, Optional
 from beanie import PydanticObjectId
 
 # LIBRARY IMPORTS
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from starlette.responses import Response
@@ -14,9 +14,9 @@ import aiofiles
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
+from common.clients.recorder import RecorderClient
 from common.models.recorder import EVENTS, Record
 from api.routers import GetApp 
-from common.rpc.recorder_pb2_grpc import RecorderStub
 from common.service import secure_channel_factory
 
 
@@ -26,38 +26,45 @@ log = logging.getLogger(__name__)
 
 
 
-async def get_recorder(request: Request) -> RecorderStub:
+async def get_recorder(request: Request) -> RecorderClient:
     if not hasattr(request.app.state, "recorder"):
         config = request.app.state.config.recorder
-        channel = secure_channel_factory(
-            security_config=config.security, client_config=config
-        )
-        request.app.state.recorder = RecorderStub(channel)
+        request.app.state.recorder = RecorderClient(config)
     return request.app.state.recorder
 
 
-Recorder = Annotated[RecorderStub, Depends(get_recorder)]
+Recorder = Annotated[RecorderClient, Depends(get_recorder)]
 
-@router.get("/load/{id}",  response_model=Record)
+@router.get("/load/{recorderId}",  response_model=Record)
 async def load(
-    user: CurrentUser, recorder: Recorder, id: str
+    user: CurrentUser, recorder: Recorder, recorderId: PydanticObjectId
 ):
-    return await recorderController.load_record(user.id, PydanticObjectId(id))
+    try:
+        return await recorder.loadRecord(user,recorderId)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=str(e)
+        )
 
+    
 
 @router.post("/edit",  response_model=Record)
 async def edit(
     user: CurrentUser,
     recorder: Recorder,
-    id: str,
+    recordId: PydanticObjectId,
     name: str,
     description: str,
 ):
-    return await recorderController.update_record(
-        user.id, PydanticObjectId(id), name, description
-    )
-
-
+    try:
+        return await recorder.updateRecord(user,recordId,name,description)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=str(e)
+        )
+    
 @router.post(
     "/start",
     
@@ -92,10 +99,18 @@ async def stop(user: CurrentUser, recorder: Recorder):
     description="Performs the removal of a Recording",
     response_model=bool,
 )
-async def stop(
-    record: str, user: CurrentUser, recorder: Recorder
+async def remove(
+    recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder
 ):
-    return await recorderController.delete_record(user.id, PydanticObjectId(record))
+    try:
+        return await recorder.deleteRecord(user,recordId)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=str(e)
+        )
+    
+    
 
 
 @router.get(
@@ -105,7 +120,7 @@ async def stop(
     response_model=bool,
 )
 async def running(user: CurrentUser, recorder: Recorder):
-    return await recorderController.running()
+    return await recorder.running()
 
 
 @router.get(
@@ -214,38 +229,43 @@ class RecordListResponse(BaseModel):
 
 
 @router.get(
-    "/list/{project_id}",
+    "/list/{projectId}",
     
     response_model=RecordListResponse,
 )
 async def list(
     user: CurrentUser,
     recorder: Recorder,
-    project_id: str,
+    projectId: PydanticObjectId,
     skip: int = 0,
     limit: int = 10,
     search: str = None,
 ):
-    total, records = await recorderController.list_records(
-        user.id, PydanticObjectId(project_id), skip, limit, search
-    )
-    return RecordListResponse(total=total, records=records)
-
+    try:
+        total,records = await recorder.listRecord(user,projectId,skip,limit,search)
+        return RecordListResponse(total=total,records=records)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=str(e)
+        )
+    
 
 @router.get(
-    "/record/count/{project_id}",
+    "/record/count/{projectId}",
     
     response_model=int,
 )
 async def record_count(
-    project_id: str,
+    projectId: PydanticObjectId,
     user: CurrentUser,
-    projectController: GetProjectController,
-    recorderController: GetRecorderController,
+    recorder: Recorder
 ):
-    return await recorderController.count_records(user.id, PydanticObjectId(project_id))
+    try:
+        return await recorder.countRecord(user,projectId)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=str(e)
+        )
 
-
-@router.get("/load",  response_model=Project)
-async def load(user: CurrentUser, projectController: GetProjectController, id: str):
-    return await projectController.load(PydanticObjectId(id))

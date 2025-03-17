@@ -4,6 +4,7 @@ import grpc
 import warnings
 
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
+from common.rpc import recorder_pb2 as common_dot_rpc_dot_recorder__pb2
 
 GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
@@ -39,6 +40,36 @@ class RecorderStub(object):
                 request_serializer=common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_base__pb2.Pong.FromString,
                 _registered_method=True)
+        self.running = channel.unary_unary(
+                '/Recorder/running',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.RunningRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.RunningResponse.FromString,
+                _registered_method=True)
+        self.loadRecord = channel.unary_unary(
+                '/Recorder/loadRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordResponse.FromString,
+                _registered_method=True)
+        self.updateRecord = channel.unary_unary(
+                '/Recorder/updateRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.UpdateRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.UpdateRecordResponse.FromString,
+                _registered_method=True)
+        self.listRecord = channel.unary_unary(
+                '/Recorder/listRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordResponse.FromString,
+                _registered_method=True)
+        self.deleteRecord = channel.unary_unary(
+                '/Recorder/deleteRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.DeleteRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.DeleteRecordResponse.FromString,
+                _registered_method=True)
+        self.countRecord = channel.unary_unary(
+                '/Recorder/countRecord',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordResponse.FromString,
+                _registered_method=True)
 
 
 class RecorderServicer(object):
@@ -51,6 +82,42 @@ class RecorderServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def running(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def loadRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def updateRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def deleteRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def countRecord(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RecorderServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -58,6 +125,36 @@ def add_RecorderServicer_to_server(servicer, server):
                     servicer.ping,
                     request_deserializer=common_dot_rpc_dot_base__pb2.Ping.FromString,
                     response_serializer=common_dot_rpc_dot_base__pb2.Pong.SerializeToString,
+            ),
+            'running': grpc.unary_unary_rpc_method_handler(
+                    servicer.running,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.RunningRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.RunningResponse.SerializeToString,
+            ),
+            'loadRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordResponse.SerializeToString,
+            ),
+            'updateRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.updateRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.UpdateRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.UpdateRecordResponse.SerializeToString,
+            ),
+            'listRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.listRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordResponse.SerializeToString,
+            ),
+            'deleteRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.DeleteRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.DeleteRecordResponse.SerializeToString,
+            ),
+            'countRecord': grpc.unary_unary_rpc_method_handler(
+                    servicer.countRecord,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.CountRecordRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -87,6 +184,168 @@ class Recorder(object):
             '/Recorder/ping',
             common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
             common_dot_rpc_dot_base__pb2.Pong.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def running(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/running',
+            common_dot_rpc_dot_recorder__pb2.RunningRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.RunningResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/loadRecord',
+            common_dot_rpc_dot_recorder__pb2.LoadRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.LoadRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def updateRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/updateRecord',
+            common_dot_rpc_dot_recorder__pb2.UpdateRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.UpdateRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/listRecord',
+            common_dot_rpc_dot_recorder__pb2.ListRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.ListRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def deleteRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/deleteRecord',
+            common_dot_rpc_dot_recorder__pb2.DeleteRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.DeleteRecordResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def countRecord(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/countRecord',
+            common_dot_rpc_dot_recorder__pb2.CountRecordRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.CountRecordResponse.FromString,
             options,
             channel_credentials,
             insecure,

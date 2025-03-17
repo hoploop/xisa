@@ -75,6 +75,7 @@ class ClientConfig(BaseModel):
     security: SecurityConfig
 
 
+
 class ServiceConfig(Config):
     max_receive: int = Field(default=MAX_MESSAGE_LENGTH)
     max_send: int = Field(default=MAX_MESSAGE_LENGTH)
@@ -118,8 +119,8 @@ def secure_credentials_factory(security_config: SecurityConfig) -> grpc.ServerCr
      
 class Client:
     
-    def __init__(self,security_config: SecurityConfig, client_config: ClientConfig):
-        self.channel = secure_channel_factory(security_config=secure_channel_factory,client_config=client_config)
+    def __init__(self,client_config: ClientConfig):
+        self.channel = secure_channel_factory(security_config=client_config.security,client_config=client_config)
         
 
 class Service:

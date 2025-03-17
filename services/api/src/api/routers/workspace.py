@@ -1,24 +1,17 @@
 # PYTHON IMPORTS
-import io
 import logging
-import os
 from typing import Annotated, List, Optional
 from beanie import PydanticObjectId
 
 # LIBRARY IMPORTS
 from fastapi import APIRouter, Depends, HTTPException, Request,status
-from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from starlette.responses import Response
 
 
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
+from common.clients.workspace import WorkspaceClient
 from common.models.workspace import Project
-from common.rpc.workspace_pb2 import CreateProjectRequest, DeleteProjectRequest, ListProjectRequest, LoadProjectRequest, UpdateProjectRequest
-from common.rpc.workspace_pb2_grpc import WorkspaceStub
-from common.service import secure_channel_factory
-from common.utils.conversions import Conversions
 
 
 # INITIALIZATION
@@ -27,17 +20,14 @@ log = logging.getLogger(__name__)
 
 
 
-async def get_workspace(request: Request) -> WorkspaceStub:
+async def get_workspace(request: Request) -> WorkspaceClient:
     if not hasattr(request.app.state, "workspace"):
         config = request.app.state.config.workspace
-        channel = secure_channel_factory(
-            security_config=config.security, client_config=config
-        )
-        request.app.state.workspace = WorkspaceStub(channel)
+        request.app.state.workspace = WorkspaceClient(config)
     return request.app.state.workspace
 
 
-Workspace = Annotated[WorkspaceStub, Depends(get_workspace)]
+Workspace = Annotated[WorkspaceClient, Depends(get_workspace)]
 
 
 
@@ -50,14 +40,13 @@ Workspace = Annotated[WorkspaceStub, Depends(get_workspace)]
 async def create_project(
     user: CurrentUser, workspace: Workspace, name: str, description: Optional[str] = ""
 ):
-    req = CreateProjectRequest(user=str(user.id),name=name,description=description)
-    res = await workspace.createProject(req)
-    if res.status == False:
+    try:
+        return await workspace.createProject(user,name,description)
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail=res.message
+            detail=str(e)
         )
-    return Conversions.deserialize(res.project)
 
 
 
@@ -66,15 +55,14 @@ async def create_project(
     description="Performs the removal of a project",
     response_model=bool,
 )
-async def delete_project(user: CurrentUser, workspace: Workspace, id: str):
-    req = DeleteProjectRequest(user=str(user.id),id=id)
-    res = await workspace.deleteProject(req)
-    if res.status == False:
+async def delete_project(user: CurrentUser, workspace: Workspace, projectId: PydanticObjectId):
+    try:
+        return await workspace.deleteProject(user,projectId)
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail=res.message
+            detail=str(e)
         )
-    return res.status
 
 
 @router.put(
@@ -86,19 +74,17 @@ async def delete_project(user: CurrentUser, workspace: Workspace, id: str):
 async def update_project(
     user: CurrentUser,
     workspace: Workspace,
-    id: str,
+    projectId: PydanticObjectId,
     name: str,
     description: Optional[str] = "",
 ):
-    req = UpdateProjectRequest(user=str(user.id),id=id,name=name,description=description)
-    res = await workspace.updateProject(req)
-    if res.status == False:
+    try:
+        return await workspace.updateProject(user,projectId,name,description)
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail=res.message
+            detail=str(e)
         )
-    return res.status
-
 
 
 class ProjectListResponse(BaseModel):
@@ -118,18 +104,14 @@ async def list_project(
     limit: int = 10,
     search: str = None,
 ):
-    req = ListProjectRequest(user=str(user.id),skip=skip,limit=limit,search=search)
-    res = await workspace.listProject(req)
-    if res.status == False:
+    try:
+        total, projects = await workspace.listProject(user,skip,limit,search)
+        return ProjectListResponse(total=total,projects=projects)
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail=res.message
+            detail=str(e)
         )
-    total = res.total
-    projects = []
-    for project in res.projects:
-        projects.append(Conversions.deserialize(project))
-    return ProjectListResponse(total=total,projects=projects)
 
 
 
@@ -140,15 +122,14 @@ async def list_project(
 async def load_project(
     user: CurrentUser,
     workspace: Workspace,
-    id: str
+    projectId: PydanticObjectId
 ):
-    req = LoadProjectRequest(user=str(user.id),id=id)
-    res = await workspace.loadProject(req)
-    if res.status == False:
+    try:
+        return await workspace.loadProject(user,projectId)
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail=res.message
+            detail=str(e)
         )
-    return Conversions.deserialize(res.project)
 
     

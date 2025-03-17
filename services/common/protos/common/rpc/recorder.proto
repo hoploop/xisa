@@ -5,4 +5,82 @@ service Recorder {
     
     // Performs synchronous ping of service
     rpc ping(Ping) returns (Pong);
+    rpc running(RunningRequest) returns (RunningResponse);
+    rpc loadRecord(LoadRecordRequest) returns (LoadRecordResponse);
+    rpc updateRecord(UpdateRecordRequest) returns (UpdateRecordResponse);
+    rpc listRecord(ListRecordRequest) returns (ListRecordResponse);
+    rpc deleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse);
+    rpc countRecord(CountRecordRequest) returns (CountRecordResponse);
+}
+
+message RunningRequest {
+
+}
+
+message RunningResponse {
+    bool status = 1;
+}
+
+message LoadRecordRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message LoadRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized record = 3;
+}
+
+message UpdateRecordRequest {
+    string user = 1;
+    string id = 2;
+    string name = 3;
+    string description = 4;
+}
+
+message UpdateRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized record = 3;
+}
+
+message ListRecordRequest {
+    string user = 1;
+    string project = 2;
+    int32 skip = 3;
+    int32 limit = 4;
+    string search = 5;
+}
+
+message ListRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+    repeated Serialized records = 4;
+}
+
+
+message CountRecordRequest {
+    string user = 1;
+    string project = 2;
+    int32 skip = 3;
+    int32 limit = 4;
+    string search = 5;
+}
+
+message CountRecordResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;   
+}
+
+message DeleteRecordRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message DeleteRecordResponse {
+    bool status = 1;
+    optional string message = 2;
 }
