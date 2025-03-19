@@ -5,7 +5,7 @@ from typing import Annotated, List, Literal, Union
 
 # LIBRARY IMPORTS
 from beanie import Delete, Document, PydanticObjectId, SaveChanges, Update, before_event
-from pydantic import Field, BaseModel
+from pydantic import Field
 
 # LOCAL IMPORTS
 from common.models.defaults import empty_list, utc_now

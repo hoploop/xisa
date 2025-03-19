@@ -7,9 +7,15 @@ from fastapi import FastAPI, Response
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
+import grpc
+from grpc_health.v1._async import HealthServicer
+from grpc_health.v1.health_pb2_grpc import add_HealthServicer_to_server
+
 
 # LOCAL IMPORTS
-from common.service import ClientConfig
+from common.models import MODELS
+from common.rpc.api_pb2_grpc import add_ApiServicer_to_server
+from common.service import ClientConfig, ExceptionInterceptor
 from common.utils.environment import Environment
 from common.utils.log import Logger
 from common.utils.config import Config
@@ -21,6 +27,8 @@ from api.routers import player
 from api.routers import detector
 from api.routers import train
 from api.routers import recorder, workspace
+from api.service import ApiService, ApiServiceConfig
+from common.utils.mongodb import Mongodb, MongodbConfig
 
 # CONSTANTS
 ENV_CONF = "../.env"
@@ -37,7 +45,9 @@ class MainConfig(Config):
     translations: str
     detector: ClientConfig
     player: ClientConfig
-
+    service: ApiServiceConfig
+    database: MongodbConfig
+    
 
 # INITIALIZATION
 env = Environment(ENV_CONF)
@@ -51,10 +61,24 @@ config = MainConfig.factory(API_CONF, env)
 async def lifespan(app: FastAPI):
     log.info("Starting up")
     app.state.config = config
+    
+    await Mongodb.initialize(config.database,MODELS)
+    
+    log.info('Initting and starting up API RPC Service')
+    service = ApiService(config.service,ws_manager)
+    await service.start() 
+    server = grpc.aio.server(interceptors=[ExceptionInterceptor(log)],options=service.options)
+    add_ApiServicer_to_server(service, server)
+    add_HealthServicer_to_server(HealthServicer(), server)
+    log.info('Starting rpc service on address: {0}'.format(config.service.address)) 
+    server.add_secure_port(config.service.address,service.secure_credentials(config.service.security)) 
+    log.info("Server started: {0}".format(config.service.address))
+    await server.start()
 
     
     yield
     # Shutdown
+    await server.stop(grace=1)
 
     log.info("Shutting down")
 

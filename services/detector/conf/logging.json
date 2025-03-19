@@ -69,6 +69,15 @@
             "mode": "a",
             "maxBytes": 10485,
             "backupCount": 5
+        },
+        "matplotlib": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "level": "DEBUG",
+            "formatter": "standard",
+            "filename": "logs/matplotlib.log",
+            "mode": "a",
+            "maxBytes": 10485,
+            "backupCount": 5
         }
     },
     "loggers": {
@@ -78,7 +87,7 @@
             "propagate": false
         },
         "detector": {
-            "handlers": ["detector"],
+            "handlers": ["detector","console"],
             "level": "DEBUG",
             "propagate": false
         },
@@ -89,6 +98,11 @@
         },
         "watchfiles": {
             "handlers": ["changes"],
+            "level": "DEBUG",
+            "propagate": false
+        },
+        "matplotlib": {
+            "handlers": ["matplotlib"],
             "level": "DEBUG",
             "propagate": false
         }

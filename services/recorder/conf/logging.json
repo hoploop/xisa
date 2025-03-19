@@ -78,7 +78,7 @@
             "propagate": false
         },
         "recorder": {
-            "handlers": ["recorder"],
+            "handlers": ["recorder","console"],
             "level": "DEBUG",
             "propagate": false
         },

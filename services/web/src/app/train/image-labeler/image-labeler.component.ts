@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Box } from '@train/image-annotator/image-annotator.component';
 
 @Component({
   selector: 'app-image-labeler',
@@ -9,5 +8,5 @@ import { Box } from '@train/image-annotator/image-annotator.component';
 })
 export class ImageLabelerComponent {
   @Output() close = new EventEmitter<boolean>();
-  @Input() box!:Box;
+
 }

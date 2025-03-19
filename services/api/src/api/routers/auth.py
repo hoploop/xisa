@@ -32,6 +32,7 @@ async def get_auth(request: Request) -> AuthClient:
     if not hasattr(request.app.state, "auth"):
         config = request.app.state.config.auth
         request.app.state.auth = AuthClient(config)
+        await request.app.state.auth.startup()
     return request.app.state.auth
 
 

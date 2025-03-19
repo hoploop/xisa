@@ -19,6 +19,10 @@ class WorkspaceClient(Client):
     
     def __init__(self, client_config):
         super().__init__(client_config)
+        
+            
+    async def startup(self):
+        await super().startup()
         self.client = WorkspaceStub(self.channel)
         
     async def ping(self) -> Pong:

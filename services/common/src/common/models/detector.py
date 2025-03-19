@@ -100,3 +100,29 @@ class DetectorTrainingSession(BaseModel):
     updated: datetime = Field(default_factory=utc_now)
     user: PydanticObjectId
     
+    
+class DetectObject(BaseModel):
+    x: float
+    y: float
+    w: float
+    h: float
+    confidence:float
+    code: int
+    name: str
+    row: int
+    col: int
+    
+class DetectText(BaseModel):
+    x: float
+    y: float
+    h: float
+    w: float
+    page: int
+    block: int
+    par: int
+    line: int
+    word: int
+    value: str
+    confidence: float
+     
+            

@@ -11,6 +11,8 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { DetectObject } from '../model/models';
+import { DetectText } from '../model/models';
 import { Detector } from '../model/models';
 import { DetectorClassListResponse } from '../model/models';
 import { DetectorImage } from '../model/models';
@@ -20,6 +22,8 @@ import { DetectorImageLabelListResponse } from '../model/models';
 import { DetectorImageListResponse } from '../model/models';
 import { DetectorImageMode } from '../model/models';
 import { DetectorListResponse } from '../model/models';
+import { DetectorObjectsPayload } from '../model/models';
+import { DetectorTextsPayload } from '../model/models';
 import { HTTPValidationError } from '../model/models';
 
 
@@ -156,6 +160,14 @@ export interface DetectorServiceInterface {
     detectorLoadDetectorid(detectorId: string, extraHttpRequestParams?: any): Observable<Detector>;
 
     /**
+     * Objects
+     * Performs the detection of objects from base64 image
+     * @param detectorId 
+     * @param detectorObjectsPayload 
+     */
+    detectorObjectsDetectorid(detectorId: string, detectorObjectsPayload: DetectorObjectsPayload, extraHttpRequestParams?: any): Observable<Array<DetectObject>>;
+
+    /**
      * Remove
      * Performs the removal of a Detector
      * @param detectorId 
@@ -163,13 +175,20 @@ export interface DetectorServiceInterface {
     detectorRemove(detectorId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
+     * Texts
+     * Performs the detection of texts from base64 image
+     * @param detectorTextsPayload 
+     */
+    detectorTexts(detectorTextsPayload: DetectorTextsPayload, extraHttpRequestParams?: any): Observable<Array<DetectText>>;
+
+    /**
      * Train
      * Trains a detector
      * @param detectorId 
-     * @param epoch 
+     * @param epochs 
      * @param size 
      */
-    detectorTrainDetectorid(detectorId: string, epoch?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
+    detectorTrainDetectorid(detectorId: string, epochs?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Update

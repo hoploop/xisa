@@ -214,12 +214,12 @@ class RecorderService(Service, RecorderServicer):
             record_id = PydanticObjectId(request.record)
             found = await Record.find_many(Record.id == record_id).first_or_none()
             if not found:
-                raise Exception("workspace.record.errors.not_found")
+                return ListRecordEventResponse(status=False,message="workspace.record.errors.not_found")
             events = await Event.find_many(Event.record == record_id,with_children=True).sort(Event.frame).to_list()
             ret = []
             for event in events:
                 ret.append(Conversions.serialize(event))
-            return ListRecordEventResponse(status=False,events=ret)
+            return ListRecordEventResponse(status=True,events=ret)
         except Exception as e:
             log.warning(str(e))
             return ListRecordEventResponse(status=False,message=str(e))

@@ -24,6 +24,7 @@ async def get_workspace(request: Request) -> WorkspaceClient:
     if not hasattr(request.app.state, "workspace"):
         config = request.app.state.config.workspace
         request.app.state.workspace = WorkspaceClient(config)
+        await request.app.state.workspace.startup()
     return request.app.state.workspace
 
 

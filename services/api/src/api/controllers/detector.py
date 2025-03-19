@@ -112,7 +112,6 @@ class DetectorController:
             detections = json.loads(result.to_json())
             for detection in detections:
                 c = detection['name']
-                
                 x = detection["box"]["x1"]
                 y = detection["box"]["y1"]
                 w = detection["box"]["x2"] - detection["box"]["x1"]

@@ -18,6 +18,8 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/detect-object.ts
+model/detect-text.ts
 model/detector-class-list-response.ts
 model/detector-class.ts
 model/detector-image-label-add.ts
@@ -27,6 +29,8 @@ model/detector-image-list-response.ts
 model/detector-image-mode.ts
 model/detector-image.ts
 model/detector-list-response.ts
+model/detector-objects-payload.ts
+model/detector-texts-payload.ts
 model/detector-training-session.ts
 model/detector.ts
 model/http-validation-error.ts

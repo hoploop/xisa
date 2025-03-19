@@ -17,6 +17,9 @@ class AuthClient(Client):
     
     def __init__(self, client_config):
         super().__init__(client_config)
+        
+    async def startup(self):
+        await super().startup()
         self.client = AuthStub(self.channel)
         
     async def ping(self) -> Pong:

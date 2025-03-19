@@ -18,6 +18,7 @@ import { DetectorFormComponent } from '@workspace/detector/detector-form/detecto
 import { DetectorLearnComponent } from '@workspace/detector/detector-learn/detector-learn.component';
 import { RecordStudioComponent } from '@workspace/record/record-studio/record-studio.component';
 import { RecordFrameComponent } from '@workspace/record/record-frame/record-frame.component';
+import { ImageAnnotatorComponent } from '@train/image-annotator/image-annotator.component';
 
 const routes: Routes = [
   { path: '', component: LogoutComponent,canActivate:[AuthGuard] },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'detector/edit/:project_id/:id', component: DetectorFormComponent,canActivate:[AuthGuard] },
   { path: 'detector/new/:project_id', component: DetectorFormComponent,canActivate:[AuthGuard] },
   { path: 'detector/learn/:detector_id', component: DetectorLearnComponent,canActivate:[AuthGuard] },
+  { path: 'mockup', component: ImageAnnotatorComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

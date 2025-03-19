@@ -13,6 +13,8 @@ service Detector {
     rpc updateDetector(UpdateDetectorRequest) returns (UpdateDetectorResponse);
     rpc createDetector(CreateDetectorRequest) returns (CreateDetectorResponse);
     rpc trainDetector(TrainDetectorRequest) returns (TrainDetectorResponse);
+    rpc detectObjects(DetectObjectsRequest) returns (DetectObjectsResponse);
+    rpc detectTexts(DetectTextsRequest) returns (DetectTextsResponse);
     rpc uploadDetectorImage(UploadDetectorImageRequest) returns (UploadDetectorImageResponse);
     rpc listDetectorImage(ListDetectorImageRequest) returns (ListDetectorImageResponse);
     rpc countDetectorImage(CountDetectorImageRequest) returns (CountDetectorImageResponse);
@@ -25,6 +27,56 @@ service Detector {
     rpc countDetectorClass(CountDetectorClassRequest) returns (CountDetectorClassResponse);
 }
 
+message DetectText {
+    float x = 1;
+    float y = 2;
+    float w = 3;
+    float h = 4;
+    int32 page = 5;
+    int32 block = 6;
+    int32 par = 7;
+    int32 line = 8;
+    int32 word = 9;
+    string value = 10;
+    float confidence = 11;
+}
+
+message DetectTextsRequest {
+    string user = 1;
+    string data = 2;
+    optional float confidence = 4;
+}
+
+message DetectTextsResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated DetectText texts = 3;
+}
+
+message DetectObject {
+    float x = 1;
+    float y = 2;
+    float w = 3;
+    float h = 4;
+    float confidence = 5;
+    string name = 6;
+    int32 code = 7;
+    int32 row = 8;
+    int32 col = 9;
+}
+
+message DetectObjectsRequest {
+    string user = 1;
+    string data = 2;
+    string detector = 3;
+    optional float confidence = 4;
+}
+
+message DetectObjectsResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated DetectObject objects = 3;
+}
 
 message CountDetectorImageLabelRequest {
     string user = 1;
@@ -151,8 +203,6 @@ message RemoveDetectorImageResponse {
 message CountDetectorImageRequest {
     string user = 1;
     string detector = 2;
-    int32 skip = 3;
-    int32 limit = 4;
 }
 
 message CountDetectorImageResponse {

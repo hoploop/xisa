@@ -2,8 +2,11 @@
 import asyncio
 import base64
 from io import BytesIO
+import json
 import logging
 import threading
+import pytesseract
+from pytesseract import Output
 from ultralytics import YOLO
 import yaml
 import os
@@ -14,15 +17,19 @@ from beanie import PydanticObjectId
 from beanie.operators import And,Or,In,RegEx
 
 from PIL import Image
+#from PIL import ImageFile
+#ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # LOCAL IMPORTS
+from common.clients.api import ApiClient
 from common.models import MODELS
 from common.models.detector import Detector, DetectorClass, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
-from common.rpc.detector_pb2 import AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
-from common.service import Service
+from common.rpc.detector_pb2 import AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
+from common.service import ClientConfig, Service
 from common.rpc.detector_pb2_grpc import DetectorServicer
 from common.service import ServiceConfig
 from common.utils.conversions import Conversions
+from common.utils.imaging import ImageGrid
 from common.utils.mongodb import Mongodb, MongodbConfig
 
 # INITIALIZATION
@@ -37,6 +44,8 @@ class DetectorServiceConfig(ServiceConfig):
     runs: str
     classes: str
     video:str
+    
+    api:ClientConfig
 
 class DetectorService(Service, DetectorServicer):
 
@@ -44,10 +53,118 @@ class DetectorService(Service, DetectorServicer):
         DetectorServicer.__init__(self)
         Service.__init__(self)
         self.config:DetectorServiceConfig = config
-        # TODO: Implement ws self.ws
+        self.api = ApiClient(self.config.api)
         
     async def start(self):
          await Mongodb.initialize(self.config.database,MODELS)
+         self.CACHE_YOLOS = {}
+         
+    
+    async def detectTexts(self, request: DetectTextsRequest, context) -> DetectTextsResponse:
+        try:
+            b64image = request.data
+            log.debug("Loading image")
+            if "," in b64image:
+                bsource = b64image.split(",")[1]
+            else:
+                bsource = b64image
+            img = Image.open(BytesIO(self.decode_base64(bsource)))
+            width, height = img.size
+            
+            log.debug("Detecting text elements")
+            confidence_level = int(round(request.confidence*100))
+            # Get verbose data including boxes, confidences, line and page numbers
+            text_results = pytesseract.image_to_data(img, output_type=Output.DICT)
+            n_boxes = len(text_results["text"])
+            texts = []
+            for i in range(n_boxes):
+                confidence = int(text_results["conf"][i])
+                text = text_results["text"][i]
+                if confidence >=  confidence_level:
+                    x = text_results["left"][i] / width
+                    y = text_results["top"][i] / height
+                    w = text_results["width"][i] / width
+                    h = text_results["height"][i] / height
+                    page = text_results["page_num"][i]
+                    block = text_results["block_num"][i]
+                    par = text_results["par_num"][i]
+                    line = text_results["line_num"][i]
+                    word = text_results["word_num"][i]
+                    texts.append(DetectText(x=x,y=y,w=w,h=h,page=page,block=block,par=par,line=line,word=word,value=text,confidence=confidence))
+            return DetectTextsResponse(status=True,texts=texts)
+                    
+            
+        except Exception as e:
+            log.warning(str(e))
+            return DetectTextsResponse(status=False,message=str(e))
+    
+    async def detectObjects(self, request: DetectObjectsRequest, context)-> DetectObjectsResponse:
+        try:
+            log.debug("Loading detector")
+            b64image = request.data
+            detector_id = PydanticObjectId(request.detector)
+            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            if not detector:
+                return DetectObjectsResponse(status=False,message="workspace.detector.errors.not_fopund")
+            
+            log.debug("Loading YOLO Model")
+            if detector.best is None:
+                path = os.path.join(self.config.path, str(detector_id), self.config.name)
+                if not os.path.exists(path):
+                    return DetectObjectsResponse(status=False,message="workspace.detector.errors.not_fopund")
+            else:
+                path = detector.best
+                
+            
+            if path not in self.CACHE_YOLOS:
+                model = YOLO(path)
+                self.CACHE_YOLOS[path]= model
+            else:
+                model = self.CACHE_YOLOS[path]
+            
+            log.debug("Loading image")
+            if "," in b64image:
+                bsource = b64image.split(",")[1]
+            else:
+                bsource = b64image
+            img = Image.open(BytesIO(self.decode_base64(bsource)))
+            width, height = img.size
+            grid = ImageGrid(width,height)
+            
+            log.debug("Start detection")
+            visual_results = model(img, conf=request.confidence or 0.7)  # predict on an image
+            
+            boxes = []
+            for result in visual_results:
+                detections = json.loads(result.to_json())
+                for detection in detections:
+                    x = detection["box"]["x1"]
+                    y = detection["box"]["y1"]
+                    w = detection["box"]["x2"] - detection["box"]["x1"]
+                    h = detection["box"]["y2"] - detection["box"]["y1"]
+                    boxes.append((x, y, w, h))
+
+            best_rows, best_cols = grid.optimal_grid_size(boxes)
+            
+            
+            objects = []
+            for result in visual_results:
+                detections = json.loads(result.to_json())
+                for detection in detections:
+                    confidence = detection['confidence']
+                    code = detection['class']
+                    name = detection['name']
+                    x = detection["box"]["x1"]
+                    y = detection["box"]["y1"]
+                    w = detection["box"]["x2"] - detection["box"]["x1"]
+                    h = detection["box"]["y2"] - detection["box"]["y1"]
+                    row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
+                    objects.append(DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col))
+            return DetectObjectsResponse(status=True,objects=objects)
+            
+        except Exception as e:
+            log.warning(str(e))
+            return DetectObjectsResponse(status=False, message = str(e))
          
     async def removeDetectorImage(self, request: RemoveDetectorImageRequest, context) -> RemoveDetectorImageResponse:
         try:
@@ -277,7 +394,7 @@ class DetectorService(Service, DetectorServicer):
                     Detector.id == origin
                 ).first_or_none()
                 if original_detector is None:
-                    raise Exception("Original detector not found")
+                    return CreateDetectorResponse(sttatus=False,message="worspace.detectors.errors.original_not_found")
 
                 base_path = self.config.path
                 original_path = os.path.join(
@@ -362,7 +479,8 @@ class DetectorService(Service, DetectorServicer):
                     #training_session.class_loss = results['cls']['loss']
                     #training_session.object_loss = results['dfl']['loss']
                     
-                asyncio.run(self.wsManager.update(training_session,session))
+                asyncio.create_task(self.api.updateSession(session,training_session))
+                
                 
 
             # Load a COCO-pretrained YOLO11n model
@@ -370,7 +488,7 @@ class DetectorService(Service, DetectorServicer):
             if detector.best is None:
                 path = os.path.join(self.config.path, str(detector_id), self.config.name)
                 if not os.path.exists(path):
-                    raise Exception("Detector model not found")
+                    return TrainDetectorResponse(status=False,message="workspace.detector.errors.not_found")
             else:
                 path = detector.best
                 
@@ -391,15 +509,16 @@ class DetectorService(Service, DetectorServicer):
                 )
                 
                 training_session.epoch_progress = epochs
-                await self.wsManager.update(training_session,session)
+                await self.api.updateSession(session,training_session)
                 log.debug("Results are saved into: {0}".format(results.save_dir))
                 detector.best = os.path.join(results.save_dir,'weights/best.pt')
                 detector.last = os.path.join(results.save_dir,'weights/last.pt')
                 
                 await detector.save()
                 
-            train_thread = threading.Thread(target=training, args=(path,), daemon=True)
-            train_thread.start()
+            #train_thread = threading.Thread(target=training, args=(path,), daemon=True)
+            #train_thread.start()
+            task1 = asyncio.create_task(training(path))  # Run task_one concurrently
             
             return TrainDetectorResponse(status=True)
         except Exception as e:
@@ -523,7 +642,7 @@ class DetectorService(Service, DetectorServicer):
                     shutil.rmtree(folder_name)
                 await detector.delete()
                 return RemoveDetectorResponse(status=True)
-            raise RemoveDetectorResponse(status=False,message="workspace.detector.errors.not_found")
+            return RemoveDetectorResponse(status=False,message="workspace.detector.errors.not_found")
         except Exception as e:
             log.warning(str(e))
             return RemoveDetectorResponse(status=False,message=str(e))

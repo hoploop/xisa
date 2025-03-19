@@ -27,6 +27,7 @@ async def get_recorder(request: Request) -> RecorderClient:
     if not hasattr(request.app.state, "recorder"):
         config = request.app.state.config.recorder
         request.app.state.recorder = RecorderClient(config)
+        await request.app.state.recorder.startup()
     return request.app.state.recorder
 
 Recorder = Annotated[RecorderClient, Depends(get_recorder)]
@@ -159,9 +160,9 @@ async def size(recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder
 
 
 @router.get("/frame/{recordId}/{frame}", operation_id="frame")
-async def frame(recordId: PydanticObjectId, frame: int,user:CurrentUser, recorder: Recorder):
+async def frame(recordId: PydanticObjectId, frame: int, recorder: Recorder):
     try:
-        frame_bytes = await recorder.loadRecordFrame(user,recordId,frame)
+        frame_bytes = await recorder.loadRecordFrame('',recordId,frame)
         return StreamingResponse(io.BytesIO(frame_bytes), media_type="image/png")    
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

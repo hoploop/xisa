@@ -162,8 +162,61 @@ export class RecordFrameComponent
   }
 
   ngAfterViewInit(): void {
-    this.context = this.canvas.nativeElement.getContext('2d')!;
+    setTimeout(()=>{
+      this.context = this.canvas.nativeElement.getContext('2d')!;
     this.load();
+    })
+
+  }
+
+  convertToBase64(): string {
+    // Create a canvas element to draw the image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      // Set the canvas size to match the image size
+      canvas.width = this.image.width;
+      canvas.height = this.image.height;
+
+      // Draw the image on the canvas
+      ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height);
+
+      // Get the Base64-encoded Data URL
+      const dataUrl = canvas.toDataURL('image/png');
+      return dataUrl;
+    }
+
+    return '';
+  }
+
+  objects(){
+    if (!this.detectorId) return;
+    let data:string = this.convertToBase64();
+    this.ctx.api.detector.detectorObjectsDetectorid(this.detectorId,{data:data,confidence:0.1}).subscribe({
+      next: (result)=>{
+        console.log(result);
+      },
+      error: (result)=>{
+        console.log(result);
+      }
+    })
+
+
+  }
+
+  texts(){
+    let data:string = this.convertToBase64();
+    this.ctx.api.detector.detectorTexts({data:data,confidence:0.1}).subscribe({
+      next: (result)=>{
+        console.log(result);
+      },
+      error: (result)=>{
+        console.log(result);
+      }
+    })
+
+
   }
 
   load() {

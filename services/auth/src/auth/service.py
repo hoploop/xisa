@@ -32,12 +32,12 @@ class AuthService(Service, AuthServicer):
         self.TOKENS = {}
         
     async def start(self):
-         await Mongodb.initialize(self.config.database,MODELS)
+        await Mongodb.initialize(self.config.database,MODELS)
         
     async def user(self, request:UserRequest, context) -> UserResponse:
         try:
             if request.token in self.USERS:
-                return self.USERS[request.token]
+                return UserResponse(status=True,user=Conversions.serialize(self.USERS[request.token]))
             else:
                 token_doc = await Token.find_many(Token.code == request.token).first_or_none()
                 if token_doc is None:

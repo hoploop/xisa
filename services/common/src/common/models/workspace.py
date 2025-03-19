@@ -12,7 +12,7 @@ from beanie import (
     Update,
     before_event,
 )
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 # LOCAL IMPORTS
 from common.models.defaults import empty_list, utc_now

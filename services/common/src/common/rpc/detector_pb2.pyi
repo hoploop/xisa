@@ -16,6 +16,96 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class DetectText(_message.Message):
+    __slots__ = ("x", "y", "w", "h", "page", "block", "par", "line", "word", "value", "confidence")
+    X_FIELD_NUMBER: _ClassVar[int]
+    Y_FIELD_NUMBER: _ClassVar[int]
+    W_FIELD_NUMBER: _ClassVar[int]
+    H_FIELD_NUMBER: _ClassVar[int]
+    PAGE_FIELD_NUMBER: _ClassVar[int]
+    BLOCK_FIELD_NUMBER: _ClassVar[int]
+    PAR_FIELD_NUMBER: _ClassVar[int]
+    LINE_FIELD_NUMBER: _ClassVar[int]
+    WORD_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    x: float
+    y: float
+    w: float
+    h: float
+    page: int
+    block: int
+    par: int
+    line: int
+    word: int
+    value: str
+    confidence: float
+    def __init__(self, x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ..., page: _Optional[int] = ..., block: _Optional[int] = ..., par: _Optional[int] = ..., line: _Optional[int] = ..., word: _Optional[int] = ..., value: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class DetectTextsRequest(_message.Message):
+    __slots__ = ("user", "data", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    data: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., data: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class DetectTextsResponse(_message.Message):
+    __slots__ = ("status", "message", "texts")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TEXTS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    texts: _containers.RepeatedCompositeFieldContainer[DetectText]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., texts: _Optional[_Iterable[_Union[DetectText, _Mapping]]] = ...) -> None: ...
+
+class DetectObject(_message.Message):
+    __slots__ = ("x", "y", "w", "h", "confidence", "name", "code", "row", "col")
+    X_FIELD_NUMBER: _ClassVar[int]
+    Y_FIELD_NUMBER: _ClassVar[int]
+    W_FIELD_NUMBER: _ClassVar[int]
+    H_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    CODE_FIELD_NUMBER: _ClassVar[int]
+    ROW_FIELD_NUMBER: _ClassVar[int]
+    COL_FIELD_NUMBER: _ClassVar[int]
+    x: float
+    y: float
+    w: float
+    h: float
+    confidence: float
+    name: str
+    code: int
+    row: int
+    col: int
+    def __init__(self, x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ..., confidence: _Optional[float] = ..., name: _Optional[str] = ..., code: _Optional[int] = ..., row: _Optional[int] = ..., col: _Optional[int] = ...) -> None: ...
+
+class DetectObjectsRequest(_message.Message):
+    __slots__ = ("user", "data", "detector", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    data: str
+    detector: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., data: _Optional[str] = ..., detector: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class DetectObjectsResponse(_message.Message):
+    __slots__ = ("status", "message", "objects")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    OBJECTS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    objects: _containers.RepeatedCompositeFieldContainer[DetectObject]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., objects: _Optional[_Iterable[_Union[DetectObject, _Mapping]]] = ...) -> None: ...
+
 class CountDetectorImageLabelRequest(_message.Message):
     __slots__ = ("user", "image")
     USER_FIELD_NUMBER: _ClassVar[int]
@@ -203,16 +293,12 @@ class RemoveDetectorImageResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
 class CountDetectorImageRequest(_message.Message):
-    __slots__ = ("user", "detector", "skip", "limit")
+    __slots__ = ("user", "detector")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
-    SKIP_FIELD_NUMBER: _ClassVar[int]
-    LIMIT_FIELD_NUMBER: _ClassVar[int]
     user: str
     detector: str
-    skip: int
-    limit: int
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
 
 class CountDetectorImageResponse(_message.Message):
     __slots__ = ("status", "message", "total")

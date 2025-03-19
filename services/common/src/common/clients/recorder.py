@@ -21,6 +21,10 @@ class RecorderClient(Client):
     
     def __init__(self, client_config):
         super().__init__(client_config)
+        
+            
+    async def startup(self):
+        await super().startup()
         self.client = RecorderStub(self.channel)
         
     async def ping(self) -> Pong:
@@ -113,7 +117,7 @@ class RecorderClient(Client):
         return res.total
     
     async def loadRecordFrame(self,user:User,recordId:PydanticObjectId,frame:int)-> bytes:
-        req = LoadRecordFrameRequest(user=str(user.id),record=str(recordId),frame=frame)
+        req = LoadRecordFrameRequest(user='',record=str(recordId),frame=frame)
         res = await self.client.loadRecordFrame(req)
         if res.status == False:
             raise Exception(res.message)

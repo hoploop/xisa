@@ -32,11 +32,11 @@ class Conversions:
     
     
     def dump(source: BaseModel | Document) -> str:
-        data = source.model_dump(by_alias=True)
-        for key in data:
-            if isinstance(data[key],ObjectId) or isinstance(data[key],PydanticObjectId):
-                data[key] = str(data[key])
-        s = json.dumps(data, default=Conversions.json_serial,ensure_ascii=False)
+        s = source.model_dump_json(by_alias=True)
+        #for key in data:
+        #    if isinstance(data[key],ObjectId) or isinstance(data[key],PydanticObjectId):
+        #        data[key] = str(data[key])
+        #s = json.dumps(data, default=Conversions.json_serial,ensure_ascii=False)
         return s
     
     def load(source:str) -> dict:

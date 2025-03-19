@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
 from common.clients.detector import DetectorClient
-from common.models.detector import Detector as DetectorDocument, DetectorClass
+from common.models.detector import DetectObject, DetectText, Detector as DetectorDocument, DetectorClass
 from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
 from api.routers.recorder import Recorder
 
@@ -26,6 +26,7 @@ async def get_detector(request: Request) -> DetectorClient:
     if not hasattr(request.app.state, "detector"):
         config = request.app.state.config.detector
         request.app.state.detector = DetectorClient(config)
+        await request.app.state.detector.startup()
     return request.app.state.detector
 
 
@@ -94,6 +95,39 @@ async def load(user: CurrentUser, detector: Detector, detectorId: PydanticObject
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+class DetectorObjectsPayload(BaseModel):
+    data: str
+    confidence: float = 0.7
+
+@router.post(
+    "/objects/{detectorId}",
+    description="Performs the detection of objects from base64 image",
+    operation_id="detectObjects",
+    response_model=List[DetectObject]
+)
+async def objects(user:CurrentUser,detector: Detector,detectorId: PydanticObjectId, payload:DetectorObjectsPayload):
+    try:
+        return await detector.detectObjects(user,detectorId,payload.data,payload.confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+class DetectorTextsPayload(BaseModel):
+    data: str
+    confidence: float = 0.7
+
+@router.post(
+    "/texts",
+    description="Performs the detection of texts from base64 image",
+    operation_id="detectTexts",
+    response_model=List[DetectText]
+)
+async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload):
+    try:
+        return await detector.detectTexts(user,payload.data,payload.confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
 
 
 @router.post(
@@ -128,12 +162,12 @@ async def train(
     backgroundTasks: BackgroundTasks,
     detectorId: PydanticObjectId,
     session: GetSession,
-    epoch: Optional[int] = 100,
+    epochs: Optional[int] = 100,
     size: Optional[int] = 640
     
 ):
     try:
-        return await detector.trainDetector(user,detectorId,session,epochs=epoch,image_size=size)
+        return await detector.trainDetector(user,detectorId,session,epochs=epochs,image_size=size)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

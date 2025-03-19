@@ -23,7 +23,8 @@
     "detector": {
       "errors": {
         "not_found": "Detector not found",
-        "already_existing": "Another detector with this username already found"
+        "already_existing": "Another detector with this username already found",
+        "original_not_found":"Original detector not found"
       },
       "class": {
         "loadings": "Loading detector classes..."
@@ -39,7 +40,7 @@
         }
       },
       "select": "Select detector",
-      "description": "Description",
+      "description": "Description", 
       "name": "Name",
       "list": "Detectors",
       "create": "New detector",

@@ -8,7 +8,6 @@ import signal
 import grpc
 from grpc_health.v1._async import HealthServicer
 from grpc_health.v1.health_pb2_grpc import add_HealthServicer_to_server
-import grpc
 
 # LOCAL IMPORTS
 from common.service import ExceptionInterceptor
@@ -43,6 +42,7 @@ async def main():
     add_HealthServicer_to_server(HealthServicer(), server)
     log.info('Starting rpc service on address: {0}'.format(config.address)) 
     server.add_secure_port(config.address,service.secure_credentials(config.security)) 
+    await server.start()
     log.info("Server started: {0}".format(config.address))
     
    # Handle graceful shutdown

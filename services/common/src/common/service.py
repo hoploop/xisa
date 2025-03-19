@@ -1,5 +1,6 @@
 # PYTHON IMPORTS
 import logging
+import time
 from typing import Any, Callable, Sequence
 
 # LIBRARY IMPORTS
@@ -84,7 +85,7 @@ class ServiceConfig(Config):
     security: SecurityConfig
     
 
-def secure_channel_factory(security_config: SecurityConfig, client_config: ClientConfig, interceptors: Sequence[ClientInterceptor]|None=None) -> grpc.aio.Channel:
+async def secure_channel_factory(security_config: SecurityConfig, client_config: ClientConfig, interceptors: Sequence[ClientInterceptor]|None=None,max_retries=5,retry_delay=3) -> grpc.aio.Channel:
         if client_config.key not in Service.KEYS:
             Service.KEYS[client_config.key] = open(client_config.key, 'rb').read()
         key = Service.KEYS[client_config.key]
@@ -105,7 +106,29 @@ def secure_channel_factory(security_config: SecurityConfig, client_config: Clien
         options = (('grpc.ssl_target_name_override', cert_cn),
                    ('grpc.max_send_message_length', MAX_MESSAGE_LENGTH),
                    ('grpc.max_receive_message_length', MAX_MESSAGE_LENGTH),)
-        return grpc.aio.secure_channel(client_config.address, credentials, options,None,interceptors)
+        
+    
+        retries = 0
+        while retries < max_retries:
+            try:
+
+                # Create secure channel with credentials
+                channel = grpc.aio.secure_channel(client_config.address, credentials, options,None,interceptors)
+                
+
+                # Wait until the channel is ready
+                await channel.channel_ready()
+                log.debug("Connected to grpc server securely!")
+                return channel
+
+            except grpc.FutureTimeoutError:
+                print(f"Connection failed. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+                retries += 1
+                retry_delay *= 2  # Exponential backoff
+
+        raise Exception("Could not connect to the server after several retries.")
+
 
 
 def secure_credentials_factory(security_config: SecurityConfig) -> grpc.ServerCredentials:
@@ -120,8 +143,12 @@ def secure_credentials_factory(security_config: SecurityConfig) -> grpc.ServerCr
 class Client:
     
     def __init__(self,client_config: ClientConfig):
-        self.channel = secure_channel_factory(security_config=client_config.security,client_config=client_config)
+        self.config = client_config
         
+    async def startup(self):
+        self.channel = await secure_channel_factory(security_config=self.config.security,client_config=self.config)
+    
+    
 
 class Service:
     KEYS = {}
@@ -132,8 +159,8 @@ class Service:
     def bind_server(cls,server:grpc.aio.Server):
         pass    
 
-    def secure_channel(self, security_config: SecurityConfig, client_config: ClientConfig) -> grpc.aio.Channel:
-        return secure_channel_factory(security_config, client_config)
+    async def secure_channel(self, security_config: SecurityConfig, client_config: ClientConfig) -> grpc.aio.Channel:
+        return await secure_channel_factory(security_config, client_config)
 
     def secure_credentials(self, security_config: SecurityConfig) -> grpc.ServerCredentials:
         return secure_credentials_factory(security_config)

@@ -75,6 +75,16 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.FromString,
                 _registered_method=True)
+        self.detectObjects = channel.unary_unary(
+                '/Detector/detectObjects',
+                request_serializer=common_dot_rpc_dot_detector__pb2.DetectObjectsRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.DetectObjectsResponse.FromString,
+                _registered_method=True)
+        self.detectTexts = channel.unary_unary(
+                '/Detector/detectTexts',
+                request_serializer=common_dot_rpc_dot_detector__pb2.DetectTextsRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.DetectTextsResponse.FromString,
+                _registered_method=True)
         self.uploadDetectorImage = channel.unary_unary(
                 '/Detector/uploadDetectorImage',
                 request_serializer=common_dot_rpc_dot_detector__pb2.UploadDetectorImageRequest.SerializeToString,
@@ -174,6 +184,18 @@ class DetectorServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def trainDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def detectObjects(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def detectTexts(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -281,6 +303,16 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.trainDetector,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.SerializeToString,
+            ),
+            'detectObjects': grpc.unary_unary_rpc_method_handler(
+                    servicer.detectObjects,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.DetectObjectsRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.DetectObjectsResponse.SerializeToString,
+            ),
+            'detectTexts': grpc.unary_unary_rpc_method_handler(
+                    servicer.detectTexts,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.DetectTextsRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.DetectTextsResponse.SerializeToString,
             ),
             'uploadDetectorImage': grpc.unary_unary_rpc_method_handler(
                     servicer.uploadDetectorImage,
@@ -549,6 +581,60 @@ class Detector(object):
             '/Detector/trainDetector',
             common_dot_rpc_dot_detector__pb2.TrainDetectorRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.TrainDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def detectObjects(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/detectObjects',
+            common_dot_rpc_dot_detector__pb2.DetectObjectsRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.DetectObjectsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def detectTexts(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/detectTexts',
+            common_dot_rpc_dot_detector__pb2.DetectTextsRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.DetectTextsResponse.FromString,
             options,
             channel_credentials,
             insecure,

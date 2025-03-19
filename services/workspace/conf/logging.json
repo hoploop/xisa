@@ -78,7 +78,7 @@
             "propagate": false
         },
         "workspace": {
-            "handlers": ["workspace"],
+            "handlers": ["workspace","console"],
             "level": "DEBUG",
             "propagate": false
         },

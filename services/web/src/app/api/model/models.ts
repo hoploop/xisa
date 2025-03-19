@@ -1,3 +1,5 @@
+export * from './detect-object';
+export * from './detect-text';
 export * from './detector';
 export * from './detector-class';
 export * from './detector-class-list-response';
@@ -8,6 +10,8 @@ export * from './detector-image-label-list-response';
 export * from './detector-image-list-response';
 export * from './detector-image-mode';
 export * from './detector-list-response';
+export * from './detector-objects-payload';
+export * from './detector-texts-payload';
 export * from './detector-training-session';
 export * from './http-validation-error';
 export * from './key-combo-press-event';
