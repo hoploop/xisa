@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Configuration, ConfigurationParameters } from '@api/configuration';
 import { environment } from '@environments/environment';
 import { ApiModule } from '@api/api.module';
-import { HttpBackend, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpBackend, provideHttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { AuthModule } from '@auth/auth.module';
@@ -17,6 +17,7 @@ import { RouterModule } from '@angular/router';
 import { WorkspaceModule } from '@workspace/workspace.module';
 import { MomentModule } from 'ngx-moment';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AuthInterceptor } from '@services/auth.interceptor';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {

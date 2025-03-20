@@ -1,6 +1,6 @@
 # PYTHON IMPORTS
 import logging
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from beanie import PydanticObjectId
 
@@ -20,6 +20,7 @@ from common.models.detector import (
 )
 from common.rpc.base_pb2 import Ping, Pong
 from common.rpc.detector_pb2 import (
+    AddDetectorClassRequest,
     AddDetectorImageLabelRequest,
     CountDetectorClassRequest,
     CountDetectorImageLabelRequest,
@@ -28,6 +29,7 @@ from common.rpc.detector_pb2 import (
     CreateDetectorRequest,
     DetectObjectsRequest,
     DetectTextsRequest,
+    ExistsDetectorClassRequest,
     ListDetectorClassRequest,
     ListDetectorImageLabelRequest,
     ListDetectorImageRequest,
@@ -95,6 +97,27 @@ class DetectorClient(Client):
                 )
             )
         return ret
+    
+    async def addDetectorClass(self,user:User,detectorId:PydanticObjectId,name:str) -> Optional[DetectorClass]:
+        req = AddDetectorClassRequest(user=str(user.id),detector=str(detectorId),name=name)
+        res = await self.client.addDetectorClass(req)
+        if res.status == False:
+            raise Exception(res.message)
+        if res.clazz:
+            return Conversions.deserialize(res.clazz)
+        else:
+            return None
+
+    async def existsDetectorClass(self,user:User,detectorId:PydanticObjectId,name:str) -> Optional[DetectorClass]:
+        req = ExistsDetectorClassRequest(user=str(user.id),detector=str(detectorId),name=name)
+        res = await self.client.existsDetectorClass(req)
+        if res.status == False:
+            raise Exception(res.message)
+        if res.clazz:
+            return Conversions.deserialize(res.clazz)
+        else:
+            return None
+
 
     async def detectTexts(
         self, user: User, data: str, confidence: float = 0.7

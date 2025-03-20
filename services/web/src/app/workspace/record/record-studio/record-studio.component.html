@@ -27,17 +27,7 @@
           </ng-container>
         </div>
       </div>
-
-
-
-    <!--
-    <video class="mt-2" width="300" controls>
-      <source [src]="'http://localhost:8000/workspace/record/video/'+recordId" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    -->
-
-
+      <app-record-video *ngIf="recordId" [recordId]="recordId"></app-record-video>
   </div>
 </div>
   <app-loader

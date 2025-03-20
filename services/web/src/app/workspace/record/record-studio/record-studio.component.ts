@@ -42,6 +42,7 @@ export class RecordStudioComponent implements OnInit {
   ngOnInit(): void {
     this.load();
     this.loadEvents();
+
   }
 
   load(){
@@ -124,4 +125,5 @@ export class RecordStudioComponent implements OnInit {
       }
     })
   }
+
 }

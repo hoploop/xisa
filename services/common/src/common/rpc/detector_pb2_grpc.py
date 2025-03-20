@@ -130,6 +130,16 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
                 _registered_method=True)
+        self.existsDetectorClass = channel.unary_unary(
+                '/Detector/existsDetectorClass',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.FromString,
+                _registered_method=True)
+        self.addDetectorClass = channel.unary_unary(
+                '/Detector/addDetectorClass',
+                request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.FromString,
+                _registered_method=True)
         self.countDetectorClass = channel.unary_unary(
                 '/Detector/countDetectorClass',
                 request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.SerializeToString,
@@ -255,6 +265,18 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def existsDetectorClass(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def addDetectorClass(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def countDetectorClass(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -358,6 +380,16 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.listDetectorClass,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.SerializeToString,
+            ),
+            'existsDetectorClass': grpc.unary_unary_rpc_method_handler(
+                    servicer.existsDetectorClass,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.SerializeToString,
+            ),
+            'addDetectorClass': grpc.unary_unary_rpc_method_handler(
+                    servicer.addDetectorClass,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.SerializeToString,
             ),
             'countDetectorClass': grpc.unary_unary_rpc_method_handler(
                     servicer.countDetectorClass,
@@ -878,6 +910,60 @@ class Detector(object):
             '/Detector/listDetectorClass',
             common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def existsDetectorClass(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/existsDetectorClass',
+            common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def addDetectorClass(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/addDetectorClass',
+            common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.FromString,
             options,
             channel_credentials,
             insecure,

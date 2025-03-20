@@ -27,7 +27,16 @@
         "original_not_found":"Original detector not found"
       },
       "class": {
-        "loadings": "Loading detector classes..."
+        "loadings": "Loading detector classes...",
+        "selects":"Select detector classes",
+        "search":"Search detector class",
+        "empty":"No detector classes",
+        "add":"Add detector class",
+        "adding":"Adding new detector class",
+        "name":"Detector class name",
+        "confirm":"Save selected classes",
+        "cancel":"Cancel",
+        "errors":{"already_existing":"Detector class already existing"}
       },
       "image": {
         "loadings": "Loading detector images...",
@@ -65,6 +74,10 @@
         "not_running": "Record is not running",
         "video_not_found": "Video not found for this record"
       },
+      "duration":"Duration: ",
+      "events":"Events: ",
+      "frames":"Frames: ",
+      "size":"Size: ",
       "list": "Recordings",
       "name": "Name",
       "studio": "Studio",

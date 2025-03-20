@@ -16,6 +16,46 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class AddDetectorClassRequest(_message.Message):
+    __slots__ = ("user", "detector", "name")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    name: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+
+class AddDetectorClassResponse(_message.Message):
+    __slots__ = ("status", "message", "clazz")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    CLAZZ_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    clazz: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., clazz: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class ExistsDetectorClassRequest(_message.Message):
+    __slots__ = ("user", "detector", "name")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    name: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+
+class ExistsDetectorClassResponse(_message.Message):
+    __slots__ = ("status", "message", "clazz")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    CLAZZ_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    clazz: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., clazz: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
 class DetectText(_message.Message):
     __slots__ = ("x", "y", "w", "h", "page", "block", "par", "line", "word", "value", "confidence")
     X_FIELD_NUMBER: _ClassVar[int]

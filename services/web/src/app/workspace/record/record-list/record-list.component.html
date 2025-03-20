@@ -1,14 +1,14 @@
 
 <div class="card">
   <div class="card-header">
-    <app-b-icon [icon]="BIconType.recordCircle"></app-b-icon>
-    <span class="ms-1" translate>workspace.record.list</span>
+    <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
+    <span class="ms-2" translate>workspace.record.list</span>
   </div>
   <div class="card-body">
     <div class="d-flex">
       <span *ngIf="running != undefined">
         <button class="btn btn-primary btn-sm" (click)="create()" *ngIf="!running">
-          <app-b-icon [icon]="BIconType.record"></app-b-icon>
+          <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
           <span class="ms-2" translate>workspace.record.new</span>
         </button>
         <button class="btn btn-danger btn-sm" (click)="create()" *ngIf="running">
@@ -26,10 +26,10 @@
         <div class="d-flex card-body">
           <div class="d-flex flex-column">
             <div>{{record.name}}</div>
-            <div><span>Duration: </span><span>{{record|recordDuration}}</span></div>
-            <div><span>Events: </span><span>{{record._id|recordEventsCount|async}}</span></div>
-            <div><span>Frames: </span><span>{{record._id|recordFramesCount|async}}</span></div>
-            <div><span>Size: </span><span>{{record._id|recordSize|async}}</span></div>
+            <small ><span translate>workspace.record.duration</span><span>{{record|recordDuration}}</span></small>
+            <small><span translate>workspace.record.events</span><span>{{record._id|recordEventsCount|async}}</span></small>
+            <small><span translate>workspace.record.frames</span><span>{{record._id|recordFramesCount|async}}</span></small>
+            <small><span translate>workspace.record.size</span><span>{{record._id|recordSize|async}}</span></small>
           </div>
           <span class="ms-auto">
             <button class="btn btn-primary btn-sm ms-1" (click)="studio(record)">

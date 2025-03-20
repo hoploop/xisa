@@ -1,7 +1,8 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService, TrainService, DetectorService, RecordService, WorkspaceService } from '@api/index';
 import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { environment } from '@environments/environment';
 export class ApiService {
 
   constructor(
+    private http: HttpClient,
     public auth: AuthService,
     public train: TrainService,
     public workspace: WorkspaceService,

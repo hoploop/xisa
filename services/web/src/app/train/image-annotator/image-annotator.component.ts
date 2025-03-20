@@ -15,6 +15,10 @@ import {
   ImageAnnotatorBox,
   ImageAnnotatorMouseOverType,
 } from './image-annotator-box';
+import { DetectorClassListComponent } from '@workspace/detector/detector-class-list/detector-class-list.component';
+import { DetectorClass } from '@api/index';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 export enum State {
@@ -32,11 +36,13 @@ export enum State {
   styleUrl: './image-annotator.component.scss',
 })
 export class ImageAnnotatorComponent implements AfterViewInit {
-  @Input() dataUrl: string = sample;
+  @ViewChild('canvasElement', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+  @Input() dataUrl?: string;
+  @Input() url?: string = 'http://localhost:8000/record/frame/67dad716d009b25b6b6e66e5/21';
+  @Input() detectorId:string = '67caa7b79fc10dc8e8afaf24';
   @Output() doubleClicked = new EventEmitter<ImageAnnotatorBox>();
-  @ViewChild('canvasElement', { static: false })
-
-  canvas!: ElementRef<HTMLCanvasElement>;
+  @Input() boxes: ImageAnnotatorBox[] = [];
+  @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
   @Input() settings: ImageAnnotatorSettings = {
     resizeHandleSize: 10,
     selectedBorderColor: 'blue',
@@ -47,8 +53,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   private context!: CanvasRenderingContext2D;
   private image = new Image();
   selectedBoxIndex: number = -1;
-  @Input() boxes: ImageAnnotatorBox[] = [];
-  @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
+
   label?: ImageAnnotatorBox;
   state: State = State.EMPTY;
   mouse = {
@@ -71,14 +76,76 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   };
 
 
-  constructor(private ctx: ContextService) {}
+  constructor(private ctx: ContextService,private http: HttpClient) {}
+
+   selectClasses(box:ImageAnnotatorBox){
+      this.ctx.openModal<DetectorClass[]|undefined>(DetectorClassListComponent,{detectorId:this.detectorId,selected:box.classes}).subscribe({
+        next: (result)=>{
+          if (result){
+            box.classes = result;
+            this.draw();
+            this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
+            console.log(box.classes);
+          }
+        },
+        error: (result)=>{
+        }
+      });
+    }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.context = this.canvas.nativeElement.getContext('2d')!;
-      this.loadBase64Image(this.dataUrl);
+      if (this.dataUrl){
+        this.loadBase64Image(this.dataUrl);
+      }
+      else if (this.url){
+        this.loadUrlImage(this.url);
+      }
+
     });
   }
+
+  // Method to get image as Blob from FastAPI
+  getUrlImage(url:string):Observable<HttpResponse<Blob>>{
+    const headers = new HttpHeaders().set('Authorization','Bearer '+this.ctx.api.getToken() ||'');
+
+    return this.http.get(url, {
+      headers,
+      responseType: 'blob', // This ensures the response is a Blob
+      observe: 'response', // Observe the full response to get both headers and body
+    });
+  }
+
+  handleLoadUrlImage(response: HttpResponse<Blob>){
+    this.image.onload = () => {
+      setTimeout(() => {
+        this.resizeCanvas();
+      });
+    };
+
+    this.image.onerror = () => {
+      console.error('Failed to load base64 image');
+    };
+
+    if (response.body){
+      this.image.src = URL.createObjectURL(response.body);
+    }
+
+  }
+
+  loadUrlImage(url:string) {
+    this.getUrlImage(url).subscribe(
+      (response: HttpResponse<Blob>) => {
+        this.handleLoadUrlImage(response);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      });
+    }
+
+
+
 
   loadBase64Image(base64String: string): void {
     this.image.onload = () => {
@@ -166,7 +233,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.boxes.forEach((box, index) => {
       box.draw();
     });
-    this.boxesChange.next(this.boxes);
+    this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
   }
 
   addBox(event: MouseEvent): void {
@@ -185,7 +252,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
         100
       )
     );
-    this.boxesChange.next(this.boxes);
+    this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
     this.draw();
   }
 
@@ -222,6 +289,31 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     box.h = box.h * scaleY;
   }
 
+  denormalizeOutputBoxes(boxes: ImageAnnotatorBox[]): ImageAnnotatorBox[] {
+    let ret :ImageAnnotatorBox[]= [];
+    boxes.forEach(box=>{
+      ret.push(this.denormalizeOutputBox(box));
+    })
+    return ret;
+  }
+
+  denormalizeOutputBox(box: ImageAnnotatorBox): ImageAnnotatorBox{
+    const canvas = this.canvas.nativeElement;
+    const rect = canvas.getBoundingClientRect(); // Get canvas position & size
+
+    // Scaling factor: Adjust for responsive canvas
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+
+    let newBox = new ImageAnnotatorBox(this.context,this.canvas.nativeElement,this.image,this.settings);
+    newBox.x = Math.round(box.x / scaleX);
+    newBox.y = Math.round(box.y / scaleY);
+    newBox.w = Math.round(box.w / scaleX);
+    newBox.h = Math.round(box.h / scaleY);
+    return newBox;
+  }
+
   onMouseDoubleClick(event:MouseEvent){
     this.updateMousePosition(event);
     let overType: ImageAnnotatorMouseOverType =ImageAnnotatorMouseOverType.NOT_OVER;
@@ -235,6 +327,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
         boxOver = box;
         overType = boxOverType;
         this.doubleClicked.next(box);
+        this.selectClasses(box);
         break;
       }
     }
@@ -281,7 +374,8 @@ export class ImageAnnotatorComponent implements AfterViewInit {
       );
       this.selectedBoxIndex = this.boxes.length - 1;
       this.boxes[this.boxes.length-1].isSelected = true;
-      this.boxesChange.next(this.boxes);
+
+      this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
       this.draw();
     } else if (overType == ImageAnnotatorMouseOverType.INSIDE) {
       this.state = State.MOVING;
@@ -469,7 +563,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   onKeyUp(event: KeyboardEvent): void {
     if (event.key == 'Backspace' && this.selectedBoxIndex != -1) {
       this.boxes.splice(this.selectedBoxIndex, 1);
-      this.boxesChange.next(this.boxes);
+      this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
       this.draw();
     }
   }
@@ -495,7 +589,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
         this.state = State.SELECTED;
       } else {
         this.boxes.splice(this.selectedBoxIndex, 1);
-        this.boxesChange.next(this.boxes);
+        this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
         this.state = State.SELECTED;
         this.draw();
       }
@@ -520,7 +614,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   deleteSelectedBox(): void {
     if (this.selectedBoxIndex !== null) {
       this.boxes.splice(this.selectedBoxIndex, 1);
-      this.boxesChange.next(this.boxes);
+      this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
       this.selectedBoxIndex = -1;
       this.draw();
     }

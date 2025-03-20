@@ -24,7 +24,7 @@ from PIL import Image
 from common.clients.api import ApiClient
 from common.models import MODELS
 from common.models.detector import Detector, DetectorClass, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
-from common.rpc.detector_pb2 import AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
+from common.rpc.detector_pb2 import AddDetectorClassRequest, AddDetectorClassResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, ExistsDetectorClassRequest, ExistsDetectorClassResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
 from common.service import ClientConfig, Service
 from common.rpc.detector_pb2_grpc import DetectorServicer
 from common.service import ServiceConfig
@@ -525,6 +525,40 @@ class DetectorService(Service, DetectorServicer):
             log.warning(str(e))
             return TrainDetectorResponse(status=False,message=str(e))
         
+    async def addDetectorClass(self, request: AddDetectorClassRequest, context) -> AddDetectorClassResponse:
+        try:
+            detector_id = PydanticObjectId(request.detector)
+            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            if detector is None:
+                return AddDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
+            
+            found = await DetectorClass.find_many(DetectorClass.detector == detector_id,DetectorClass.name == request.name.strip()).first_or_none()
+            if found is not None:
+                return AddDetectorClassResponse(status=False,message="workspace.detector.class.errors.already_existing")
+        
+            clazz = await DetectorClass(detector=detector_id,name=request.name.strip()).insert()
+            return AddDetectorClassResponse(status=True,clazz=Conversions.serialize(clazz))
+
+        except Exception as e:
+            log.warning(str(e))
+            return AddDetectorClassResponse(status=False,message=str(e))
+        
+    async def existsDetectorClass(self, request: ExistsDetectorClassRequest, context) -> ExistsDetectorClassResponse:
+        try:
+            detector_id = PydanticObjectId(request.detector)
+            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            if detector is None:
+                return ExistsDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
+            
+            found = await DetectorClass.find_many(DetectorClass.detector == detector_id,DetectorClass.name == request.name.strip()).first_or_none()
+            if found is None:
+                return ExistsDetectorClassResponse(status=True,clazz=None)
+                
+            return ExistsDetectorClassResponse(status=True,clazz=Conversions.serialize(found))
+
+        except Exception as e:
+            log.warning(str(e))
+            return ExistsDetectorClassResponse(status=False,message=str(e))
         
     async def update_folder(
         self, user_id: PydanticObjectId, detector_id: PydanticObjectId
@@ -693,7 +727,7 @@ class DetectorService(Service, DetectorServicer):
             if found is None:
                 return ListDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
 
-            if search is not None and search.trim() != "":
+            if search is not None and search.strip() != "":
                 classes = []
                 qry = And(
                     DetectorClass.detector == detector_id,
@@ -752,7 +786,7 @@ class DetectorService(Service, DetectorServicer):
             if found is None:
                 return ListDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.not_found")
 
-            if search is not None and search.trim() != "":
+            if search is not None and search.strip() != "":
                 classes = []
                 qry = And(
                     DetectorClass.detector == found.detector,

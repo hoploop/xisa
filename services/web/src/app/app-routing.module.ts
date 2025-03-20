@@ -38,7 +38,7 @@ const routes: Routes = [
   { path: 'detector/edit/:project_id/:id', component: DetectorFormComponent,canActivate:[AuthGuard] },
   { path: 'detector/new/:project_id', component: DetectorFormComponent,canActivate:[AuthGuard] },
   { path: 'detector/learn/:detector_id', component: DetectorLearnComponent,canActivate:[AuthGuard] },
-  { path: 'mockup', component: ImageAnnotatorComponent },
+  { path: 'mockup', component: ImageAnnotatorComponent,canActivate:[AuthGuard]  },
   { path: '**', component: NotFoundComponent }
 ];
 

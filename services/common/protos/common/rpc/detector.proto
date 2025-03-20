@@ -24,7 +24,33 @@ service Detector {
     rpc addDetectorImageLabel(AddDetectorImageLabelRequest) returns (AddDetectorImageLabelResponse);
     rpc listDetectorImageLabel(ListDetectorImageLabelRequest) returns (ListDetectorImageLabelResponse);
     rpc listDetectorClass(ListDetectorClassRequest) returns (ListDetectorClassResponse);
+    rpc existsDetectorClass(ExistsDetectorClassRequest) returns (ExistsDetectorClassResponse);
+    rpc addDetectorClass(AddDetectorClassRequest) returns (AddDetectorClassResponse);
     rpc countDetectorClass(CountDetectorClassRequest) returns (CountDetectorClassResponse);
+}
+
+message AddDetectorClassRequest {
+    string user = 1;
+    string detector = 2;
+    string name = 3;
+}
+
+message AddDetectorClassResponse {
+    bool status = 1;
+    optional string message = 2;
+    optional Serialized clazz = 3;
+}
+
+message ExistsDetectorClassRequest {
+    string user = 1;
+    string detector = 2;
+    string name = 3;
+}
+
+message ExistsDetectorClassResponse {
+    bool status = 1;
+    optional string message = 2;
+    optional Serialized clazz = 3;
 }
 
 message DetectText {

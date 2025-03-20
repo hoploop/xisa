@@ -117,7 +117,7 @@ class RecorderClient(Client):
         return res.total
     
     async def loadRecordFrame(self,user:User,recordId:PydanticObjectId,frame:int)-> bytes:
-        req = LoadRecordFrameRequest(user='',record=str(recordId),frame=frame)
+        req = LoadRecordFrameRequest(user=str(user.id),record=str(recordId),frame=frame)
         res = await self.client.loadRecordFrame(req)
         if res.status == False:
             raise Exception(res.message)
@@ -139,10 +139,10 @@ class RecorderClient(Client):
     
     async def streamRecordVideo(self,user:User,recordId:PydanticObjectId):
         req = StreamRecordVideoRequest(user=str(user.id),record=str(recordId))
-        return await self.client.streamRecordVideo(req)
+        return self.client.streamRecordVideo(req)
     
-    async def streamRangeRecordVideo(self,user:User,recordId:PydanticObjectId) -> bytes:
-        req = StreamRangeRecordVideoRequest(user=str(user.id),record=str(recordId))
+    async def streamRangeRecordVideo(self,user:User,recordId:PydanticObjectId,start_byte:int,end_byte:int) -> bytes:
+        req = StreamRangeRecordVideoRequest(user=str(user.id),record=str(recordId),start_byte=start_byte,end_byte=end_byte)
         res = await self.client.streamRangeRecordVideo(req)
         if res.status == False:
             raise Exception(res.message)

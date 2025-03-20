@@ -1,3 +1,4 @@
+import { DetectorClass } from '@api/index';
 import { ImageAnnotatorSettings } from './image-annotator-settings';
 
 export enum ImageAnnotatorMouseOverType {
@@ -17,6 +18,7 @@ export class ImageAnnotatorBox {
   isResizing: boolean = false;
   isMoving: boolean = false;
   dataUrl?: string;
+  classes: DetectorClass[] = [];
 
 
   constructor(

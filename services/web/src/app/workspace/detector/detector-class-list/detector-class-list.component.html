@@ -1,0 +1,72 @@
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.cubesStacked"></app-fa-icon>
+    <span class="ms-2" translate>workspace.detector.class.selects</span>
+  </ng-content>
+  <button
+    type="button"
+    class="btn-close"
+    (click)="dismiss()"
+    aria-label="Close"
+  ></button>
+
+  <ng-content body>
+    <div class="d-flex flex-column m-1">
+
+      <input
+        type="text"
+        class="form form-control-sm form-control"
+        [ngModel]="newClass"
+        [placeholder]="'workspace.detector.class.name' | translate"
+        (ngModelChange)="onNewClassChange($event)"
+      />
+      <button
+        class="btn btn-primary mt-1 btn-sm"
+        *ngIf="enableCreate"
+        (click)="addNewClass()"
+        [disabled]="!newClassValid"
+      >
+        <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
+        <span class="ms-1" translate>workspace.detector.class.add</span>
+      </button>
+      <div
+        class="mt-1 d-flex justify-content-center align-items-center"
+        *ngIf="classes.length == 0 && !(loading | async) && !(error | async)"
+      >
+        <span translate>workspace.detector.class.empty</span>
+      </div>
+
+      <app-search
+      class="mt-3"
+      [value]="search"
+      (valueChange)="onSearchChange($event)"
+      [placeholder]="'workspace.detector.class.search' | translate"
+    ></app-search>
+
+      <ng-container *ngFor="let otherClass of classes">
+        <div
+          class="btn btn-sm mt-1"
+          [class.btn-primary]="(selected | detectorClassFilter: otherClass._id) != -1"
+          [class.btn-outline-secondary]="(selected | detectorClassFilter: otherClass._id) ==-1"
+          (click)="select(otherClass)"
+        >
+        <div class="d-flex align-items-center w-100">
+          <app-fa-icon [icon]="FAIconType.square" *ngIf="(selected | detectorClassFilter: otherClass._id) ==-1"></app-fa-icon>
+          <app-fa-icon [icon]="FAIconType.squareCheck" *ngIf="(selected | detectorClassFilter: otherClass._id) !=-1"></app-fa-icon>
+          <span class="ms-auto">{{ otherClass.name }}</span>
+          </div>
+
+        </div>
+
+      </ng-container>
+      <button class="btn btn-primary mt-3 btn-sm" (click)="submit()">
+        <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
+        <span class="ms-1" translate>workspace.detector.class.confirm</span>
+      </button>
+      <button class="btn btn-secondary mt-1 btn-sm" (click)="dismiss()">
+        <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+        <span class="ms-1" translate>workspace.detector.class.cancel</span>
+      </button>
+    </div>
+  </ng-content>
+</app-modal>

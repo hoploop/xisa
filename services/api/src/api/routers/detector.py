@@ -243,6 +243,43 @@ async def class_list(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
+@router.get(
+    "/class/exists/{detectorId}",
+    response_model=bool,
+)
+async def class_exists(
+    user: CurrentUser,
+    detector: Detector,
+    detectorId: PydanticObjectId,
+    name:str
+):
+    try:
+        if await detector.existsDetectorClass(user,detectorId,name) is not None:
+            return True
+        else:
+            return False
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.post(
+    "/class/add/{detectorId}",
+    response_model=DetectorClass,
+)
+async def class_add(
+    user: CurrentUser,
+    detector: Detector,
+    detectorId: PydanticObjectId,
+    name:str
+):
+    try:
+        return await detector.addDetectorClass(user,detectorId,name)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
 
 @router.get(
     "/class/count/{detectorId}",

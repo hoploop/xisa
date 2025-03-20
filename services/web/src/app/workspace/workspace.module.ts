@@ -28,6 +28,8 @@ import { RecordFramePipe } from './record/record-frame.pipe';
 import { RecordEventPickerComponent } from './record/record-event-picker/record-event-picker.component';
 import { RecordFrameComponent } from './record/record-frame/record-frame.component';
 import { DetectorSelectorComponent } from './detector/detector-selector/detector-selector.component';
+import { RecordVideoComponent } from './record/record-video/record-video.component';
+import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
 
 
 
@@ -57,6 +59,8 @@ import { DetectorSelectorComponent } from './detector/detector-selector/detector
     RecordEventPickerComponent,
     RecordFrameComponent,
     DetectorSelectorComponent,
+    RecordVideoComponent,
+    DetectorClassFilterPipe,
   ],
   imports: [
     CommonModule,

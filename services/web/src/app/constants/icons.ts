@@ -1,5 +1,6 @@
 import { AnimationProp } from '@fortawesome/angular-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import {
   faAnglesDown,
   faAnglesUp,
@@ -36,6 +37,7 @@ import {
   faCircleQuestion,
   faCircleUp,
   faCircleXmark,
+  faClapperboard,
   faCloudSunRain,
   faCogs,
   faCubesStacked,
@@ -209,6 +211,8 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   arrowPointer: faArrowPointer,
   microphoneAlt: faMicrophoneAlt,
   microphoneAltSlash: faMicrophoneAltSlash,
+  squareCheck: faSquareCheck,
+  square: faSquare,
   fileWaveForm: faFileWaveform,
   message: faMessage,
   broom: faBroom,
@@ -218,6 +222,7 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   question: faQuestion,
   userMinus:faUserMinus,
   film: faFilm,
+  clapperBoard: faClapperboard,
   video: faVideo,
   videoSlash: faVideoSlash,
   videoCamera: faVideoCamera,
@@ -233,6 +238,9 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
 
 export enum FAIconType {
   film = 'film',
+  square = 'square',
+  squareCheck = 'squareCheck',
+  clapperBoard = 'clapperBoard',
   mouse = 'mouse',
   keyboard = 'keyboard',
   video = 'video',

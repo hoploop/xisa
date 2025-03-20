@@ -160,9 +160,9 @@ async def size(recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder
 
 
 @router.get("/frame/{recordId}/{frame}", operation_id="frame")
-async def frame(recordId: PydanticObjectId, frame: int, recorder: Recorder):
+async def frame(recordId: PydanticObjectId,user:CurrentUser, frame: int, recorder: Recorder):
     try:
-        frame_bytes = await recorder.loadRecordFrame('',recordId,frame)
+        frame_bytes = await recorder.loadRecordFrame(user,recordId,frame)
         return StreamingResponse(io.BytesIO(frame_bytes), media_type="image/png")    
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
@@ -184,20 +184,21 @@ async def video(recordId: PydanticObjectId, app: GetApp,user:CurrentUser, reques
         # Parse the range header
         start, end = range_header.replace("bytes=", "").split("-")
         start = int(start)
+        #end = min(int(end), file_size - 1)
         end = int(end) if end else file_size - 1
         chunk_size = end - start + 1
 
-        chunk = await recorder.streamRangeRecordVideo(user,recordId)
+        chunk = await recorder.streamRangeRecordVideo(user,recordId,start,end)
 
         headers = {
             "Content-Range": f"bytes {start}-{end}/{file_size}",
             "Accept-Ranges": "bytes",
-            "Content-Length": str(chunk_size),
+            "Content-Length": str(len(chunk)),
             "Content-Type": "video/mp4",
         }
         return Response(chunk, status_code=206, headers=headers)
 
-    return StreamingResponse(video_generator(), media_type="video/mp4")
+    return StreamingResponse(video_generator(), media_type="video/mp4",headers={'Accept-Ranges': 'bytes'})
 
 
 class RecordListResponse(BaseModel):

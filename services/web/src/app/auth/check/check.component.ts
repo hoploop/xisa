@@ -31,7 +31,6 @@ export class CheckComponent implements OnInit {
       return;
     }
     this.ctx.api.setToken(token);
-    console.log('Checking token: '+token);
     this.loading.next(this.ctx.translate.instant('auth.checking'));
     this.ctx.api.auth.authCheck().subscribe({
       next: (result) => {

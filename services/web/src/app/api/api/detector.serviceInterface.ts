@@ -14,6 +14,7 @@ import { Observable }                                        from 'rxjs';
 import { DetectObject } from '../model/models';
 import { DetectText } from '../model/models';
 import { Detector } from '../model/models';
+import { DetectorClass } from '../model/models';
 import { DetectorClassListResponse } from '../model/models';
 import { DetectorImage } from '../model/models';
 import { DetectorImageLabel } from '../model/models';
@@ -36,11 +37,27 @@ export interface DetectorServiceInterface {
     configuration: Configuration;
 
     /**
+     * Class Add
+     * 
+     * @param detectorId 
+     * @param name 
+     */
+    detectorClassAddDetectorid(detectorId: string, name: string, extraHttpRequestParams?: any): Observable<DetectorClass>;
+
+    /**
      * Class Count
      * 
      * @param detectorId 
      */
     detectorClassCountDetectorid(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
+     * Class Exists
+     * 
+     * @param detectorId 
+     * @param name 
+     */
+    detectorClassExistsDetectorid(detectorId: string, name: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Class List

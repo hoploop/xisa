@@ -77,7 +77,7 @@ class Api:
             allow_credentials=config.cors.allow_credentials,
             allow_methods=config.cors.allow_methods,
             allow_headers=config.cors.allow_headers,
-            expose_headers=["X-Locale", "X-Session"],
+            expose_headers=["X-Locale", "X-Session",'Content-Range'],
         )
 
         app.add_middleware(BaseHTTPMiddleware, dispatch=Api.locale_middleware)

@@ -43,6 +43,7 @@ class RecorderService(Service, RecorderServicer):
         self.is_running = False
         self.record = None
         self.events = []
+        self.CACHED_FRAMES = {}
 
         
     async def start(self):
@@ -240,6 +241,10 @@ class RecorderService(Service, RecorderServicer):
             record_id = PydanticObjectId(request.record)
             frame_number = request.frame
             filename = os.path.join(self.config.video,str(record_id)+VIDEO_EXT)
+            
+            if filename in self.CACHED_FRAMES and frame_number in self.CACHED_FRAMES[filename]:
+                return LoadRecordFrameResponse(status=True,frame=self.CACHED_FRAMES[filename][frame_number])
+            
             cap = cv2.VideoCapture(filename)
 
             if not cap.isOpened():
@@ -264,6 +269,11 @@ class RecorderService(Service, RecorderServicer):
             frame_bytes = encoded_image.tobytes()
             
             cap.release()
+            
+            if filename not in self.CACHED_FRAMES:
+                self.CACHED_FRAMES[filename] = {}
+            if frame_number not in self.CACHED_FRAMES[filename]:
+                self.CACHED_FRAMES[filename][frame_number] = frame_bytes
             
             return LoadRecordFrameResponse(status=True,frame=frame_bytes)
         except Exception as e:
@@ -296,7 +306,7 @@ class RecorderService(Service, RecorderServicer):
             log.warning(str(e))
             return SizeRecordVideoResponse(status=False,message=str(e))
             
-    async def streamRecordVideo(self, request: StreamRecordVideoRequest, context) -> StreamRecordVideoResponse:
+    async def streamRecordVideo(self, request: StreamRecordVideoRequest, context):
         try:
             record_id = PydanticObjectId(request.record)
             video_id = str(record_id)
