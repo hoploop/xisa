@@ -18,6 +18,7 @@ service Recorder {
     rpc listRecordEvent(ListRecordEventRequest) returns (ListRecordEventResponse);
     rpc countRecordFrame(CountRecordFrameRequest) returns (CountRecordFrameResponse);
     rpc loadRecordFrame(LoadRecordFrameRequest) returns (LoadRecordFrameResponse);
+    rpc loadRecordFrameBase64(LoadRecordFrameBase64Request) returns (LoadRecordFrameBase64Response);
     rpc streamRecordVideo(StreamRecordVideoRequest) returns (stream StreamRecordVideoResponse);
     rpc streamRangeRecordVideo(StreamRangeRecordVideoRequest) returns (StreamRangeRecordVideoResponse);
     rpc sizeRecordVideo(SizeRecordVideoRequest) returns (SizeRecordVideoResponse);
@@ -84,6 +85,19 @@ message LoadRecordFrameResponse {
     bool status = 1;
     optional string message = 2;
     bytes frame = 3;
+}
+
+
+message LoadRecordFrameBase64Request {
+    string user = 1;
+    string record = 2;
+    int32 frame = 3;
+}
+
+message LoadRecordFrameBase64Response {
+    bool status = 1;
+    optional string message = 2;
+    string frame = 3;
 }
 
 message CountRecordFrameRequest {

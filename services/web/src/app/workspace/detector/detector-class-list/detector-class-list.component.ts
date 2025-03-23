@@ -86,12 +86,15 @@ export class DetectorClassListComponent extends BaseComponent implements OnInit 
   }
 
   select(clazz: DetectorClass){
-    if (this.selected.indexOf(clazz)!=-1){
-      this.selected.splice(this.selected.indexOf(clazz),1);
+    let found = this.selected.findIndex(item=> item._id === clazz._id);
+    if (found!=-1){
+      this.selected.splice(found,1);
     }else{
       this.selected.push(clazz);
     }
     this.selectedChange.next(this.selected);
+    this.load();
+
   }
 
   load(){

@@ -5,6 +5,8 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -18,15 +20,15 @@ import {
 import { DetectorClassListComponent } from '@workspace/detector/detector-class-list/detector-class-list.component';
 import { DetectorClass } from '@api/index';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ImageAnnotatorHighlight } from './image-annotator-highlight';
 
 export enum State {
   EMPTY = 0,
   SELECTED = 1,
   ADDING = 2,
   RESIZING = 3,
-  MOVING=4,
+  MOVING = 4,
 }
 
 @Component({
@@ -35,13 +37,19 @@ export enum State {
   templateUrl: './image-annotator.component.html',
   styleUrl: './image-annotator.component.scss',
 })
-export class ImageAnnotatorComponent implements AfterViewInit {
-  @ViewChild('canvasElement', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+export class ImageAnnotatorComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild('canvasElement', { static: false })
+  canvas!: ElementRef<HTMLCanvasElement>;
   @Input() dataUrl?: string;
-  @Input() url?: string = 'http://localhost:8000/record/frame/67dad716d009b25b6b6e66e5/21';
-  @Input() detectorId:string = '67caa7b79fc10dc8e8afaf24';
+  @Input() url?: string =
+    'http://localhost:8000/record/frame/67dad716d009b25b6b6e66e5/21';
+  @Input() detectorId: string = '67caa7b79fc10dc8e8afaf24';
   @Output() doubleClicked = new EventEmitter<ImageAnnotatorBox>();
   @Input() boxes: ImageAnnotatorBox[] = [];
+  @Input() highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
+  @Output() onSelectedHighlight: EventEmitter<ImageAnnotatorHighlight> =
+    new EventEmitter();
+  @Output() onSelectedBox: EventEmitter<ImageAnnotatorBox> = new EventEmitter();
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
   @Input() settings: ImageAnnotatorSettings = {
     resizeHandleSize: 10,
@@ -49,66 +57,88 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     defaultBorderColor: 'red',
     selectedColor: 'rgba(255,255,255,0.4)',
     defaultColor: 'rgba(255,255,255,0.2)',
+    showHighlights: true,
+    selectedHighlightBorderColor: 'blue',
+      defaultHighlightBorderColor: 'red',
+      selectedHighlightColor: 'rgba(255,255,255,0.4)',
+      defaultHighlightColor: 'rgba(255,255,255,0.2)',
   };
   private context!: CanvasRenderingContext2D;
   private image = new Image();
   selectedBoxIndex: number = -1;
+  selectedHighlightIndex: number = -1;
+  subs = new Subscription();
 
   label?: ImageAnnotatorBox;
   state: State = State.EMPTY;
   mouse = {
     x: 0,
-    y:0,
-    cursor:'default'
+    y: 0,
+    cursor: 'default',
   };
   adding = {
     startX: 0,
-    startY: 0
+    startY: 0,
   };
   moving = {
     startX: 0,
-    startY: 0
+    startY: 0,
   };
   resizing = {
     startX: 0,
     startY: 0,
-    type: ImageAnnotatorMouseOverType.NOT_OVER
+    type: ImageAnnotatorMouseOverType.NOT_OVER,
   };
 
+  ngOnDestroy(): void {
+      this.subs.unsubscribe();
+  }
 
-  constructor(private ctx: ContextService,private http: HttpClient) {}
+  ngOnInit(): void {
+      this.subs.add(this.highlights.subscribe(hl=>{
+        if (this.context && this.canvas){
+          this.draw();
+        }
+      }))
+  }
 
-   selectClasses(box:ImageAnnotatorBox){
-      this.ctx.openModal<DetectorClass[]|undefined>(DetectorClassListComponent,{detectorId:this.detectorId,selected:box.classes}).subscribe({
-        next: (result)=>{
-          if (result){
+  constructor(private ctx: ContextService, private http: HttpClient) {}
+
+  selectClasses(box: ImageAnnotatorBox) {
+    this.ctx
+      .openModal<DetectorClass[] | undefined>(DetectorClassListComponent, {
+        detectorId: this.detectorId,
+        selected: box.classes,
+      })
+      .subscribe({
+        next: (result) => {
+          if (result) {
             box.classes = result;
             this.draw();
             this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
-            console.log(box.classes);
           }
         },
-        error: (result)=>{
-        }
+        error: (result) => {},
       });
-    }
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.context = this.canvas.nativeElement.getContext('2d')!;
-      if (this.dataUrl){
+      if (this.dataUrl) {
         this.loadBase64Image(this.dataUrl);
-      }
-      else if (this.url){
+      } else if (this.url) {
         this.loadUrlImage(this.url);
       }
-
     });
   }
 
   // Method to get image as Blob from FastAPI
-  getUrlImage(url:string):Observable<HttpResponse<Blob>>{
-    const headers = new HttpHeaders().set('Authorization','Bearer '+this.ctx.api.getToken() ||'');
+  getUrlImage(url: string): Observable<HttpResponse<Blob>> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + this.ctx.api.getToken() || ''
+    );
 
     return this.http.get(url, {
       headers,
@@ -117,7 +147,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     });
   }
 
-  handleLoadUrlImage(response: HttpResponse<Blob>){
+  handleLoadUrlImage(response: HttpResponse<Blob>) {
     this.image.onload = () => {
       setTimeout(() => {
         this.resizeCanvas();
@@ -128,24 +158,21 @@ export class ImageAnnotatorComponent implements AfterViewInit {
       console.error('Failed to load base64 image');
     };
 
-    if (response.body){
+    if (response.body) {
       this.image.src = URL.createObjectURL(response.body);
     }
-
   }
 
-  loadUrlImage(url:string) {
+  loadUrlImage(url: string) {
     this.getUrlImage(url).subscribe(
       (response: HttpResponse<Blob>) => {
         this.handleLoadUrlImage(response);
       },
       (error) => {
         console.error('Error loading image:', error);
-      });
-    }
-
-
-
+      }
+    );
+  }
 
   loadBase64Image(base64String: string): void {
     this.image.onload = () => {
@@ -164,9 +191,12 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   resizeCanvas(): void {
     this.canvas.nativeElement.width = this.image.width;
     this.canvas.nativeElement.height = this.image.height;
-    this.boxes.forEach(box=>{
+    this.boxes.forEach((box) => {
       this.normalizeInitialBox(box);
-    })
+    });
+    this.highlights.getValue().forEach((hl) => {
+      //this.normalizeInitialHighlight(hl);
+    });
     this.draw();
   }
 
@@ -195,14 +225,8 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.context.closePath();
   }
 
-  drawImage(x:number,y:number,image: any) {
-    this.context.drawImage(
-      image,
-      x,
-      y,
-      image.width,
-      image.height
-    );
+  drawImage(x: number, y: number, image: any) {
+    this.context.drawImage(image, x, y, image.width, image.height);
   }
 
   draw(): void {
@@ -231,7 +255,11 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.context.restore();
 
     this.boxes.forEach((box, index) => {
-      box.draw();
+      box.draw(this.context,this.settings,this.image);
+    });
+
+    this.highlights.getValue().forEach((hl, index) => {
+      hl.draw(this.context,this.settings);
     });
     this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
   }
@@ -242,10 +270,6 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     const mouseY = event.clientY - rect.top;
     this.boxes.push(
       new ImageAnnotatorBox(
-        this.context,
-        this.canvas.nativeElement,
-        this.image,
-        this.settings,
         mouseX,
         mouseY,
         100,
@@ -256,9 +280,38 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.draw();
   }
 
+  updateSelectedBox() {
+    let cbox = this.selectedBox;
+    if (cbox != undefined) {
+      this.onSelectedBox.next(cbox);
+    }
+  }
+
+  updateSelectedHighlight() {
+    let chighlight = this.selectedHighlight;
+    if (chighlight != undefined) {
+      this.onSelectedHighlight.next(chighlight);
+    }
+  }
+
   get selectedBox(): ImageAnnotatorBox | undefined {
     if (this.selectedBoxIndex == -1) return undefined;
     return this.boxes[this.selectedBoxIndex];
+  }
+
+  get selectedHighlight(): ImageAnnotatorHighlight | undefined {
+    if (this.selectedHighlightIndex == -1) return undefined;
+    return this.highlights.getValue()[this.selectedHighlightIndex];
+  }
+
+  getScales(): number[]{
+    const canvas = this.canvas.nativeElement;
+    const rect = canvas.getBoundingClientRect(); // Get canvas position & size
+
+    // Scaling factor: Adjust for responsive canvas
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return [scaleX, scaleY]
   }
 
   updateMousePosition(event: MouseEvent) {
@@ -276,7 +329,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.mouse.y = y;
   }
 
-  normalizeInitialBox(box: ImageAnnotatorBox){
+  normalizeInitialBox(box: ImageAnnotatorBox) {
     const canvas = this.canvas.nativeElement;
     const rect = canvas.getBoundingClientRect(); // Get canvas position & size
 
@@ -289,15 +342,28 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     box.h = box.h * scaleY;
   }
 
+  normalizeInitialHighlight(hl: ImageAnnotatorHighlight) {
+    const canvas = this.canvas.nativeElement;
+    const rect = canvas.getBoundingClientRect(); // Get canvas position & size
+
+    // Scaling factor: Adjust for responsive canvas
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    hl.x = hl.x * scaleX;
+    hl.y = hl.y * scaleY;
+    hl.w = hl.w * scaleX;
+    hl.h = hl.h * scaleY;
+  }
+
   denormalizeOutputBoxes(boxes: ImageAnnotatorBox[]): ImageAnnotatorBox[] {
-    let ret :ImageAnnotatorBox[]= [];
-    boxes.forEach(box=>{
+    let ret: ImageAnnotatorBox[] = [];
+    boxes.forEach((box) => {
       ret.push(this.denormalizeOutputBox(box));
-    })
+    });
     return ret;
   }
 
-  denormalizeOutputBox(box: ImageAnnotatorBox): ImageAnnotatorBox{
+  denormalizeOutputBox(box: ImageAnnotatorBox): ImageAnnotatorBox {
     const canvas = this.canvas.nativeElement;
     const rect = canvas.getBoundingClientRect(); // Get canvas position & size
 
@@ -305,8 +371,7 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
-
-    let newBox = new ImageAnnotatorBox(this.context,this.canvas.nativeElement,this.image,this.settings);
+    let newBox = new ImageAnnotatorBox();
     newBox.x = Math.round(box.x / scaleX);
     newBox.y = Math.round(box.y / scaleY);
     newBox.w = Math.round(box.w / scaleX);
@@ -314,15 +379,16 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     return newBox;
   }
 
-  onMouseDoubleClick(event:MouseEvent){
+  onMouseDoubleClick(event: MouseEvent) {
     this.updateMousePosition(event);
-    let overType: ImageAnnotatorMouseOverType =ImageAnnotatorMouseOverType.NOT_OVER;
+    let overType: ImageAnnotatorMouseOverType =
+      ImageAnnotatorMouseOverType.NOT_OVER;
     let boxOver: ImageAnnotatorBox | undefined = undefined;
     let boxOverIndex: number = -1;
     this.selectedBoxIndex = -1;
     for (let i = 0; i < this.boxes.length; i++) {
       let box = this.boxes[i];
-      let boxOverType = box.isMouseOver(this.mouse.x, this.mouse.y);
+      let boxOverType = box.isMouseOver(this.settings,this.mouse.x, this.mouse.y);
       if (boxOverType == ImageAnnotatorMouseOverType.INSIDE) {
         boxOver = box;
         overType = boxOverType;
@@ -337,74 +403,81 @@ export class ImageAnnotatorComponent implements AfterViewInit {
   onMouseDown(event: MouseEvent): void {
     this.updateMousePosition(event);
 
-
-    let overType: ImageAnnotatorMouseOverType =ImageAnnotatorMouseOverType.NOT_OVER;
+    let overType: ImageAnnotatorMouseOverType =
+      ImageAnnotatorMouseOverType.NOT_OVER;
     let boxOver: ImageAnnotatorBox | undefined = undefined;
     let boxOverIndex: number = -1;
     this.selectedBoxIndex = -1;
+    this.selectedHighlightIndex = -1;
+    this.updateSelectedBox();
+    this.updateSelectedHighlight();
     for (let i = 0; i < this.boxes.length; i++) {
       let box = this.boxes[i];
-      let boxOverType = box.isMouseOver(this.mouse.x, this.mouse.y);
+      let boxOverType = box.isMouseOver(this.settings,this.mouse.x, this.mouse.y);
       if (boxOverType != ImageAnnotatorMouseOverType.NOT_OVER) {
         boxOver = box;
         overType = boxOverType;
         boxOverIndex = i;
         boxOver.isSelected = true;
         this.selectedBoxIndex = i;
-      }else{
+        this.updateSelectedBox();
+      } else {
         box.isSelected = false;
       }
     }
+
+    for (let i = 0; i < this.highlights.getValue().length; i++) {
+      let hl = this.highlights.getValue()[i];
+      if (hl.isMouseOver(this.mouse.x, this.mouse.y)) {
+        this.selectedHighlightIndex = i;
+        this.updateSelectedHighlight();
+        break;
+      }
+    }
+
     if (overType == ImageAnnotatorMouseOverType.NOT_OVER) {
       this.state = State.ADDING;
       this.adding.startX = this.mouse.x;
       this.adding.startY = this.mouse.y;
       this.boxes.push(
         new ImageAnnotatorBox(
-          this.context,
-          this.canvas.nativeElement,
-          this.image,
-          this.settings,
           this.mouse.x,
           this.mouse.y,
           this.settings.resizeHandleSize,
           this.settings.resizeHandleSize
         )
-
       );
       this.selectedBoxIndex = this.boxes.length - 1;
-      this.boxes[this.boxes.length-1].isSelected = true;
+      this.updateSelectedBox();
+      this.boxes[this.boxes.length - 1].isSelected = true;
 
       this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes));
       this.draw();
     } else if (overType == ImageAnnotatorMouseOverType.INSIDE) {
       this.state = State.MOVING;
-      if (boxOver){
+      if (boxOver) {
         this.moving.startX = this.mouse.x - boxOver.x;
         this.moving.startY = this.mouse.y - boxOver.y;
         this.selectedBoxIndex = boxOverIndex;
+        this.updateSelectedBox();
         boxOver.isSelected = true;
       }
-
-
     } else {
       this.state = State.RESIZING;
       this.resizing.type = overType;
       this.resizing.startX = this.mouse.x;
       this.resizing.startY = this.mouse.y;
       this.selectedBoxIndex = boxOverIndex;
+      this.updateSelectedBox();
     }
-
   }
 
   //@HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
     this.updateMousePosition(event);
 
-
     // Adding Mode
     if (this.state == State.ADDING) {
-
       let w = Math.abs(this.mouse.x - this.adding.startX);
       let h = Math.abs(this.mouse.y - this.adding.startY);
       let x = Math.min(this.adding.startX, this.mouse.x);
@@ -417,12 +490,8 @@ export class ImageAnnotatorComponent implements AfterViewInit {
         box.h = h;
         this.draw();
       }
-    }
-    else if (this.state == State.SELECTED){
-
-    }
-    else if (this.state == State.EMPTY){
-
+    } else if (this.state == State.SELECTED) {
+    } else if (this.state == State.EMPTY) {
     }
 
     // Moving Mode
@@ -438,85 +507,77 @@ export class ImageAnnotatorComponent implements AfterViewInit {
       }
     } else if (this.state == State.RESIZING) {
       let box = this.selectedBox;
-      if (box!=undefined){
-        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM){
-          if (this.mouse.y > box.y){
-            box.h = this.mouse.y-box.y;
+      if (box != undefined) {
+        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM) {
+          if (this.mouse.y > box.y) {
+            box.h = this.mouse.y - box.y;
           }
-        }
-        else if (this.resizing.type == ImageAnnotatorMouseOverType.TOP){
-          if (this.mouse.y < box.y + box.h){
-            box.h = box.y+box.h - this.mouse.y;
-            box.y = this.mouse.y;
-
-          }
-        }
-        else if (this.resizing.type == ImageAnnotatorMouseOverType.LEFT){
-          if (this.mouse.x < box.x + box.w){
-            box.w = box.x+box.w - this.mouse.x;
-            box.x = this.mouse.x;
-
-          }
-        }
-        if (this.resizing.type == ImageAnnotatorMouseOverType.RIGHT){
-          if (this.mouse.x > box.x){
-            box.w = this.mouse.x-box.x;
-          }
-        }
-        if (this.resizing.type == ImageAnnotatorMouseOverType.TOP_RIGHT){
-          if (this.mouse.y < box.y + box.h){
-            box.h = box.y+box.h - this.mouse.y;
+        } else if (this.resizing.type == ImageAnnotatorMouseOverType.TOP) {
+          if (this.mouse.y < box.y + box.h) {
+            box.h = box.y + box.h - this.mouse.y;
             box.y = this.mouse.y;
           }
-          if (this.mouse.x > box.x){
-            box.w = this.mouse.x-box.x;
+        } else if (this.resizing.type == ImageAnnotatorMouseOverType.LEFT) {
+          if (this.mouse.x < box.x + box.w) {
+            box.w = box.x + box.w - this.mouse.x;
+            box.x = this.mouse.x;
           }
         }
-        if (this.resizing.type == ImageAnnotatorMouseOverType.TOP_LEFT){
-          if (this.mouse.y < box.y + box.h){
-            box.h = box.y+box.h - this.mouse.y;
+        if (this.resizing.type == ImageAnnotatorMouseOverType.RIGHT) {
+          if (this.mouse.x > box.x) {
+            box.w = this.mouse.x - box.x;
+          }
+        }
+        if (this.resizing.type == ImageAnnotatorMouseOverType.TOP_RIGHT) {
+          if (this.mouse.y < box.y + box.h) {
+            box.h = box.y + box.h - this.mouse.y;
             box.y = this.mouse.y;
-
           }
-          if (this.mouse.x < box.x + box.w){
-            box.w = box.x+box.w - this.mouse.x;
-            box.x = this.mouse.x;
-
+          if (this.mouse.x > box.x) {
+            box.w = this.mouse.x - box.x;
           }
         }
-        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM_RIGHT){
-          if (this.mouse.y > box.y){
-            box.h = this.mouse.y-box.y;
+        if (this.resizing.type == ImageAnnotatorMouseOverType.TOP_LEFT) {
+          if (this.mouse.y < box.y + box.h) {
+            box.h = box.y + box.h - this.mouse.y;
+            box.y = this.mouse.y;
           }
-          if (this.mouse.x > box.x){
-            box.w = this.mouse.x-box.x;
+          if (this.mouse.x < box.x + box.w) {
+            box.w = box.x + box.w - this.mouse.x;
+            box.x = this.mouse.x;
           }
         }
-        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM_LEFT){
-          if (this.mouse.y > box.y){
-            box.h = this.mouse.y-box.y;
+        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM_RIGHT) {
+          if (this.mouse.y > box.y) {
+            box.h = this.mouse.y - box.y;
           }
-          if (this.mouse.x < box.x + box.w){
-            box.w = box.x+box.w - this.mouse.x;
+          if (this.mouse.x > box.x) {
+            box.w = this.mouse.x - box.x;
+          }
+        }
+        if (this.resizing.type == ImageAnnotatorMouseOverType.BOTTOM_LEFT) {
+          if (this.mouse.y > box.y) {
+            box.h = this.mouse.y - box.y;
+          }
+          if (this.mouse.x < box.x + box.w) {
+            box.w = box.x + box.w - this.mouse.x;
             box.x = this.mouse.x;
-
           }
         }
         this.draw();
       }
-
     }
     this.updateCursor();
   }
 
   updateCursor() {
-
-    let overType: ImageAnnotatorMouseOverType =ImageAnnotatorMouseOverType.NOT_OVER;
+    let overType: ImageAnnotatorMouseOverType =
+      ImageAnnotatorMouseOverType.NOT_OVER;
     let boxOver: ImageAnnotatorBox | undefined = undefined;
     let boxOverIndex: number = -1;
     for (let i = 0; i < this.boxes.length; i++) {
       let box = this.boxes[i];
-      let boxOverType = box.isMouseOver(this.mouse.x, this.mouse.y);
+      let boxOverType = box.isMouseOver(this.settings,this.mouse.x, this.mouse.y);
       if (boxOverType != ImageAnnotatorMouseOverType.NOT_OVER) {
         boxOver = box;
         overType = boxOverType;
@@ -525,37 +586,27 @@ export class ImageAnnotatorComponent implements AfterViewInit {
       }
     }
 
-
-      if (overType == ImageAnnotatorMouseOverType.BOTTOM_RIGHT){
-        this.mouse.cursor = 'nwse-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.BOTTOM_LEFT){
-
-        this.mouse.cursor = 'nesw-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.TOP_LEFT){
-        this.mouse.cursor = 'nwse-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.TOP_RIGHT){
-        this.mouse.cursor = 'nesw-resize';
-
-      }
-      else if (overType == ImageAnnotatorMouseOverType.TOP){
-        this.mouse.cursor = 'ns-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.BOTTOM){
-        this.mouse.cursor = 'ns-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.LEFT){
-        this.mouse.cursor = 'ew-resize';
-      }
-      else if (overType == ImageAnnotatorMouseOverType.RIGHT){
-        this.mouse.cursor = 'ew-resize';
-      }else if (overType == ImageAnnotatorMouseOverType.INSIDE){
-        this.mouse.cursor = 'move';
-      }else if (overType == ImageAnnotatorMouseOverType.NOT_OVER){
-        this.mouse.cursor = 'default';
-      }
+    if (overType == ImageAnnotatorMouseOverType.BOTTOM_RIGHT) {
+      this.mouse.cursor = 'nwse-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.BOTTOM_LEFT) {
+      this.mouse.cursor = 'nesw-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.TOP_LEFT) {
+      this.mouse.cursor = 'nwse-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.TOP_RIGHT) {
+      this.mouse.cursor = 'nesw-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.TOP) {
+      this.mouse.cursor = 'ns-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.BOTTOM) {
+      this.mouse.cursor = 'ns-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.LEFT) {
+      this.mouse.cursor = 'ew-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.RIGHT) {
+      this.mouse.cursor = 'ew-resize';
+    } else if (overType == ImageAnnotatorMouseOverType.INSIDE) {
+      this.mouse.cursor = 'move';
+    } else if (overType == ImageAnnotatorMouseOverType.NOT_OVER) {
+      this.mouse.cursor = 'default';
+    }
 
     this.canvas.nativeElement.style.cursor = this.mouse.cursor;
   }
@@ -572,7 +623,6 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     this.updateMousePosition(event);
 
     if (this.state == State.ADDING) {
-
       let w = Math.abs(this.mouse.x - this.adding.startX);
       let h = Math.abs(this.mouse.y - this.adding.startY);
       let x = Math.min(this.adding.startX, this.mouse.x);
@@ -608,7 +658,6 @@ export class ImageAnnotatorComponent implements AfterViewInit {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
-
   }
 
   deleteSelectedBox(): void {

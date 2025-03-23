@@ -22,8 +22,8 @@
           </div>
         </div>
         <div class="col-9">
-          <ng-container  *ngIf="recordId && detector">
-            <app-record-frame [recordId]="recordId" [detectorId]="detector._id || undefined" [frame]="frame" *ngIf="frame"></app-record-frame>
+          <ng-container  *ngIf="recordId && detector && detector._id">
+            <app-record-frame [recordId]="recordId" [detectorId]="detector._id" [frame]="frame" *ngIf="frame"></app-record-frame>
           </ng-container>
         </div>
       </div>

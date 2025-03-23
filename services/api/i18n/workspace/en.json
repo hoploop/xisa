@@ -74,6 +74,9 @@
         "not_running": "Record is not running",
         "video_not_found": "Video not found for this record"
       },
+      "frame":{
+        "loading":"Frame is loading"
+      },
       "duration":"Duration: ",
       "events":"Events: ",
       "frames":"Frames: ",

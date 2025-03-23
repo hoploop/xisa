@@ -105,6 +105,11 @@ class RecorderStub(object):
                 request_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.FromString,
                 _registered_method=True)
+        self.loadRecordFrameBase64 = channel.unary_unary(
+                '/Recorder/loadRecordFrameBase64',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Request.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Response.FromString,
+                _registered_method=True)
         self.streamRecordVideo = channel.unary_stream(
                 '/Recorder/streamRecordVideo',
                 request_serializer=common_dot_rpc_dot_recorder__pb2.StreamRecordVideoRequest.SerializeToString,
@@ -210,6 +215,12 @@ class RecorderServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def loadRecordFrameBase64(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def streamRecordVideo(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -300,6 +311,11 @@ def add_RecorderServicer_to_server(servicer, server):
                     servicer.loadRecordFrame,
                     request_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.FromString,
                     response_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.SerializeToString,
+            ),
+            'loadRecordFrameBase64': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadRecordFrameBase64,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Request.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Response.SerializeToString,
             ),
             'streamRecordVideo': grpc.unary_stream_rpc_method_handler(
                     servicer.streamRecordVideo,
@@ -695,6 +711,33 @@ class Recorder(object):
             '/Recorder/loadRecordFrame',
             common_dot_rpc_dot_recorder__pb2.LoadRecordFrameRequest.SerializeToString,
             common_dot_rpc_dot_recorder__pb2.LoadRecordFrameResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadRecordFrameBase64(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/loadRecordFrameBase64',
+            common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Request.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.LoadRecordFrameBase64Response.FromString,
             options,
             channel_credentials,
             insecure,

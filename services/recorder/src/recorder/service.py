@@ -1,4 +1,5 @@
 # PYTHON IMPORTS
+import base64
 import logging
 import os
 
@@ -14,7 +15,7 @@ import grpc
 from common.models import MODELS
 from common.models.defaults import utc_now
 from common.models.recorder import OS, Event, Record
-from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
+from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadRecordFrameBase64Request, LoadRecordFrameBase64Response, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
 from common.rpc.recorder_pb2_grpc import RecorderServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -44,6 +45,7 @@ class RecorderService(Service, RecorderServicer):
         self.record = None
         self.events = []
         self.CACHED_FRAMES = {}
+        self.CACHED_FRAMES_BASE64 = {}
 
         
     async def start(self):
@@ -248,7 +250,7 @@ class RecorderService(Service, RecorderServicer):
             cap = cv2.VideoCapture(filename)
 
             if not cap.isOpened():
-                raise("Error: Could not open video file.")
+                return LoadRecordFrameResponse(status=False,message="Error: Could not open video file.")
                 
             cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
             
@@ -279,6 +281,54 @@ class RecorderService(Service, RecorderServicer):
         except Exception as e:
             log.warning(str(e))
             return LoadRecordFrameResponse(status=False,message=str(e))
+        
+    
+    async def loadRecordFrameBase64(self, request:LoadRecordFrameBase64Request, context) -> LoadRecordFrameBase64Response:
+        try:
+            record_id = PydanticObjectId(request.record)
+            frame_number = request.frame
+            filename = os.path.join(self.config.video,str(record_id)+VIDEO_EXT)
+            
+            if filename in self.CACHED_FRAMES_BASE64 and frame_number in self.CACHED_FRAMES_BASE64[filename]:
+                return LoadRecordFrameBase64Response(status=True,frame=self.CACHED_FRAMES_BASE64[filename][frame_number])
+            
+            cap = cv2.VideoCapture(filename)
+
+            if not cap.isOpened():
+                return LoadRecordFrameBase64Response(status=False,message="Error: Could not open video file.")
+                
+            cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+            
+            # Read the specific frame
+            ret, frame = cap.read()
+            
+            if not ret:
+                return LoadRecordFrameBase64Response(status=True,message=f"Error: Could not read frame {frame_number}.")
+            
+            # Check if frame was successfully read
+            # Convert BGR to RGB
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            # Encode the frame as PNG image in memory
+            _, encoded_image = cv2.imencode(".png", frame_rgb)
+            
+            # Convert the image to bytes
+            frame_bytes = encoded_image.tobytes()
+            
+            png_as_text = 'data:image/png;base64,'+base64.b64encode(frame_bytes).decode()
+            
+            
+            cap.release()
+            
+            if filename not in self.CACHED_FRAMES_BASE64:
+                self.CACHED_FRAMES_BASE64[filename] = {}
+            if frame_number not in self.CACHED_FRAMES_BASE64[filename]:
+                self.CACHED_FRAMES_BASE64[filename][frame_number] = png_as_text
+            
+            return LoadRecordFrameBase64Response(status=True,frame=png_as_text)
+        except Exception as e:
+            log.warning(str(e))
+            return LoadRecordFrameBase64Response(status=False,message=str(e))
         
     async def sizeRecord(self, request:SizeRecordRequest, context) -> SizeRecordResponse:
         try:

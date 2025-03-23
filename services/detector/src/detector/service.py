@@ -22,6 +22,7 @@ from PIL import Image
 
 # LOCAL IMPORTS
 from common.clients.api import ApiClient
+from common.clients.recorder import RecorderClient
 from common.models import MODELS
 from common.models.detector import Detector, DetectorClass, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
 from common.rpc.detector_pb2 import AddDetectorClassRequest, AddDetectorClassResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, ExistsDetectorClassRequest, ExistsDetectorClassResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
@@ -44,7 +45,7 @@ class DetectorServiceConfig(ServiceConfig):
     runs: str
     classes: str
     video:str
-    
+    recorder:ClientConfig
     api:ClientConfig
 
 class DetectorService(Service, DetectorServicer):
@@ -54,6 +55,7 @@ class DetectorService(Service, DetectorServicer):
         Service.__init__(self)
         self.config:DetectorServiceConfig = config
         self.api = ApiClient(self.config.api)
+        self.recorder = RecorderClient(self.config.recorder)
         
     async def start(self):
          await Mongodb.initialize(self.config.database,MODELS)

@@ -30,6 +30,7 @@ import { RecordFrameComponent } from './record/record-frame/record-frame.compone
 import { DetectorSelectorComponent } from './detector/detector-selector/detector-selector.component';
 import { RecordVideoComponent } from './record/record-video/record-video.component';
 import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
+import { TrainModule } from "../train/train.module";
 
 
 
@@ -67,8 +68,9 @@ import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
     UtilsModule,
     FormsModule,
     TranslateModule,
-    MomentModule
-  ],
+    MomentModule,
+    TrainModule
+],
   exports: [
     ProjectListComponent,
     ProjectFormComponent,

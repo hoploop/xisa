@@ -87,6 +87,25 @@ export interface DetectorServiceInterface {
     detectorCreateProjectid(projectId: string, name: string, origin?: string, description?: string, extraHttpRequestParams?: any): Observable<Detector>;
 
     /**
+     * Objects Frame
+     * Performs the detection of objects from recording frame image
+     * @param recordId 
+     * @param detectorId 
+     * @param frame 
+     * @param confidence 
+     */
+    detectorFrameObjectsRecordid(recordId: string, detectorId: string, frame: number, confidence: number, extraHttpRequestParams?: any): Observable<Array<DetectObject>>;
+
+    /**
+     * Texts Frame
+     * Performs the detection of texts from recording frame image
+     * @param recordId 
+     * @param frame 
+     * @param confidence 
+     */
+    detectorFrameTexts(recordId: string, frame: number, confidence: number, extraHttpRequestParams?: any): Observable<Array<DetectText>>;
+
+    /**
      * Frame Upload
      * Uploads an image from a recording frame to a detector
      * @param recordId 

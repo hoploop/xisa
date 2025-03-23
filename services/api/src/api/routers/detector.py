@@ -32,7 +32,6 @@ async def get_detector(request: Request) -> DetectorClient:
 
 Detector = Annotated[DetectorClient, Depends(get_detector)]
 
-
 class DetectorListResponse(BaseModel):
     detectors: List[DetectorDocument] 
     total: int
@@ -111,6 +110,20 @@ async def objects(user:CurrentUser,detector: Detector,detectorId: PydanticObject
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
+@router.post(
+    "/frame/objects/{recordId}",
+    description="Performs the detection of objects from recording frame image",
+    operation_id="detectObjectsFromFrame",
+    response_model=List[DetectObject]
+)
+async def objects_frame(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,recordId: PydanticObjectId,frame:int, confidence:float):
+    try:
+        data = await recorder.loadRecordFrameBase64(user,recordId,frame)
+        return await detector.detectObjects(user,detectorId,data,confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 class DetectorTextsPayload(BaseModel):
     data: str
     confidence: float = 0.7
@@ -129,10 +142,22 @@ async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload
 
 
 
+@router.post(
+    "/frame/texts",
+    description="Performs the detection of texts from recording frame image",
+    operation_id="detectTextsFromFrame",
+    response_model=List[DetectText]
+)
+async def texts_frame(user:CurrentUser,detector: Detector,recorder:Recorder,recordId: PydanticObjectId,frame:int, confidence:float):
+    try:
+        data = await recorder.loadRecordFrameBase64(user,recordId,frame)
+        return await detector.detectTexts(user,data,confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 @router.post(
     "/create/{projectId}",
-    
     description="Creates a new detector",
     response_model=DetectorDocument,
 )

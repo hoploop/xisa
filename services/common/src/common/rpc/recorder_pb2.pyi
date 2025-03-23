@@ -102,6 +102,26 @@ class LoadRecordFrameResponse(_message.Message):
     frame: bytes
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., frame: _Optional[bytes] = ...) -> None: ...
 
+class LoadRecordFrameBase64Request(_message.Message):
+    __slots__ = ("user", "record", "frame")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    FRAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    frame: int
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+
+class LoadRecordFrameBase64Response(_message.Message):
+    __slots__ = ("status", "message", "frame")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    FRAME_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    frame: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., frame: _Optional[str] = ...) -> None: ...
+
 class CountRecordFrameRequest(_message.Message):
     __slots__ = ("user", "record")
     USER_FIELD_NUMBER: _ClassVar[int]

@@ -22,10 +22,6 @@ export class ImageAnnotatorBox {
 
 
   constructor(
-    private ctx: CanvasRenderingContext2D,
-    private canvas: HTMLCanvasElement,
-    private image: HTMLImageElement,
-    private settings: ImageAnnotatorSettings,
     public x: number = 0,
     public y: number = 0,
     public w: number = 0,
@@ -35,90 +31,97 @@ export class ImageAnnotatorBox {
 
   }
 
+  classesToStringList(): string[]{
+    let ret: string[] = [];
+    this.classes.forEach(clazz=>{
+      ret.push(clazz.name);
+    })
+    return ret;
+  }
 
 
-  isMouseOver(x: number, y: number): ImageAnnotatorMouseOverType {
+  isMouseOver(settings:ImageAnnotatorSettings,x: number, y: number): ImageAnnotatorMouseOverType {
     // Bottom Right
     if (
-      x >= this.x + this.w - this.settings.resizeHandleSize &&
-      x <= this.x + this.w + this.settings.resizeHandleSize &&
-      y >= this.y + this.h - this.settings.resizeHandleSize &&
-      y <= this.y + this.h + this.settings.resizeHandleSize
+      x >= this.x + this.w - settings.resizeHandleSize &&
+      x <= this.x + this.w + settings.resizeHandleSize &&
+      y >= this.y + this.h - settings.resizeHandleSize &&
+      y <= this.y + this.h + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.BOTTOM_RIGHT;
     }
 
     // Top Right
     else if (
-      x >= this.x + this.w - this.settings.resizeHandleSize &&
-      x <= this.x + this.w + this.settings.resizeHandleSize &&
-      y >= this.y - this.settings.resizeHandleSize &&
-      y <= this.y + this.settings.resizeHandleSize
+      x >= this.x + this.w - settings.resizeHandleSize &&
+      x <= this.x + this.w + settings.resizeHandleSize &&
+      y >= this.y - settings.resizeHandleSize &&
+      y <= this.y + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.TOP_RIGHT;
     }
 
     // Top LEFT
     else if (
-      x >= this.x - this.settings.resizeHandleSize &&
-      x <= this.x + this.settings.resizeHandleSize &&
-      y >= this.y - this.settings.resizeHandleSize &&
-      y <= this.y + this.settings.resizeHandleSize
+      x >= this.x - settings.resizeHandleSize &&
+      x <= this.x + settings.resizeHandleSize &&
+      y >= this.y - settings.resizeHandleSize &&
+      y <= this.y + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.TOP_LEFT;
     }
 
     // Bottom LEFT
     else if (
-      x >= this.x - this.settings.resizeHandleSize &&
-      x <= this.x + this.settings.resizeHandleSize &&
-      y >= this.y + this.h - this.settings.resizeHandleSize &&
-      y <= this.y + this.h + this.settings.resizeHandleSize
+      x >= this.x - settings.resizeHandleSize &&
+      x <= this.x + settings.resizeHandleSize &&
+      y >= this.y + this.h - settings.resizeHandleSize &&
+      y <= this.y + this.h + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.BOTTOM_LEFT;
     }
 
     // LEFT
     else if (
-      x >= this.x - this.settings.resizeHandleSize &&
-      x <= this.x + this.settings.resizeHandleSize &&
-      y >= this.y + this.settings.resizeHandleSize &&
-      y <= this.y + this.h - this.settings.resizeHandleSize
+      x >= this.x - settings.resizeHandleSize &&
+      x <= this.x + settings.resizeHandleSize &&
+      y >= this.y + settings.resizeHandleSize &&
+      y <= this.y + this.h - settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.LEFT;
     }
     // RIGHT
     else if (
-      x >= this.x + this.w - this.settings.resizeHandleSize &&
-      x <= this.x + this.w + this.settings.resizeHandleSize &&
-      y >= this.y + this.settings.resizeHandleSize &&
-      y <= this.y + this.h - this.settings.resizeHandleSize
+      x >= this.x + this.w - settings.resizeHandleSize &&
+      x <= this.x + this.w + settings.resizeHandleSize &&
+      y >= this.y + settings.resizeHandleSize &&
+      y <= this.y + this.h - settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.RIGHT;
     }
 
     // TOP
     else if (
-      x >= this.x + this.settings.resizeHandleSize &&
-      x <= this.x + this.w - this.settings.resizeHandleSize &&
-      y >= this.y - this.settings.resizeHandleSize &&
-      y <= this.y + this.settings.resizeHandleSize
+      x >= this.x + settings.resizeHandleSize &&
+      x <= this.x + this.w - settings.resizeHandleSize &&
+      y >= this.y - settings.resizeHandleSize &&
+      y <= this.y + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.TOP;
     }
     // BOTTOM
     else if (
-      x >= this.x + this.settings.resizeHandleSize &&
-      x <= this.x + this.w - this.settings.resizeHandleSize &&
-      y >= this.y + this.h - this.settings.resizeHandleSize &&
-      y <= this.y + this.h + this.settings.resizeHandleSize
+      x >= this.x + settings.resizeHandleSize &&
+      x <= this.x + this.w - settings.resizeHandleSize &&
+      y >= this.y + this.h - settings.resizeHandleSize &&
+      y <= this.y + this.h + settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.BOTTOM;
     } else if (
-      x > this.x + this.settings.resizeHandleSize &&
-      x < this.x + this.w - this.settings.resizeHandleSize &&
-      y > this.y + this.settings.resizeHandleSize &&
-      y < this.y + this.h - this.settings.resizeHandleSize
+      x > this.x + settings.resizeHandleSize &&
+      x < this.x + this.w - settings.resizeHandleSize &&
+      y > this.y + settings.resizeHandleSize &&
+      y < this.y + this.h - settings.resizeHandleSize
     ) {
       return ImageAnnotatorMouseOverType.INSIDE;
     } else {
@@ -126,100 +129,107 @@ export class ImageAnnotatorBox {
     }
   }
 
-  draw() {
-    this.updateDataUrl();
+  draw(ctx: CanvasRenderingContext2D,settings:ImageAnnotatorSettings,image:HTMLImageElement){
+    if (ctx==undefined) return;
+    this.updateDataUrl(ctx,image);
 
     // Settings colors
     if (this.isSelected) {
-      this.ctx.strokeStyle = this.settings.selectedBorderColor;
-      this.ctx.fillStyle = this.settings.selectedColor;
+      ctx.strokeStyle = settings.selectedBorderColor;
+      ctx.fillStyle = settings.selectedColor;
     } else {
-      this.ctx.strokeStyle = this.settings.defaultBorderColor;
-      this.ctx.fillStyle = this.settings.defaultColor;
+      ctx.strokeStyle = settings.defaultBorderColor;
+      ctx.fillStyle = settings.defaultColor;
     }
 
     // Drawing the main rectangle
-    this.ctx.fillRect(this.x, this.y, this.w, this.h);
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeRect(this.x, this.y, this.w, this.h);
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
 
     //if (!this.isSelected) return;
 
     // Draw resize handles
     if (this.isSelected) {
-      this.ctx.fillStyle = this.settings.selectedBorderColor;
+      ctx.fillStyle = settings.selectedBorderColor;
     } else {
-      this.ctx.fillStyle = this.settings.defaultBorderColor;
+      ctx.fillStyle = settings.defaultBorderColor;
     }
 
 
     // Bottom right handle
-    this.ctx.fillRect(
-      this.x + this.w - this.settings.resizeHandleSize / 2,
-      this.y + this.h - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x + this.w - settings.resizeHandleSize / 2,
+      this.y + this.h - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Top left handle
-    this.ctx.fillRect(
-      this.x - this.settings.resizeHandleSize / 2,
-      this.y - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x - settings.resizeHandleSize / 2,
+      this.y - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Top right handle
-    this.ctx.fillRect(
-      this.x + this.w - this.settings.resizeHandleSize / 2,
-      this.y - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x + this.w - settings.resizeHandleSize / 2,
+      this.y - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Bottom Left handle
-    this.ctx.fillRect(
-      this.x - this.settings.resizeHandleSize / 2,
-      this.y + this.h - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x - settings.resizeHandleSize / 2,
+      this.y + this.h - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Left handle
-    this.ctx.fillRect(
-      this.x - this.settings.resizeHandleSize / 2,
-      this.y + this.h / 2 - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x - settings.resizeHandleSize / 2,
+      this.y + this.h / 2 - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Right handle
-    this.ctx.fillRect(
-      this.x + this.w - this.settings.resizeHandleSize / 2,
-      this.y + this.h / 2 - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x + this.w - settings.resizeHandleSize / 2,
+      this.y + this.h / 2 - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Top handle
-    this.ctx.fillRect(
-      this.x + this.w / 2 - this.settings.resizeHandleSize / 2,
-      this.y - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x + this.w / 2 - settings.resizeHandleSize / 2,
+      this.y - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
 
     // Bottom handle
-    this.ctx.fillRect(
-      this.x + this.w / 2 - this.settings.resizeHandleSize / 2,
-      this.y + this.h - this.settings.resizeHandleSize / 2,
-      this.settings.resizeHandleSize,
-      this.settings.resizeHandleSize
+    ctx.fillRect(
+      this.x + this.w / 2 - settings.resizeHandleSize / 2,
+      this.y + this.h - settings.resizeHandleSize / 2,
+      settings.resizeHandleSize,
+      settings.resizeHandleSize
     );
+
+    //Classes
+    if (this.classes.length > 0){
+      ctx.font = "18pt Arial";
+      ctx.fillText(this.classes.length.toString(), this.x+6, this.y+20+3);
+    }
   }
 
-  drawImage(x:number,y:number,image: HTMLImageElement) {
-    this.ctx.drawImage(
+  drawImage(ctx: CanvasRenderingContext2D,x:number,y:number,image: HTMLImageElement) {
+    ctx.drawImage(
       image,
       x,
       y,
@@ -228,14 +238,15 @@ export class ImageAnnotatorBox {
     );
   }
 
-  updateDataUrl() {
+  updateDataUrl(ctx: CanvasRenderingContext2D,image:HTMLImageElement) {
+    const canvas = ctx.canvas;
     const croppedCanvas = document.createElement('canvas');
     const croppedCtx = croppedCanvas.getContext('2d')!;
-    const rect = this.canvas.getBoundingClientRect(); // Get canvas position & size
+    const rect = canvas.getBoundingClientRect(); // Get canvas position & size
 
     // Scaling factor: Adjust for responsive canvas
-    const scaleX = this.canvas.width / rect.width;
-    const scaleY = this.canvas.height / rect.height;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
     const cropX = this.x / scaleX;
     const cropY = this.y / scaleY;
     const cropWidth = this.w / scaleX;
@@ -243,7 +254,7 @@ export class ImageAnnotatorBox {
     croppedCanvas.width = cropWidth;
     croppedCanvas.height = cropHeight;
     croppedCtx.drawImage(
-      this.image,
+      image,
       cropX,
       cropY,
       cropWidth,
