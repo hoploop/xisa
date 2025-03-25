@@ -50,6 +50,7 @@ export class RecordFrameComponent
   testing: boolean = false;
   objects?: DetectObject[];
   texts ?: DetectText[];
+  expanded: boolean = false;
 
   subs = new Subscription();
   settings: ImageAnnotatorSettings = {
@@ -62,6 +63,10 @@ export class RecordFrameComponent
     return (
       environment.imageUrl + this.recordId + '/' + this.frame.count.toString()
     );
+  }
+
+  toggleExpansion(){
+    this.expanded = !this.expanded;
   }
 
   onAcceptTraining(box:ImageAnnotatorBox, label:DetectorLabel){

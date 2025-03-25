@@ -27,6 +27,7 @@
         "original_not_found":"Original detector not found"
       },
       "suggestion":{
+        "title":"Suggestions",
         "by_class":"I suggest you to select this element by object class '{{class}}'",
         "by_classes_order_1":"I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
         "by_classes_order_2":"I suggest you to select this element by object class '{{class}}' and then select by row {{row}} and col {{col}}",
@@ -100,6 +101,7 @@
           "not_found":"Event not found"
         }
       },
+      
 
       "duration":"Duration: ",
       "events":"Events: ",
@@ -107,7 +109,10 @@
       "size":"Size: ",
       "list": "Recordings",
       "name": "Name",
-      "studio": "Studio",
+      "studio": {
+        "title":"Studio",
+        "frames":"Frames"
+      },
       "description": "Description",
       "loading": "Loading recording..",
       "saving": "Saving recording...",

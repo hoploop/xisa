@@ -30,6 +30,11 @@ export class RecordStudioComponent implements OnInit {
   frame?:Frame = undefined;
   events: RecordEventListRecordId200ResponseInner[] = [];
   detector?:Detector;
+  expanded:boolean = false;
+
+  toggleExpansion(){
+    this.expanded = !this.expanded;
+  }
 
   constructor(
     private ctx: ContextService,

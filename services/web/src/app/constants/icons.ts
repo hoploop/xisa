@@ -1,6 +1,6 @@
 import { AnimationProp } from '@fortawesome/angular-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
+import { faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faImages, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import {
   faAnglesDown,
   faAnglesUp,
@@ -144,6 +144,7 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   upRightAndDownLeftFromCenter: faUpRightAndDownLeftFromCenter,
   pen: faPen,
   refresh: faRefresh,
+  images: faImages,
   userPlus: faUserPlus,
   pause: faPause,
   play: faPlay,
@@ -265,6 +266,7 @@ export enum FAIconType {
   fileImage = 'fileImage',
   userMinus = 'userMinus',
   fileWaveForm = 'fileWaveForm',
+  images = 'images',
   arrowPointer = 'arrowPointer',
   arrowsUpDownLeftRight = 'arrowsUpDownLeftRight',
   plus = 'plus',
