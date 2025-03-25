@@ -1,4 +1,16 @@
+<div class="d-flex">
 <div class="d-flex flex-column w-100">
-  <app-detector-suggestion *ngFor="let suggestion of suggestions" (onAccept)="accept($event)" [suggestion]="suggestion"></app-detector-suggestion>
   <app-image-annotator *ngIf="(loading|async) == undefined" (doubleClicked)="selectClasses($event)" [url]="imageUrl" [boxes]="boxes"></app-image-annotator>
+</div>
+<div class="d-flex ms-2 flex-column">
+  <app-detector-objects-summary *ngIf="objects" [objects]="objects"></app-detector-objects-summary>
+  <app-detector-texts-summary *ngIf="texts" [texts]="texts"></app-detector-texts-summary>
+  <app-detector-suggestion *ngFor="let suggestion of suggestions" (onAccept)="onAcceptSuggestion($event)" (onReject)="onRejectSuggestion($event)" [suggestion]="suggestion"></app-detector-suggestion>
+  <ng-container *ngFor="let box of boxes|async">
+    <ng-container *ngFor="let label of box.labels">
+      <app-detector-label-suggestion [box]="box" [label]="label" (onAccept)="onAcceptObject(box,label)" (onReject)="onRejectObject(box,label)"></app-detector-label-suggestion>
+      <app-detector-label-train *ngIf="!labelIsDetected(label.name)" (onAccept)="onAcceptTraining(box,label)" (onReject)="onRejectTraining(box,label)" [box]="box" [label]="label"></app-detector-label-train>
+    </ng-container>
+  </ng-container>
+</div>
 </div>

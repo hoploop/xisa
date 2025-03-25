@@ -8,10 +8,15 @@
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 0"  [translate]="'workspace.detector.suggestion.by_text'" [translateParams]="{'text':suggestion.by_text}"></span>
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'workspace.detector.suggestion.by_texts_order_1'" [translateParams]="{'text':suggestion.by_text,'order':suggestion.by_order[0]}"></span>
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'workspace.detector.suggestion.by_texts_order_2'" [translateParams]="{'text':suggestion.by_text,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
+      <span class="ms-2 text-muted"><small>{{(suggestion.confidence)}}%</small></span>
       <div class="ms-auto">
         <button class="btn btn-success btn-sm" (click)="onAccept.next(suggestion)">
           <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
           <span class="ms-1" translate>workspace.detector.suggestion.accept</span>
+        </button>
+        <button class="btn ms-1 btn-danger btn-sm" (click)="onReject.next(suggestion)">
+          <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+          <span class="ms-1" translate>workspace.detector.suggestion.reject</span>
         </button>
       </div>
   </div>

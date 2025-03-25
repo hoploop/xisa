@@ -84,6 +84,8 @@ export class DetectorLabelSelectComponent extends BaseComponent implements OnIni
   }
 
   select(label: DetectorLabel){
+    console.log(this.selected);
+    console.log(label);
     let found = this.selected.findIndex(item=> item._id === label._id);
     if (found!=-1){
       this.selected.splice(found,1);

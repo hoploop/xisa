@@ -20,7 +20,7 @@ export class ImageAnnotatorBox {
   canResize: boolean = true;
   canMove: boolean = true;
   dataUrl?: string;
-  label?: DetectorLabel = undefined;
+  labels: DetectorLabel[] = [];
   selectedBorderColor: string = 'blue';
   defaultBorderColor: string = 'red';
   defaultBorderSize: number = 1;
@@ -246,9 +246,18 @@ export class ImageAnnotatorBox {
     );
 
     //Classes
-    if (this.label) {
+    if (this.labels.length>0) {
       ctx.font = '18pt Arial';
-      ctx.fillText(this.label.name, this.x + 6, this.y + 20 + 3);
+      let labels = "";
+      this.labels.forEach(label=>{
+        if (labels == ""){
+          labels += label.name;
+        }else{
+          labels += ", "+label.name
+        }
+
+      })
+      ctx.fillText(labels, this.x + 6, this.y + 20 + 3);
     }
   }
 

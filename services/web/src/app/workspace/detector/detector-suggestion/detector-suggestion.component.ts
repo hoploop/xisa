@@ -11,5 +11,6 @@ import { BaseComponent } from '@utils/base/base.component';
 export class DetectorSuggestionComponent extends BaseComponent {
   @Input() suggestion!:DetectorSuggestion;
   @Output() onAccept = new EventEmitter<DetectorSuggestion>();
+  @Output() onReject = new EventEmitter<DetectorSuggestion>();
 
 }

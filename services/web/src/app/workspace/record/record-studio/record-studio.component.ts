@@ -42,7 +42,6 @@ export class RecordStudioComponent implements OnInit {
   ngOnInit(): void {
     this.load();
     this.loadEvents();
-
   }
 
   load(){
@@ -63,7 +62,6 @@ export class RecordStudioComponent implements OnInit {
   }
 
   selectFrame(frame:Frame){
-    console.log('Frame selected');
     this.frame=undefined;
     setTimeout(()=>{
       this.frame = frame;
@@ -78,7 +76,6 @@ export class RecordStudioComponent implements OnInit {
         this.events = result;
         this.loading.next(undefined);
         this.countFrames();
-        console.log(result);
       },
       error: (result)=>{
         this.loading.next(undefined);

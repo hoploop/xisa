@@ -56,7 +56,6 @@ export class ImageAnnotatorComponent
   selectedHighlightIndex: number = -1;
   subs = new Subscription();
 
-  label?: ImageAnnotatorBox;
   state: State = State.EMPTY;
   mouse = {
     x: 0,
@@ -635,9 +634,5 @@ export class ImageAnnotatorComponent
     }
   }
 
-  labelSelectedBox() {
-    if (this.selectedBoxIndex != -1) {
-      this.label = this.boxes.getValue()[this.selectedBoxIndex];
-    }
-  }
+
 }

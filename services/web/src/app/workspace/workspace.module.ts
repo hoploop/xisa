@@ -32,6 +32,11 @@ import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
 import { TrainModule } from "../train/train.module";
 import { DetectorSuggestionComponent } from './detector/detector-suggestion/detector-suggestion.component';
 import { DetectorLabelSelectComponent } from './detector/detector-label-select/detector-label-select.component';
+import { DetectorLabelSuggestionComponent } from './detector/detector-label-suggestion/detector-label-suggestion.component';
+import { DetectorLabelTrainComponent } from './detector/detector-label-train/detector-label-train.component';
+import { DetectorObjectsSummaryComponent } from './detector/detector-objects-summary/detector-objects-summary.component';
+import { DetectorTextsSummaryComponent } from './detector/detector-texts-summary/detector-texts-summary.component';
+import { DetectorSummaryComponent } from './detector/detector-summary/detector-summary.component';
 
 
 
@@ -64,6 +69,11 @@ import { DetectorLabelSelectComponent } from './detector/detector-label-select/d
     DetectorClassFilterPipe,
     DetectorSuggestionComponent,
     DetectorLabelSelectComponent,
+    DetectorLabelSuggestionComponent,
+    DetectorLabelTrainComponent,
+    DetectorObjectsSummaryComponent,
+    DetectorTextsSummaryComponent,
+    DetectorSummaryComponent,
   ],
   imports: [
     CommonModule,

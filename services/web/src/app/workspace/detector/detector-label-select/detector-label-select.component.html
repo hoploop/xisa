@@ -52,7 +52,7 @@
         >
         <div class="d-flex align-items-center w-100">
           <app-fa-icon [icon]="FAIconType.square" *ngIf="(selected | detectorClassFilter: otherLabel._id) ==-1"></app-fa-icon>
-          <app-fa-icon [icon]="FAIconType.squareCheck" *ngIf="(selected | detectorClassFilter: otherLabel._id) ==-1"></app-fa-icon>
+          <app-fa-icon [icon]="FAIconType.squareCheck" *ngIf="(selected | detectorClassFilter: otherLabel._id) !=-1"></app-fa-icon>
           <span class="ms-auto">{{ otherLabel.name }}</span>
           </div>
 

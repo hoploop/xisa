@@ -33,9 +33,14 @@
         "by_text":"I suggest you to select this element by text '{{text}}'",
         "by_texts_order_1":"I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
         "by_texts_order_2":"I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
-        "accept":"Accept"
-        
+        "accept":"Accept",
+        "reject":"Reject",
+        "by_user_class":"You are suggesting to use a select by class '{{class}}'"
       },
+      "detected_objects":"I detected {{n}} objects",
+      "detected_texts":"I detected {{n}} text boxes",
+      "detected_no_objects":"I detected no objects, probably I need more training",
+      "detected_no_texts":"I detected no text boxes, probably there is no text in the image or font is too small or difficult to parse",
       "class": {
         "loadings": "Loading detector classes...",
         "selects":"Select detector classes",
@@ -57,6 +62,9 @@
           "not_found": "Detector Image not found",
           "label_not_found": "Image label not found"
         }
+      },
+      "train":{
+        "by_user_class":"You are suggesting to train detector to detect by class '{{class}}'"
       },
       "select": "Select detector",
       "description": "Description", 
