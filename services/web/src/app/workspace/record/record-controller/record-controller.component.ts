@@ -34,7 +34,7 @@ export class RecordControllerComponent implements OnInit{
   }
 
   load(){
-    this.ctx.api.record.recordRunning().subscribe({
+    this.ctx.api.recorder.recorderRunning().subscribe({
       next: (result)=>{
         this.running = result;
       },
@@ -46,7 +46,7 @@ export class RecordControllerComponent implements OnInit{
 
   start() {
     if (!this.projectId) return;
-    this.ctx.api.record.recordStart(this.projectId,this.name,this.description).subscribe({
+    this.ctx.api.recorder.recorderStart(this.projectId,this.name,this.description).subscribe({
       next: (result)=>{
         this.running = true;
       },
@@ -58,7 +58,7 @@ export class RecordControllerComponent implements OnInit{
 
   stop() {
     if (!this.projectId) return;
-    this.ctx.api.record.recordStop().subscribe({
+    this.ctx.api.recorder.recorderStop().subscribe({
       next: (result)=>{
         this.running = false;
         this.cancel();

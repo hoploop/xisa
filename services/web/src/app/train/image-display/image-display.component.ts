@@ -31,7 +31,7 @@ export class ImageDisplayComponent implements AfterViewInit{
     console.log('Loading image blob');
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant("train.image.downloading"));
-    this.ctx.api.train.trainImageDownloadFileId(this.fileId).subscribe({
+    this.ctx.api.train.imageDownload(this.fileId).subscribe({
       next: (result) => {
         this.loading.next(undefined);
         //const blobUrl = URL.createObjectURL(result);

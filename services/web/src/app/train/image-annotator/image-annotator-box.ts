@@ -1,4 +1,4 @@
-import { DetectorClass } from '@api/index';
+import { DetectorLabel } from '@api/index';
 import { ImageAnnotatorSettings } from './image-annotator-settings';
 
 export enum ImageAnnotatorMouseOverType {
@@ -20,7 +20,7 @@ export class ImageAnnotatorBox {
   canResize: boolean = true;
   canMove: boolean = true;
   dataUrl?: string;
-  class?: DetectorClass = undefined;
+  label?: DetectorLabel = undefined;
   selectedBorderColor: string = 'blue';
   defaultBorderColor: string = 'red';
   defaultBorderSize: number = 1;
@@ -246,9 +246,9 @@ export class ImageAnnotatorBox {
     );
 
     //Classes
-    if (this.class) {
+    if (this.label) {
       ctx.font = '18pt Arial';
-      ctx.fillText(this.class.name, this.x + 6, this.y + 20 + 3);
+      ctx.fillText(this.label.name, this.x + 6, this.y + 20 + 3);
     }
   }
 

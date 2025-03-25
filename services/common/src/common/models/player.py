@@ -36,7 +36,7 @@ class StepResult(Document):
 class Step(Document):
     order: int
     scenario: PydanticObjectId
-    by_class: Optional[str] = None
+    by_label: Optional[str] = None
     by_text: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
     event:PydanticObjectId

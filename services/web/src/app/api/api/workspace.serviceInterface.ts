@@ -25,7 +25,7 @@ export interface WorkspaceServiceInterface {
     configuration: Configuration;
 
     /**
-     * Create Project
+     * Project Create
      * Performs the creation of a project
      * @param name 
      * @param description 
@@ -33,14 +33,14 @@ export interface WorkspaceServiceInterface {
     workspaceProjectCreate(name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Delete Project
+     * Project Delete
      * Performs the removal of a project
      * @param projectId 
      */
     workspaceProjectDelete(projectId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
-     * List Project
+     * Project List
      * 
      * @param skip 
      * @param limit 
@@ -49,14 +49,14 @@ export interface WorkspaceServiceInterface {
     workspaceProjectList(skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<ProjectListResponse>;
 
     /**
-     * Load Project
+     * Project Load
      * 
      * @param projectId 
      */
     workspaceProjectLoad(projectId: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Update Project
+     * Project Update
      * Performs the update of a project
      * @param projectId 
      * @param name 

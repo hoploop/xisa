@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -11,14 +10,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ContextService } from '@services/context.service';
-import { sample } from './sample';
 import { ImageAnnotatorSettings } from './image-annotator-settings';
 import {
   ImageAnnotatorBox,
   ImageAnnotatorMouseOverType,
 } from './image-annotator-box';
-import { DetectorClassListComponent } from '@workspace/detector/detector-class-list/detector-class-list.component';
-import { DetectorClass } from '@api/index';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 

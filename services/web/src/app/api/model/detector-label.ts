@@ -7,11 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DetectorLabel } from './detector-label';
 
 
-export interface DetectorClassListResponse { 
-    classes: Array<DetectorLabel>;
-    total: number;
+export interface DetectorLabel { 
+    _id?: string | null;
+    detector: string;
+    name: string;
+    created?: string;
+    updated?: string;
 }
 

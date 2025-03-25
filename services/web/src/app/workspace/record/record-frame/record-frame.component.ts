@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Frame } from '../record-frame';
 import {
-  DetectorClass,
+  DetectorLabel,
   DetectorImageMode,
   DetectorSuggestion,
   KeyComboPressEventTypeEnum,
@@ -18,14 +18,14 @@ import {
   MouseClickLeftEventTypeEnum,
   MousePressLeftEvent,
   MousePressLeftEventTypeEnum,
+  DetectorImageLabelAdd,
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
 import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { ImageAnnotatorSettings } from '@train/image-annotator/image-annotator-settings';
 import { BehaviorSubject } from 'rxjs';
-import { DetectorClassListComponent } from '@workspace/detector/detector-class-list/detector-class-list.component';
-import { Event } from '@api/model/event';
+import { DetectorLabelSelectComponent } from '@workspace/detector/detector-label-select/detector-label-select.component';
 
 
 @Component({
@@ -59,14 +59,14 @@ export class RecordFrameComponent
 
     selectClasses(box: ImageAnnotatorBox) {
       this.ctx
-        .openModal<DetectorClass[] | undefined>(DetectorClassListComponent, {
+        .openModal<DetectorLabel[] | undefined>(DetectorLabelSelectComponent, {
           detectorId: this.detectorId,
-          selected: box.classes,
+          selected: box.label,
         })
         .subscribe({
           next: (result) => {
-            if (result) {
-              box.classes = result;
+            if (result && result.length > 0) {
+              box.label = result[0];
               let boxes = this.boxes.getValue();
               this.boxes.next(boxes);
             }
@@ -100,15 +100,16 @@ export class RecordFrameComponent
             this.setLoading(undefined);
             for (let i = 0; i < result.length; i++){
               let el = result[i];
-            if (el._id) {
-              let payloadAdd = {
+            if (el._id && box.label) {
+              let payloadAdd:DetectorImageLabelAdd = {
                 image_id: el._id,
                 xstart: box.x,
                 xend: box.x+box.w,
                 ystart: box.y,
                 yend: box.y+box.h,
-                class: box.class,
+                label: box.label.name
               }
+
               this.ctx.api.detector
                 .detectorImageLabelAdd(payloadAdd)
                 .subscribe({
@@ -143,7 +144,7 @@ export class RecordFrameComponent
 
   objects(){
     if (!this.detectorId) return;
-    this.ctx.api.detector.detectorFrameObjectsRecordid(this.recordId,this.detectorId,this.frame.count,0.1).subscribe({
+    this.ctx.api.detector.detectorObjectsFromFrame(this.recordId,this.detectorId,this.frame.count,0.1).subscribe({
       next: (result)=>{
         console.log(result);
       },

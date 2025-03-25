@@ -87,6 +87,7 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 @router.get(
     "/check",
+    operation_id="authCheck",
     description="Checks the current token",
     response_model=bool,
 )
@@ -94,7 +95,9 @@ async def check(host: GetHost, token: TokenOrNone, session: GetSession, auth: Au
     return await auth.check(token)
 
 
-@router.post("/login", description="Performs the login")
+@router.post("/login", 
+             operation_id="authLogin",
+             description="Performs the login")
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     host: GetHost,
@@ -113,6 +116,7 @@ async def login(
 
 @router.get(
     "/logout",
+    operation_id="authLogout",
     description="Performs the logout",
     response_model=bool,
 )
@@ -126,7 +130,9 @@ class RegisterRequest(BaseModel):
     password: str
     name: str = ""
 
-@router.put("/register", response_model=bool)
+@router.put("/register", 
+            operation_id="authRegister",
+            response_model=bool)
 async def register(req: RegisterRequest, auth: Auth):
     # return await auth.register(req.username, req.email, req.password)
     try:
@@ -140,7 +146,9 @@ async def register(req: RegisterRequest, auth: Auth):
     
 
 
-@router.post("/unregister", response_model=bool)
+@router.post("/unregister", 
+             operation_id="authUnregister",
+             response_model=bool)
 async def unregister(token: TokenOrNone, auth: Auth):
     try:
         return await auth.unregister(token)
@@ -153,7 +161,9 @@ async def unregister(token: TokenOrNone, auth: Auth):
     
 
 
-@router.post("/password/reset", response_model=bool)
+@router.post("/password/reset", 
+             operation_id="authPasswordReset",
+             response_model=bool)
 async def password_reset(
     old: str, new: str, token: TokenOrNone, host: GetHost, auth: Auth
 ):

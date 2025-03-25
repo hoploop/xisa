@@ -21,7 +21,6 @@ import { DetectorImageCountPipe } from './detector/detector-image-count.pipe';
 import { DetectorClassCountPipe } from './detector/detector-class-count.pipe';
 import { DetectorLearnComponent } from './detector/detector-learn/detector-learn.component';
 import { DetectorImageListComponent } from './detector/detector-image-list/detector-image-list.component';
-import { DetectorClassListComponent } from './detector/detector-class-list/detector-class-list.component';
 import { RecordStudioComponent } from './record/record-studio/record-studio.component';
 import { RecordVideoPipe } from './record/record-video.pipe';
 import { RecordFramePipe } from './record/record-frame.pipe';
@@ -32,6 +31,7 @@ import { RecordVideoComponent } from './record/record-video/record-video.compone
 import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
 import { TrainModule } from "../train/train.module";
 import { DetectorSuggestionComponent } from './detector/detector-suggestion/detector-suggestion.component';
+import { DetectorLabelSelectComponent } from './detector/detector-label-select/detector-label-select.component';
 
 
 
@@ -54,7 +54,6 @@ import { DetectorSuggestionComponent } from './detector/detector-suggestion/dete
     DetectorClassCountPipe,
     DetectorLearnComponent,
     DetectorImageListComponent,
-    DetectorClassListComponent,
     RecordStudioComponent,
     RecordVideoPipe,
     RecordFramePipe,
@@ -64,6 +63,7 @@ import { DetectorSuggestionComponent } from './detector/detector-suggestion/dete
     RecordVideoComponent,
     DetectorClassFilterPipe,
     DetectorSuggestionComponent,
+    DetectorLabelSelectComponent,
   ],
   imports: [
     CommonModule,

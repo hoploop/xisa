@@ -35,7 +35,7 @@ export class RecordFormComponent {
     if (!this.recordId) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.record.recordLoadRecorderid(this.recordId).subscribe({
+    this.ctx.api.recorder.recorderLoad(this.recordId).subscribe({
       next: (result)=>{
         this.name = result.name;
         this.description = result.description;
@@ -55,7 +55,7 @@ export class RecordFormComponent {
       this.error.next(undefined);
 
       this.loading.next(this.ctx.translate.instant('workspace.record.removing'));
-      this.ctx.api.record.recordRemove(this.recordId).subscribe({
+      this.ctx.api.recorder.recorderRemove(this.recordId).subscribe({
         next: (result)=>{
           this.loading.next(undefined);
           this.router.navigateByUrl('/record/list/'+this.projectId);
@@ -78,7 +78,7 @@ export class RecordFormComponent {
     if (!this.projectId) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.saving'));
-    this.ctx.api.record.recordEdit(this.recordId,this.name,this.description||'').subscribe({
+    this.ctx.api.recorder.recorderEdit(this.recordId,this.name,this.description||'').subscribe({
       next: (result)=>{
           this.loading.next(undefined);
           this.router.navigateByUrl('/record/list/'+this.projectId);

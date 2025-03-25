@@ -10,8 +10,8 @@
 import { DetectorLabel } from './detector-label';
 
 
-export interface DetectorClassListResponse { 
-    classes: Array<DetectorLabel>;
+export interface DetectorLabelListResponse { 
+    labels: Array<DetectorLabel>;
     total: number;
 }
 

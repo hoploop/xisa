@@ -60,7 +60,7 @@ export class DetectorListComponent implements OnInit {
     this.loading.next(this.ctx.translate.instant('workspace.detector.loadings'));
     this.error.next(undefined);
     this.ctx.api.detector
-      .detectorListProjectid(this.projectId,this.skip, this.limit, this.search)
+      .detectorList(this.projectId,this.skip, this.limit, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);

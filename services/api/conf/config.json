@@ -92,7 +92,7 @@
       { "name": "ws", "description": "WebSocket management" },
       { "name": "auth", "description": "Auth management" },
       { "name": "detector", "description": "Detector management" },
-      { "name": "record", "description": "Record management" },
+      { "name": "recorder", "description": "Record management" },
       { "name": "project", "description": "Project management" },
       { "name": "ui", "description": "UI management" },
       { "name": "player", "description": "Player management" },

@@ -27,13 +27,13 @@ export interface TrainServiceInterface {
      * Retrieve image from MongoDB GridFS
      * @param fileId 
      */
-    trainImageDownloadFileId(fileId: string, extraHttpRequestParams?: any): Observable<string>;
+    imageDownload(fileId: string, extraHttpRequestParams?: any): Observable<string>;
 
     /**
      * Upload File
      * 
      * @param file 
      */
-    trainImageUpload(file: Blob, extraHttpRequestParams?: any): Observable<any>;
+    imageUpload(file: Blob, extraHttpRequestParams?: any): Observable<any>;
 
 }

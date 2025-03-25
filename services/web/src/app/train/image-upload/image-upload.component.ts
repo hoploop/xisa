@@ -40,7 +40,7 @@ export class ImageUploadComponent {
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant("train.image.uploading"));
     formData.append('file', imageBlob, filename); // Append Blob as file
-    this.ctx.api.train.trainImageUpload(imageBlob).subscribe({
+    this.ctx.api.train.imageUpload(imageBlob).subscribe({
       next: (result) => {
         this.uploaded.next(result.id);
         this.imageIds.push(result.id);

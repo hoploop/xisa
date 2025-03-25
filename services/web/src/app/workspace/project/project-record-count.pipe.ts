@@ -16,7 +16,7 @@ export class ProjectRecordCountPipe implements PipeTransform {
       if (value==undefined || value == null){
         observer.next(0);
       }else{
-      this.ctx.api.record.recordRecordCountProjectid(value).subscribe({
+      this.ctx.api.recorder.recorderCount(value).subscribe({
         next: (result)=>{
           observer.next(result);
         },

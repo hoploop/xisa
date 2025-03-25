@@ -29,7 +29,7 @@ export class DetectorImageListComponent implements OnInit {
     if (!this.detectorId) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.image.loadings"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorImageListDetectorid(this.detectorId,this.skip,this.limit).subscribe({
+    this.ctx.api.detector.detectorImageList(this.detectorId,this.skip,this.limit).subscribe({
       next: (result)=>{
         this.total = result.total;
         this.images = result.images;

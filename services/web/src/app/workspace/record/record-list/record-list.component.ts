@@ -62,7 +62,7 @@ export class RecordListComponent implements OnInit {
 
   load() {
     if (!this.projectId) return;
-    this.ctx.api.record.recordRunning().subscribe({
+    this.ctx.api.recorder.recorderRunning().subscribe({
       next: (result)=>{
         this.running = result;
       },
@@ -73,7 +73,7 @@ export class RecordListComponent implements OnInit {
 
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loadings'));
-    this.ctx.api.record.recordListProjectid(this.projectId,this.skip,this.limit,this.search).subscribe(
+    this.ctx.api.recorder.recorderList(this.projectId,this.skip,this.limit,this.search).subscribe(
      { next: (result)=>{
         this.loading.next(undefined);
         this.total = result.total;

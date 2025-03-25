@@ -30,10 +30,13 @@ async def get_recorder(request: Request) -> RecorderClient:
         await request.app.state.recorder.startup()
     return request.app.state.recorder
 
+
 Recorder = Annotated[RecorderClient, Depends(get_recorder)]
 
 
-@router.get("/load/{recorderId}", response_model=Record)
+@router.get("/load/{recorderId}", 
+            operation_id="recorderLoad",
+            response_model=Record)
 async def load(user: CurrentUser, recorder: Recorder, recorderId: PydanticObjectId):
     try:
         return await recorder.loadRecord(user, recorderId)
@@ -41,7 +44,9 @@ async def load(user: CurrentUser, recorder: Recorder, recorderId: PydanticObject
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
-@router.post("/edit", response_model=Record)
+@router.post("/edit", 
+             operation_id="recorderEdit",
+             response_model=Record)
 async def edit(
     user: CurrentUser,
     recorder: Recorder,
@@ -57,6 +62,7 @@ async def edit(
 
 @router.post(
     "/start",
+    operation_id="recorderStart",
     description="Performs the start of a new Recording",
     response_model=Record,
 )
@@ -75,6 +81,7 @@ async def start(
 
 @router.post(
     "/stop",
+    operation_id="recorderStop",
     description="Performs the stop of a Recording",
     response_model=bool,
 )
@@ -87,6 +94,7 @@ async def stop(user: CurrentUser, recorder: Recorder):
 
 @router.delete(
     "/remove",
+    operation_id="recorderRemove",
     description="Performs the removal of a Recording",
     response_model=bool,
 )
@@ -99,6 +107,7 @@ async def remove(recordId: PydanticObjectId, user: CurrentUser, recorder: Record
 
 @router.get(
     "/running",
+    operation_id="recorderRunning",
     description="Checks if a recorder is running",
     response_model=bool,
 )
@@ -107,7 +116,8 @@ async def running(user: CurrentUser, recorder: Recorder):
 
 
 @router.get(
-    "/events/count/{recordId}",
+    "/event/count/{recordId}",
+    operation_id="recorderEventCount",
     description="Counts how many events in the recording",
     response_model=int,
 )
@@ -119,14 +129,14 @@ async def event_count(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
 @router.get(
-    "/events/load/{eventId}",
+    "/event/load/{eventId}",
+    operation_id="recorderEventLoad",
     description="Loads a specific event",
     response_model=EVENTS,
 )
-async def event_load(
-    eventId: PydanticObjectId, user: CurrentUser, recorder: Recorder
-):
+async def event_load(eventId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
     try:
         return await recorder.loadEvent(user, eventId)
     except Exception as e:
@@ -135,6 +145,7 @@ async def event_load(
 
 @router.get(
     "/event/list/{recordId}",
+    operation_id="recorderEventList",
     description="List events in the recording",
     response_model=List[EVENTS],
 )
@@ -145,63 +156,73 @@ async def event_list(recordId: PydanticObjectId, user: CurrentUser, recorder: Re
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
-
 @router.get(
     "/frame/count/{recordId}",
+    operation_id="recorderFrameCount",
     description="Counts how many frames in the recording",
     response_model=int,
 )
-async def frame_count(recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
+async def frame_count(
+    recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder
+):
     try:
-        return await recorder.countRecordFrame(user,recordId)
+        return await recorder.countRecordFrame(user, recordId)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
-
 @router.get(
     "/size/{recordId}",
+    operation_id="recorderSize",
     description="Size in bytes of the recording",
     response_model=int,
 )
 async def size(recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
     try:
-        return await recorder.sizeRecord(user,recordId)
+        return await recorder.sizeRecord(user, recordId)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
-
-@router.get("/frame/{recordId}/{frame}", operation_id="frame")
-async def frame(recordId: PydanticObjectId,user:CurrentUser, frame: int, recorder: Recorder):
+@router.get("/frame/{recordId}/{frame}", 
+            operation_id="recorderFrameLoad")
+async def frame_load(
+    recordId: PydanticObjectId, user: CurrentUser, frame: int, recorder: Recorder
+):
     try:
-        frame_bytes = await recorder.loadRecordFrame(user,recordId,frame)
-        return StreamingResponse(io.BytesIO(frame_bytes), media_type="image/png")    
+        frame_bytes = await recorder.loadRecordFrame(user, recordId, frame)
+        return StreamingResponse(io.BytesIO(frame_bytes), media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
-    
 
 
-@router.get("/video/{recordId}", operation_id="video")
-async def video(recordId: PydanticObjectId, app: GetApp,user:CurrentUser, request: Request,recorder:Recorder):
-    video_stream = await recorder.streamRecordVideo(user,recordId)
+@router.get("/video/{recordId}", 
+            operation_id="recorderVideo")
+async def video(
+    recordId: PydanticObjectId,
+    app: GetApp,
+    user: CurrentUser,
+    request: Request,
+    recorder: Recorder,
+):
+    video_stream = await recorder.streamRecordVideo(user, recordId)
 
     async def video_generator():
         for chunk in video_stream:
             yield chunk.chunk_data
 
-    file_size = await recorder.sizeRecordVideo(user,recordId)
+    file_size = await recorder.sizeRecordVideo(user, recordId)
     range_header = request.headers.get("range")
 
     if range_header:
         # Parse the range header
         start, end = range_header.replace("bytes=", "").split("-")
         start = int(start)
-        #end = min(int(end), file_size - 1)
+        # end = min(int(end), file_size - 1)
         end = int(end) if end else file_size - 1
         chunk_size = end - start + 1
 
-        chunk = await recorder.streamRangeRecordVideo(user,recordId,start,end)
+        chunk = await recorder.streamRangeRecordVideo(user, recordId, start, end)
 
         headers = {
             "Content-Range": f"bytes {start}-{end}/{file_size}",
@@ -211,7 +232,9 @@ async def video(recordId: PydanticObjectId, app: GetApp,user:CurrentUser, reques
         }
         return Response(chunk, status_code=206, headers=headers)
 
-    return StreamingResponse(video_generator(), media_type="video/mp4",headers={'Accept-Ranges': 'bytes'})
+    return StreamingResponse(
+        video_generator(), media_type="video/mp4", headers={"Accept-Ranges": "bytes"}
+    )
 
 
 class RecordListResponse(BaseModel):
@@ -221,6 +244,7 @@ class RecordListResponse(BaseModel):
 
 @router.get(
     "/list/{projectId}",
+    operation_id="recorderList",
     response_model=RecordListResponse,
 )
 async def list(
@@ -240,9 +264,10 @@ async def list(
 
 @router.get(
     "/record/count/{projectId}",
+    operation_id="recorderCount",
     response_model=int,
 )
-async def record_count(
+async def count(
     projectId: PydanticObjectId, user: CurrentUser, recorder: Recorder
 ):
     try:

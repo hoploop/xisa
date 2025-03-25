@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DetectorClass } from '@api/index';
+import { DetectorLabel } from '@api/index';
 
 @Pipe({
   name: 'detectorClassFilter',
@@ -7,7 +7,7 @@ import { DetectorClass } from '@api/index';
 })
 export class DetectorClassFilterPipe implements PipeTransform {
 
-  transform(array: DetectorClass[],  value?: string| null): number {
+  transform(array: DetectorLabel[],  value?: string| null): number {
     if (!array || value === undefined) {
       return -1;  // Return -1 if array, attribute or value is missing
     }

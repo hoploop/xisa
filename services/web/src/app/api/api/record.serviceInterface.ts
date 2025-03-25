@@ -13,9 +13,9 @@ import { Observable }                                        from 'rxjs';
 
 import { HTTPValidationError } from '../model/models';
 import { Record } from '../model/models';
-import { RecordEventListRecordid200ResponseInner } from '../model/models';
 import { RecordListResponse } from '../model/models';
-import { ResponseEventLoadRecordEventsLoadEventidGet } from '../model/models';
+import { RecorderEventList200ResponseInner } from '../model/models';
+import { ResponseRecordereventload } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -27,49 +27,56 @@ export interface RecordServiceInterface {
     configuration: Configuration;
 
     /**
+     * Count
+     * 
+     * @param projectId 
+     */
+    recorderCount(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
      * Edit
      * 
      * @param recordId 
      * @param name 
      * @param description 
      */
-    recordEdit(recordId: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
-
-    /**
-     * Event List
-     * List events in the recording
-     * @param recordId 
-     */
-    recordEventListRecordid(recordId: string, extraHttpRequestParams?: any): Observable<Array<RecordEventListRecordid200ResponseInner>>;
+    recorderEdit(recordId: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
      * Event Count
      * Counts how many events in the recording
      * @param recordId 
      */
-    recordEventsCountRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recorderEventCount(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
+     * Event List
+     * List events in the recording
+     * @param recordId 
+     */
+    recorderEventList(recordId: string, extraHttpRequestParams?: any): Observable<Array<RecorderEventList200ResponseInner>>;
 
     /**
      * Event Load
      * Loads a specific event
      * @param eventId 
      */
-    recordEventsLoadEventid(eventId: string, extraHttpRequestParams?: any): Observable<ResponseEventLoadRecordEventsLoadEventidGet>;
+    recorderEventLoad(eventId: string, extraHttpRequestParams?: any): Observable<ResponseRecordereventload>;
 
     /**
      * Frame Count
      * Counts how many frames in the recording
      * @param recordId 
      */
-    recordFrameCountRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recorderFrameCount(recordId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
-     * Frame
+     * Frame Load
      * 
      * @param recordId 
      * @param frame 
      */
-    recordFrameRecordidFrame(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<any>;
+    recorderFrameLoad(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<any>;
 
     /**
      * List
@@ -79,41 +86,34 @@ export interface RecordServiceInterface {
      * @param limit 
      * @param search 
      */
-    recordListProjectid(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordListResponse>;
+    recorderList(projectId: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordListResponse>;
 
     /**
      * Load
      * 
      * @param recorderId 
      */
-    recordLoadRecorderid(recorderId: string, extraHttpRequestParams?: any): Observable<Record>;
-
-    /**
-     * Record Count
-     * 
-     * @param projectId 
-     */
-    recordRecordCountProjectid(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+    recorderLoad(recorderId: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
      * Remove
      * Performs the removal of a Recording
      * @param recordId 
      */
-    recordRemove(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
+    recorderRemove(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Running
      * Checks if a recorder is running
      */
-    recordRunning(extraHttpRequestParams?: any): Observable<boolean>;
+    recorderRunning(extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Size
      * Size in bytes of the recording
      * @param recordId 
      */
-    recordSizeRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+    recorderSize(recordId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
      * Start
@@ -122,19 +122,19 @@ export interface RecordServiceInterface {
      * @param name 
      * @param description 
      */
-    recordStart(projectId: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Record>;
+    recorderStart(projectId: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Record>;
 
     /**
      * Stop
      * Performs the stop of a Recording
      */
-    recordStop(extraHttpRequestParams?: any): Observable<boolean>;
+    recorderStop(extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Video
      * 
      * @param recordId 
      */
-    recordVideoRecordid(recordId: string, extraHttpRequestParams?: any): Observable<any>;
+    recorderVideo(recordId: string, extraHttpRequestParams?: any): Observable<any>;
 
 }

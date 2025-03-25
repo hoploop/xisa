@@ -2,9 +2,9 @@
   <div class="card-body">
     <div class="d-flex align-items-center">
       <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
-      <span class="ms-2" *ngIf="suggestion.by_class && suggestion.by_order &&  suggestion.by_order.length == 0"  [translate]="'workspace.detector.suggestion.by_class'"  [translateParams]="{'class':suggestion.by_class}"></span>
-      <span class="ms-2" *ngIf="suggestion.by_class && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'workspace.detector.suggestion.by_classes_order_1'" [translateParams]="{'class':suggestion.by_class,'order':suggestion.by_order[0]}"></span>
-      <span class="ms-2" *ngIf="suggestion.by_class && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'workspace.detector.suggestion.by_classes_order_2'" [translateParams]="{'class':suggestion.by_class,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order &&  suggestion.by_order.length == 0"  [translate]="'workspace.detector.suggestion.by_class'"  [translateParams]="{'class':suggestion.by_label}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'workspace.detector.suggestion.by_classes_order_1'" [translateParams]="{'class':suggestion.by_label,'order':suggestion.by_order[0]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'workspace.detector.suggestion.by_classes_order_2'" [translateParams]="{'class':suggestion.by_label,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 0"  [translate]="'workspace.detector.suggestion.by_text'" [translateParams]="{'text':suggestion.by_text}"></span>
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'workspace.detector.suggestion.by_texts_order_1'" [translateParams]="{'text':suggestion.by_text,'order':suggestion.by_order[0]}"></span>
       <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'workspace.detector.suggestion.by_texts_order_2'" [translateParams]="{'text':suggestion.by_text,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>

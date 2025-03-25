@@ -15,7 +15,7 @@ export class RecordEventsCountPipe implements PipeTransform {
       if (value==undefined || value == null){
         observer.next(0);
       }else{
-      this.ctx.api.record.recordEventsCountRecordid(value).subscribe({
+      this.ctx.api.recorder.recorderEventCount(value).subscribe({
         next: (result)=>{
           observer.next(result);
         },

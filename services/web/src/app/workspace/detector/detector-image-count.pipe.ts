@@ -17,7 +17,7 @@ export class DetectorImageCountPipe implements PipeTransform {
       if (value == undefined || value == null) {
         observer.next(0);
       } else {
-        this.ctx.api.detector.detectorImageCountDetectorid(value).subscribe({
+        this.ctx.api.detector.detectorImageCount(value).subscribe({
           next: (result) => {
             observer.next(result);
           },

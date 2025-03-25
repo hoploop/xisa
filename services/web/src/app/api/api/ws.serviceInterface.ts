@@ -26,6 +26,6 @@ export interface WsServiceInterface {
      * Websocket Models
      * 
      */
-    wsModels(extraHttpRequestParams?: any): Observable<DetectorTrainingSession>;
+    websocketModelsWsModelsGet(extraHttpRequestParams?: any): Observable<DetectorTrainingSession>;
 
 }

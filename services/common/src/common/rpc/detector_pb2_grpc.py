@@ -125,25 +125,25 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelResponse.FromString,
                 _registered_method=True)
-        self.listDetectorClass = channel.unary_unary(
-                '/Detector/listDetectorClass',
-                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
+        self.listDetectorLabel = channel.unary_unary(
+                '/Detector/listDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.FromString,
                 _registered_method=True)
-        self.existsDetectorClass = channel.unary_unary(
-                '/Detector/existsDetectorClass',
-                request_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.FromString,
+        self.existsDetectorLabel = channel.unary_unary(
+                '/Detector/existsDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.FromString,
                 _registered_method=True)
-        self.addDetectorClass = channel.unary_unary(
-                '/Detector/addDetectorClass',
-                request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.FromString,
+        self.addDetectorLabel = channel.unary_unary(
+                '/Detector/addDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorLabelResponse.FromString,
                 _registered_method=True)
-        self.countDetectorClass = channel.unary_unary(
-                '/Detector/countDetectorClass',
-                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.FromString,
+        self.countDetectorLabel = channel.unary_unary(
+                '/Detector/countDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorLabelResponse.FromString,
                 _registered_method=True)
         self.suggestStep = channel.unary_unary(
                 '/Detector/suggestStep',
@@ -264,25 +264,25 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def listDetectorClass(self, request, context):
+    def listDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def existsDetectorClass(self, request, context):
+    def existsDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def addDetectorClass(self, request, context):
+    def addDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def countDetectorClass(self, request, context):
+    def countDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -387,25 +387,25 @@ def add_DetectorServicer_to_server(servicer, server):
                     request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelResponse.SerializeToString,
             ),
-            'listDetectorClass': grpc.unary_unary_rpc_method_handler(
-                    servicer.listDetectorClass,
-                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.SerializeToString,
+            'listDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.SerializeToString,
             ),
-            'existsDetectorClass': grpc.unary_unary_rpc_method_handler(
-                    servicer.existsDetectorClass,
-                    request_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.SerializeToString,
+            'existsDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.existsDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.SerializeToString,
             ),
-            'addDetectorClass': grpc.unary_unary_rpc_method_handler(
-                    servicer.addDetectorClass,
-                    request_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.SerializeToString,
+            'addDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.addDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorLabelResponse.SerializeToString,
             ),
-            'countDetectorClass': grpc.unary_unary_rpc_method_handler(
-                    servicer.countDetectorClass,
-                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.SerializeToString,
+            'countDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.countDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CountDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CountDetectorLabelResponse.SerializeToString,
             ),
             'suggestStep': grpc.unary_unary_rpc_method_handler(
                     servicer.suggestStep,
@@ -910,7 +910,7 @@ class Detector(object):
             _registered_method=True)
 
     @staticmethod
-    def listDetectorClass(request,
+    def listDetectorLabel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -923,9 +923,9 @@ class Detector(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Detector/listDetectorClass',
-            common_dot_rpc_dot_detector__pb2.ListDetectorClassRequest.SerializeToString,
-            common_dot_rpc_dot_detector__pb2.ListDetectorClassResponse.FromString,
+            '/Detector/listDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -937,7 +937,7 @@ class Detector(object):
             _registered_method=True)
 
     @staticmethod
-    def existsDetectorClass(request,
+    def existsDetectorLabel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -950,9 +950,9 @@ class Detector(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Detector/existsDetectorClass',
-            common_dot_rpc_dot_detector__pb2.ExistsDetectorClassRequest.SerializeToString,
-            common_dot_rpc_dot_detector__pb2.ExistsDetectorClassResponse.FromString,
+            '/Detector/existsDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -964,7 +964,7 @@ class Detector(object):
             _registered_method=True)
 
     @staticmethod
-    def addDetectorClass(request,
+    def addDetectorLabel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -977,9 +977,9 @@ class Detector(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Detector/addDetectorClass',
-            common_dot_rpc_dot_detector__pb2.AddDetectorClassRequest.SerializeToString,
-            common_dot_rpc_dot_detector__pb2.AddDetectorClassResponse.FromString,
+            '/Detector/addDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.AddDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.AddDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -991,7 +991,7 @@ class Detector(object):
             _registered_method=True)
 
     @staticmethod
-    def countDetectorClass(request,
+    def countDetectorLabel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -1004,9 +1004,9 @@ class Detector(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Detector/countDetectorClass',
-            common_dot_rpc_dot_detector__pb2.CountDetectorClassRequest.SerializeToString,
-            common_dot_rpc_dot_detector__pb2.CountDetectorClassResponse.FromString,
+            '/Detector/countDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.CountDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CountDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,

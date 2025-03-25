@@ -16,7 +16,7 @@ from common.models.defaults import empty_list, utc_now
 log = logging.getLogger(__name__)
 
 class DetectorSuggestion(Document):
-    by_class: Optional[str] = None
+    by_label: Optional[str] = None
     by_text: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
     event:PydanticObjectId

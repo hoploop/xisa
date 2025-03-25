@@ -21,9 +21,10 @@ from common.models.detector import (
 )
 from common.rpc.base_pb2 import Ping, Pong
 from common.rpc.detector_pb2 import (
-    AddDetectorClassRequest,
+    AddDetectorLabelRequest,
     AddDetectorImageLabelRequest,
-    CountDetectorClassRequest,
+    AddDetectorLabelResponse,
+    CountDetectorLabelRequest,
     CountDetectorImageLabelRequest,
     CountDetectorImageRequest,
     CountDetectorRequest,
@@ -31,10 +32,12 @@ from common.rpc.detector_pb2 import (
     DetectObjectsRequest,
     DetectTextsRequest,
     DetectorStepSuggestion,
-    ExistsDetectorClassRequest,
-    ListDetectorClassRequest,
+    ExistsDetectorLabelRequest,
+    ExistsDetectorLabelResponse,
+    ListDetectorLabelRequest,
     ListDetectorImageLabelRequest,
     ListDetectorImageRequest,
+    ListDetectorLabelResponse,
     ListDetectorRequest,
     LoadDetectorRequest,
     RemoveDetectorImageLabelRequest,
@@ -124,7 +127,7 @@ class DetectorClient(Client):
         for su in res.suggestions:
             ret.append(
                 DetectorSuggestion(
-                    by_class=su.byClass,
+                    by_class=su.byLabel,
                     by_text=su.byText,
                     by_order=su.byOrder,
                     confidence=su.confidence,
@@ -140,28 +143,28 @@ class DetectorClient(Client):
     async def addDetectorLabel(
         self, user: User, detectorId: PydanticObjectId, name: str
     ) -> Optional[DetectorLabel]:
-        req = AddDetectorClassRequest(
+        req = AddDetectorLabelRequest(
             user=str(user.id), detector=str(detectorId), name=name
         )
-        res = await self.client.addDetectorClass(req)
+        res:AddDetectorLabelResponse = await self.client.addDetectorLabel(req)
         if res.status == False:
             raise Exception(res.message)
-        if res.clazz:
-            return Conversions.deserialize(res.clazz)
+        if res.label:
+            return Conversions.deserialize(res.label)
         else:
             return None
 
     async def existsDetectorLabel(
         self, user: User, detectorId: PydanticObjectId, name: str
     ) -> Optional[DetectorLabel]:
-        req = ExistsDetectorClassRequest(
+        req = ExistsDetectorLabelRequest(
             user=str(user.id), detector=str(detectorId), name=name
         )
-        res = await self.client.existsDetectorClass(req)
+        res:ExistsDetectorLabelResponse = await self.client.existsDetectorLabel(req)
         if res.status == False:
             raise Exception(res.message)
-        if res.clazz:
-            return Conversions.deserialize(res.clazz)
+        if res.label:
+            return Conversions.deserialize(res.label)
         else:
             return None
 
@@ -383,7 +386,7 @@ class DetectorClient(Client):
             ret.append(Conversions.deserialize(label))
         return total, ret
 
-    async def listDetectorClass(
+    async def listDetectorLabel(
         self,
         user: User,
         detectorId: PydanticObjectId,
@@ -391,25 +394,26 @@ class DetectorClient(Client):
         limit: int,
         search: str,
     ) -> Tuple[int, List[DetectorLabel]]:
-        req = ListDetectorClassRequest(
+        req = ListDetectorLabelRequest(
             user=str(user.id),
             detector=str(detectorId),
             skip=skip,
             limit=limit,
             search=search,
         )
-        res = await self.client.listDetectorClass(req)
+        res: ListDetectorLabelResponse = await self.client.listDetectorLabel(req)
         if res.status == False:
             raise Exception(res.message)
         ret = []
         total = res.total
-        for clazz in res.classes:
-            ret.append(Conversions.deserialize(clazz))
+        
+        for label in res.labels:
+            ret.append(Conversions.deserialize(label))
         return total, ret
 
-    async def countDetectorClass(self, user: User, detectorId: PydanticObjectId) -> int:
-        req = CountDetectorClassRequest(user=str(user.id), detector=str(detectorId))
-        res = await self.client.countDetectorClass(req)
+    async def countDetectorLabel(self, user: User, detectorId: PydanticObjectId) -> int:
+        req = CountDetectorLabelRequest(user=str(user.id), detector=str(detectorId))
+        res = await self.client.countDetectorLabel(req)
         if res.status == False:
             raise Exception(res.message)
         return res.total

@@ -39,7 +39,7 @@ class DetectorListResponse(BaseModel):
 
 @router.get(
     "/list/{projectId}",
-    
+    operation_id="detectorList",
     response_model=DetectorListResponse,
 )
 async def list(
@@ -59,7 +59,9 @@ async def list(
 
 
 @router.get(
-    "/count/{projectId}",  response_model=int
+    "/count/{projectId}",  
+    operation_id="detectorCount",
+    response_model=int
 )
 async def count(user: CurrentUser, detector: Detector, projectId: PydanticObjectId):
     try:
@@ -69,7 +71,9 @@ async def count(user: CurrentUser, detector: Detector, projectId: PydanticObject
 
 
 @router.post(
-    "/update",  response_model=DetectorDocument
+    "/update",  
+    operation_id="detectorUpdate",
+    response_model=DetectorDocument
 )
 async def update(
     user: CurrentUser, detector: Detector, detectorId: PydanticObjectId, name: str, description: str
@@ -84,7 +88,7 @@ async def update(
 
 @router.get(
     "/load/{detectorId}",
-    
+    operation_id="detectorLoad",
     description="Performs the loading of a Detector",
     response_model=DetectorDocument,
 )
@@ -101,7 +105,7 @@ class DetectorObjectsPayload(BaseModel):
 @router.post(
     "/objects/{detectorId}",
     description="Performs the detection of objects from base64 image",
-    operation_id="detectObjects",
+    operation_id="detectorObjects",
     response_model=List[DetectObject]
 )
 async def objects(user:CurrentUser,detector: Detector,detectorId: PydanticObjectId, payload:DetectorObjectsPayload):
@@ -114,10 +118,10 @@ async def objects(user:CurrentUser,detector: Detector,detectorId: PydanticObject
 @router.post(
     "/frame/objects/{recordId}",
     description="Performs the detection of objects from recording frame image",
-    operation_id="detectObjectsFromFrame",
+    operation_id="detectorObjectsFromFrame",
     response_model=List[DetectObject]
 )
-async def objects_frame(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,recordId: PydanticObjectId,frame:int, confidence:float):
+async def objects_from_frame(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,recordId: PydanticObjectId,frame:int, confidence:float):
     try:
         data = await recorder.loadRecordFrameBase64(user,recordId,frame)
         return await detector.detectObjects(user,detectorId,data,confidence)
@@ -131,7 +135,7 @@ class DetectorTextsPayload(BaseModel):
 @router.post(
     "/texts",
     description="Performs the detection of texts from base64 image",
-    operation_id="detectTexts",
+    operation_id="detectorTexts",
     response_model=List[DetectText]
 )
 async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload):
@@ -147,7 +151,7 @@ async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload
 @router.post(
     "/frame/suggestions",
     description="Performs the detection of suggestions from recording frame image",
-    operation_id="detectSuggestionsFromFrame",
+    operation_id="detectorFrameSuggestions",
     response_model=List[DetectorSuggestion]
 )
 async def frame_suggestions(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,eventId:PydanticObjectId, confidence:float):
@@ -163,10 +167,10 @@ async def frame_suggestions(user:CurrentUser,detector: Detector,recorder:Recorde
 @router.post(
     "/frame/texts",
     description="Performs the detection of texts from recording frame image",
-    operation_id="detectTextsFromFrame",
+    operation_id="detectorFrameTexts",
     response_model=List[DetectText]
 )
-async def texts_frame(user:CurrentUser,detector: Detector,recorder:Recorder,recordId: PydanticObjectId,frame:int, confidence:float):
+async def frame_texts(user:CurrentUser,detector: Detector,recorder:Recorder,recordId: PydanticObjectId,frame:int, confidence:float):
     try:
         data = await recorder.loadRecordFrameBase64(user,recordId,frame)
         return await detector.detectTexts(user,data,confidence)
@@ -176,6 +180,7 @@ async def texts_frame(user:CurrentUser,detector: Detector,recorder:Recorder,reco
 
 @router.post(
     "/create/{projectId}",
+    operation_id="detectorCreate",
     description="Creates a new detector",
     response_model=DetectorDocument,
 )
@@ -196,6 +201,7 @@ async def create(
 
 @router.post(
     "/train/{detectorId}",
+    operation_id="detectorTrain",
     description="Trains a detector",
     response_model=bool,
 )
@@ -223,6 +229,7 @@ class DetectorImageListResponse(BaseModel):
 
 @router.get(
     "/image/list/{detectorId}",
+    operation_id="detectorImageList",
     response_model=DetectorImageListResponse,
 )
 async def image_list(
@@ -244,6 +251,7 @@ class DetectorImageLabelListResponse(BaseModel):
 
 @router.get(
     "/image/label/list/{imageId}",
+    operation_id="detectorImageLabelList",
     response_model=DetectorImageLabelListResponse,
 )
 async def image_label_list(
@@ -261,17 +269,17 @@ async def image_label_list(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
                                   
-class DetectorClassListResponse(BaseModel):
-    classes: List[DetectorLabel]
+class DetectorLabelListResponse(BaseModel):
+    labels: List[DetectorLabel]
     total: int
                       
 
 @router.get(
-    "/class/list/{detectorId}",
-    
-    response_model=DetectorClassListResponse,
+    "/label/list/{detectorId}",
+    operation_id="detectorLabelList",
+    response_model=DetectorLabelListResponse,
 )
-async def class_list(
+async def label_list(
     user: CurrentUser,
     detector: Detector,
     detectorId: PydanticObjectId,
@@ -280,17 +288,18 @@ async def class_list(
     search: str = None,
 ):
     try:
-        total, classes = await detector.listDetectorClass(user,detectorId,skip,limit,search)
-        return DetectorClassListResponse(total=total, classes=classes)
+        total, labels = await detector.listDetectorLabel(user,detectorId,skip,limit,search)
+        return DetectorLabelListResponse(total=total, labels=labels)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 @router.get(
-    "/class/exists/{detectorId}",
+    "/label/exists/{detectorId}",
+    operation_id="detectorLabelExists",
     response_model=bool,
 )
-async def class_exists(
+async def label_exists(
     user: CurrentUser,
     detector: Detector,
     detectorId: PydanticObjectId,
@@ -307,10 +316,11 @@ async def class_exists(
 
 
 @router.post(
-    "/class/add/{detectorId}",
+    "/label/add/{detectorId}",
+    operation_id="detectorLabelAdd",
     response_model=DetectorLabel,
 )
-async def class_add(
+async def label_add(
     user: CurrentUser,
     detector: Detector,
     detectorId: PydanticObjectId,
@@ -325,21 +335,23 @@ async def class_add(
 
 
 @router.get(
-    "/class/count/{detectorId}",
+    "/label/count/{detectorId}",
+    operation_id="detectorLabelCount",
     response_model=int,
 )
-async def class_count(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
+async def label_count(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
     try:
-        return await detector.countDetectorClass(user,detectorId)
+        return await detector.countDetectorLabel(user,detectorId)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 @router.get(
     "/image/label/count/{imageId}",
+    operation_id="detectorImageLabelCount",
     response_model=int,
 )
-async def image_list(user: CurrentUser, detector: Detector, imageId: PydanticObjectId):
+async def image_label_count(user: CurrentUser, detector: Detector, imageId: PydanticObjectId):
     try:
         return await detector.countDetectorImageLabel(user,imageId)
     except Exception as e:
@@ -354,10 +366,11 @@ class DetectorImageLabelAdd(BaseModel):
     xend:float
     ystart:float
     yend:float
-    classes:List[str]  
+    label:str
 
 @router.post(
     "/image/label/add",
+    operation_id="detectorImageLabelAdd",
     description="Adds a label to an image of a detector",
     response_model=DetectorImageLabel,
 )
@@ -365,7 +378,7 @@ async def image_label_add(
     user: CurrentUser,detector: Detector, req: DetectorImageLabelAdd
 ):
     try:
-        return await detector.addDetectorImageLabel(user,req.image_id,req.xstart,req.xend,req.ystart,req.yend,req.classes)
+        return await detector.addDetectorImageLabel(user,req.image_id,req.xstart,req.xend,req.ystart,req.yend,req.label)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
@@ -373,6 +386,7 @@ async def image_label_add(
 
 @router.delete(
     "/image/label/remove",
+    operation_id="detectorImageLabelRemove",
     description="Removes a label to an image of a detector",
     response_model=bool,
 )
@@ -386,6 +400,7 @@ async def image_label_remove(user: CurrentUser, detector: Detector,labelId: Pyda
 
 @router.get(
     "/image/count/{detectorId}",
+    operation_id="detectorImageCount",
     response_model=int,
 )
 async def image_count(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId):
@@ -398,6 +413,7 @@ async def image_count(user: CurrentUser, detector: Detector, detectorId: Pydanti
 
 @router.delete(
     "/image/remove",
+    operation_id="detectorImageRemove",
     description="Performs the removal of a Detector Image",
     response_model=bool,
 )
@@ -411,7 +427,7 @@ async def image_remove(imageId: PydanticObjectId, user: CurrentUser, detector: D
 
 @router.post(
     "/image/upload",
-    
+    operation_id="detectorImageUpload",
     description="Uploads an image to a detector",
     response_model=List[DetectorImage],
 )
@@ -430,7 +446,7 @@ async def image_upload(
 
 @router.post(
     "/frame/upload",
-    
+    operation_id="detectorFrameUpload",
     description="Uploads an image from a recording frame to a detector",
     response_model=List[DetectorImage],
 )
@@ -452,6 +468,7 @@ async def frame_upload(
 
 @router.delete(
     "/remove",
+    operation_id="detectorRemove",
     description="Performs the removal of a Detector",
     response_model=bool,
 )

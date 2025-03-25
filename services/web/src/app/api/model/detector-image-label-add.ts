@@ -15,6 +15,6 @@ export interface DetectorImageLabelAdd {
     xend: number;
     ystart: number;
     yend: number;
-    classes: Array<string>;
+    label: string;
 }
 

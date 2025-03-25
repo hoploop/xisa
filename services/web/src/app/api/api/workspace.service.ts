@@ -98,7 +98,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
 
     /**
-     * Create Project
+     * Project Create
      * Performs the creation of a project
      * @param name 
      * @param description 
@@ -182,7 +182,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
 
     /**
-     * Delete Project
+     * Project Delete
      * Performs the removal of a project
      * @param projectId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -261,7 +261,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
 
     /**
-     * List Project
+     * Project List
      * @param skip 
      * @param limit 
      * @param search 
@@ -346,7 +346,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
 
     /**
-     * Load Project
+     * Project Load
      * @param projectId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -424,7 +424,7 @@ export class WorkspaceService implements WorkspaceServiceInterface {
     }
 
     /**
-     * Update Project
+     * Project Update
      * Performs the update of a project
      * @param projectId 
      * @param name 

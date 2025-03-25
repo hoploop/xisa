@@ -17,9 +17,9 @@ VAL: DetectorImageMode
 TEST: DetectorImageMode
 
 class DetectorStepSuggestion(_message.Message):
-    __slots__ = ("event", "byClass", "byText", "byOrder", "confidence", "x", "y", "w", "h")
+    __slots__ = ("event", "byLabel", "byText", "byOrder", "confidence", "x", "y", "w", "h")
     EVENT_FIELD_NUMBER: _ClassVar[int]
-    BYCLASS_FIELD_NUMBER: _ClassVar[int]
+    BYLABEL_FIELD_NUMBER: _ClassVar[int]
     BYTEXT_FIELD_NUMBER: _ClassVar[int]
     BYORDER_FIELD_NUMBER: _ClassVar[int]
     CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
@@ -28,7 +28,7 @@ class DetectorStepSuggestion(_message.Message):
     W_FIELD_NUMBER: _ClassVar[int]
     H_FIELD_NUMBER: _ClassVar[int]
     event: str
-    byClass: str
+    byLabel: str
     byText: str
     byOrder: _containers.RepeatedScalarFieldContainer[int]
     confidence: float
@@ -36,7 +36,7 @@ class DetectorStepSuggestion(_message.Message):
     y: float
     w: float
     h: float
-    def __init__(self, event: _Optional[str] = ..., byClass: _Optional[str] = ..., byText: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ..., x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ...) -> None: ...
+    def __init__(self, event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ..., x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ...) -> None: ...
 
 class SuggestStepRequest(_message.Message):
     __slots__ = ("user", "data", "event", "detector", "confidence")
@@ -62,7 +62,7 @@ class SuggestStepResponse(_message.Message):
     suggestions: _containers.RepeatedCompositeFieldContainer[DetectorStepSuggestion]
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., suggestions: _Optional[_Iterable[_Union[DetectorStepSuggestion, _Mapping]]] = ...) -> None: ...
 
-class AddDetectorClassRequest(_message.Message):
+class AddDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "detector", "name")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
@@ -72,17 +72,17 @@ class AddDetectorClassRequest(_message.Message):
     name: str
     def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
 
-class AddDetectorClassResponse(_message.Message):
-    __slots__ = ("status", "message", "clazz")
+class AddDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "label")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    CLAZZ_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
     status: bool
     message: str
-    clazz: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., clazz: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+    label: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., label: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
-class ExistsDetectorClassRequest(_message.Message):
+class ExistsDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "detector", "name")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
@@ -92,15 +92,15 @@ class ExistsDetectorClassRequest(_message.Message):
     name: str
     def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
 
-class ExistsDetectorClassResponse(_message.Message):
-    __slots__ = ("status", "message", "clazz")
+class ExistsDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "label")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    CLAZZ_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
     status: bool
     message: str
-    clazz: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., clazz: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+    label: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., label: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
 class DetectText(_message.Message):
     __slots__ = ("x", "y", "w", "h", "page", "block", "par", "line", "word", "value", "confidence")
@@ -226,7 +226,7 @@ class RemoveDetectorImageLabelResponse(_message.Message):
     message: str
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
-class CountDetectorClassRequest(_message.Message):
+class CountDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "detector")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
@@ -234,7 +234,7 @@ class CountDetectorClassRequest(_message.Message):
     detector: str
     def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
 
-class CountDetectorClassResponse(_message.Message):
+class CountDetectorLabelResponse(_message.Message):
     __slots__ = ("status", "message", "total")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
@@ -244,7 +244,7 @@ class CountDetectorClassResponse(_message.Message):
     total: int
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ...) -> None: ...
 
-class ListDetectorClassRequest(_message.Message):
+class ListDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "detector", "skip", "limit", "search")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
@@ -258,17 +258,17 @@ class ListDetectorClassRequest(_message.Message):
     search: str
     def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ..., search: _Optional[str] = ...) -> None: ...
 
-class ListDetectorClassResponse(_message.Message):
-    __slots__ = ("status", "message", "total", "classes")
+class ListDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "total", "labels")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
     TOTAL_FIELD_NUMBER: _ClassVar[int]
-    CLASSES_FIELD_NUMBER: _ClassVar[int]
+    LABELS_FIELD_NUMBER: _ClassVar[int]
     status: bool
     message: str
     total: int
-    classes: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., classes: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
+    labels: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., labels: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
 
 class ListDetectorImageLabelRequest(_message.Message):
     __slots__ = ("user", "image", "skip", "limit", "search")

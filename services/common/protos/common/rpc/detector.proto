@@ -23,10 +23,10 @@ service Detector {
     rpc countDetectorImageLabel(CountDetectorImageLabelRequest) returns (CountDetectorImageLabelResponse);
     rpc addDetectorImageLabel(AddDetectorImageLabelRequest) returns (AddDetectorImageLabelResponse);
     rpc listDetectorImageLabel(ListDetectorImageLabelRequest) returns (ListDetectorImageLabelResponse);
-    rpc listDetectorClass(ListDetectorClassRequest) returns (ListDetectorClassResponse);
-    rpc existsDetectorClass(ExistsDetectorClassRequest) returns (ExistsDetectorClassResponse);
-    rpc addDetectorClass(AddDetectorClassRequest) returns (AddDetectorClassResponse);
-    rpc countDetectorClass(CountDetectorClassRequest) returns (CountDetectorClassResponse);
+    rpc listDetectorLabel(ListDetectorLabelRequest) returns (ListDetectorLabelResponse);
+    rpc existsDetectorLabel(ExistsDetectorLabelRequest) returns (ExistsDetectorLabelResponse);
+    rpc addDetectorLabel(AddDetectorLabelRequest) returns (AddDetectorLabelResponse);
+    rpc countDetectorLabel(CountDetectorLabelRequest) returns (CountDetectorLabelResponse);
     rpc suggestStep(SuggestStepRequest) returns (SuggestStepResponse);
 }
 
@@ -34,7 +34,7 @@ service Detector {
 
 message DetectorStepSuggestion {
   optional string event = 1;
-  optional string byClass = 2;
+  optional string byLabel = 2;
   optional string byText = 3;
   repeated int32 byOrder = 4;
   optional float confidence = 5;
@@ -58,28 +58,28 @@ message SuggestStepResponse {
     repeated DetectorStepSuggestion suggestions = 3;
 }
 
-message AddDetectorClassRequest {
+message AddDetectorLabelRequest {
     string user = 1;
     string detector = 2;
     string name = 3;
 }
 
-message AddDetectorClassResponse {
+message AddDetectorLabelResponse {
     bool status = 1;
     optional string message = 2;
-    optional Serialized clazz = 3;
+    optional Serialized label = 3;
 }
 
-message ExistsDetectorClassRequest {
+message ExistsDetectorLabelRequest {
     string user = 1;
     string detector = 2;
     string name = 3;
 }
 
-message ExistsDetectorClassResponse {
+message ExistsDetectorLabelResponse {
     bool status = 1;
     optional string message = 2;
-    optional Serialized clazz = 3;
+    optional Serialized label = 3;
 }
 
 message DetectText {
@@ -155,20 +155,20 @@ message RemoveDetectorImageLabelResponse {
     optional string message = 2;
 }
 
-message CountDetectorClassRequest {
+message CountDetectorLabelRequest {
     string user = 1;
     string detector = 2;
     
 }
 
-message CountDetectorClassResponse {
+message CountDetectorLabelResponse {
     bool status = 1;
     optional string message = 2;
     int32 total = 3;
 }
 
 
-message ListDetectorClassRequest {
+message ListDetectorLabelRequest {
     string user = 1;
     string detector = 2;
     int32 skip = 3;
@@ -176,11 +176,11 @@ message ListDetectorClassRequest {
     string search = 5;
 }
 
-message ListDetectorClassResponse {
+message ListDetectorLabelResponse {
     bool status = 1;
     optional string message = 2;
     int32 total = 3;
-    repeated Serialized classes = 4;
+    repeated Serialized labels = 4;
 }
 
 

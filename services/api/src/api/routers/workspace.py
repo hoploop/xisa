@@ -34,11 +34,11 @@ Workspace = Annotated[WorkspaceClient, Depends(get_workspace)]
 
 @router.post(
     "/project/create",
-    
+    operation_id="workspaceProjectCreate",
     description="Performs the creation of a project",
     response_model=Project,
 )
-async def create_project(
+async def project_create(
     user: CurrentUser, workspace: Workspace, name: str, description: Optional[str] = ""
 ):
     try:
@@ -53,10 +53,11 @@ async def create_project(
 
 @router.delete(
     "/project/delete",
+    operation_id="workspaceProjectDelete",
     description="Performs the removal of a project",
     response_model=bool,
 )
-async def delete_project(user: CurrentUser, workspace: Workspace, projectId: PydanticObjectId):
+async def project_delete(user: CurrentUser, workspace: Workspace, projectId: PydanticObjectId):
     try:
         return await workspace.deleteProject(user,projectId)
     except Exception as e:
@@ -68,11 +69,11 @@ async def delete_project(user: CurrentUser, workspace: Workspace, projectId: Pyd
 
 @router.put(
     "/project/update",
-    
+    operation_id="workspaceProjectUpdate",
     description="Performs the update of a project",
     response_model=bool,
 )
-async def update_project(
+async def project_update(
     user: CurrentUser,
     workspace: Workspace,
     projectId: PydanticObjectId,
@@ -95,10 +96,10 @@ class ProjectListResponse(BaseModel):
 
 @router.get(
     "/project/list",
-    
+    operation_id="workspaceProjectList",
     response_model=ProjectListResponse,
 )
-async def list_project(
+async def project_list(
     user: CurrentUser,
     workspace: Workspace,
     skip: int = 0,
@@ -118,9 +119,10 @@ async def list_project(
 
 @router.get(
     "/project/load",
+    operation_id="workspaceProjectLoad",
     response_model=Project,
 )
-async def load_project(
+async def project_load(
     user: CurrentUser,
     workspace: Workspace,
     projectId: PydanticObjectId

@@ -49,7 +49,7 @@ export class RecordStudioComponent implements OnInit {
     if (!this.recordId) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.record.recordLoadRecorderid(this.recordId).subscribe({
+    this.ctx.api.recorder.recorderLoad(this.recordId).subscribe({
       next: (result)=>{
         this.record = result;
         this.projectId = result.project;
@@ -73,7 +73,7 @@ export class RecordStudioComponent implements OnInit {
 
   loadEvents(){
     if (!this.recordId) return;
-    this.ctx.api.record.recordEventListRecordid(this.recordId).subscribe({
+    this.ctx.api.recorder.recorderEventList(this.recordId).subscribe({
       next: (result)=>{
         this.events = result;
         this.loading.next(undefined);
@@ -101,7 +101,7 @@ export class RecordStudioComponent implements OnInit {
 
   countFrames(){
     if (!this.recordId) return;
-    this.ctx.api.record.recordFrameCountRecordid(this.recordId).subscribe({
+    this.ctx.api.recorder.recorderFrameCount(this.recordId).subscribe({
       next: (result)=>{
         this.frames_count = result;
         for (let i = 0; i < this.frames_count; i++){
