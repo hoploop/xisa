@@ -15,6 +15,7 @@ import { HTTPValidationError } from '../model/models';
 import { Record } from '../model/models';
 import { RecordEventListRecordid200ResponseInner } from '../model/models';
 import { RecordListResponse } from '../model/models';
+import { ResponseEventLoadRecordEventsLoadEventidGet } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -47,6 +48,13 @@ export interface RecordServiceInterface {
      * @param recordId 
      */
     recordEventsCountRecordid(recordId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
+     * Event Load
+     * Loads a specific event
+     * @param eventId 
+     */
+    recordEventsLoadEventid(eventId: string, extraHttpRequestParams?: any): Observable<ResponseEventLoadRecordEventsLoadEventidGet>;
 
     /**
      * Frame Count

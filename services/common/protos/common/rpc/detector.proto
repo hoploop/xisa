@@ -27,6 +27,35 @@ service Detector {
     rpc existsDetectorClass(ExistsDetectorClassRequest) returns (ExistsDetectorClassResponse);
     rpc addDetectorClass(AddDetectorClassRequest) returns (AddDetectorClassResponse);
     rpc countDetectorClass(CountDetectorClassRequest) returns (CountDetectorClassResponse);
+    rpc suggestStep(SuggestStepRequest) returns (SuggestStepResponse);
+}
+
+
+
+message DetectorStepSuggestion {
+  optional string event = 1;
+  optional string byClass = 2;
+  optional string byText = 3;
+  repeated int32 byOrder = 4;
+  optional float confidence = 5;
+  float x = 6;
+    float y = 7;
+        float w = 8;
+    float h = 9;
+}
+
+message SuggestStepRequest {
+    string user = 1;
+    string data = 2;
+    string event = 3;
+    string detector = 4;
+    optional float confidence = 5;
+}
+
+message SuggestStepResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated DetectorStepSuggestion suggestions = 3;
 }
 
 message AddDetectorClassRequest {
@@ -197,7 +226,7 @@ message AddDetectorImageLabelRequest {
     float xend = 4;
     float ystart = 5;
     float yend = 6;
-    repeated string classes = 7;
+    string label = 7;
 }
 
 message AddDetectorImageLabelResponse {

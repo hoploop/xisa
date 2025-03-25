@@ -8,7 +8,7 @@ from beanie import PydanticObjectId
 from common.models.auth import User
 from common.models.recorder import EVENTS, Record
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordFrameRequest, CountRecordRequest, DeleteRecordRequest, ListRecordEventRequest, ListRecordRequest, LoadRecordFrameBase64Request, LoadRecordFrameRequest, LoadRecordRequest, RunningRequest, SizeRecordRequest, SizeRecordVideoRequest, StartRecordRequest, StopRecordRequest, StreamRangeRecordVideoRequest, StreamRecordVideoRequest, UpdateRecordRequest
+from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordFrameRequest, CountRecordRequest, DeleteRecordRequest, ListRecordEventRequest, ListRecordRequest, LoadEventRequest, LoadRecordFrameBase64Request, LoadRecordFrameRequest, LoadRecordRequest, RunningRequest, SizeRecordRequest, SizeRecordVideoRequest, StartRecordRequest, StopRecordRequest, StreamRangeRecordVideoRequest, StreamRecordVideoRequest, UpdateRecordRequest
 from common.rpc.recorder_pb2_grpc import RecorderStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -115,6 +115,13 @@ class RecorderClient(Client):
         if res.status == False:
             raise Exception(res.message)
         return res.total
+    
+    async def loadEvent(self,user:User,eventId:PydanticObjectId) -> EVENTS:
+        req = LoadEventRequest(user=str(user.id),id=str(eventId))
+        res = await self.client.loadEvent(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.event)
     
     async def loadRecordFrame(self,user:User,recordId:PydanticObjectId,frame:int)-> bytes:
         req = LoadRecordFrameRequest(user=str(user.id),record=str(recordId),frame=frame)

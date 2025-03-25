@@ -15,7 +15,7 @@ import grpc
 from common.models import MODELS
 from common.models.defaults import utc_now
 from common.models.recorder import OS, Event, Record
-from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadRecordFrameBase64Request, LoadRecordFrameBase64Response, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
+from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadEventRequest, LoadEventResponse, LoadRecordFrameBase64Request, LoadRecordFrameBase64Response, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
 from common.rpc.recorder_pb2_grpc import RecorderServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -281,6 +281,16 @@ class RecorderService(Service, RecorderServicer):
         except Exception as e:
             log.warning(str(e))
             return LoadRecordFrameResponse(status=False,message=str(e))
+        
+    async def loadEvent(self, request: LoadEventRequest, context) -> LoadEventResponse:
+        try:
+            evt = await Event.find_many(Event.id == PydanticObjectId(request.id),with_children=True).first_or_none()
+            if evt is None:
+                return LoadEventResponse(status=False,message="workspace.record.event.errors.not_found")
+            return LoadEventResponse(status=True,event=Conversions.serialize(evt))
+        except Exception as e:
+            log.warning(str(e))
+            return LoadEventResponse(status=False,message=str(e))
         
     
     async def loadRecordFrameBase64(self, request:LoadRecordFrameBase64Request, context) -> LoadRecordFrameBase64Response:

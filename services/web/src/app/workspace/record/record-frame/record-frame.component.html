@@ -1,1 +1,4 @@
-<app-image-annotator *ngIf="(loading|async) == undefined" [url]="imageUrl" [highlights]="highlights"></app-image-annotator>
+<div class="d-flex flex-column w-100">
+  <app-detector-suggestion *ngFor="let suggestion of suggestions" (onAccept)="accept($event)" [suggestion]="suggestion"></app-detector-suggestion>
+  <app-image-annotator *ngIf="(loading|async) == undefined" (doubleClicked)="selectClasses($event)" [url]="imageUrl" [boxes]="boxes"></app-image-annotator>
+</div>

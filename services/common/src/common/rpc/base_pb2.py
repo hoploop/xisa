@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63ommon/rpc/base.proto\"\x16\n\x04Ping\x12\x0e\n\x06status\x18\x01 \x01(\x08\"\x16\n\x04Pong\x12\x0e\n\x06status\x18\x02 \x01(\x08\"-\n\nSerialized\x12\x11\n\tsignature\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\tb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x63ommon/rpc/base.proto\"\x16\n\x04Ping\x12\x0e\n\x06status\x18\x01 \x01(\x08\"\x16\n\x04Pong\x12\x0e\n\x06status\x18\x02 \x01(\x08\"-\n\nSerialized\x12\x11\n\tsignature\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\xaa\x01\n\x04Step\x12\r\n\x05order\x18\x01 \x01(\x05\x12\x15\n\x08scenario\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x12\n\x05\x65vent\x18\x03 \x01(\tH\x01\x88\x01\x01\x12\x0f\n\x07\x62yClass\x18\x04 \x03(\t\x12\x0e\n\x06\x62yText\x18\x05 \x03(\t\x12\x0f\n\x07\x62yOrder\x18\x06 \x03(\x05\x12\x10\n\x08\x64uration\x18\x07 \x01(\x02\x12\r\n\x05retry\x18\x08 \x01(\x05\x42\x0b\n\t_scenarioB\x08\n\x06_eventb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,4 +37,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PONG']._serialized_end=71
   _globals['_SERIALIZED']._serialized_start=73
   _globals['_SERIALIZED']._serialized_end=118
+  _globals['_STEP']._serialized_start=121
+  _globals['_STEP']._serialized_end=291
 # @@protoc_insertion_point(module_scope)

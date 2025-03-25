@@ -24,8 +24,9 @@ from PIL import Image
 from common.clients.api import ApiClient
 from common.clients.recorder import RecorderClient
 from common.models import MODELS
-from common.models.detector import Detector, DetectorClass, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
-from common.rpc.detector_pb2 import AddDetectorClassRequest, AddDetectorClassResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, ExistsDetectorClassRequest, ExistsDetectorClassResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
+from common.models.auth import User
+from common.models.detector import Detector, DetectorLabel, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
+from common.rpc.detector_pb2 import AddDetectorClassRequest, AddDetectorClassResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorClassRequest, CountDetectorClassResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, DetectorStepSuggestion, ExistsDetectorClassRequest, ExistsDetectorClassResponse, ListDetectorClassRequest, ListDetectorClassResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, SuggestStepRequest, SuggestStepResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
 from common.service import ClientConfig, Service
 from common.rpc.detector_pb2_grpc import DetectorServicer
 from common.service import ServiceConfig
@@ -57,9 +58,105 @@ class DetectorService(Service, DetectorServicer):
         self.api = ApiClient(self.config.api)
         self.recorder = RecorderClient(self.config.recorder)
         
+        
     async def start(self):
          await Mongodb.initialize(self.config.database,MODELS)
          self.CACHE_YOLOS = {}
+         await self.recorder.startup()
+         
+    async def suggestStep(self, request:SuggestStepRequest, context) -> SuggestStepResponse:
+        try:
+            user = await User.find_many(User.id == PydanticObjectId(request.user)).first_or_none()
+            event = await self.recorder.loadEvent(user,PydanticObjectId(request.event))
+            
+            b64image = request.data
+            log.debug("Loading image")
+            if "," in b64image:
+                bsource = b64image.split(",")[1]
+            else:
+                bsource = b64image
+            img = Image.open(BytesIO(self.decode_base64(bsource)))
+            width, height = img.size
+            
+            # If has no position, not suggestions are possible so far
+            if not event.type.startswith('mouse'):
+                return SuggestStepResponse(status=True,suggestions=[])
+            
+            x, y = event.position
+            print('{0},{1}'.format(x,y))
+            #x = x / width
+            #y = y / height
+            print('{0},{1}'.format(x,y))
+            
+            req = DetectTextsRequest(user=request.user,data=request.data,confidence=request.confidence)
+            res = await self.detectTexts(req,context)
+            
+            suggestions = []
+            
+            if res.status == True:
+                matched = None
+                for text in res.texts:
+                    nx = text.x*width
+                    ny = text.y*height
+                    nw = text.w*width
+                    nh = text.h*height
+                    
+                    if x > nx and x < (nx+nw) and y > ny and y < (ny+nh):
+                        matched = text
+                        log.debug('detected Text: {0},{1} ({2},{3})'.format(nx,ny,nw,nh))
+                        break
+                        
+                # Now checking if it is unique
+                if matched:
+                    others = []
+                    for text in res.texts:
+                        if text!=matched and text.value == matched.value:
+                            others.append(text)
+                    
+                    # There are no other texts with same value, suggestion is unique for text
+                    if len(others)==0:
+                        suggestions.append(DetectorStepSuggestion(event=request.event,byText=matched.value,confidence=matched.confidence,x=nx,y=ny,w=nw,h=nh))
+                    
+                    else:
+                        suggestions.append(DetectorStepSuggestion(event=request.event,byText=matched.value,byOrder=[matched.line,matched.block],x=nx,y=ny,w=nw,h=nh,confidence=matched.confidence))
+                        
+                            
+            req = DetectObjectsRequest(user=request.user,data=request.data,detector=request.detector,confidence=request.confidence)
+            res = await self.detectObjects(req,context)
+                        
+            #DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col
+            
+            if res.status == True:
+                matched = None
+                for obj in res.objects:
+                    nx = obj.x*width
+                    ny = obj.y*height
+                    nw = obj.w*width
+                    nh = obj.h*height
+                    if x > nx and x < (nx+nw) and y > ny and y < (ny+nh):
+                        matched = obj
+                        break
+                
+                # Now checking if it is unique
+                if matched:
+                    others = []
+                    for obj in res.objects:
+                        if obj != matched and matched.name == obj.name:
+                            others.append(obj)
+                            
+                    # There are no other objects with same value
+                    if len(others)==0:
+                        suggestions.append(DetectorStepSuggestion(event=request.event,byClass=matched.name,confidence=matched.confidence,x=nx,y=ny,w=nw,h=nh))
+                    
+                    else:
+                        suggestions.append(DetectorStepSuggestion(event=request.event,byClass=matched.name,byOrder=[matched.row,matched.col],x=nx,y=ny,w=nw,h=nh,confidence=matched.confidence))
+                
+            return SuggestStepResponse(status=True,suggestions=suggestions)
+            
+        
+        except Exception as e:
+            log.warning(str(e))
+            return SuggestStepResponse(status=False,message=str(e))
          
     
     async def detectTexts(self, request: DetectTextsRequest, context) -> DetectTextsResponse:
@@ -82,7 +179,7 @@ class DetectorService(Service, DetectorServicer):
             for i in range(n_boxes):
                 confidence = int(text_results["conf"][i])
                 text = text_results["text"][i]
-                if confidence >=  confidence_level:
+                if confidence >=  confidence_level and text.strip()!='':
                     x = text_results["left"][i] / width
                     y = text_results["top"][i] / height
                     w = text_results["width"][i] / width
@@ -224,8 +321,6 @@ class DetectorService(Service, DetectorServicer):
             total = await DetectorImage.find_many(
                 DetectorImage.detector == detector_id
             ).count()
-            
-            
             
             return CountDetectorImageResponse(status=True,total=total)
         except Exception as e:
@@ -534,11 +629,11 @@ class DetectorService(Service, DetectorServicer):
             if detector is None:
                 return AddDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
             
-            found = await DetectorClass.find_many(DetectorClass.detector == detector_id,DetectorClass.name == request.name.strip()).first_or_none()
+            found = await DetectorLabel.find_many(DetectorLabel.detector == detector_id,DetectorLabel.name == request.name.strip()).first_or_none()
             if found is not None:
                 return AddDetectorClassResponse(status=False,message="workspace.detector.class.errors.already_existing")
         
-            clazz = await DetectorClass(detector=detector_id,name=request.name.strip()).insert()
+            clazz = await DetectorLabel(detector=detector_id,name=request.name.strip()).insert()
             return AddDetectorClassResponse(status=True,clazz=Conversions.serialize(clazz))
 
         except Exception as e:
@@ -552,7 +647,7 @@ class DetectorService(Service, DetectorServicer):
             if detector is None:
                 return ExistsDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
             
-            found = await DetectorClass.find_many(DetectorClass.detector == detector_id,DetectorClass.name == request.name.strip()).first_or_none()
+            found = await DetectorLabel.find_many(DetectorLabel.detector == detector_id,DetectorLabel.name == request.name.strip()).first_or_none()
             if found is None:
                 return ExistsDetectorClassResponse(status=True,clazz=None)
                 
@@ -566,8 +661,8 @@ class DetectorService(Service, DetectorServicer):
         self, user_id: PydanticObjectId, detector_id: PydanticObjectId
     ):
 
-        classes = await DetectorClass.find_many(
-            DetectorClass.detector == detector_id
+        classes = await DetectorLabel.find_many(
+            DetectorLabel.detector == detector_id
         ).to_list()
         images = await DetectorImage.find_many(
             DetectorImage.detector == detector_id
@@ -618,8 +713,8 @@ class DetectorService(Service, DetectorServicer):
             lines = []
             for label in labels:
                 for clazz_id in label.classes:
-                    dclass = await DetectorClass.find_many(
-                        DetectorClass.id == clazz_id
+                    dclass = await DetectorLabel.find_many(
+                        DetectorLabel.id == clazz_id
                     ).first_or_none()
                     class_name = dclass.name
                     w = (label.xend - label.xstart) / image.width
@@ -693,20 +788,20 @@ class DetectorService(Service, DetectorServicer):
                 return AddDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.not_found")
             detector_id = found.detector
 
-            class_ids = []
-            for class_name in request.classes:
-                found_class = await DetectorClass.find_many(
-                    DetectorClass.detector == detector_id, DetectorClass.name == class_name
-                ).first_or_none()
-                if found_class is None:
-                    found_class = await DetectorClass(
-                        detector=detector_id, name=class_name
-                    ).insert()
-                class_ids.append(found_class.id)
+            class_id = None
+            class_name = request.label
+            found_class = await DetectorLabel.find_many(
+                DetectorLabel.detector == detector_id, DetectorLabel.name == class_name
+            ).first_or_none()
+            if found_class is None:
+                found_class = await DetectorLabel(
+                    detector=detector_id, name=class_name
+                ).insert()
+            class_id = found_class.id
 
             detector_image_label = await DetectorImageLabel(
                 image=image_id,
-                classes=class_ids,
+                label=class_id,
                 xstart=request.xstart,
                 xend=request.xend,
                 ystart=request.ystart,
@@ -732,17 +827,17 @@ class DetectorService(Service, DetectorServicer):
             if search is not None and search.strip() != "":
                 classes = []
                 qry = And(
-                    DetectorClass.detector == detector_id,
-                    RegEx(DetectorClass.name, search, "i"),
+                    DetectorLabel.detector == detector_id,
+                    RegEx(DetectorLabel.name, search, "i"),
                 )
             else:
-                qry = And(DetectorClass.detector == detector_id)
-            total = await DetectorClass.find_many(qry).count()
+                qry = And(DetectorLabel.detector == detector_id)
+            total = await DetectorLabel.find_many(qry).count()
             classes = (
-                await DetectorClass.find_many(qry)
+                await DetectorLabel.find_many(qry)
                 .skip(skip)
                 .limit(limit)
-                .sort(-DetectorClass.updated)
+                .sort(-DetectorLabel.updated)
                 .to_list()
             )
             user_id = PydanticObjectId(request.user)
@@ -763,8 +858,8 @@ class DetectorService(Service, DetectorServicer):
             if found is None:
                 return ListDetectorClassResponse(status=False,message="workspace.detector.errors.not_found")
 
-            qry = And(DetectorClass.detector == detector_id)
-            total = await DetectorClass.find_many(qry).count()
+            qry = And(DetectorLabel.detector == detector_id)
+            total = await DetectorLabel.find_many(qry).count()
             
             user_id = PydanticObjectId(request.user)
             await self.update_folder(user_id, detector_id)
@@ -791,10 +886,10 @@ class DetectorService(Service, DetectorServicer):
             if search is not None and search.strip() != "":
                 classes = []
                 qry = And(
-                    DetectorClass.detector == found.detector,
-                    RegEx(DetectorClass.name, search, "i"),
+                    DetectorLabel.detector == found.detector,
+                    RegEx(DetectorLabel.name, search, "i"),
                 )
-                found_classes = await DetectorClass.find_many(qry).to_list()
+                found_classes = await DetectorLabel.find_many(qry).to_list()
                 for found_class in found_classes:
                     classes.append(found_class.id)
                 qry = And(

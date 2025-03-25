@@ -24,6 +24,7 @@ import { DetectorImageListResponse } from '../model/models';
 import { DetectorImageMode } from '../model/models';
 import { DetectorListResponse } from '../model/models';
 import { DetectorObjectsPayload } from '../model/models';
+import { DetectorSuggestion } from '../model/models';
 import { DetectorTextsPayload } from '../model/models';
 import { HTTPValidationError } from '../model/models';
 
@@ -95,6 +96,15 @@ export interface DetectorServiceInterface {
      * @param confidence 
      */
     detectorFrameObjectsRecordid(recordId: string, detectorId: string, frame: number, confidence: number, extraHttpRequestParams?: any): Observable<Array<DetectObject>>;
+
+    /**
+     * Frame Suggestions
+     * Performs the detection of suggestions from recording frame image
+     * @param detectorId 
+     * @param eventId 
+     * @param confidence 
+     */
+    detectorFrameSuggestions(detectorId: string, eventId: string, confidence: number, extraHttpRequestParams?: any): Observable<Array<DetectorSuggestion>>;
 
     /**
      * Texts Frame

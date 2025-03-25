@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
 from common.clients.detector import DetectorClient
-from common.models.detector import DetectObject, DetectText, Detector as DetectorDocument, DetectorClass
+from common.models.detector import DetectObject, DetectText, Detector as DetectorDocument, DetectorLabel, DetectorSuggestion
 from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
 from api.routers.recorder import Recorder
 
@@ -142,6 +142,24 @@ async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload
 
 
 
+
+
+@router.post(
+    "/frame/suggestions",
+    description="Performs the detection of suggestions from recording frame image",
+    operation_id="detectSuggestionsFromFrame",
+    response_model=List[DetectorSuggestion]
+)
+async def frame_suggestions(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,eventId:PydanticObjectId, confidence:float):
+    try:
+        event = await recorder.loadEvent(user,eventId)
+        data = await recorder.loadRecordFrameBase64(user,event.record,event.frame)
+        return  await detector.suggestStep(user,data,detectorId,eventId,confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
 @router.post(
     "/frame/texts",
     description="Performs the detection of texts from recording frame image",
@@ -244,7 +262,7 @@ async def image_label_list(
 
                                   
 class DetectorClassListResponse(BaseModel):
-    classes: List[DetectorClass]
+    classes: List[DetectorLabel]
     total: int
                       
 
@@ -279,7 +297,7 @@ async def class_exists(
     name:str
 ):
     try:
-        if await detector.existsDetectorClass(user,detectorId,name) is not None:
+        if await detector.existsDetectorLabel(user,detectorId,name) is not None:
             return True
         else:
             return False
@@ -290,7 +308,7 @@ async def class_exists(
 
 @router.post(
     "/class/add/{detectorId}",
-    response_model=DetectorClass,
+    response_model=DetectorLabel,
 )
 async def class_add(
     user: CurrentUser,
@@ -299,7 +317,7 @@ async def class_add(
     name:str
 ):
     try:
-        return await detector.addDetectorClass(user,detectorId,name)
+        return await detector.addDetectorLabel(user,detectorId,name)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

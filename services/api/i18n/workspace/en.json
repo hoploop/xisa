@@ -26,6 +26,16 @@
         "already_existing": "Another detector with this username already found",
         "original_not_found":"Original detector not found"
       },
+      "suggestion":{
+        "by_class":"I suggest you to select this element by object class '{{class}}'",
+        "by_classes_order_1":"I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
+        "by_classes_order_2":"I suggest you to select this element by object class '{{class}}' and then select by row {{row}} and col {{col}}",
+        "by_text":"I suggest you to select this element by text '{{text}}'",
+        "by_texts_order_1":"I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
+        "by_texts_order_2":"I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
+        "accept":"Accept"
+        
+      },
       "class": {
         "loadings": "Loading detector classes...",
         "selects":"Select detector classes",
@@ -77,6 +87,12 @@
       "frame":{
         "loading":"Frame is loading"
       },
+      "event":{
+        "errors":{
+          "not_found":"Event not found"
+        }
+      },
+
       "duration":"Duration: ",
       "events":"Events: ",
       "frames":"Frames: ",

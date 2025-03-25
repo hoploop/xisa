@@ -125,6 +125,11 @@ class RecorderStub(object):
                 request_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.FromString,
                 _registered_method=True)
+        self.loadEvent = channel.unary_unary(
+                '/Recorder/loadEvent',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.LoadEventRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.LoadEventResponse.FromString,
+                _registered_method=True)
 
 
 class RecorderServicer(object):
@@ -239,6 +244,12 @@ class RecorderServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def loadEvent(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RecorderServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -331,6 +342,11 @@ def add_RecorderServicer_to_server(servicer, server):
                     servicer.sizeRecordVideo,
                     request_deserializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.FromString,
                     response_serializer=common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.SerializeToString,
+            ),
+            'loadEvent': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadEvent,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.LoadEventRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.LoadEventResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -819,6 +835,33 @@ class Recorder(object):
             '/Recorder/sizeRecordVideo',
             common_dot_rpc_dot_recorder__pb2.SizeRecordVideoRequest.SerializeToString,
             common_dot_rpc_dot_recorder__pb2.SizeRecordVideoResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadEvent(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/loadEvent',
+            common_dot_rpc_dot_recorder__pb2.LoadEventRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.LoadEventResponse.FromString,
             options,
             channel_credentials,
             insecure,

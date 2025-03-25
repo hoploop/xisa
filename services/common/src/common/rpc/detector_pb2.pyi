@@ -16,6 +16,52 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class DetectorStepSuggestion(_message.Message):
+    __slots__ = ("event", "byClass", "byText", "byOrder", "confidence", "x", "y", "w", "h")
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    BYCLASS_FIELD_NUMBER: _ClassVar[int]
+    BYTEXT_FIELD_NUMBER: _ClassVar[int]
+    BYORDER_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    X_FIELD_NUMBER: _ClassVar[int]
+    Y_FIELD_NUMBER: _ClassVar[int]
+    W_FIELD_NUMBER: _ClassVar[int]
+    H_FIELD_NUMBER: _ClassVar[int]
+    event: str
+    byClass: str
+    byText: str
+    byOrder: _containers.RepeatedScalarFieldContainer[int]
+    confidence: float
+    x: float
+    y: float
+    w: float
+    h: float
+    def __init__(self, event: _Optional[str] = ..., byClass: _Optional[str] = ..., byText: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ..., x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ...) -> None: ...
+
+class SuggestStepRequest(_message.Message):
+    __slots__ = ("user", "data", "event", "detector", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    data: str
+    event: str
+    detector: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., data: _Optional[str] = ..., event: _Optional[str] = ..., detector: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class SuggestStepResponse(_message.Message):
+    __slots__ = ("status", "message", "suggestions")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    SUGGESTIONS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    suggestions: _containers.RepeatedCompositeFieldContainer[DetectorStepSuggestion]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., suggestions: _Optional[_Iterable[_Union[DetectorStepSuggestion, _Mapping]]] = ...) -> None: ...
+
 class AddDetectorClassRequest(_message.Message):
     __slots__ = ("user", "detector", "name")
     USER_FIELD_NUMBER: _ClassVar[int]
@@ -273,22 +319,22 @@ class UploadDetectorImageResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., images: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
 
 class AddDetectorImageLabelRequest(_message.Message):
-    __slots__ = ("user", "image", "xstart", "xend", "ystart", "yend", "classes")
+    __slots__ = ("user", "image", "xstart", "xend", "ystart", "yend", "label")
     USER_FIELD_NUMBER: _ClassVar[int]
     IMAGE_FIELD_NUMBER: _ClassVar[int]
     XSTART_FIELD_NUMBER: _ClassVar[int]
     XEND_FIELD_NUMBER: _ClassVar[int]
     YSTART_FIELD_NUMBER: _ClassVar[int]
     YEND_FIELD_NUMBER: _ClassVar[int]
-    CLASSES_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
     user: str
     image: str
     xstart: float
     xend: float
     ystart: float
     yend: float
-    classes: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, user: _Optional[str] = ..., image: _Optional[str] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., classes: _Optional[_Iterable[str]] = ...) -> None: ...
+    label: str
+    def __init__(self, user: _Optional[str] = ..., image: _Optional[str] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., label: _Optional[str] = ...) -> None: ...
 
 class AddDetectorImageLabelResponse(_message.Message):
     __slots__ = ("status", "message", "label")

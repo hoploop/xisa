@@ -15,7 +15,18 @@ from common.models.defaults import empty_list, utc_now
 # INITIALIZATION
 log = logging.getLogger(__name__)
 
-class DetectorClass(Document):
+class DetectorSuggestion(Document):
+    by_class: Optional[str] = None
+    by_text: Optional[str] = None
+    by_order: List[int] = Field(default_factory=empty_list)
+    event:PydanticObjectId
+    confidence:float
+    x:float
+    y:float
+    w:float
+    h: float
+
+class DetectorLabel(Document):
     detector: PydanticObjectId
     name: str
     created: datetime = Field(default_factory=utc_now)
@@ -29,7 +40,7 @@ class DetectorImageLabel(Document):
     image: PydanticObjectId
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)
-    classes: List[PydanticObjectId] = Field(default_factory=empty_list)
+    label: PydanticObjectId
     xstart:float
     xend:float
     ystart:float
@@ -86,7 +97,7 @@ class Detector(Document):
     @before_event(Delete)
     async def remove_related(self):
         await DetectorImage.find_all(DetectorImage.detector == self.id).delete()
-        await DetectorClass.find_all(DetectorClass.detector == self.id).delete()
+        await DetectorLabel.find_all(DetectorLabel.detector == self.id).delete()
      
 class DetectorTrainingSession(BaseModel):
     type:Literal['detector.training.session'] = 'detector.training.session'

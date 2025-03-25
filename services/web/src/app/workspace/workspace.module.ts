@@ -31,6 +31,7 @@ import { DetectorSelectorComponent } from './detector/detector-selector/detector
 import { RecordVideoComponent } from './record/record-video/record-video.component';
 import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
 import { TrainModule } from "../train/train.module";
+import { DetectorSuggestionComponent } from './detector/detector-suggestion/detector-suggestion.component';
 
 
 
@@ -62,6 +63,7 @@ import { TrainModule } from "../train/train.module";
     DetectorSelectorComponent,
     RecordVideoComponent,
     DetectorClassFilterPipe,
+    DetectorSuggestionComponent,
   ],
   imports: [
     CommonModule,

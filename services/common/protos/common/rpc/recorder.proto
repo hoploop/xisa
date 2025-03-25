@@ -22,7 +22,19 @@ service Recorder {
     rpc streamRecordVideo(StreamRecordVideoRequest) returns (stream StreamRecordVideoResponse);
     rpc streamRangeRecordVideo(StreamRangeRecordVideoRequest) returns (StreamRangeRecordVideoResponse);
     rpc sizeRecordVideo(SizeRecordVideoRequest) returns (SizeRecordVideoResponse);
+    rpc loadEvent(LoadEventRequest) returns (LoadEventResponse);
 
+}
+
+message LoadEventRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message LoadEventResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized event = 3;
 }
 
 message SizeRecordVideoRequest {

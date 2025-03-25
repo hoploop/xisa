@@ -119,6 +119,19 @@ async def event_count(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+@router.get(
+    "/events/load/{eventId}",
+    description="Loads a specific event",
+    response_model=EVENTS,
+)
+async def event_load(
+    eventId: PydanticObjectId, user: CurrentUser, recorder: Recorder
+):
+    try:
+        return await recorder.loadEvent(user, eventId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
 
 @router.get(
     "/event/list/{recordId}",

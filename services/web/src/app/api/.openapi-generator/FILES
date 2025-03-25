@@ -30,6 +30,7 @@ model/detector-image-mode.ts
 model/detector-image.ts
 model/detector-list-response.ts
 model/detector-objects-payload.ts
+model/detector-suggestion.ts
 model/detector-texts-payload.ts
 model/detector-training-session.ts
 model/detector.ts
@@ -55,6 +56,7 @@ model/record-event-list-recordid200-response-inner.ts
 model/record-list-response.ts
 model/record.ts
 model/register-request.ts
+model/response-event-load-record-events-load-eventid-get.ts
 model/validation-error-loc-inner.ts
 model/validation-error.ts
 param.ts

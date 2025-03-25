@@ -6,6 +6,24 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class LoadEventRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class LoadEventResponse(_message.Message):
+    __slots__ = ("status", "message", "event")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    event: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., event: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
 class SizeRecordVideoRequest(_message.Message):
     __slots__ = ("user", "record")
     USER_FIELD_NUMBER: _ClassVar[int]

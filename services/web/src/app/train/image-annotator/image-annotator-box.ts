@@ -11,36 +11,51 @@ export enum ImageAnnotatorMouseOverType {
   BOTTOM_LEFT = 6,
   LEFT = 7,
   INSIDE = 8,
-  NOT_OVER = 9
+  NOT_OVER = 9,
 }
 
 export class ImageAnnotatorBox {
   isResizing: boolean = false;
   isMoving: boolean = false;
+  canResize: boolean = true;
+  canMove: boolean = true;
   dataUrl?: string;
-  classes: DetectorClass[] = [];
-
+  class?: DetectorClass = undefined;
+  selectedBorderColor: string = 'blue';
+  defaultBorderColor: string = 'red';
+  defaultBorderSize: number = 1;
+  selectedColor: string = 'rgba(255,255,255,0.4)';
+  defaultColor: string = 'rgba(255,255,255,0.2)';
+  selectedBorderSize: number = 1;
 
   constructor(
     public x: number = 0,
     public y: number = 0,
     public w: number = 0,
     public h: number = 0,
+    public percentage: boolean = false,
     public isSelected: boolean = false
-  ) {
-
-  }
-
-  classesToStringList(): string[]{
-    let ret: string[] = [];
-    this.classes.forEach(clazz=>{
-      ret.push(clazz.name);
-    })
-    return ret;
-  }
+  ) {}
 
 
-  isMouseOver(settings:ImageAnnotatorSettings,x: number, y: number): ImageAnnotatorMouseOverType {
+
+  isMouseOver(
+    settings: ImageAnnotatorSettings,
+    x: number,
+    y: number
+  ): ImageAnnotatorMouseOverType {
+
+    if (!this.canResize){
+      if (  x > this.x  &&
+        x < this.x + this.w  &&
+        y > this.y &&
+        y < this.y + this.h ){
+          return ImageAnnotatorMouseOverType.INSIDE;
+        }else{
+          return ImageAnnotatorMouseOverType.NOT_OVER;
+        }
+    }
+
     // Bottom Right
     if (
       x >= this.x + this.w - settings.resizeHandleSize &&
@@ -129,33 +144,42 @@ export class ImageAnnotatorBox {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D,settings:ImageAnnotatorSettings,image:HTMLImageElement){
-    if (ctx==undefined) return;
-    this.updateDataUrl(ctx,image);
+  draw(
+    ctx: CanvasRenderingContext2D,
+    settings: ImageAnnotatorSettings,
+    image: HTMLImageElement
+  ) {
+    if (ctx == undefined) return;
+    this.updateDataUrl(ctx, image);
 
     // Settings colors
     if (this.isSelected) {
-      ctx.strokeStyle = settings.selectedBorderColor;
-      ctx.fillStyle = settings.selectedColor;
+      ctx.strokeStyle = this.selectedBorderColor;
+      ctx.fillStyle = this.selectedColor;
     } else {
-      ctx.strokeStyle = settings.defaultBorderColor;
-      ctx.fillStyle = settings.defaultColor;
+      ctx.strokeStyle = this.defaultBorderColor;
+      ctx.fillStyle = this.defaultColor;
     }
 
     // Drawing the main rectangle
     ctx.fillRect(this.x, this.y, this.w, this.h);
-    ctx.lineWidth = 1;
+    if (this.isSelected){
+      ctx.lineWidth = this.selectedBorderSize;
+    }else{
+      ctx.lineWidth = this.defaultBorderSize;
+    }
+
     ctx.strokeRect(this.x, this.y, this.w, this.h);
 
     //if (!this.isSelected) return;
+    if (!this.canResize) return;
 
     // Draw resize handles
     if (this.isSelected) {
-      ctx.fillStyle = settings.selectedBorderColor;
+      ctx.fillStyle = this.selectedBorderColor;
     } else {
-      ctx.fillStyle = settings.defaultBorderColor;
+      ctx.fillStyle = this.defaultBorderColor;
     }
-
 
     // Bottom right handle
     ctx.fillRect(
@@ -222,23 +246,22 @@ export class ImageAnnotatorBox {
     );
 
     //Classes
-    if (this.classes.length > 0){
-      ctx.font = "18pt Arial";
-      ctx.fillText(this.classes.length.toString(), this.x+6, this.y+20+3);
+    if (this.class) {
+      ctx.font = '18pt Arial';
+      ctx.fillText(this.class.name, this.x + 6, this.y + 20 + 3);
     }
   }
 
-  drawImage(ctx: CanvasRenderingContext2D,x:number,y:number,image: HTMLImageElement) {
-    ctx.drawImage(
-      image,
-      x,
-      y,
-      image.width,
-      image.height
-    );
+  drawImage(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    image: HTMLImageElement
+  ) {
+    ctx.drawImage(image, x, y, image.width, image.height);
   }
 
-  updateDataUrl(ctx: CanvasRenderingContext2D,image:HTMLImageElement) {
+  updateDataUrl(ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
     const canvas = ctx.canvas;
     const croppedCanvas = document.createElement('canvas');
     const croppedCtx = croppedCanvas.getContext('2d')!;

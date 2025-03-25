@@ -13,10 +13,11 @@ from common.models.detector import (
     DetectObject,
     DetectText,
     Detector,
-    DetectorClass,
+    DetectorLabel,
     DetectorImage,
     DetectorImageLabel,
     DetectorImageMode,
+    DetectorSuggestion,
 )
 from common.rpc.base_pb2 import Ping, Pong
 from common.rpc.detector_pb2 import (
@@ -29,6 +30,7 @@ from common.rpc.detector_pb2 import (
     CreateDetectorRequest,
     DetectObjectsRequest,
     DetectTextsRequest,
+    DetectorStepSuggestion,
     ExistsDetectorClassRequest,
     ListDetectorClassRequest,
     ListDetectorImageLabelRequest,
@@ -38,6 +40,8 @@ from common.rpc.detector_pb2 import (
     RemoveDetectorImageLabelRequest,
     RemoveDetectorImageRequest,
     RemoveDetectorRequest,
+    SuggestStepRequest,
+    SuggestStepResponse,
     TrainDetectorRequest,
     UpdateDetectorRequest,
     UploadDetectorImageRequest,
@@ -93,13 +97,52 @@ class DetectorClient(Client):
                     code=obj.code,
                     name=obj.name,
                     row=obj.row,
-                    col=obj.col
+                    col=obj.col,
                 )
             )
         return ret
-    
-    async def addDetectorClass(self,user:User,detectorId:PydanticObjectId,name:str) -> Optional[DetectorClass]:
-        req = AddDetectorClassRequest(user=str(user.id),detector=str(detectorId),name=name)
+
+    async def suggestStep(
+        self,
+        user: User,
+        data: str,
+        detectorId: PydanticObjectId,
+        eventId: PydanticObjectId,
+        confidence: float = 0.1,
+    ) -> List[DetectorSuggestion]:
+        req = SuggestStepRequest(
+            user=str(user.id),
+            data=data,
+            event=str(eventId),
+            detector=str(detectorId),
+            confidence=confidence,
+        )
+        res: SuggestStepResponse = await self.client.suggestStep(req)
+        if res.status == False:
+            raise Exception(res.message)
+        ret = []
+        for su in res.suggestions:
+            ret.append(
+                DetectorSuggestion(
+                    by_class=su.byClass,
+                    by_text=su.byText,
+                    by_order=su.byOrder,
+                    confidence=su.confidence,
+                    event=PydanticObjectId(su.event),
+                    x=su.x,
+                    y=su.y,
+                    w=su.w,
+                    h=su.h,
+                )
+            )
+        return ret
+
+    async def addDetectorLabel(
+        self, user: User, detectorId: PydanticObjectId, name: str
+    ) -> Optional[DetectorLabel]:
+        req = AddDetectorClassRequest(
+            user=str(user.id), detector=str(detectorId), name=name
+        )
         res = await self.client.addDetectorClass(req)
         if res.status == False:
             raise Exception(res.message)
@@ -108,8 +151,12 @@ class DetectorClient(Client):
         else:
             return None
 
-    async def existsDetectorClass(self,user:User,detectorId:PydanticObjectId,name:str) -> Optional[DetectorClass]:
-        req = ExistsDetectorClassRequest(user=str(user.id),detector=str(detectorId),name=name)
+    async def existsDetectorLabel(
+        self, user: User, detectorId: PydanticObjectId, name: str
+    ) -> Optional[DetectorLabel]:
+        req = ExistsDetectorClassRequest(
+            user=str(user.id), detector=str(detectorId), name=name
+        )
         res = await self.client.existsDetectorClass(req)
         if res.status == False:
             raise Exception(res.message)
@@ -117,7 +164,6 @@ class DetectorClient(Client):
             return Conversions.deserialize(res.clazz)
         else:
             return None
-
 
     async def detectTexts(
         self, user: User, data: str, confidence: float = 0.7
@@ -278,7 +324,7 @@ class DetectorClient(Client):
         xend: float,
         ystart: float,
         yend: float,
-        classes: List[str],
+        label: str,
     ) -> DetectorImageLabel:
         req = AddDetectorImageLabelRequest(
             user=str(user.id),
@@ -287,7 +333,7 @@ class DetectorClient(Client):
             xend=xend,
             ystart=ystart,
             yend=yend,
-            classes=classes,
+            label=label,
         )
         res = await self.client.addDetectorImageLabel(req)
         if res.status == False:
@@ -344,7 +390,7 @@ class DetectorClient(Client):
         skip: int,
         limit: int,
         search: str,
-    ) -> Tuple[int, List[DetectorClass]]:
+    ) -> Tuple[int, List[DetectorLabel]]:
         req = ListDetectorClassRequest(
             user=str(user.id),
             detector=str(detectorId),
