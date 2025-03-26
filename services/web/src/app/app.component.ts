@@ -14,6 +14,7 @@ export class AppComponent implements AfterViewInit {
   title = 'web';
   logged = new BehaviorSubject<boolean|undefined>(undefined);
   registering = new BehaviorSubject<boolean|undefined>(undefined);
+  topMargin = new BehaviorSubject<number>(0);
 
   constructor(private ctx:ContextService,private renderer: Renderer2){
 
@@ -22,6 +23,11 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.adjustPadding();
     window.addEventListener('resize', () => this.adjustPadding()); // Adjust padding on window resize
+
+
+    this.ctx.resizeTop.subscribe(result=>{
+      this.topMargin.next(result[1]);
+    })
 
     this.ctx.beat.auth.logged.subscribe(result=>{
       if (result){
@@ -36,11 +42,12 @@ export class AppComponent implements AfterViewInit {
     })
   }
 
+  onResizeTop(event:[number,number]){
+    console.log(event);
+  }
 
   adjustPadding() {
-    if (this.navbar) {
-      const navbarHeight = this.navbar.nativeElement.offsetHeight;
-      this.renderer.setStyle(document.body, 'padding-top', `${navbarHeight}px`);
-    }
+
+
   }
 }

@@ -5,6 +5,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { Frame } from '../record-frame';
@@ -43,14 +44,13 @@ export class RecordFrameComponent
   @Input() frame!: Frame;
   @Input() detectorId!: string;
   @Input() recordId!: string;
-  boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
-  suggestions: DetectorSuggestion[] = [];
+  @Output() boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
+  @Output() suggestions = new BehaviorSubject<DetectorSuggestion[]>([]);
   training: boolean = true;
   evaluating: boolean = true;
   testing: boolean = false;
-  objects?: DetectObject[];
-  texts ?: DetectText[];
-  expanded: boolean = false;
+  @Output() objects = new BehaviorSubject<DetectObject[]>([]);
+  @Output() texts = new BehaviorSubject<DetectText[]>([]);
 
   subs = new Subscription();
   settings: ImageAnnotatorSettings = {
@@ -59,50 +59,11 @@ export class RecordFrameComponent
     canCreateBox: true,
   };
 
+
   get imageUrl(): string {
     return (
       environment.imageUrl + this.recordId + '/' + this.frame.count.toString()
     );
-  }
-
-  toggleExpansion(){
-    this.expanded = !this.expanded;
-  }
-
-  onAcceptTraining(box:ImageAnnotatorBox, label:DetectorLabel){
-
-  }
-
-  onRejectTraining(box:ImageAnnotatorBox, label:DetectorLabel){
-
-  }
-
-  onAcceptObject(box:ImageAnnotatorBox, label:DetectorLabel){
-
-  }
-
-  onRejectObject(box:ImageAnnotatorBox, label:DetectorLabel){
-
-  }
-
-
-  onAcceptSuggestion(value:DetectorSuggestion){
-
-  }
-
-  onRejectSuggestion(value:DetectorSuggestion){
-
-  }
-
-  labelIsDetected(value:string):boolean{
-    if (!this.objects) return false;
-    for (let i = 0; i < this.objects.length; i++){
-      let obj = this.objects[i];
-      if (obj.name == value){
-        return true;
-      }
-    }
-    return false;
   }
 
   ngOnDestroy(): void {
@@ -210,7 +171,7 @@ export class RecordFrameComponent
       )
       .subscribe({
         next: (result) => {
-          this.objects = result;
+          this.objects.next(result);
         },
         error: (result) => {
           console.log(result);
@@ -229,7 +190,7 @@ export class RecordFrameComponent
         next: (result) => {
           console.log(result);
           let ret = this.boxes.getValue();
-          this.suggestions = result;
+          this.suggestions.next(result);
           result.forEach((sug) => {
             let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h);
             n.canResize = false;
@@ -255,7 +216,7 @@ export class RecordFrameComponent
       .detectorFrameTexts(this.recordId, this.frame.count, 0.1)
       .subscribe({
         next: (result) => {
-          this.texts = result;
+          this.texts.next(result);
           this.loading.next(undefined);
         },
         error: (result) => {

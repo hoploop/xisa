@@ -1,9 +1,9 @@
-<div class="card">
-  <div class="card-header">
+<app-template-card-container>
+  <div title>
     <app-fa-icon [icon]="FAIconType.folder"></app-fa-icon>
     <span class="ms-1" translate>workspace.project.list</span>
   </div>
-  <div class="card-body">
+  <div body>
     <div class="d-flex">
       <span>
         <button class="btn btn-primary btn-sm" (click)="create()">
@@ -42,4 +42,5 @@
 
   </div>
   <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-</div>
+
+</app-template-card-container>

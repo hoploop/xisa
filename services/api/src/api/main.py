@@ -29,6 +29,7 @@ from api.routers import train
 from api.routers import recorder, workspace
 from api.service import ApiService, ApiServiceConfig
 from common.utils.mongodb import Mongodb, MongodbConfig
+from api.routers import trainer
 
 # CONSTANTS
 ENV_CONF = "../.env"
@@ -45,6 +46,7 @@ class MainConfig(Config):
     translations: str
     detector: ClientConfig
     player: ClientConfig
+    trainer: ClientConfig
     service: ApiServiceConfig
     database: MongodbConfig
     
@@ -149,5 +151,6 @@ app.include_router(workspace.router, tags=["workspace"], prefix="/workspace")
 app.include_router(recorder.router, tags=["recorder"], prefix="/recorder")
 app.include_router(player.router, tags=["player"], prefix="/player")
 app.include_router(train.router, tags=["train"], prefix="/train")
+app.include_router(trainer.router, tags=["trainer"], prefix="/trainer")
 
 #use_route_names_as_operation_ids(app)

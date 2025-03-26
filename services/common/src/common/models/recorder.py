@@ -9,6 +9,7 @@ from pydantic import Field
 
 # LOCAL IMPORTS
 from common.models.defaults import empty_list, utc_now
+from common.models.train import TrainLesson
 
 
 class OS(Document):
@@ -130,5 +131,6 @@ class Record(Document):
 
     @before_event(Delete)
     async def remove_related(self):
+        await TrainLesson.find_all(TrainLesson.record == self.id).delete()
         await Event.find_many(Event.record == self.id, with_children=True).delete()
 

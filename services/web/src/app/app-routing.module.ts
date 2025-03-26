@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: 'project/edit/:id', component: ProjectFormComponent,canActivate:[AuthGuard] },
   { path: 'record/list/:project_id', component: RecordListComponent,canActivate:[AuthGuard] },
   { path: 'record/form/:record_id', component: RecordFormComponent,canActivate:[AuthGuard] },
-  { path: 'record/studio/:record_id', component: RecordStudioComponent,canActivate:[AuthGuard] },
+  { path: 'record/studio/:record_id/:detector_id', component: RecordStudioComponent,canActivate:[AuthGuard] },
   { path: 'record/controller/:project_id', component: RecordControllerComponent,canActivate:[AuthGuard] },
   { path: 'detector/list/:project_id', component: DetectorListComponent,canActivate:[AuthGuard] },
   { path: 'detector/edit/:project_id/:id', component: DetectorFormComponent,canActivate:[AuthGuard] },

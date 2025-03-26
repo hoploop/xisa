@@ -20,39 +20,45 @@
         "delete_not_allowed": "You cannot remove this project"
       }
     },
+    "trainer": {
+      "lesson": {
+        "errors": { "not_found": "Lesson not found" }
+      }
+    },
     "detector": {
       "errors": {
         "not_found": "Detector not found",
         "already_existing": "Another detector with this username already found",
-        "original_not_found":"Original detector not found"
+        "original_not_found": "Original detector not found"
       },
-      "suggestion":{
-        "title":"Suggestions",
-        "by_class":"I suggest you to select this element by object class '{{class}}'",
-        "by_classes_order_1":"I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
-        "by_classes_order_2":"I suggest you to select this element by object class '{{class}}' and then select by row {{row}} and col {{col}}",
-        "by_text":"I suggest you to select this element by text '{{text}}'",
-        "by_texts_order_1":"I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
-        "by_texts_order_2":"I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
-        "accept":"Accept",
-        "reject":"Reject",
-        "by_user_class":"You are suggesting to use a select by class '{{class}}'"
+      "suggestion": {
+        "title": "Suggestions",
+        "title_n": "Suggestions ({{n}})",
+        "by_class": "I suggest you to select this element by object class '{{class}}'",
+        "by_classes_order_1": "I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
+        "by_classes_order_2": "I suggest you to select this element by object class '{{class}}' and then select by row {{row}} and col {{col}}",
+        "by_text": "I suggest you to select this element by text '{{text}}'",
+        "by_texts_order_1": "I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
+        "by_texts_order_2": "I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
+        "accept": "Accept",
+        "reject": "Reject",
+        "by_user_class": "You are suggesting to use a select by class '{{class}}'"
       },
-      "detected_objects":"I detected {{n}} objects",
-      "detected_texts":"I detected {{n}} text boxes",
-      "detected_no_objects":"I detected no objects, probably I need more training",
-      "detected_no_texts":"I detected no text boxes, probably there is no text in the image or font is too small or difficult to parse",
+      "detected_objects": "I detected {{n}} objects",
+      "detected_texts": "I detected {{n}} text boxes",
+      "detected_no_objects": "I detected no objects, probably I need more training",
+      "detected_no_texts": "I detected no text boxes, probably there is no text in the image or font is too small or difficult to parse",
       "class": {
         "loadings": "Loading detector classes...",
-        "selects":"Select detector classes",
-        "search":"Search detector class",
-        "empty":"No detector classes",
-        "add":"Add detector class",
-        "adding":"Adding new detector class",
-        "name":"Detector class name",
-        "confirm":"Save selected classes",
-        "cancel":"Cancel",
-        "errors":{"already_existing":"Detector class already existing"}
+        "selects": "Select detector classes",
+        "search": "Search detector class",
+        "empty": "No detector classes",
+        "add": "Add detector class",
+        "adding": "Adding new detector class",
+        "name": "Detector class name",
+        "confirm": "Save selected classes",
+        "cancel": "Cancel",
+        "errors": { "already_existing": "Detector class already existing" }
       },
       "image": {
         "loadings": "Loading detector images...",
@@ -64,11 +70,11 @@
           "label_not_found": "Image label not found"
         }
       },
-      "train":{
-        "by_user_class":"You are suggesting to train detector to detect by class '{{class}}'"
+      "train": {
+        "by_user_class": "You are suggesting to train detector to detect by class '{{class}}'"
       },
       "select": "Select detector",
-      "description": "Description", 
+      "description": "Description",
       "name": "Name",
       "list": "Detectors",
       "create": "New detector",
@@ -93,25 +99,26 @@
         "not_running": "Record is not running",
         "video_not_found": "Video not found for this record"
       },
-      "frame":{
-        "loading":"Frame is loading"
+      "frame": {
+        "loading": "Frame is loading",
+        "select": "Select a frame"
       },
-      "event":{
-        "errors":{
-          "not_found":"Event not found"
+      "event": {
+        "errors": {
+          "not_found": "Event not found"
         }
       },
-      
 
-      "duration":"Duration: ",
-      "events":"Events: ",
-      "frames":"Frames: ",
-      "size":"Size: ",
+      "duration": "Duration: ",
+      "events": "Events: ",
+      "frames": "Frames: ",
+      "size": "Size: ",
       "list": "Recordings",
       "name": "Name",
       "studio": {
-        "title":"Studio",
-        "frames":"Frames"
+        "title": "Studio",
+        "frames": "Frames",
+        "video": "Video"
       },
       "description": "Description",
       "loading": "Loading recording..",

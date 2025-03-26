@@ -10,6 +10,8 @@ api/recorder.service.ts
 api/recorder.serviceInterface.ts
 api/train.service.ts
 api/train.serviceInterface.ts
+api/trainer.service.ts
+api/trainer.serviceInterface.ts
 api/workspace.service.ts
 api/workspace.serviceInterface.ts
 api/ws.service.ts
@@ -57,6 +59,7 @@ model/record.ts
 model/recorder-event-list200-response-inner.ts
 model/register-request.ts
 model/response-recordereventload.ts
+model/train-lesson.ts
 model/validation-error-loc-inner.ts
 model/validation-error.ts
 param.ts

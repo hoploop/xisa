@@ -922,7 +922,7 @@ class DetectorService(Service, DetectorServicer):
             detector_id = PydanticObjectId(request.detector)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
-                return UploadDetectorImageResponse(status=False,message="workspace.detector.errors.not_fopund")
+                return UploadDetectorImageResponse(status=False,message="workspace.detector.errors.not_found")
             
             log.debug("Loading image")
             if "," in b64image:

@@ -4,5 +4,6 @@ export interface Frame {
   record:string,
   count: number,
   event?:RecordEventListRecordId200ResponseInner,
-  resolved:boolean
+  resolved:boolean,
+  milliseconds:number
 }

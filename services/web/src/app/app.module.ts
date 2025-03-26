@@ -17,7 +17,8 @@ import { RouterModule } from '@angular/router';
 import { WorkspaceModule } from '@workspace/workspace.module';
 import { MomentModule } from 'ngx-moment';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { AuthInterceptor } from '@services/auth.interceptor';
+import { TemplatesModule } from '@templates/templates.module';
+import { UtilsModule } from '@utils/utils.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -48,7 +49,9 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     FontAwesomeModule,
     AuthModule,
     MomentModule,
+    UtilsModule,
     WorkspaceModule,
+    TemplatesModule,
     ApiModule.forRoot(apiConfigFactory),
     TranslateModule.forRoot({
         defaultLanguage: environment.locale.i18n.default,

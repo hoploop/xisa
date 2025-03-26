@@ -1,0 +1,48 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Trainer {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+    
+    rpc recordHasLesson(RecordHasLessonRequest) returns (RecordHasLessonResponse);
+    rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
+    rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
+
+}
+
+message LessonSetDetectorRequest {
+    string user = 1;
+    string detector = 2;
+    string lesson = 3;
+}
+
+message LessonSetDetectorResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized lesson = 3;
+}
+
+message RecordHasLessonRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message RecordHasLessonResponse {
+    bool status = 1;
+    optional string message = 2;
+    optional Serialized lesson = 3;
+}
+
+
+message RecordCreateLessonRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message RecordCreateLessonResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized lesson = 3;
+}

@@ -65,6 +65,18 @@
       "cn": "pin"
     }
   },
+  "trainer": {
+    "address": "${TRAINER_RPC_HOST}:${TRAINER_RPC_PORT}",
+    "key": "${CLIENT_KEY}",
+    "cert": "${CLIENT_CERT}",
+    "chain": "pin",
+    "security": {
+      "key": "${SERVER_KEY}",
+      "cert": "${SERVER_CERT}",
+      "chain": "${SERVER_PEM}",
+      "cn": "pin"
+    }
+  },
   "translations": "${TRANSLATIONS_PATH}",
   "service": {
     "address": "${API_RPC_HOST}:${API_RPC_PORT}",
@@ -99,6 +111,7 @@
       { "name": "core", "description": "Core management" },
       { "name": "audio", "description": "Audio management" },
       { "name": "utils", "description": "Utils management" },
+      { "name": "trainer", "description": "Trainer management" },
       { "name": "store", "description": "Store management" },
       { "name": "prompt", "description": "Prompt management" },
       { "name": "language", "description": "Language management" },

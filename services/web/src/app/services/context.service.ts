@@ -7,12 +7,15 @@ import { BeatService } from './beat.service';
 import { WsService } from './ws.service';
 import { NavigationService } from './navigation.service';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContextService {
+
+
+  public resizeTop = new Subject<[number,number]>();
 
   constructor(
     public api: ApiService,

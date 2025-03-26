@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ContextService } from '@services/context.service';
 
 @Component({
   selector: 'app-menu',
@@ -8,4 +9,10 @@ import { Component } from '@angular/core';
 })
 export class MenuComponent {
 
+  constructor(private ctx:ContextService){
+
+  }
+  onResizeTop(event:[number,number]){
+    this.ctx.resizeTop.next(event);
+  }
 }

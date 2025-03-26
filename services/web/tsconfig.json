@@ -10,6 +10,7 @@
       "@utils/*":["./src/app/utils/*"],
       "@services/*":["./src/app/services/*"],
       "@workspace/*":["./src/app/workspace/*"],
+      "@templates/*":["./src/app/templates/*"],
       "@guards/*":["./src/app/guards/*"],
       "@train/*":["./src/app/train/*"],
     },

@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { ContextService } from '@services/context.service';
+import { BaseComponent } from '@utils/base/base.component';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -10,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: './record-video.component.html',
   styleUrl: './record-video.component.scss'
 })
-export class RecordVideoComponent implements OnInit{
+export class RecordVideoComponent extends BaseComponent implements OnInit{
   @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
 
   @Input() recordId!:string;
@@ -18,14 +20,17 @@ export class RecordVideoComponent implements OnInit{
   chunkSize: number = 1024 * 1024; // 5MB per chunk, you can adjust this based on your needs
   currentByte: number = 0; // Start byte for video streaming
 
-  constructor(private ctx:ContextService,private http: HttpClient){
-
+  constructor(ctx: ContextService, router: Router, route: ActivatedRoute,private http: HttpClient){
+    super(ctx,router,route);
   }
 
   ngOnInit(): void {
     this.loadVideo();
   }
 
+  dismiss(){
+    this.ctx.closeModal(undefined);
+  }
 
   getVideoWithRange(url: string, startByte: number, endByte: number): Observable<HttpResponse<Blob>> {
     const headers = new HttpHeaders().set('Range', `bytes=${startByte}-${endByte}`).set('Authorization','Bearer '+this.ctx.api.getToken() ||'');

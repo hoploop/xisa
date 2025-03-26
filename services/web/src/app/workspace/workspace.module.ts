@@ -37,6 +37,9 @@ import { DetectorLabelTrainComponent } from './detector/detector-label-train/det
 import { DetectorObjectsSummaryComponent } from './detector/detector-objects-summary/detector-objects-summary.component';
 import { DetectorTextsSummaryComponent } from './detector/detector-texts-summary/detector-texts-summary.component';
 import { DetectorSummaryComponent } from './detector/detector-summary/detector-summary.component';
+import { TemplatesModule } from '@templates/templates.module';
+import { RecordFrameSelectorComponent } from './record/record-frame-selector/record-frame-selector.component';
+import { RecordSuggestionsComponent } from './record/record-suggestions/record-suggestions.component';
 
 
 
@@ -74,12 +77,15 @@ import { DetectorSummaryComponent } from './detector/detector-summary/detector-s
     DetectorObjectsSummaryComponent,
     DetectorTextsSummaryComponent,
     DetectorSummaryComponent,
+    RecordFrameSelectorComponent,
+    RecordSuggestionsComponent,
   ],
   imports: [
     CommonModule,
     UtilsModule,
     FormsModule,
     TranslateModule,
+    TemplatesModule,
     MomentModule,
     TrainModule
 ],

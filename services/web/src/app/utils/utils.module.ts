@@ -12,6 +12,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TagsEditorComponent } from './tags-editor/tags-editor.component';
 import { BaseComponent } from './base/base.component';
 import { ModalComponent } from './modal/modal.component';
+import { ResizeObserverDirective } from './resize-observer.directive';
+import { ResizeListenerComponent } from './resize-listener/resize-listener.component';
 
 
 
@@ -24,6 +26,8 @@ import { ModalComponent } from './modal/modal.component';
     TagsEditorComponent,
     BaseComponent,
     ModalComponent,
+    ResizeListenerComponent,
+    ResizeObserverDirective,
 
   ],
   imports: [
@@ -38,7 +42,9 @@ import { ModalComponent } from './modal/modal.component';
     LoaderComponent,
     SearchComponent,
     TagsEditorComponent,
-    ModalComponent
+    ModalComponent,
+    ResizeObserverDirective,
+    ResizeListenerComponent
   ]
 })
 export class UtilsModule {

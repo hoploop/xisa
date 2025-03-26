@@ -1,0 +1,16 @@
+{
+  "address": "${TRAINER_RPC_HOST}:${TRAINER_RPC_PORT}",
+  
+  "security": {
+    "key": "${SERVER_KEY}",
+    "cert": "${SERVER_CERT}",
+    "chain": "${SERVER_PEM}",
+    "cn": "pin"
+  },
+  "database": {
+    "uri": "${DATABASE_URI}",
+    "name": "pin",
+    "filesystem": "fs"
+  }
+ 
+}

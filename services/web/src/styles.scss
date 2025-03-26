@@ -4,6 +4,11 @@
 $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 @import "bootstrap-icons/font/bootstrap-icons.scss";
 
+
+body {
+  background-color: #80a89e;
+}
+
 .pointer {
   cursor: pointer !important;
 }
