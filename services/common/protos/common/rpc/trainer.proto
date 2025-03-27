@@ -9,7 +9,25 @@ service Trainer {
     rpc recordHasLesson(RecordHasLessonRequest) returns (RecordHasLessonResponse);
     rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
     rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
+    rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
 
+}
+
+message TrainImageObjectRequest {
+    string user = 1;
+    string lesson = 2;
+    int32 frame = 3;
+    string label = 4;
+    float xstart = 5;
+    float xend = 6;
+    float ystart = 7;
+    float yend = 8;
+}
+
+message TrainImageObjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    string id = 3;
 }
 
 message LessonSetDetectorRequest {

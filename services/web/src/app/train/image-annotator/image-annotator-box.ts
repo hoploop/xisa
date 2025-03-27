@@ -1,5 +1,7 @@
 import { DetectorLabel } from '@api/index';
 import { ImageAnnotatorSettings } from './image-annotator-settings';
+import { v4 as uuid } from 'uuid';
+
 
 export enum ImageAnnotatorMouseOverType {
   TOP_LEFT = 0,
@@ -27,6 +29,7 @@ export class ImageAnnotatorBox {
   selectedColor: string = 'rgba(255,255,255,0.4)';
   defaultColor: string = 'rgba(255,255,255,0.2)';
   selectedBorderSize: number = 1;
+  id = uuid();
 
   constructor(
     public x: number = 0,

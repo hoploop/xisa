@@ -88,6 +88,7 @@ class DetectorService(Service, DetectorServicer):
             #y = y / height
             print('{0},{1}'.format(x,y))
             
+            # Matching texts
             req = DetectTextsRequest(user=request.user,data=request.data,confidence=request.confidence)
             res = await self.detectTexts(req,context)
             
@@ -120,7 +121,7 @@ class DetectorService(Service, DetectorServicer):
                     else:
                         suggestions.append(DetectorStepSuggestion(event=request.event,byText=matched.value,byOrder=[matched.line,matched.block],x=nx,y=ny,w=nw,h=nh,confidence=matched.confidence))
                         
-                            
+            # Mathing objects                            
             req = DetectObjectsRequest(user=request.user,data=request.data,detector=request.detector,confidence=request.confidence)
             res = await self.detectObjects(req,context)
                         

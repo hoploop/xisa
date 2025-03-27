@@ -33,6 +33,7 @@
       },
       "suggestion": {
         "title": "Suggestions",
+        "empty":"No suggestions available, try to add some custom objects or try with another frame",
         "title_n": "Suggestions ({{n}})",
         "by_class": "I suggest you to select this element by object class '{{class}}'",
         "by_classes_order_1": "I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
@@ -40,14 +41,24 @@
         "by_text": "I suggest you to select this element by text '{{text}}'",
         "by_texts_order_1": "I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
         "by_texts_order_2": "I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
+        "by_regex": "I suggest you to select this element by text matching the regular expression '{{regex}}'",
+        "by_regex_order_1": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by order {{order}}",
+        "by_regex_order_2": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by row {{row}} and col {{col}}",
         "accept": "Accept",
         "reject": "Reject",
         "by_user_class": "You are suggesting to use a select by class '{{class}}'"
       },
+      "training":{
+        "title":"Train new objects",
+        "all_done":"All objects are already detected by current detector",
+        "empty":"There are no new objects to be trained for detection",
+        "loading":"Training...",
+        "by_label":"You are adding a box with label '{{label}}' to the detection objects training"
+      },
       "detected_objects": "I detected {{n}} objects",
       "detected_texts": "I detected {{n}} text boxes",
-      "detected_no_objects": "I detected no objects, probably I need more training",
-      "detected_no_texts": "I detected no text boxes, probably there is no text in the image or font is too small or difficult to parse",
+      "detected_no_objects": "I detected no objects, probably I need more training or you have to create a custom box",
+      "detected_no_texts": "I detected no text boxes, probably there is no text in the event area or font is too small or difficult to parse",
       "class": {
         "loadings": "Loading detector classes...",
         "selects": "Select detector classes",
@@ -88,8 +99,7 @@
       "remove": "Delete",
       "removing": "Removing detector...",
       "cancel": "Cancel",
-      "learn": "Learn",
-      "training": "Training..."
+      "learn": "Learn"
     },
     "record": {
       "errors": {
@@ -117,8 +127,12 @@
       "name": "Name",
       "studio": {
         "title": "Studio",
-        "frames": "Frames",
-        "video": "Video"
+        "frames": "Select frame",
+        "video": "View video",
+        "train":"Train new objects",
+        "train_n":"Train new objects ({{n}})",
+        "selected_frame":"Frame {{n}}"
+        
       },
       "description": "Description",
       "loading": "Loading recording..",

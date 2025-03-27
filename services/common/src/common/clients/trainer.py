@@ -10,7 +10,7 @@ from common.models.train import TrainLesson
 from common.rpc.auth_pb2 import CheckRequest, LoginRequest, LogoutRequest, RegisterRequest, ResetPasswordRequest, UnregisterRequest, UserRequest
 from common.rpc.auth_pb2_grpc import AuthStub
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectRequest, TrainImageObjectResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -58,3 +58,10 @@ class TrainerClient(Client):
             raise Exception(res.message)
         
         return Conversions.deserialize(res.lesson)
+    
+    async def trainImageObject(self,user:User,lessonId:PydanticObjectId,frame:int,label:str,xstart:float,xend:float,ystart:float,yend:float) -> PydanticObjectId:
+        req = TrainImageObjectRequest(user=str(user.id),lesson=str(lessonId),frame=frame,label=label,xstart=xstart,xend=xend,ystart=ystart,yend=yend)
+        res: TrainImageObjectResponse = await self.client.trainImageObject(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return PydanticObjectId(res.id)

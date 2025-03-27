@@ -46,9 +46,7 @@ export class RecordFrameComponent
   @Input() recordId!: string;
   @Output() boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
   @Output() suggestions = new BehaviorSubject<DetectorSuggestion[]>([]);
-  training: boolean = true;
-  evaluating: boolean = true;
-  testing: boolean = false;
+
   @Output() objects = new BehaviorSubject<DetectObject[]>([]);
   @Output() texts = new BehaviorSubject<DetectText[]>([]);
 
@@ -94,65 +92,7 @@ export class RecordFrameComponent
       });
   }
 
-  save(box: ImageAnnotatorBox) {
-    // Converting the current image to blob
-    if (this.detectorId && this.recordId) {
-      let modes: DetectorImageMode[] = [];
-      if (this.training) {
-        modes.push(DetectorImageMode.Train);
-      }
-      if (this.evaluating) {
-        modes.push(DetectorImageMode.Val);
-      }
-      if (this.testing) {
-        modes.push(DetectorImageMode.Test);
-      }
-      this.ctx.api.detector
-        .detectorFrameUpload(
-          this.recordId,
-          this.detectorId,
-          this.frame.count,
-          modes
-        )
-        .subscribe({
-          next: (result) => {
-            this.setLoading(undefined);
-            for (let i = 0; i < result.length; i++) {
-              let el = result[i];
 
-              box.labels.forEach((label) => {
-                if (el._id) {
-                  let payloadAdd: DetectorImageLabelAdd = {
-                    image_id: el._id,
-                    xstart: box.x,
-                    xend: box.x + box.w,
-                    ystart: box.y,
-                    yend: box.y + box.h,
-                    label: label.name,
-                  };
-
-                  this.ctx.api.detector
-                    .detectorImageLabelAdd(payloadAdd)
-                    .subscribe({
-                      next: (result2) => {
-                        this.setLoading(undefined);
-                      },
-                      error: (result2) => {
-                        this.setError(result2.error.detail);
-                        this.setLoading(undefined);
-                      },
-                    });
-                }
-              });
-            }
-          },
-          error: (result) => {
-            this.setError(result.error.detail);
-            this.setLoading(undefined);
-          },
-        });
-    }
-  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -188,7 +128,6 @@ export class RecordFrameComponent
       .detectorFrameSuggestions(this.detectorId, this.frame.event._id, 0.1)
       .subscribe({
         next: (result) => {
-          console.log(result);
           let ret = this.boxes.getValue();
           this.suggestions.next(result);
           result.forEach((sug) => {
@@ -226,6 +165,8 @@ export class RecordFrameComponent
   }
 
   load() {
+    this.detectObjects();
+    this.detectTexts();
     if (!this.frame) return;
     if (!this.frame.event) return;
     let event = this.frame.event;
@@ -279,8 +220,7 @@ export class RecordFrameComponent
         break;
     }
 
-    this.detectObjects();
-    this.detectTexts();
+
 
     this.loading.next(undefined);
   }

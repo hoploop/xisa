@@ -33,13 +33,14 @@ import { TrainModule } from "../train/train.module";
 import { DetectorSuggestionComponent } from './detector/detector-suggestion/detector-suggestion.component';
 import { DetectorLabelSelectComponent } from './detector/detector-label-select/detector-label-select.component';
 import { DetectorLabelSuggestionComponent } from './detector/detector-label-suggestion/detector-label-suggestion.component';
-import { DetectorLabelTrainComponent } from './detector/detector-label-train/detector-label-train.component';
 import { DetectorObjectsSummaryComponent } from './detector/detector-objects-summary/detector-objects-summary.component';
 import { DetectorTextsSummaryComponent } from './detector/detector-texts-summary/detector-texts-summary.component';
 import { DetectorSummaryComponent } from './detector/detector-summary/detector-summary.component';
 import { TemplatesModule } from '@templates/templates.module';
 import { RecordFrameSelectorComponent } from './record/record-frame-selector/record-frame-selector.component';
 import { RecordSuggestionsComponent } from './record/record-suggestions/record-suggestions.component';
+import { RecordTrainingComponent } from './record/record-training/record-training.component';
+import { DetectorTrainSuggestionComponent } from './detector/detector-train-suggestion/detector-train-suggestion.component';
 
 
 
@@ -73,12 +74,13 @@ import { RecordSuggestionsComponent } from './record/record-suggestions/record-s
     DetectorSuggestionComponent,
     DetectorLabelSelectComponent,
     DetectorLabelSuggestionComponent,
-    DetectorLabelTrainComponent,
     DetectorObjectsSummaryComponent,
     DetectorTextsSummaryComponent,
     DetectorSummaryComponent,
     RecordFrameSelectorComponent,
     RecordSuggestionsComponent,
+    RecordTrainingComponent,
+    DetectorTrainSuggestionComponent,
   ],
   imports: [
     CommonModule,

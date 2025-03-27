@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { HTTPValidationError } from '../model/models';
+import { TrainImageObjectPayload } from '../model/models';
 import { TrainLesson } from '../model/models';
 
 
@@ -29,6 +30,13 @@ export interface TrainerServiceInterface {
      * @param recordId 
      */
     trainerLesson(recordId: string, extraHttpRequestParams?: any): Observable<TrainLesson>;
+
+    /**
+     * Lesson Image Object
+     * 
+     * @param trainImageObjectPayload 
+     */
+    trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, extraHttpRequestParams?: any): Observable<string>;
 
     /**
      * Lesson Set Detector

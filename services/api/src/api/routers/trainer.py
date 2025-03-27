@@ -9,6 +9,7 @@ import base64
 # LIBRARY IMPORTS
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi import FastAPI, File, UploadFile
+from pydantic import BaseModel
 from starlette.responses import Response
 
 
@@ -60,6 +61,28 @@ async def lesson(user: CurrentUser, trainer: Trainer,recordId:PydanticObjectId):
 async def lesson_set_detector(user:CurrentUser,trainer:Trainer,detectorId:PydanticObjectId,lessonId:PydanticObjectId):
     try:
         found = await trainer.lessonSetDetector(user,lessonId,detectorId)
+        return found
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class TrainImageObjectPayload(BaseModel):
+    lessonId: PydanticObjectId
+    frame: int
+    label:str
+    xstart:float
+    xend:float
+    ystart:float
+    yend:float
+
+@router.post(
+    "/lesson/image/object",
+    operation_id="trainerLessonImageObject",
+    response_model=PydanticObjectId
+)
+async def lesson_image_object(user:CurrentUser,trainer:Trainer,payload: TrainImageObjectPayload):
+    try:
+        found = await trainer.trainImageObject(user,payload.lessonId,payload.frame,payload.label,payload.xstart,payload.xend,payload.ystart,payload.yend)
         return found
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

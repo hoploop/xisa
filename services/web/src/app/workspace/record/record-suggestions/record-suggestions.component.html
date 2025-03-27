@@ -4,17 +4,15 @@
     <span class="ms-2" translate>workspace.detector.suggestion.title</span>
   </ng-content>
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
-
   <ng-content body>
-    <app-detector-objects-summary *ngIf="objects" [objects]="objects"></app-detector-objects-summary>
-    <app-detector-texts-summary *ngIf="texts" [texts]="texts"></app-detector-texts-summary>
     <app-detector-suggestion *ngFor="let suggestion of suggestions" (onAccept)="onAcceptSuggestion($event)" (onReject)="onRejectSuggestion($event)" [suggestion]="suggestion"></app-detector-suggestion>
     <ng-container *ngFor="let box of boxes">
       <ng-container *ngFor="let label of box.labels">
         <app-detector-label-suggestion [box]="box" [label]="label" (onAccept)="onAcceptObject(box,label)" (onReject)="onRejectObject(box,label)"></app-detector-label-suggestion>
-        <app-detector-label-train *ngIf="!labelIsDetected(label.name)" (onAccept)="onAcceptTraining(box,label)" (onReject)="onRejectTraining(box,label)" [box]="box" [label]="label"></app-detector-label-train>
       </ng-container>
     </ng-container>
+    <span *ngIf="suggestions.length == 0 && boxes.length == 0" translate>workspace.detector.suggestion.empty</span>
   </ng-content>
+
 </app-modal>
 

@@ -55,6 +55,11 @@ class TrainerStub(object):
                 request_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.FromString,
                 _registered_method=True)
+        self.trainImageObject = channel.unary_unary(
+                '/Trainer/trainImageObject',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectResponse.FromString,
+                _registered_method=True)
 
 
 class TrainerServicer(object):
@@ -85,6 +90,12 @@ class TrainerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def trainImageObject(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_TrainerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -107,6 +118,11 @@ def add_TrainerServicer_to_server(servicer, server):
                     servicer.lessonSetDetector,
                     request_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.FromString,
                     response_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.SerializeToString,
+            ),
+            'trainImageObject': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainImageObject,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -217,6 +233,33 @@ class Trainer(object):
             '/Trainer/lessonSetDetector',
             common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.SerializeToString,
             common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainImageObject(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainImageObject',
+            common_dot_rpc_dot_trainer__pb2.TrainImageObjectRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainImageObjectResponse.FromString,
             options,
             channel_credentials,
             insecure,

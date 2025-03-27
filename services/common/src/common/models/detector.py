@@ -19,6 +19,7 @@ log = logging.getLogger(__name__)
 class DetectorSuggestion(Document):
     by_label: Optional[str] = None
     by_text: Optional[str] = None
+    by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
     event:PydanticObjectId
     confidence:float

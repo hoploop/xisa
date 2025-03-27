@@ -13,6 +13,7 @@ export interface DetectorSuggestion {
     _id?: string | null;
     by_label?: string | null;
     by_text?: string | null;
+    by_regex?: string | null;
     by_order?: Array<number>;
     event: string;
     confidence: number;
