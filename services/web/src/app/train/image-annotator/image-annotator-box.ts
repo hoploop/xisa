@@ -20,6 +20,7 @@ export class ImageAnnotatorBox {
   isResizing: boolean = false;
   isMoving: boolean = false;
   canResize: boolean = true;
+  canSelect: boolean = true;
   canMove: boolean = true;
   dataUrl?: string;
   labels: DetectorLabel[] = [];

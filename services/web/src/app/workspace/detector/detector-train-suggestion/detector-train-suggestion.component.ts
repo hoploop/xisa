@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DetectorLabel } from '@api/index';
+import { DetectorLabel, TrainImageObject } from '@api/index';
 import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 
@@ -12,6 +12,8 @@ import { BaseComponent } from '@utils/base/base.component';
 export class DetectorTrainSuggestionComponent extends BaseComponent {
   @Input() box!: ImageAnnotatorBox;
   @Input() label!:DetectorLabel;
+  @Input() train?: TrainImageObject;
   @Output() onAccept = new EventEmitter<[ImageAnnotatorBox,DetectorLabel]>();
   @Output() onReject = new EventEmitter<[ImageAnnotatorBox,DetectorLabel]>();
+  @Output() onRemove = new EventEmitter<TrainImageObject>();
 }

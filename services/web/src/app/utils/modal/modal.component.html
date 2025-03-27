@@ -4,7 +4,7 @@
   </h5>
   <button type="button" class="btn btn-close" (click)="dismiss()" aria-label="Close"></button>
 </div>
-<div class="modal-body">
+<div class="modal-body" *ngIf="showBody">
   <ng-content select="[body]"></ng-content>
 </div>
 <app-loader [modalFooter]="true" [loading]="loading" [error]="error"></app-loader>

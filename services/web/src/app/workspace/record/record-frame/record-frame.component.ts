@@ -1,17 +1,14 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { Frame } from '../record-frame';
 import {
   DetectorLabel,
-  DetectorImageMode,
   DetectorSuggestion,
   KeyComboPressEventTypeEnum,
   KeyPressEventTypeEnum,
@@ -20,7 +17,6 @@ import {
   MouseClickLeftEventTypeEnum,
   MousePressLeftEvent,
   MousePressLeftEventTypeEnum,
-  DetectorImageLabelAdd,
   DetectObject,
   DetectText,
 } from '@api/index';
@@ -30,6 +26,7 @@ import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { ImageAnnotatorSettings } from '@train/image-annotator/image-annotator-settings';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { DetectorLabelSelectComponent } from '@workspace/detector/detector-label-select/detector-label-select.component';
+import { ImageAnnotatorHighlight } from '@train/image-annotator/image-annotator-highlight';
 
 @Component({
   selector: 'app-record-frame',
@@ -42,11 +39,9 @@ export class RecordFrameComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
   @Input() frame!: Frame;
-  @Input() detectorId!: string;
-  @Input() recordId!: string;
   @Output() boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
+  @Output() highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
   @Output() suggestions = new BehaviorSubject<DetectorSuggestion[]>([]);
-
   @Output() objects = new BehaviorSubject<DetectObject[]>([]);
   @Output() texts = new BehaviorSubject<DetectText[]>([]);
 
@@ -60,7 +55,7 @@ export class RecordFrameComponent
 
   get imageUrl(): string {
     return (
-      environment.imageUrl + this.recordId + '/' + this.frame.count.toString()
+      environment.imageUrl + this.frame.lesson.record + '/' + this.frame.count.toString()
     );
   }
 
@@ -77,7 +72,7 @@ export class RecordFrameComponent
   selectClasses(box: ImageAnnotatorBox) {
     this.ctx
       .openModal<DetectorLabel[] | undefined>(DetectorLabelSelectComponent, {
-        detectorId: this.detectorId,
+        detectorId: this.frame.lesson.detector,
         selected: box.labels,
       })
       .subscribe({
@@ -92,8 +87,6 @@ export class RecordFrameComponent
       });
   }
 
-
-
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.load();
@@ -101,11 +94,11 @@ export class RecordFrameComponent
   }
 
   detectObjects() {
-    if (!this.detectorId) return;
+    if (!this.frame.lesson.detector) return;
     this.ctx.api.detector
       .detectorObjectsFromFrame(
-        this.recordId,
-        this.detectorId,
+        this.frame.lesson.record,
+        this.frame.lesson.detector,
         this.frame.count,
         0.1
       )
@@ -119,27 +112,28 @@ export class RecordFrameComponent
       });
   }
 
-  accept(suggestion: DetectorSuggestion) {}
+  accept(suggestion: DetectorSuggestion) {
+
+  }
 
   loadSuggestions() {
-    if (!this.detectorId) return;
     if (!this.frame.event?._id) return;
+    if (!this.frame.lesson.detector) return;
     this.ctx.api.detector
-      .detectorFrameSuggestions(this.detectorId, this.frame.event._id, 0.1)
+      .detectorFrameSuggestions(this.frame.lesson.detector, this.frame.event._id, 0.1)
       .subscribe({
         next: (result) => {
-          let ret = this.boxes.getValue();
+          let ret = this.highlights.getValue();
           this.suggestions.next(result);
           result.forEach((sug) => {
-            let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h);
-            n.canResize = false;
+            let n = new ImageAnnotatorHighlight(sug.x, sug.y, sug.w, sug.h);
             n.defaultBorderColor = 'green';
             n.defaultBorderSize = 2;
             n.selectedBorderSize = 2;
-            n.canMove = false;
+
             ret.push(n);
           });
-          this.boxes.next(ret);
+          this.highlights.next(ret);
         },
         error: (result) => {
           console.log(result);
@@ -152,7 +146,7 @@ export class RecordFrameComponent
       this.ctx.translate.instant('workspace.record.frame.loading')
     );
     this.ctx.api.detector
-      .detectorFrameTexts(this.recordId, this.frame.count, 0.1)
+      .detectorFrameTexts(this.frame.lesson.record, this.frame.count, 0.1)
       .subscribe({
         next: (result) => {
           this.texts.next(result);
@@ -185,7 +179,6 @@ export class RecordFrameComponent
         break;
       case MouseClickLeftEventTypeEnum.MouseClickLeft:
         let evt = event as MouseClickLeftEvent;
-        console.log(evt);
         if (evt.position) {
           let x = evt.position[0] - 20;
           let y = evt.position[1] - 20;
@@ -193,7 +186,7 @@ export class RecordFrameComponent
           let h = 40;
           let nh = this.boxes.getValue();
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
-          evt_box.canResize = false;
+          evt_box.canResize = true;
           evt_box.canMove = false;
           nh.push(evt_box);
           this.boxes.next(nh);
@@ -202,7 +195,6 @@ export class RecordFrameComponent
         break;
       case MousePressLeftEventTypeEnum.MousePressLeft:
         let evt2 = event as MousePressLeftEvent;
-        console.log(evt2);
         if (evt2.position) {
           let x = evt2.position[0] - 20;
           let y = evt2.position[1] - 20;
@@ -210,7 +202,7 @@ export class RecordFrameComponent
           let h = 40;
           let nh = this.boxes.getValue();
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
-          evt_box.canResize = false;
+          evt_box.canResize = true;
           evt_box.canMove = false;
           nh.push(evt_box);
           this.boxes.next(nh);

@@ -1,15 +1,16 @@
 # PYTHON IMPORTS
 import logging
 
-from beanie import PydanticObjectId
 
 # LIBRARY IMPORTS
+from beanie import PydanticObjectId
+from beanie.operators import And, Or
 
 # LOCAL IMPORTS
 from common.models import MODELS
 from common.models.detector import Detector, DetectorLabel
 from common.models.train import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectRequest, TrainImageObjectResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -69,34 +70,56 @@ class TrainerService(Service, TrainerServicer):
             log.warning(str(e))
             return RecordCreateLessonResponse(status=False,message=str(e))
         
+    async def trainImageObjectList(self, request:TrainImageObjectListRequest, context) -> TrainImageObjectListResponse:
+        try:
+            lessonId = PydanticObjectId(request.lesson)
+            qry = And(TrainImageObject.lesson == lessonId)
+            if request.frame and request.frame >=0:
+                qry = And(TrainImageObject.lesson == lessonId,TrainImageObject.frame == request.frame)
+            tios = await TrainImageObject.find_many(qry).to_list()
+            ret = []
+            total = 0
+            for tio in tios:
+                total +=1
+                ret.append(Conversions.serialize(tio))
+            return TrainImageObjectListResponse(status=True,total=total,objects=ret)
+        except Exception as e:
+            log.warning(str(e))
+            return TrainImageObjectListResponse(status=False,message=str(e))
+        
+    async def trainImageObjectRemove(self, request: TrainImageObjectRemoveRequest, context) -> TrainImageObjectRemoveResponse:
+        try:
+            found = await TrainImageObject.find_many(TrainImageObject.id == PydanticObjectId(request.id)).first_or_none()
+            if not found:
+                return TrainImageObjectRemoveResponse(status=False,message='trainer.lesson.errors.object_not_found')
+            await found.delete()
+            return TrainImageObjectRemoveResponse(status=True)
+        except Exception as e:
+            log.warning(str(e))
+            return TrainImageObjectRemoveResponse(status=False,message=str(e))
+        
     async def trainImageObject(self, request:TrainImageObjectRequest, context) -> TrainImageObjectResponse:
         try:
             lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
             if lesson is None:
                 return TrainImageObjectResponse(status=False,message="workspace.trainer.lesson.errors.not_found")
-            detectorId = lesson.detector
             detector = await Detector.find_many(Detector.id == PydanticObjectId(lesson.detector)).first_or_none()
             if detector is None:
                 return TrainImageObjectResponse(status=False,message="workspace.detector.errors.not_found")
             
-            class_id = None
-            class_name = request.label
-            found_class = await DetectorLabel.find_many(
-                DetectorLabel.detector == detectorId, DetectorLabel.name == class_name
-            ).first_or_none()
-            if found_class is None:
-                found_class = await DetectorLabel(
-                    detector=detectorId, name=class_name
-                ).insert()
-            class_id = found_class.id
+         
             
             tio = await TrainImageObject(
+                lesson=lesson.id,
                 frame=request.frame,
-                label=class_id,
+                label=request.label,
                 xstart=request.xstart,
                 xend=request.xend,
                 ystart=request.ystart,
                 yend=request.yend,
+                val=request.val,
+                train=request.train,
+                test=request.test
             ).insert()
             user_id = PydanticObjectId(request.user)
             return TrainImageObjectResponse(status=True,id=str(tio.id))

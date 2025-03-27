@@ -1,4 +1,4 @@
-<app-modal [loading]="loading" [error]="error">
+<app-modal [loading]="loading" [error]="error" [showBody]="(loading|async)==undefined">
   <ng-content header>
     <app-fa-icon [icon]="FAIconType.shapes"></app-fa-icon>
     <span class="ms-2" translate>workspace.detector.training.title</span>
@@ -10,10 +10,8 @@
     <app-detector-texts-summary *ngIf="texts" [texts]="texts"></app-detector-texts-summary>
     <ng-container *ngFor="let box of boxes">
       <ng-container *ngFor="let label of box.labels">
-        <app-detector-train-suggestion *ngIf="!labelIsDetected(label)" [box]="box" [label]="label" (onAccept)="onAcceptObject(box,label)" (onReject)="onRejectObject(box,label)"></app-detector-train-suggestion>
+        <app-detector-train-suggestion *ngIf="!labelIsDetected(label)" [train]="labelIsInTrainQueue(label)" [box]="box" [label]="label" (onRemove)="onRemoveObject($event)" (onAccept)="onAcceptObject(box,label)" (onReject)="onRejectObject(box,label)"></app-detector-train-suggestion>
       </ng-container>
-
-
 
     </ng-container>
     <div class="card mb-1" *ngIf="totalTrainingObjects ==0 && boxes.length > 0">
@@ -33,6 +31,9 @@
         </div>
       </div>
     </div>
+
+
+
   </ng-content>
 </app-modal>
 

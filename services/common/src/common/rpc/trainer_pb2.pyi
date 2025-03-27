@@ -1,12 +1,29 @@
 from common.rpc import base_pb2 as _base_pb2
+from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class TrainImageObjectRemoveRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class TrainImageObjectRemoveResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
 class TrainImageObjectRequest(_message.Message):
-    __slots__ = ("user", "lesson", "frame", "label", "xstart", "xend", "ystart", "yend")
+    __slots__ = ("user", "lesson", "frame", "label", "xstart", "xend", "ystart", "yend", "train", "test", "val")
     USER_FIELD_NUMBER: _ClassVar[int]
     LESSON_FIELD_NUMBER: _ClassVar[int]
     FRAME_FIELD_NUMBER: _ClassVar[int]
@@ -15,6 +32,9 @@ class TrainImageObjectRequest(_message.Message):
     XEND_FIELD_NUMBER: _ClassVar[int]
     YSTART_FIELD_NUMBER: _ClassVar[int]
     YEND_FIELD_NUMBER: _ClassVar[int]
+    TRAIN_FIELD_NUMBER: _ClassVar[int]
+    TEST_FIELD_NUMBER: _ClassVar[int]
+    VAL_FIELD_NUMBER: _ClassVar[int]
     user: str
     lesson: str
     frame: int
@@ -23,7 +43,10 @@ class TrainImageObjectRequest(_message.Message):
     xend: float
     ystart: float
     yend: float
-    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ..., label: _Optional[str] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ...) -> None: ...
+    train: bool
+    test: bool
+    val: bool
+    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ..., label: _Optional[str] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., train: bool = ..., test: bool = ..., val: bool = ...) -> None: ...
 
 class TrainImageObjectResponse(_message.Message):
     __slots__ = ("status", "message", "id")
@@ -90,3 +113,25 @@ class RecordCreateLessonResponse(_message.Message):
     message: str
     lesson: _base_pb2.Serialized
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class TrainImageObjectListRequest(_message.Message):
+    __slots__ = ("user", "lesson", "frame")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    LESSON_FIELD_NUMBER: _ClassVar[int]
+    FRAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    lesson: str
+    frame: int
+    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+
+class TrainImageObjectListResponse(_message.Message):
+    __slots__ = ("status", "message", "total", "objects")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    OBJECTS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    objects: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., objects: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...

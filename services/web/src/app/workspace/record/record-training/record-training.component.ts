@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DetectObject, DetectorImageLabelAdd, DetectorImageMode, DetectorLabel, DetectorSuggestion, DetectText, TrainLesson } from '@api/index';
+import { DetectObject, DetectorImageLabelAdd, DetectorImageMode, DetectorLabel, DetectorSuggestion, DetectText, TrainImageObject, TrainLesson } from '@api/index';
 import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 
@@ -20,12 +20,16 @@ export class RecordTrainingComponent extends BaseComponent implements OnInit {
   testing: boolean = false;
   savedLabels: DetectorLabel[] = [];
   totalTrainingObjects: number = 0;
+  trainImageObjects: TrainImageObject[] = [];
 
-
-  trainingQueue: Array<[ImageAnnotatorBox,DetectorLabel]> = [];
 
   ngOnInit(): void {
+    setTimeout(()=>{
+      this.loadImageObjects();
       this.calculateTrainingObjects();
+    });
+
+
   }
 
   calculateTrainingObjects(){
@@ -39,6 +43,23 @@ export class RecordTrainingComponent extends BaseComponent implements OnInit {
       })
   }
 
+  loadImageObjects(){
+    this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading_objects'));
+    setTimeout(()=>{
+      if (!this.lesson._id) return;
+      this.ctx.api.trainer.trainerLessonImageObjectList(this.lesson._id,this.frame).subscribe({
+        next: (result)=>{
+          this.loading.next(undefined);
+          this.trainImageObjects = result.objects;
+        },
+        error: (result)=>{
+          this.loading.next(undefined);
+          this.error.next(result.error.detail);
+        }
+      })
+    });
+
+  }
 
   dismiss() {
     this.ctx.closeModal(undefined);
@@ -49,6 +70,12 @@ export class RecordTrainingComponent extends BaseComponent implements OnInit {
     for (let i = 0; i < this.objects.length; i++) {
       let obj = this.objects[i];
       if (obj.name == value.name) {
+        return true;
+      }
+    }
+    for (let i = 0; i< this.trainImageObjects.length; i++){
+      let tio = this.trainImageObjects[i];
+      if (tio.label == value.name){
         return true;
       }
     }
@@ -63,19 +90,44 @@ export class RecordTrainingComponent extends BaseComponent implements OnInit {
     }
   }
 
-
-  onAcceptObject(box: ImageAnnotatorBox, label: DetectorLabel) {
-
-    // Check if box and labels are already in the training queue
-    for (let i = 0; i < this.trainingQueue.length; i++){
-      let tBox = this.trainingQueue[i][0];
-      let tLabel = this.trainingQueue[i][1];
-      if (tBox.id == box.id && label._id == tLabel._id){
-        return;
+  labelIsInTrainQueue(value: DetectorLabel): TrainImageObject | undefined {
+    for (let i = 0; i< this.trainImageObjects.length; i++){
+      let tio = this.trainImageObjects[i];
+      if (tio.label == value.name){
+        return tio;
       }
     }
+    return undefined;
+  }
 
-    this.trainingQueue.push([box,label]);
+  onRemoveObject(value: TrainImageObject){
+    if (!value._id) return;
+    this.ctx.api.trainer.trainerLessonImageObjectRemove(value._id).subscribe({
+      next: (result)=>{
+        this.loadImageObjects();
+      }
+    })
+  }
+
+  onAcceptObject(box: ImageAnnotatorBox, label: DetectorLabel) {
+    if (!this.lesson._id) return;
+    // Check if box and labels are already in the training queue
+    this.ctx.api.trainer.trainerLessonImageObject({
+      lessonId: this.lesson._id,
+    frame: this.frame,
+    label: label.name,
+    xstart: box.x,
+    xend: box.x+box.w,
+    ystart: box.y,
+    yend: box.y+box.h,
+    val: this.evaluating,
+    test: this.testing,
+    train: this.training
+    }).subscribe({
+      next: (result)=>{
+        this.loadImageObjects();
+      }
+    })
   }
 
   onRejectObject(box: ImageAnnotatorBox, label: DetectorLabel) {}

@@ -36,6 +36,8 @@ export * from './record-list-response';
 export * from './recorder-event-list200-response-inner';
 export * from './register-request';
 export * from './response-recordereventload';
+export * from './train-image-object';
+export * from './train-image-object-list-response';
 export * from './train-image-object-payload';
 export * from './train-lesson';
 export * from './validation-error';

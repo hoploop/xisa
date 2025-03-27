@@ -22,8 +22,9 @@
     },
     "trainer": {
       "lesson": {
-        "errors": { "not_found": "Lesson not found" }
+        "errors": { "not_found": "Lesson not found","object_not_found":"Object image not found" }
       }
+      
     },
     "detector": {
       "errors": {
@@ -46,6 +47,7 @@
         "by_regex_order_2": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by row {{row}} and col {{col}}",
         "accept": "Accept",
         "reject": "Reject",
+        "remove":"Remove",
         "by_user_class": "You are suggesting to use a select by class '{{class}}'"
       },
       "training":{
@@ -53,7 +55,8 @@
         "all_done":"All objects are already detected by current detector",
         "empty":"There are no new objects to be trained for detection",
         "loading":"Training...",
-        "by_label":"You are adding a box with label '{{label}}' to the detection objects training"
+        "by_label":"You are adding a box with label '{{label}}' to the detection objects training",
+        "loading_objects":"Loading training objects.."
       },
       "detected_objects": "I detected {{n}} objects",
       "detected_texts": "I detected {{n}} text boxes",

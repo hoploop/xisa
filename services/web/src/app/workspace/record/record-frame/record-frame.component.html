@@ -1,6 +1,5 @@
 <div class="d-flex">
   <div class="d-flex flex-column w-100">
-    <app-image-annotator *ngIf="(loading|async) == undefined" (doubleClicked)="selectClasses($event)" [url]="imageUrl" [boxes]="boxes"></app-image-annotator>
+    <app-image-annotator *ngIf="(loading|async) == undefined" (doubleClicked)="selectClasses($event)" [url]="imageUrl" [highlights]="highlights" [boxes]="boxes"></app-image-annotator>
   </div>
-
 </div>

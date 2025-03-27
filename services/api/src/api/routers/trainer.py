@@ -1,7 +1,7 @@
 # PYTHON IMPORTS
 import io
 import logging
-from typing import Annotated
+from typing import Annotated, List
 from beanie import PydanticObjectId
 from bson import ObjectId
 import base64
@@ -16,7 +16,7 @@ from starlette.responses import Response
 # LOCAL IMPORTS
 from common.clients.trainer import TrainerClient
 from api.routers.auth import CurrentUser
-from common.models.train import TrainLesson
+from common.models.train import TrainImageObject, TrainLesson
 
 
 # INITIALIZATION
@@ -41,14 +41,14 @@ Trainer = Annotated[TrainerClient, Depends(get_trainer)]
     description="Checks if a recorder is running",
     response_model=TrainLesson,
 )
-async def lesson(user: CurrentUser, trainer: Trainer,recordId:PydanticObjectId):
+async def lesson(user: CurrentUser, trainer: Trainer, recordId: PydanticObjectId):
     try:
-        
-        found = await trainer.recordHasLesson(user,recordId)
+
+        found = await trainer.recordHasLesson(user, recordId)
         print(recordId)
         if found is None:
-            found = await trainer.recordCreateLesson(user,recordId)
-        return found 
+            found = await trainer.recordCreateLesson(user, recordId)
+        return found
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
@@ -56,11 +56,16 @@ async def lesson(user: CurrentUser, trainer: Trainer,recordId:PydanticObjectId):
 @router.post(
     "/lesson/detector",
     operation_id="trainerLessonSetDetector",
-    response_model=TrainLesson
+    response_model=TrainLesson,
 )
-async def lesson_set_detector(user:CurrentUser,trainer:Trainer,detectorId:PydanticObjectId,lessonId:PydanticObjectId):
+async def lesson_set_detector(
+    user: CurrentUser,
+    trainer: Trainer,
+    detectorId: PydanticObjectId,
+    lessonId: PydanticObjectId,
+):
     try:
-        found = await trainer.lessonSetDetector(user,lessonId,detectorId)
+        found = await trainer.lessonSetDetector(user, lessonId, detectorId)
         return found
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
@@ -69,20 +74,70 @@ async def lesson_set_detector(user:CurrentUser,trainer:Trainer,detectorId:Pydant
 class TrainImageObjectPayload(BaseModel):
     lessonId: PydanticObjectId
     frame: int
-    label:str
-    xstart:float
-    xend:float
-    ystart:float
-    yend:float
+    label: str
+    xstart: float
+    xend: float
+    ystart: float
+    yend: float
+    val: bool
+    test: bool
+    train: bool
+
 
 @router.post(
     "/lesson/image/object",
     operation_id="trainerLessonImageObject",
-    response_model=PydanticObjectId
+    response_model=PydanticObjectId,
 )
-async def lesson_image_object(user:CurrentUser,trainer:Trainer,payload: TrainImageObjectPayload):
+async def lesson_image_object(
+    user: CurrentUser, trainer: Trainer, payload: TrainImageObjectPayload
+):
     try:
-        found = await trainer.trainImageObject(user,payload.lessonId,payload.frame,payload.label,payload.xstart,payload.xend,payload.ystart,payload.yend)
+        found = await trainer.trainImageObject(
+            user,
+            payload.lessonId,
+            payload.frame,
+            payload.label,
+            payload.xstart,
+            payload.xend,
+            payload.ystart,
+            payload.yend,
+            payload.train,
+            payload.test,
+            payload.val,
+        )
         return found
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class TrainImageObjectListResponse(BaseModel):
+    total: int
+    objects: List[TrainImageObject]
+
+@router.get(
+    "/lesson/image/object/list/{lessonId}",
+    operation_id="trainerLessonImageObjectList",
+    response_model=TrainImageObjectListResponse,
+)
+async def lesson_image_object_list(
+    user: CurrentUser, trainer: Trainer, lessonId: PydanticObjectId, frame:int = -1
+):
+    try:
+        total, ret = await trainer.trainImageObjectList(user,lessonId,frame)
+        return TrainImageObjectListResponse(total=total,objects=ret)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+@router.delete(
+    "/lesson/image/object/remove/{objectId}",
+    operation_id="trainerLessonImageObjectRemove",
+    response_model=bool,
+)
+async def lesson_image_object_remove(user:CurrentUser,trainer:Trainer,objectId:PydanticObjectId):
+    try:
+        return await trainer.trainImageObjectRemove(user,objectId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+ 

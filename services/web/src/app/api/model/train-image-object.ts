@@ -9,16 +9,19 @@
  */
 
 
-export interface TrainImageObjectPayload { 
-    lessonId: string;
+export interface TrainImageObject { 
+    _id?: string | null;
+    lesson: string;
     frame: number;
     label: string;
     xstart: number;
     xend: number;
     ystart: number;
     yend: number;
-    val: boolean;
-    test: boolean;
-    train: boolean;
+    test?: boolean;
+    train?: boolean;
+    val?: boolean;
+    created?: string;
+    updated?: string;
 }
 

@@ -19,6 +19,9 @@ class TrainImageObject(Document):
     xend:float
     ystart:float
     yend:float
+    test:bool = Field(default=False)
+    train:bool = Field(default=True)
+    val:bool = Field(default=True)
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)
     

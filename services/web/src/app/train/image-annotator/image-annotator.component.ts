@@ -17,6 +17,7 @@ import {
 } from './image-annotator-box';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ImageAnnotatorHighlight } from './image-annotator-highlight';
 
 export enum State {
   EMPTY = 0,
@@ -43,8 +44,10 @@ export class ImageAnnotatorComponent
   @Input() detectorId: string = '67caa7b79fc10dc8e8afaf24';
   @Output() doubleClicked = new EventEmitter<ImageAnnotatorBox>();
   @Input() boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
+  @Input() highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
   @Output() onSelectedBox: EventEmitter<ImageAnnotatorBox> = new EventEmitter();
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
+  @Output() loaded = new EventEmitter<boolean>();
   @Input() settings: ImageAnnotatorSettings = {
     resizeHandleSize: 10,
     showHighlights: true,
@@ -92,6 +95,18 @@ export class ImageAnnotatorComponent
         }
       })
     );
+
+    this.subs.add(
+      this.highlights.subscribe((highlights)=>{
+        if (this.context && this.canvas) {
+          highlights.forEach(highlight=>{
+            this.normalizeInitialHighlight(highlight);
+          })
+
+          this.draw();
+        }
+      })
+    )
   }
 
   constructor(private ctx: ContextService, private http: HttpClient) {}
@@ -125,6 +140,7 @@ export class ImageAnnotatorComponent
     this.image.onload = () => {
       setTimeout(() => {
         this.resizeCanvas();
+        this.loaded.next(true);
       });
     };
 
@@ -152,6 +168,7 @@ export class ImageAnnotatorComponent
     this.image.onload = () => {
       setTimeout(() => {
         this.resizeCanvas();
+        this.loaded.next(true);
       });
     };
 
@@ -229,6 +246,10 @@ export class ImageAnnotatorComponent
       box.draw(this.context, this.settings, this.image);
     });
 
+    this.highlights.getValue().forEach((highlight)=>{
+      highlight.draw(this.context,this.settings,this.image);
+    })
+
     this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes.getValue()));
   }
 
@@ -292,6 +313,23 @@ export class ImageAnnotatorComponent
       box.y = box.y * scaleY;
       box.w = box.w * scaleX;
       box.h = box.h * scaleY;
+    }
+
+  }
+
+
+  normalizeInitialHighlight(highlight: ImageAnnotatorHighlight) {
+    const canvas = this.canvas.nativeElement;
+    const rect = canvas.getBoundingClientRect(); // Get canvas position & size
+
+    // Scaling factor: Adjust for responsive canvas
+    const scaleX = canvas.width;// / rect.width;
+    const scaleY = canvas.height;// / rect.height;
+    if (highlight.percentage){
+      highlight.x = highlight.x * scaleX;
+      highlight.y = highlight.y * scaleY;
+      highlight.w = highlight.w * scaleX;
+      highlight.h = highlight.h * scaleY;
     }
 
   }
@@ -365,9 +403,11 @@ export class ImageAnnotatorComponent
         boxOver = box;
         overType = boxOverType;
         boxOverIndex = i;
-        boxOver.isSelected = true;
-        this.selectedBoxIndex = i;
-        this.updateSelectedBox();
+        if (boxOver.canSelect){
+          boxOver.isSelected = true;
+          this.selectedBoxIndex = i;
+          this.updateSelectedBox();
+        }
       } else {
         box.isSelected = false;
       }
@@ -401,11 +441,14 @@ export class ImageAnnotatorComponent
           this.moving.startX = this.mouse.x - boxOver.x;
           this.moving.startY = this.mouse.y - boxOver.y;
         }else{
+          if (boxOver.canSelect)
           this.state = State.SELECTED;
         }
+        if (boxOver.canSelect){
         this.selectedBoxIndex = boxOverIndex;
         this.updateSelectedBox();
         boxOver.isSelected = true;
+        }
       }
     } else {
       if (boxOver) {

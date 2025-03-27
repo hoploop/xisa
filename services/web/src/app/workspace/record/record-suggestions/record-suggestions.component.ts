@@ -11,6 +11,7 @@ import {
 import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
+import { Frame } from '../record-frame';
 
 @Component({
   selector: 'app-record-suggestions',
@@ -19,10 +20,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './record-suggestions.component.scss',
 })
 export class RecordSuggestionsComponent extends BaseComponent {
-  @Input() suggestions!: DetectorSuggestion[];
-  @Input() boxes!: ImageAnnotatorBox[];
-  @Input() lesson!:TrainLesson;
-  @Input() frame!:number;
+  @Input() frame!:Frame;
 
   dismiss() {
     this.ctx.closeModal(undefined);

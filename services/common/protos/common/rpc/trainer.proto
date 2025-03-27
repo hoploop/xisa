@@ -10,7 +10,18 @@ service Trainer {
     rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
     rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
     rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
+    rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
+    rpc trainImageObjectRemove(TrainImageObjectRemoveRequest) returns (TrainImageObjectRemoveResponse);
+}
 
+message TrainImageObjectRemoveRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message TrainImageObjectRemoveResponse {
+    bool status = 1;
+    optional string message = 2;
 }
 
 message TrainImageObjectRequest {
@@ -22,6 +33,9 @@ message TrainImageObjectRequest {
     float xend = 6;
     float ystart = 7;
     float yend = 8;
+    bool train = 9;
+    bool test = 10;
+    bool val = 11;
 }
 
 message TrainImageObjectResponse {
@@ -29,6 +43,7 @@ message TrainImageObjectResponse {
     optional string message = 2;
     string id = 3;
 }
+
 
 message LessonSetDetectorRequest {
     string user = 1;
@@ -63,4 +78,18 @@ message RecordCreateLessonResponse {
     bool status = 1;
     optional string message = 2;
     Serialized lesson = 3;
+}
+
+
+message TrainImageObjectListRequest {
+    string user = 1;
+    string lesson = 2;
+    optional int32 frame = 3;
+}
+
+message TrainImageObjectListResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+    repeated Serialized objects = 4;
 }

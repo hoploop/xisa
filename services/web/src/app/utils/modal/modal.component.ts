@@ -13,6 +13,7 @@ export class ModalComponent {
   FAIconType = FAIconType;
   @Input() loading = new BehaviorSubject<string|undefined>(undefined);
   @Input() error = new BehaviorSubject<string|undefined>(undefined);
+  @Input() showBody: boolean = true;
   constructor(private ctx:ContextService){
 
   }

@@ -1,16 +1,14 @@
 # PYTHON IMPORTS
 import logging
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from beanie import PydanticObjectId
 
 # LOCAL IMPORTS
 from common.models.auth import User
-from common.models.train import TrainLesson
-from common.rpc.auth_pb2 import CheckRequest, LoginRequest, LogoutRequest, RegisterRequest, ResetPasswordRequest, UnregisterRequest, UserRequest
-from common.rpc.auth_pb2_grpc import AuthStub
+from common.models.train import TrainImageObject, TrainLesson
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectRequest, TrainImageObjectResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -59,9 +57,28 @@ class TrainerClient(Client):
         
         return Conversions.deserialize(res.lesson)
     
-    async def trainImageObject(self,user:User,lessonId:PydanticObjectId,frame:int,label:str,xstart:float,xend:float,ystart:float,yend:float) -> PydanticObjectId:
-        req = TrainImageObjectRequest(user=str(user.id),lesson=str(lessonId),frame=frame,label=label,xstart=xstart,xend=xend,ystart=ystart,yend=yend)
+    async def trainImageObject(self,user:User,lessonId:PydanticObjectId,frame:int,label:str,xstart:float,xend:float,ystart:float,yend:float,train:bool,test:bool,val:bool) -> PydanticObjectId:
+        req = TrainImageObjectRequest(user=str(user.id),lesson=str(lessonId),frame=frame,label=label,xstart=xstart,xend=xend,ystart=ystart,yend=yend,train=train,test=test,val=val)
         res: TrainImageObjectResponse = await self.client.trainImageObject(req)
         if res.status == False:
             raise Exception(res.message)
         return PydanticObjectId(res.id)
+    
+    async def trainImageObjectList(self,user:User,lessonId:PydanticObjectId,frame:int=-1) -> Tuple[int,List[TrainImageObject]]:
+        req = TrainImageObjectListRequest(user=str(user.id),lesson=str(lessonId),frame=frame)
+        res: TrainImageObjectListResponse = await self.client.trainImageObjectList(req)
+        if res.status == False:
+            raise Exception(res.message)
+        total = res.total
+        ret = []
+        for obj in res.objects:
+            ret.append(Conversions.deserialize(obj))
+        return total,ret
+    
+    
+    async def trainImageObjectRemove(self,user:User,objectId:PydanticObjectId) -> bool:
+        req = TrainImageObjectRemoveRequest(user=str(user.id),id=str(objectId))
+        res: TrainImageObjectRemoveResponse = await self.client.trainImageObjectRemove(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
