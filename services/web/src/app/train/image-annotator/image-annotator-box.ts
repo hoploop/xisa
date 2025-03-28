@@ -283,10 +283,10 @@ export class ImageAnnotatorBox {
     // Scaling factor: Adjust for responsive canvas
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    const cropX = this.x / scaleX;
-    const cropY = this.y / scaleY;
-    const cropWidth = this.w / scaleX;
-    const cropHeight = this.h / scaleY;
+    const cropX = this.x; // / scaleX;
+    const cropY = this.y; // / scaleY;
+    const cropWidth = this.w; // / scaleX;
+    const cropHeight = this.h; // / scaleY;
     croppedCanvas.width = cropWidth;
     croppedCanvas.height = cropHeight;
     croppedCtx.drawImage(

@@ -41,6 +41,10 @@ import { RecordFrameSelectorComponent } from './record/record-frame-selector/rec
 import { RecordSuggestionsComponent } from './record/record-suggestions/record-suggestions.component';
 import { RecordTrainingComponent } from './record/record-training/record-training.component';
 import { DetectorTrainSuggestionComponent } from './detector/detector-train-suggestion/detector-train-suggestion.component';
+import { RecordBoxDetectedObjectComponent } from './record/record-box-detected-object/record-box-detected-object.component';
+import { RecordBoxDetectedTextComponent } from './record/record-box-detected-text/record-box-detected-text.component';
+import { RecordBoxTrainObjectComponent } from './record/record-box-train-object/record-box-train-object.component';
+import { RecordBoxEventComponent } from './record/record-box-event/record-box-event.component';
 
 
 
@@ -81,6 +85,10 @@ import { DetectorTrainSuggestionComponent } from './detector/detector-train-sugg
     RecordSuggestionsComponent,
     RecordTrainingComponent,
     DetectorTrainSuggestionComponent,
+    RecordBoxDetectedObjectComponent,
+    RecordBoxDetectedTextComponent,
+    RecordBoxTrainObjectComponent,
+    RecordBoxEventComponent,
   ],
   imports: [
     CommonModule,

@@ -15,23 +15,19 @@
   </div>
 
   <div class="card-body">
-    <div class="d-flex justify-content-center mb-2">
-      <div class="btn-group btn-group-sm">
-        <button class="btn btn-outline-primary">Play</button>
-        <button class="btn btn-primary">Train</button>
-        <button class="btn btn-outline-primary">Replay</button>
-      </div>
-    </div>
 
     <div class="d-flex justify-content-center mb-2">
       <!-- Frame Selector -->
       <button
-        class="btn btn-outline-secondary  btn-sm w-100"
+        class="btn btn-sm w-100"
         (click)="selectFrame()"
+        [class.btn-outline-primary]="frame==undefined"
+        [class.btn-primary]="frame!=undefined"
       >
         <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
         <span *ngIf="frame==undefined" class="ms-2" translate>workspace.record.studio.frames</span>
         <span *ngIf="frame!=undefined" class="ms-2" [translate]="'workspace.record.studio.selected_frame'" [translateParams]="{'n':frame.count.toString()}"></span>
+        <span *ngIf="frame!=undefined" class="ms-2 smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
       </button>
 
       <!-- Video Selector -->
@@ -43,37 +39,14 @@
         <span class="ms-2" translate>workspace.record.studio.video</span>
       </button>
 
-      <!-- Suggestions Selector-->
-      <button
-        class="btn btn-outline-secondary ms-1 btn-sm w-100"
-        (click)="viewSuggestions()"
-      >
-        <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
-        <span class="ms-2" *ngIf="frame && frame.suggestions.length == 0" translate>workspace.detector.suggestion.title</span>
-        <span class="ms-2" *ngIf="frame && frame.suggestions.length  > 0" [translate]="'workspace.detector.suggestion.title_n'" [translateParams]="{n:frame.suggestions.length}"></span>
-      </button>
 
-      <!-- Train Selector -->
-      <button
-        class="btn btn-outline-secondary ms-1 btn-sm w-100"
-        (click)="viewTrain()"
-      >
-        <app-fa-icon [icon]="FAIconType.shapes"></app-fa-icon>
-        <span class="ms-2" *ngIf="totalTrainingObjects == 0" translate>workspace.record.studio.train</span>
-        <span class="ms-2" *ngIf="totalTrainingObjects > 0" [translate]="'workspace.record.studio.train_n'" [translateParams]="{'n':totalTrainingObjects}"></span>
-      </button>
-    </div>
 
-    <ng-container *ngIf="recordId && detector && detector._id">
-      <app-record-frame
-        (objects)="onUpdateDetectedObjects($event)"
-        (boxes)="onUpdateFrameBoxes($event)"
-        (suggestions)="onUpdateDetectorSuggestions($event)"
-        (texts)="onUpdateDetectedTexts($event)"
-        [frame]="frame"
-        *ngIf="frame"
-      ></app-record-frame>
-    </ng-container>
+      </div>
+      <div>
+
+
+    <app-record-frame [frame]="frame" *ngIf="frame"></app-record-frame>
+
   </div>
 
   <app-loader

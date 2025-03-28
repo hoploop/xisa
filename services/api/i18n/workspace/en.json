@@ -132,10 +132,11 @@
         "title": "Studio",
         "frames": "Select frame",
         "video": "View video",
-        "train":"Train new objects",
-        "train_n":"Train new objects ({{n}})",
-        "selected_frame":"Frame {{n}}"
-        
+        "train":"Train new objects ({{n}})",
+        "selected_frame":"Frame {{n}}",
+        "detected_texts":"Detected texts ({{n}})",
+        "detected_objects":"Detected objects ({{n}})",
+        "event":"Event"       
       },
       "description": "Description",
       "loading": "Loading recording..",

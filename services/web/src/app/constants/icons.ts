@@ -107,8 +107,10 @@ import {
 export enum BIconType {
   person = 'bi-person',
   recordCircle = 'bi-record-circle',
+  textareaT = 'bi-textarea-t',
   personAdd = 'bi-person-add',
   key = 'bi-key',
+  boundingBox = 'bi-bounding-box',
   typeBold = 'bi-type-bold',
   arrowDownRight = 'bi-arrow-down-right',
   arrowsMove = 'bi-arrows-move',

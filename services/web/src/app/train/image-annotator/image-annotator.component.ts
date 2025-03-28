@@ -48,11 +48,11 @@ export class ImageAnnotatorComponent
   @Output() onSelectedBox: EventEmitter<ImageAnnotatorBox> = new EventEmitter();
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
   @Output() loaded = new EventEmitter<boolean>();
-  @Input() settings: ImageAnnotatorSettings = {
+  @Input() settings = new BehaviorSubject<ImageAnnotatorSettings>({
     resizeHandleSize: 10,
     showHighlights: true,
     canCreateBox: true,
-  };
+  });
   private context!: CanvasRenderingContext2D;
   private image = new Image();
   selectedBoxIndex: number = -1;
@@ -243,11 +243,11 @@ export class ImageAnnotatorComponent
     this.context.restore();
 
     this.boxes.getValue().forEach((box, index) => {
-      box.draw(this.context, this.settings, this.image);
+      box.draw(this.context, this.settings.getValue(), this.image);
     });
 
     this.highlights.getValue().forEach((highlight)=>{
-      highlight.draw(this.context,this.settings,this.image);
+      highlight.draw(this.context,this.settings.getValue(),this.image);
     })
 
     this.boxesChange.next(this.denormalizeOutputBoxes(this.boxes.getValue()));
@@ -368,7 +368,7 @@ export class ImageAnnotatorComponent
     for (let i = 0; i < this.boxes.getValue().length; i++) {
       let box = this.boxes.getValue()[i];
       let boxOverType = box.isMouseOver(
-        this.settings,
+        this.settings.getValue(),
         this.mouse.x,
         this.mouse.y
       );
@@ -395,7 +395,7 @@ export class ImageAnnotatorComponent
     for (let i = 0; i < this.boxes.getValue().length; i++) {
       let box = this.boxes.getValue()[i];
       let boxOverType = box.isMouseOver(
-        this.settings,
+        this.settings.getValue(),
         this.mouse.x,
         this.mouse.y
       );
@@ -414,7 +414,7 @@ export class ImageAnnotatorComponent
     }
 
     if (overType == ImageAnnotatorMouseOverType.NOT_OVER) {
-      if (this.settings.canCreateBox) {
+      if (this.settings.getValue().canCreateBox) {
         this.state = State.ADDING;
         this.adding.startX = this.mouse.x;
         this.adding.startY = this.mouse.y;
@@ -423,8 +423,8 @@ export class ImageAnnotatorComponent
           new ImageAnnotatorBox(
             this.mouse.x,
             this.mouse.y,
-            this.settings.resizeHandleSize,
-            this.settings.resizeHandleSize
+            this.settings.getValue().resizeHandleSize,
+            this.settings.getValue().resizeHandleSize
           )
         );
         this.selectedBoxIndex = boxes.length - 1;
@@ -572,7 +572,7 @@ export class ImageAnnotatorComponent
     for (let i = 0; i < this.boxes.getValue().length; i++) {
       let box = this.boxes.getValue()[i];
       let boxOverType = box.isMouseOver(
-        this.settings,
+        this.settings.getValue(),
         this.mouse.x,
         this.mouse.y
       );

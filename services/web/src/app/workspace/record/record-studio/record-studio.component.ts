@@ -40,11 +40,9 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   events: RecordEventListRecordId200ResponseInner[] = [];
   detector?: Detector;
   detectorId?: string;
-  objects: DetectObject[] = [];
-  texts: DetectText[] = [];
-  boxes: ImageAnnotatorBox[] = [];
+
   lesson?: TrainLesson;
-  totalTrainingObjects = 0;
+
 
   constructor(
     protected override ctx: ContextService,
@@ -66,6 +64,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     });
 
   }
+
+
 
   load() {
     if (!this.recordId) return;
@@ -93,7 +93,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
         next: (result)=>{
           this.loading.next(undefined);
           if (this.frame)
-          this.frame.trainImageObjects = result.objects;
+          this.frame.train = result.objects;
         },
         error: (result)=>{
           this.loading.next(undefined);
@@ -106,23 +106,11 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
 
 
 
-  calculateTrainingObjects() {
-    setTimeout(()=>{
-
-    this.totalTrainingObjects = 0;
-    this.boxes.forEach((box) => {
-      box.labels.forEach((label) => {
-        if (!this.labelIsDetected(label)) {
-          this.totalTrainingObjects += 1;
-        }
-      });
-    });});
-  }
 
   labelIsDetected(value: DetectorLabel): boolean {
-    if (!this.objects) return false;
-    for (let i = 0; i < this.objects.length; i++) {
-      let obj = this.objects[i];
+    if (!this.frame) return false;
+    for (let i = 0; i < this.frame.objects.length; i++) {
+      let obj = this.frame.objects[i];
       if (obj.name == value.name) {
         return true;
       }
@@ -132,8 +120,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
 
   labelIsInTrainQueue(value: DetectorLabel): TrainImageObject | undefined {
     if (!this.frame) return undefined;
-      for (let i = 0; i< this.frame.trainImageObjects.length; i++){
-        let tio = this.frame.trainImageObjects[i];
+      for (let i = 0; i< this.frame.train.length; i++){
+        let tio = this.frame.train[i];
         if (tio.label == value.name){
           return tio;
         }
@@ -141,26 +129,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       return undefined;
     }
 
-  onUpdateFrameBoxes(value: ImageAnnotatorBox[]) {
-    this.boxes = value;
-    this.calculateTrainingObjects();
-  }
 
-  onUpdateDetectorSuggestions(value: DetectorSuggestion[]) {
-    if (this.frame){
-      this.frame.suggestions = value;
-    }
-  }
-
-  onUpdateDetectedObjects(value: DetectObject[]) {
-    this.objects = value;
-    this.calculateTrainingObjects();
-  }
-
-  onUpdateDetectedTexts(value: DetectText[]) {
-    this.texts = value;
-    this.calculateTrainingObjects();
-  }
 
   viewSuggestions() {
     if (!this.frame) return;
@@ -200,31 +169,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       });
   }
 
-  viewTrain() {
-    this.ctx
-      .openModal<undefined>(
-        RecordTrainingComponent,
-        {
-          objects: this.objects,
-          texts: this.texts,
-          boxes: this.boxes,
-          lesson: this.lesson,
-          frame: this.frame?.count,
-        },
-        { centered: true, size: 'lg' }
-      )
-      .subscribe({
-        next: (result) => {
-          if (result) {
-            this.frame = undefined;
-            setTimeout(() => {
-              this.frame = result;
-            });
-          }
-        },
-        error: (result) => {},
-      });
-  }
+
 
   viewVideo() {
     if (!this.recordId) return;
@@ -300,7 +245,9 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
               milliseconds: ms,
               suggestions: [],
               lesson: this.lesson,
-              trainImageObjects: []
+              train: [],
+              objects:[],
+              texts: []
             });
           }
           ms += deltaFrame;
