@@ -60,7 +60,7 @@ message TrainImageObjectRequest {
 message TrainImageObjectResponse {
     bool status = 1;
     optional string message = 2;
-    string id = 3;
+    Serialized object = 3;
 }
 
 

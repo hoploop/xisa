@@ -19,6 +19,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { HTTPValidationError } from '../model/http-validation-error';
 // @ts-ignore
+import { TrainImageObject } from '../model/train-image-object';
+// @ts-ignore
 import { TrainImageObjectListResponse } from '../model/train-image-object-list-response';
 // @ts-ignore
 import { TrainImageObjectPayload } from '../model/train-image-object-payload';
@@ -179,9 +181,9 @@ export class TrainerService implements TrainerServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<string>;
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<string>>;
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<string>>;
+    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainImageObject>;
+    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainImageObject>>;
+    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainImageObject>>;
     public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (trainImageObjectPayload === null || trainImageObjectPayload === undefined) {
             throw new Error('Required parameter trainImageObjectPayload was null or undefined when calling trainerLessonImageObject.');
@@ -240,7 +242,7 @@ export class TrainerService implements TrainerServiceInterface {
         }
 
         let localVarPath = `/trainer/lesson/image/object`;
-        return this.httpClient.request<string>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TrainImageObject>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: trainImageObjectPayload,

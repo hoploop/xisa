@@ -110,7 +110,7 @@ class TrainImageObjectPayload(BaseModel):
 @router.post(
     "/lesson/image/object",
     operation_id="trainerLessonImageObject",
-    response_model=PydanticObjectId,
+    response_model=TrainImageObject,
 )
 async def lesson_image_object(
     user: CurrentUser, trainer: Trainer, payload: TrainImageObjectPayload

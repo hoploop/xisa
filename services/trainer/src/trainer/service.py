@@ -137,7 +137,7 @@ class TrainerService(Service, TrainerServicer):
                 test=request.test
             ).insert()
             user_id = PydanticObjectId(request.user)
-            return TrainImageObjectResponse(status=True,id=str(tio.id))
+            return TrainImageObjectResponse(status=True,object=Conversions.serialize(tio))
         except Exception as e:
             log.warning(str(e))
             return TrainImageObjectResponse(status=False,message=str(e))

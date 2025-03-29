@@ -73,14 +73,14 @@ class TrainImageObjectRequest(_message.Message):
     def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ..., labels: _Optional[_Iterable[str]] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., train: bool = ..., test: bool = ..., val: bool = ...) -> None: ...
 
 class TrainImageObjectResponse(_message.Message):
-    __slots__ = ("status", "message", "id")
+    __slots__ = ("status", "message", "object")
     STATUS_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    ID_FIELD_NUMBER: _ClassVar[int]
+    OBJECT_FIELD_NUMBER: _ClassVar[int]
     status: bool
     message: str
-    id: str
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+    object: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., object: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
 class LessonSetDetectorRequest(_message.Message):
     __slots__ = ("user", "detector", "lesson")

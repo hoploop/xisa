@@ -61,6 +61,6 @@
    </button>
   </div>
   <div class="d-flex justify-content-center align-items-center w-100">
-    <app-image-annotator *ngIf="(loading|async) == undefined" (doubleClicked)="boxDetail($event)"  [settings]="settings" [url]="imageUrl" [highlights]="highlights" [boxes]="boxes"></app-image-annotator>
+    <app-image-annotator *ngIf="(loading|async) == undefined" (onBoxCreated)="boxAdded($event)" (doubleClicked)="boxDetail($event)"  [settings]="settings" [url]="imageUrl" [highlights]="highlights" [boxes]="boxes"></app-image-annotator>
   </div>
 </div>

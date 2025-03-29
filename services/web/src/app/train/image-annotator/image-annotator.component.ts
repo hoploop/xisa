@@ -47,6 +47,7 @@ export class ImageAnnotatorComponent
   @Input() highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
   @Output() onSelectedBox: EventEmitter<ImageAnnotatorBox> = new EventEmitter();
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
+  @Output() onBoxCreated = new EventEmitter<ImageAnnotatorBox>();
   @Output() loaded = new EventEmitter<boolean>();
   @Input() settings = new BehaviorSubject<ImageAnnotatorSettings>({
     resizeHandleSize: 10,
@@ -258,7 +259,9 @@ export class ImageAnnotatorComponent
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
     let boxes = this.boxes.getValue();
-    boxes.push(new ImageAnnotatorBox(mouseX, mouseY, 100, 100));
+    let nbox = new ImageAnnotatorBox(mouseX, mouseY, 100, 100)
+    boxes.push(nbox);
+    this.onBoxCreated.next(nbox);
     this.boxes.next(boxes);
     this.boxesChange.next(this.denormalizeOutputBoxes(boxes));
     this.draw();
@@ -419,19 +422,19 @@ export class ImageAnnotatorComponent
         this.adding.startX = this.mouse.x;
         this.adding.startY = this.mouse.y;
         let boxes = this.boxes.getValue();
-        boxes.push(
-          new ImageAnnotatorBox(
-            this.mouse.x,
-            this.mouse.y,
-            this.settings.getValue().resizeHandleSize,
-            this.settings.getValue().resizeHandleSize
-          )
+        let nbox = new ImageAnnotatorBox(
+          this.mouse.x,
+          this.mouse.y,
+          this.settings.getValue().resizeHandleSize,
+          this.settings.getValue().resizeHandleSize
         );
+        boxes.push(nbox);
         this.selectedBoxIndex = boxes.length - 1;
         boxes[boxes.length - 1].isSelected = true;
         this.boxes.next(boxes);
         this.updateSelectedBox();
         this.boxesChange.next(this.denormalizeOutputBoxes(boxes));
+        this.onBoxCreated.next(nbox)
         this.draw();
       }
     } else if (overType == ImageAnnotatorMouseOverType.INSIDE) {

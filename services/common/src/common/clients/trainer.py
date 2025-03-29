@@ -57,12 +57,12 @@ class TrainerClient(Client):
         
         return Conversions.deserialize(res.lesson)
     
-    async def trainImageObject(self,user:User,lessonId:PydanticObjectId,frame:int,labels:List[str],xstart:float,xend:float,ystart:float,yend:float,train:bool,test:bool,val:bool) -> PydanticObjectId:
+    async def trainImageObject(self,user:User,lessonId:PydanticObjectId,frame:int,labels:List[str],xstart:float,xend:float,ystart:float,yend:float,train:bool,test:bool,val:bool) -> TrainImageObject:
         req = TrainImageObjectRequest(user=str(user.id),lesson=str(lessonId),frame=frame,labels=labels,xstart=xstart,xend=xend,ystart=ystart,yend=yend,train=train,test=test,val=val)
         res: TrainImageObjectResponse = await self.client.trainImageObject(req)
         if res.status == False:
             raise Exception(res.message)
-        return PydanticObjectId(res.id)
+        return Conversions.deserialize(res.object)
     
     async def trainImageObjectList(self,user:User,lessonId:PydanticObjectId,frame:int=-1) -> Tuple[int,List[TrainImageObject]]:
         req = TrainImageObjectListRequest(user=str(user.id),lesson=str(lessonId),frame=frame)

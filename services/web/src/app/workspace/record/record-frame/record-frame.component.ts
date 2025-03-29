@@ -34,7 +34,6 @@ import { RecordBoxDetectedObjectComponent } from '../record-box-detected-object/
 import { RecordBoxDetectedTextComponent } from '../record-box-detected-text/record-box-detected-text.component';
 import { RecordBoxEventComponent } from '../record-box-event/record-box-event.component';
 import { RecordBoxTrainObjectComponent } from '../record-box-train-object/record-box-train-object.component';
-import { RecordBoxTrainObjectResult } from '../record-box-train-object/record-box-train-object-result';
 import { RecordBoxEventResult } from '../record-box-event/record-box-event-result';
 import { RecordBoxDetectedTextResult } from '../record-box-detected-text/record-box-detected-text-result';
 import { RecordBoxDetectedObjectResult } from '../record-box-detected-object/record-box-detected-object-result';
@@ -116,6 +115,31 @@ export class RecordFrameComponent
       }))
   }
 
+  boxAdded(box:ImageAnnotatorBox){
+    if (!this.lesson._id) return;
+      this.ctx.api.trainer.trainerLessonImageObject({
+        lessonId: this.lesson._id,
+        frame: this.frame.count,
+        labels: [],
+        xstart: box.x,
+        xend: box.x+box.w,
+        ystart: box.y,
+        yend: box.y+box.h,
+        val: true,
+        test: true,
+        train: true
+      }).subscribe({
+        next: (result)=>{
+          this.trainBoxes.set(box.id,result);
+          this.detectTrainObjectDetail(box,result);
+          this.frame.train.push(result);
+        },
+        error: (result)=>{
+          console.log(result);
+        }
+
+      })
+  }
 
   boxDetail(box:ImageAnnotatorBox){
     if (this.suggestionBoxes.has(box.id)){
@@ -151,13 +175,14 @@ export class RecordFrameComponent
   }
 
   detectTrainObjectDetail(box:ImageAnnotatorBox, train: TrainImageObject){
-    this.ctx.openModal<RecordBoxTrainObjectResult | undefined>(RecordBoxTrainObjectComponent, {
+    this.ctx.openModal<undefined>(RecordBoxTrainObjectComponent, {
       box: box,
       train:train,
-      lesson: this.lesson
+      lesson: this.lesson,
+      frame: this.frame
     })
     .subscribe({
-      next: (result) => {},
+      next: (result) => { this.render();},
       error: (result) => {},
     });
   }
@@ -215,11 +240,7 @@ export class RecordFrameComponent
       })
       .subscribe({
         next: (result) => {
-          if (result && result.length > 0) {
-            box.labels = result;
-            let boxes = this.boxes.getValue();
-            this.boxes.next(boxes);
-          }
+          this.render();
         },
         error: (result) => {},
       });
