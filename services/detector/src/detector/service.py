@@ -26,7 +26,7 @@ from common.clients.recorder import RecorderClient
 from common.models import MODELS
 from common.models.auth import User
 from common.models.detector import Detector, DetectorLabel, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
-from common.rpc.detector_pb2 import AddDetectorLabelRequest, AddDetectorLabelResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorLabelRequest, CountDetectorLabelResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, DetectorStepSuggestion, ExistsDetectorLabelRequest, ExistsDetectorLabelResponse, ListDetectorLabelRequest, ListDetectorLabelResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, SuggestStepRequest, SuggestStepResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
+from common.rpc.detector_pb2 import AddDetectorLabelRequest, AddDetectorLabelResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorLabelRequest, CountDetectorLabelResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, DetectorStepSuggestion, ExistsDetectorLabelRequest, ExistsDetectorLabelResponse, FindDetectorImageLabelResponse, ListDetectorLabelRequest, ListDetectorLabelResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, SuggestStepRequest, SuggestStepResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
 from common.service import ClientConfig, Service
 from common.rpc.detector_pb2_grpc import DetectorServicer
 from common.service import ServiceConfig
@@ -63,6 +63,16 @@ class DetectorService(Service, DetectorServicer):
          await Mongodb.initialize(self.config.database,MODELS)
          self.CACHE_YOLOS = {}
          await self.recorder.startup()
+         
+    async def findDetectorImageLabel(self, request, context):
+        try:
+            found = await DetectorLabel.find_many(DetectorLabel.detector == PydanticObjectId(request.detector),DetectorLabel.name == request.name).first_or_none()
+            if found is not None:
+                return FindDetectorImageLabelResponse(status=True,label=Conversions.serialize(found))
+            return FindDetectorImageLabelResponse(status=False,message="workspace.detector.label.errors.not_found")
+        except Exception as e:
+            log.warning(str(e))
+            return FindDetectorImageLabelResponse(status=False,message=str(e))
          
     async def suggestStep(self, request:SuggestStepRequest, context) -> SuggestStepResponse:
         try:

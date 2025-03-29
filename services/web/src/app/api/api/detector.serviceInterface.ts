@@ -146,6 +146,14 @@ export interface DetectorServiceInterface {
     detectorImageUpload(detectorId: string, data: string, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
 
     /**
+     * Label
+     * 
+     * @param detectorId 
+     * @param name 
+     */
+    detectorLabel(detectorId: string, name: string, extraHttpRequestParams?: any): Observable<DetectorLabel>;
+
+    /**
      * Label Add
      * 
      * @param detectorId 

@@ -22,6 +22,7 @@ service Detector {
     rpc removeDetectorImageLabel(RemoveDetectorImageLabelRequest) returns (RemoveDetectorImageLabelResponse);
     rpc countDetectorImageLabel(CountDetectorImageLabelRequest) returns (CountDetectorImageLabelResponse);
     rpc addDetectorImageLabel(AddDetectorImageLabelRequest) returns (AddDetectorImageLabelResponse);
+    rpc findDetectorImageLabel(FindDetectorImageLabelRequest) returns (FindDetectorImageLabelResponse);
     rpc listDetectorImageLabel(ListDetectorImageLabelRequest) returns (ListDetectorImageLabelResponse);
     rpc listDetectorLabel(ListDetectorLabelRequest) returns (ListDetectorLabelResponse);
     rpc existsDetectorLabel(ExistsDetectorLabelRequest) returns (ExistsDetectorLabelResponse);
@@ -30,7 +31,17 @@ service Detector {
     rpc suggestStep(SuggestStepRequest) returns (SuggestStepResponse);
 }
 
+message FindDetectorImageLabelRequest {
+    string user = 1;
+    string detector = 2;
+    string name = 3;
+}
 
+message FindDetectorImageLabelResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized label = 3;
+}
 
 message DetectorStepSuggestion {
   optional string event = 1;

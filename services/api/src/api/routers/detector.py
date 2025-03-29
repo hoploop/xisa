@@ -59,6 +59,19 @@ async def list(
 
 
 @router.get(
+    "/label/{detectorId}",  
+    operation_id="detectorLabel",
+    response_model=DetectorLabel
+)
+async def label(user: CurrentUser, detector: Detector, detectorId: PydanticObjectId,name:str):
+    try:
+        return await detector.findDetectorLabel(user,detectorId,name)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.get(
     "/count/{projectId}",  
     operation_id="detectorCount",
     response_model=int

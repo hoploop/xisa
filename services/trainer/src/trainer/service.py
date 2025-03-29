@@ -112,7 +112,7 @@ class TrainerService(Service, TrainerServicer):
             tio = await TrainImageObject(
                 lesson=lesson.id,
                 frame=request.frame,
-                label=request.label,
+                labels=request.labels,
                 xstart=request.xstart,
                 xend=request.xend,
                 ystart=request.ystart,

@@ -16,6 +16,26 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class FindDetectorImageLabelRequest(_message.Message):
+    __slots__ = ("user", "detector", "name")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    name: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+
+class FindDetectorImageLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "label")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    label: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., label: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
 class DetectorStepSuggestion(_message.Message):
     __slots__ = ("event", "byLabel", "byText", "byOrder", "confidence", "x", "y", "w", "h")
     EVENT_FIELD_NUMBER: _ClassVar[int]

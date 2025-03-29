@@ -120,6 +120,11 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.FromString,
                 _registered_method=True)
+        self.findDetectorImageLabel = channel.unary_unary(
+                '/Detector/findDetectorImageLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelResponse.FromString,
+                _registered_method=True)
         self.listDetectorImageLabel = channel.unary_unary(
                 '/Detector/listDetectorImageLabel',
                 request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorImageLabelRequest.SerializeToString,
@@ -258,6 +263,12 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def findDetectorImageLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def listDetectorImageLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -381,6 +392,11 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.addDetectorImageLabel,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.SerializeToString,
+            ),
+            'findDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.findDetectorImageLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelResponse.SerializeToString,
             ),
             'listDetectorImageLabel': grpc.unary_unary_rpc_method_handler(
                     servicer.listDetectorImageLabel,
@@ -872,6 +888,33 @@ class Detector(object):
             '/Detector/addDetectorImageLabel',
             common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.AddDetectorImageLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def findDetectorImageLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/findDetectorImageLabel',
+            common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.FindDetectorImageLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,

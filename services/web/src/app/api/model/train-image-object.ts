@@ -13,7 +13,7 @@ export interface TrainImageObject {
     _id?: string | null;
     lesson: string;
     frame: number;
-    label: string;
+    labels?: Array<string>;
     xstart: number;
     xend: number;
     ystart: number;

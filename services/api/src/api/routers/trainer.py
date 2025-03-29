@@ -74,7 +74,7 @@ async def lesson_set_detector(
 class TrainImageObjectPayload(BaseModel):
     lessonId: PydanticObjectId
     frame: int
-    label: str
+    labels: List[str]
     xstart: float
     xend: float
     ystart: float
@@ -97,7 +97,7 @@ async def lesson_image_object(
             user,
             payload.lessonId,
             payload.frame,
-            payload.label,
+            payload.labels,
             payload.xstart,
             payload.xend,
             payload.ystart,

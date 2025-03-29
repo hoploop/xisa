@@ -1,25 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  DetectObject,
   Detector,
   DetectorLabel,
-  DetectorSuggestion,
-  DetectText,
   Record,
-  TrainImageObject,
   TrainLesson,
 } from '@api/index';
-import { FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
-import { BehaviorSubject } from 'rxjs';
 import { Frame } from '../record-frame';
 import { RecordEventListRecordId200ResponseInner } from '@api/model/record-event-list-record-id200-response-inner';
 import { RecordFrameSelectorComponent } from '../record-frame-selector/record-frame-selector.component';
 import { RecordVideoComponent } from '../record-video/record-video.component';
 import { RecordSuggestionsComponent } from '../record-suggestions/record-suggestions.component';
-import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
-import { RecordTrainingComponent } from '../record-training/record-training.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
@@ -117,19 +109,6 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     }
     return false;
   }
-
-  labelIsInTrainQueue(value: DetectorLabel): TrainImageObject | undefined {
-    if (!this.frame) return undefined;
-      for (let i = 0; i< this.frame.train.length; i++){
-        let tio = this.frame.train[i];
-        if (tio.label == value.name){
-          return tio;
-        }
-      }
-      return undefined;
-    }
-
-
 
   viewSuggestions() {
     if (!this.frame) return;

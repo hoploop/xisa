@@ -12,7 +12,7 @@
 export interface TrainImageObjectPayload { 
     lessonId: string;
     frame: number;
-    label: string;
+    labels: Array<string>;
     xstart: number;
     xend: number;
     ystart: number;

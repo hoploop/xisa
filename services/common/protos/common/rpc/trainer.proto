@@ -28,7 +28,7 @@ message TrainImageObjectRequest {
     string user = 1;
     string lesson = 2;
     int32 frame = 3;
-    string label = 4;
+    repeated string labels = 4;
     float xstart = 5;
     float xend = 6;
     float ystart = 7;

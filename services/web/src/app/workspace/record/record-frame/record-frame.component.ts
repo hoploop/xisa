@@ -19,6 +19,7 @@ import {
   MousePressLeftEventTypeEnum,
   DetectObject,
   DetectText,
+  TrainLesson,
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
@@ -37,6 +38,8 @@ import { RecordBoxTrainObjectResult } from '../record-box-train-object/record-bo
 import { RecordBoxEventResult } from '../record-box-event/record-box-event-result';
 import { RecordBoxDetectedTextResult } from '../record-box-detected-text/record-box-detected-text-result';
 import { RecordBoxDetectedObjectResult } from '../record-box-detected-object/record-box-detected-object-result';
+import { RecordBoxSuggestionComponent } from '../record-box-suggestion/record-box-suggestion.component';
+import { RecordBoxSuggestionResult } from '../record-box-suggestion/record-box-suggestion-result';
 
 @Component({
   selector: 'app-record-frame',
@@ -49,6 +52,7 @@ export class RecordFrameComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
   @Input() frame!: Frame;
+  @Input() lesson!: TrainLesson;
   boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
   highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
 
@@ -117,7 +121,7 @@ export class RecordFrameComponent
     if (this.suggestionBoxes.has(box.id)){
       let suggestion: DetectorSuggestion | undefined = this.suggestionBoxes.get(box.id);
       if (suggestion){
-
+        this.suggestionDetail(box,suggestion);
       }
 
     }else if (this.objectBoxes.has(box.id)){
@@ -149,7 +153,8 @@ export class RecordFrameComponent
   detectTrainObjectDetail(box:ImageAnnotatorBox, train: TrainImageObject){
     this.ctx.openModal<RecordBoxTrainObjectResult | undefined>(RecordBoxTrainObjectComponent, {
       box: box,
-      train:train
+      train:train,
+      lesson: this.lesson
     })
     .subscribe({
       next: (result) => {},
@@ -188,6 +193,18 @@ export class RecordFrameComponent
         next: (result) => {},
         error: (result) => {},
       });
+  }
+
+  suggestionDetail(box:ImageAnnotatorBox, suggestion: DetectorSuggestion){
+    this.ctx.openModal<RecordBoxSuggestionResult| undefined>(RecordBoxSuggestionComponent, {
+      box: box,
+      suggestion: suggestion,
+      lesson: this.lesson
+    })
+    .subscribe({
+      next: (result) => {},
+      error: (result) => {},
+    });
   }
 
   selectClasses(box: ImageAnnotatorBox) {
@@ -293,8 +310,8 @@ export class RecordFrameComponent
     this.suggestionBoxes.clear();
     for (let i = 0; i < this.frame.suggestions.length; i++){
       let sug:DetectorSuggestion = this.frame.suggestions[i];
-
       let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h);
+      this.suggestionBoxes.set(n.id,sug);
       n.defaultBorderColor = 'green';
       n.defaultBorderSize = 2;
       n.selectedBorderSize = 2;

@@ -15,5 +15,6 @@ export class RecordBoxDetectedObjectComponent extends BaseComponent {
 
   dismiss(){
     this.ctx.closeModal(undefined);
+
   }
 }

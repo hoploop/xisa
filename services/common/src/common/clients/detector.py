@@ -104,6 +104,13 @@ class DetectorClient(Client):
                 )
             )
         return ret
+    
+    async def findDetectorLabel(self,user:User,detectorId:PydanticObjectId,name:str) -> DetectorLabel:
+        req = AddDetectorLabelRequest(user=str(user.id),detector=str(detectorId),name=name)
+        res: AddDetectorLabelResponse = await self.client.findDetectorImageLabel(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.label)
 
     async def suggestStep(
         self,

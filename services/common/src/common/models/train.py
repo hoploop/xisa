@@ -1,6 +1,6 @@
 # PYTHON IMPORTS
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 # LIBRARY IMPORTS
 from beanie import Delete, Document, before_event, Update,SaveChanges,Insert
@@ -8,13 +8,13 @@ from beanie import PydanticObjectId
 from pydantic import Field
 
 # LOCAL IMPORTS
-from common.models.defaults import utc_now
+from common.models.defaults import empty_list, utc_now
 
 
 class TrainImageObject(Document):
     lesson: PydanticObjectId
     frame: int
-    label: str
+    labels: List[str] = Field(default_factory=empty_list)
     xstart:float
     xend:float
     ystart:float
