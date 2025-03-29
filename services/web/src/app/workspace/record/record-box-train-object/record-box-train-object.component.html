@@ -66,11 +66,11 @@
         <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
         <span class="ms-1" translate>workspace.detector.class.cancel</span>
       </button>
-      <button class="ms-1 btn btn-sm btn-danger">
+      <button class="ms-1 btn btn-sm btn-danger" (click)="remove()">
         <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
         <span class="ms-2">Remove</span>
       </button>
-      <button class="ms-1 btn btn-sm btn-primary">
+      <button class="ms-1 btn btn-sm btn-primary" (click)="submit()">
         <app-fa-icon [icon]="FAIconType.save"></app-fa-icon>
         <span class="ms-2">Save</span>
       </button>

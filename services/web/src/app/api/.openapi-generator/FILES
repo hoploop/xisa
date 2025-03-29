@@ -61,6 +61,7 @@ model/register-request.ts
 model/response-recordereventload.ts
 model/train-image-object-list-response.ts
 model/train-image-object-payload.ts
+model/train-image-object-update-payload.ts
 model/train-image-object.ts
 model/train-lesson.ts
 model/validation-error-loc-inner.ts

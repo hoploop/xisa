@@ -8,7 +8,7 @@ from beanie import PydanticObjectId
 from common.models.auth import User
 from common.models.train import TrainImageObject, TrainLesson
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -79,6 +79,14 @@ class TrainerClient(Client):
     async def trainImageObjectRemove(self,user:User,objectId:PydanticObjectId) -> bool:
         req = TrainImageObjectRemoveRequest(user=str(user.id),id=str(objectId))
         res: TrainImageObjectRemoveResponse = await self.client.trainImageObjectRemove(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    
+    async def trainImageObjectUpdate(self,user:User,imageObjectId:PydanticObjectId,labels:List[str],val:bool,test:bool,train:bool) -> bool:
+        req = TrainImageObjectUpdateRequest(user=str(user.id),id=str(imageObjectId),labels=labels,val=val,test=test,train=train)
+        res: TrainImageObjectUpdateResponse = await self.client.trainImageObjectUpdate(req)
         if res.status == False:
             raise Exception(res.message)
         return res.status

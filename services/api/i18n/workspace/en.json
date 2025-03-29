@@ -23,6 +23,9 @@
     "trainer": {
       "lesson": {
         "errors": { "not_found": "Lesson not found","object_not_found":"Object image not found" }
+      },
+      "label":{
+        "errors":{"not_found":"Train image object not found"}
       }
       
     },

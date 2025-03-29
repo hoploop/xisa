@@ -39,6 +39,7 @@ export * from './response-recordereventload';
 export * from './train-image-object';
 export * from './train-image-object-list-response';
 export * from './train-image-object-payload';
+export * from './train-image-object-update-payload';
 export * from './train-lesson';
 export * from './validation-error';
 export * from './validation-error-loc-inner';

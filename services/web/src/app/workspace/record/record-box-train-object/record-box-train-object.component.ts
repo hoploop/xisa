@@ -3,6 +3,7 @@ import { DetectorLabel, TrainImageObject, TrainLesson } from '@api/index';
 import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 import { Observable } from 'rxjs';
+import { RecordBoxTrainObjectResult } from './record-box-train-object-result';
 
 @Component({
   selector: 'app-record-box-train-object',
@@ -90,8 +91,28 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
   }
 
   submit(){
-    this.train.labels = this.labelsToStringList(this.selected);
-    this.ctx.closeModal(this.selected);
+    if (!this.train._id) return;
+    let labels = this.labelsToStringList(this.selected);
+    this.ctx.api.trainer.trainerLessonImageObjectUpdate({id:this.train._id,labels:labels,val:true,test:true,train:true}).subscribe({
+      next: (result)=>{
+        this.train.labels = labels;
+        this.ctx.closeModal(new RecordBoxTrainObjectResult(false,true));
+      },
+      error: (result)=>{
+
+      }
+    })
+
+  }
+
+  remove(){
+    if (this.train._id)
+    this.ctx.api.trainer.trainerLessonImageObjectRemove(this.train._id).subscribe({
+      next: (result)=>{
+        this.ctx.closeModal(new RecordBoxTrainObjectResult(true,false));
+      },
+      error: (result)=>{}
+    })
   }
 
   select(label: DetectorLabel){

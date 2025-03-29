@@ -14,6 +14,7 @@ import { Observable }                                        from 'rxjs';
 import { HTTPValidationError } from '../model/models';
 import { TrainImageObjectListResponse } from '../model/models';
 import { TrainImageObjectPayload } from '../model/models';
+import { TrainImageObjectUpdatePayload } from '../model/models';
 import { TrainLesson } from '../model/models';
 
 
@@ -53,6 +54,13 @@ export interface TrainerServiceInterface {
      * @param objectId 
      */
     trainerLessonImageObjectRemove(objectId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Lesson Image Object Update
+     * 
+     * @param trainImageObjectUpdatePayload 
+     */
+    trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Lesson Set Detector

@@ -10,7 +10,7 @@ from beanie.operators import And, Or
 from common.models import MODELS
 from common.models.detector import Detector, DetectorLabel
 from common.models.train import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -91,12 +91,27 @@ class TrainerService(Service, TrainerServicer):
         try:
             found = await TrainImageObject.find_many(TrainImageObject.id == PydanticObjectId(request.id)).first_or_none()
             if not found:
-                return TrainImageObjectRemoveResponse(status=False,message='trainer.lesson.errors.object_not_found')
+                return TrainImageObjectRemoveResponse(status=False,message='workspace.trainer.lesson.errors.object_not_found')
             await found.delete()
             return TrainImageObjectRemoveResponse(status=True)
         except Exception as e:
             log.warning(str(e))
             return TrainImageObjectRemoveResponse(status=False,message=str(e))
+        
+    async def trainImageObjectUpdate(self, request:TrainImageObjectUpdateRequest, context) -> TrainImageObjectUpdateResponse:
+        try:
+            found = await TrainImageObject.find_many(TrainImageObject.id == PydanticObjectId(request.id)).first_or_none()
+            if found is None:
+                return TrainImageObjectUpdateResponse(status=False,message="workspace.trainer.label.errors.not_found")
+            found.labels = request.labels
+            found.train = request.train
+            found.val = request.val
+            found.test = request.test
+            await found.save()
+            return TrainImageObjectUpdateResponse(status=True)
+        except Exception as e:
+            log.warning(str(e))
+            return TrainImageObjectUpdateResponse(status=False,message=str(e))
         
     async def trainImageObject(self, request:TrainImageObjectRequest, context) -> TrainImageObjectResponse:
         try:

@@ -71,6 +71,29 @@ async def lesson_set_detector(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
+
+class TrainImageObjectUpdatePayload(BaseModel):
+    id: PydanticObjectId
+    labels: List[str]
+    val: bool
+    test: bool
+    train: bool
+
+
+@router.put(
+    "/lesson/image/object/update",
+    operation_id="trainerLessonImageObjectUpdate",
+    response_model=bool,
+)
+async def lesson_image_object_update(
+    user: CurrentUser, trainer: Trainer, payload: TrainImageObjectUpdatePayload
+):
+    try:
+        return await trainer.trainImageObjectUpdate(user,payload.id, payload.labels,payload.val,payload.test,payload.train)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
 class TrainImageObjectPayload(BaseModel):
     lessonId: PydanticObjectId
     frame: int

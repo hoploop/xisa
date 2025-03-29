@@ -22,6 +22,30 @@ class TrainImageObjectRemoveResponse(_message.Message):
     message: str
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
+class TrainImageObjectUpdateRequest(_message.Message):
+    __slots__ = ("user", "labels", "id", "train", "test", "val")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    LABELS_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    TRAIN_FIELD_NUMBER: _ClassVar[int]
+    TEST_FIELD_NUMBER: _ClassVar[int]
+    VAL_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    labels: _containers.RepeatedScalarFieldContainer[str]
+    id: str
+    train: bool
+    test: bool
+    val: bool
+    def __init__(self, user: _Optional[str] = ..., labels: _Optional[_Iterable[str]] = ..., id: _Optional[str] = ..., train: bool = ..., test: bool = ..., val: bool = ...) -> None: ...
+
+class TrainImageObjectUpdateResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
 class TrainImageObjectRequest(_message.Message):
     __slots__ = ("user", "lesson", "frame", "labels", "xstart", "xend", "ystart", "yend", "train", "test", "val")
     USER_FIELD_NUMBER: _ClassVar[int]

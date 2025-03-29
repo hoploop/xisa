@@ -9,6 +9,8 @@ service Trainer {
     rpc recordHasLesson(RecordHasLessonRequest) returns (RecordHasLessonResponse);
     rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
     rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
+    rpc trainImageObjectUpdate(TrainImageObjectUpdateRequest) returns (TrainImageObjectUpdateResponse);
+    
     rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
     rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
     rpc trainImageObjectRemove(TrainImageObjectRemoveRequest) returns (TrainImageObjectRemoveResponse);
@@ -23,6 +25,23 @@ message TrainImageObjectRemoveResponse {
     bool status = 1;
     optional string message = 2;
 }
+
+
+
+message TrainImageObjectUpdateRequest {
+    string user = 1;
+    repeated string labels = 2;
+    string id = 3;
+    bool train = 4;
+    bool test = 5;
+    bool val = 6;
+}
+
+message TrainImageObjectUpdateResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
 
 message TrainImageObjectRequest {
     string user = 1;
