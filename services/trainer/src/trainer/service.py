@@ -107,6 +107,10 @@ class TrainerService(Service, TrainerServicer):
             found.train = request.train
             found.val = request.val
             found.test = request.test
+            found.xstart = request.xstart
+            found.xend = request.xend
+            found.ystart = request.ystart
+            found.yend = request.yend
             await found.save()
             return TrainImageObjectUpdateResponse(status=True)
         except Exception as e:

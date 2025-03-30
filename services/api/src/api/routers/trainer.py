@@ -78,6 +78,10 @@ class TrainImageObjectUpdatePayload(BaseModel):
     val: bool
     test: bool
     train: bool
+    xstart: float
+    xend: float
+    ystart: float
+    yend: float
 
 
 @router.put(
@@ -89,7 +93,10 @@ async def lesson_image_object_update(
     user: CurrentUser, trainer: Trainer, payload: TrainImageObjectUpdatePayload
 ):
     try:
-        return await trainer.trainImageObjectUpdate(user,payload.id, payload.labels,payload.val,payload.test,payload.train)
+        return await trainer.trainImageObjectUpdate(user,payload.id, payload.labels,payload.val,payload.test,payload.train,payload.xstart,
+            payload.xend,
+            payload.ystart,
+            payload.yend)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

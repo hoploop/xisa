@@ -23,20 +23,28 @@ class TrainImageObjectRemoveResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
 class TrainImageObjectUpdateRequest(_message.Message):
-    __slots__ = ("user", "labels", "id", "train", "test", "val")
+    __slots__ = ("user", "labels", "id", "train", "test", "val", "xstart", "xend", "ystart", "yend")
     USER_FIELD_NUMBER: _ClassVar[int]
     LABELS_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
     TRAIN_FIELD_NUMBER: _ClassVar[int]
     TEST_FIELD_NUMBER: _ClassVar[int]
     VAL_FIELD_NUMBER: _ClassVar[int]
+    XSTART_FIELD_NUMBER: _ClassVar[int]
+    XEND_FIELD_NUMBER: _ClassVar[int]
+    YSTART_FIELD_NUMBER: _ClassVar[int]
+    YEND_FIELD_NUMBER: _ClassVar[int]
     user: str
     labels: _containers.RepeatedScalarFieldContainer[str]
     id: str
     train: bool
     test: bool
     val: bool
-    def __init__(self, user: _Optional[str] = ..., labels: _Optional[_Iterable[str]] = ..., id: _Optional[str] = ..., train: bool = ..., test: bool = ..., val: bool = ...) -> None: ...
+    xstart: float
+    xend: float
+    ystart: float
+    yend: float
+    def __init__(self, user: _Optional[str] = ..., labels: _Optional[_Iterable[str]] = ..., id: _Optional[str] = ..., train: bool = ..., test: bool = ..., val: bool = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ...) -> None: ...
 
 class TrainImageObjectUpdateResponse(_message.Message):
     __slots__ = ("status", "message")

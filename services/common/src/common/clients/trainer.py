@@ -84,8 +84,8 @@ class TrainerClient(Client):
         return res.status
     
     
-    async def trainImageObjectUpdate(self,user:User,imageObjectId:PydanticObjectId,labels:List[str],val:bool,test:bool,train:bool) -> bool:
-        req = TrainImageObjectUpdateRequest(user=str(user.id),id=str(imageObjectId),labels=labels,val=val,test=test,train=train)
+    async def trainImageObjectUpdate(self,user:User,imageObjectId:PydanticObjectId,labels:List[str],val:bool,test:bool,train:bool,xstart:float,xend:float,ystart:float,yend:float) -> bool:
+        req = TrainImageObjectUpdateRequest(user=str(user.id),id=str(imageObjectId),labels=labels,val=val,test=test,train=train,xstart=xstart,xend=xend,ystart=ystart,yend=yend)
         res: TrainImageObjectUpdateResponse = await self.client.trainImageObjectUpdate(req)
         if res.status == False:
             raise Exception(res.message)

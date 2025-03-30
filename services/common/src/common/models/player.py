@@ -33,11 +33,13 @@ class StepResult(Document):
     end:Optional[datetime] = None
     status: StepResultStatus = StepResultStatus.UNKNOWN
     message: str = ''
+    
 class Step(Document):
     order: int
     scenario: PydanticObjectId
     by_label: Optional[str] = None
     by_text: Optional[str] = None
+    by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
     event:PydanticObjectId
     duration: float = 1.0

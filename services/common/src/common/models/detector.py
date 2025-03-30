@@ -27,6 +27,7 @@ class DetectorSuggestion(Document):
     y:float
     w:float
     h: float
+    
 
 class DetectorLabel(Document):
     detector: PydanticObjectId

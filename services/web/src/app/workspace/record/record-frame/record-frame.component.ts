@@ -55,16 +55,16 @@ export class RecordFrameComponent
   boxes = new BehaviorSubject<ImageAnnotatorBox[]>([]);
   highlights = new BehaviorSubject<ImageAnnotatorHighlight[]>([]);
 
-  textBoxes = new Map<string,DetectText>();
-  objectBoxes = new Map<string,DetectObject>();
-  trainBoxes = new Map<string,TrainImageObject>();
-  eventBoxes = new Map<string,RecordEventListRecordId200ResponseInner>();
-  suggestionBoxes = new Map<string,DetectorSuggestion>();
+  textBoxes = new Map<string, DetectText>();
+  objectBoxes = new Map<string, DetectObject>();
+  trainBoxes = new Map<string, TrainImageObject>();
+  eventBoxes = new Map<string, RecordEventListRecordId200ResponseInner>();
+  suggestionBoxes = new Map<string, DetectorSuggestion>();
   textsVisible = false;
   objectsVisible = false;
   trainVisible = false;
   eventVisible = false;
-  suggestionsVisible= false;
+  suggestionsVisible = false;
 
   subs = new Subscription();
   settings = new BehaviorSubject<ImageAnnotatorSettings>({
@@ -73,135 +73,154 @@ export class RecordFrameComponent
     canCreateBox: true,
   });
 
-  toggleTexts(){
+  toggleTexts() {
     this.textsVisible = !this.textsVisible;
     this.render();
   }
 
-  toggleObjects(){
+  toggleObjects() {
     this.objectsVisible = !this.objectsVisible;
     this.render();
   }
 
-  toggleSuggestions(){
+  toggleSuggestions() {
     this.suggestionsVisible = !this.suggestionsVisible;
     this.render();
   }
 
-  toggleTrain(){
+  toggleTrain() {
     this.trainVisible = !this.trainVisible;
     this.render();
   }
 
-  toggleEvent(){
+  toggleEvent() {
     this.eventVisible = !this.eventVisible;
     this.render();
   }
 
-
   get imageUrl(): string {
     return (
-      environment.imageUrl + this.frame.lesson.record + '/' + this.frame.count.toString()
+      environment.imageUrl +
+      this.frame.lesson.record +
+      '/' +
+      this.frame.count.toString()
     );
   }
 
   ngOnDestroy(): void {
-      this.subs.unsubscribe();
+    this.subs.unsubscribe();
   }
 
   ngOnInit(): void {
-      this.subs.add(this.boxes.subscribe(result=>{
-
-      }))
+    this.subs.add(this.boxes.subscribe((result) => {}));
   }
 
-  boxAdded(box:ImageAnnotatorBox){
-    if (!this.lesson._id) return;
-      this.ctx.api.trainer.trainerLessonImageObject({
-        lessonId: this.lesson._id,
-        frame: this.frame.count,
-        labels: [],
-        xstart: box.x,
-        xend: box.x+box.w,
-        ystart: box.y,
-        yend: box.y+box.h,
-        val: true,
-        test: true,
-        train: true
-      }).subscribe({
-        next: (result)=>{
-          this.trainBoxes.set(box.id,result);
-          this.detectTrainObjectDetail(box,result);
-          this.frame.train.push(result);
-        },
-        error: (result)=>{
-          console.log(result);
-        }
-
-      })
-  }
-
-  boxDetail(box:ImageAnnotatorBox){
-    if (this.suggestionBoxes.has(box.id)){
-      let suggestion: DetectorSuggestion | undefined = this.suggestionBoxes.get(box.id);
-      if (suggestion){
-        this.suggestionDetail(box,suggestion);
+  boxDetail(box: ImageAnnotatorBox) {
+    if (this.suggestionBoxes.has(box.id)) {
+      let suggestion: DetectorSuggestion | undefined = this.suggestionBoxes.get(
+        box.id
+      );
+      if (suggestion) {
+        this.suggestionDetail(box, suggestion);
       }
-
-    }else if (this.objectBoxes.has(box.id)){
-      let obj: DetectObject |undefined = this.objectBoxes.get(box.id);
-      if (obj){
-        this.detectObjectDetail(box,obj);
+    } else if (this.objectBoxes.has(box.id)) {
+      let obj: DetectObject | undefined = this.objectBoxes.get(box.id);
+      if (obj) {
+        this.detectObjectDetail(box, obj);
       }
-
-    }else if (this.textBoxes.has(box.id)){
+    } else if (this.textBoxes.has(box.id)) {
       let text: DetectText | undefined = this.textBoxes.get(box.id);
-      if (text){
-        this.detectTextDetail(box,text);
+      if (text) {
+        this.detectTextDetail(box, text);
       }
-
-    }else if (this.eventBoxes.has(box.id)){
-      let event: RecordEventListRecordId200ResponseInner | undefined = this.eventBoxes.get(box.id);
-      if (event){
-        this.eventDetail(box,event);
+    } else if (this.eventBoxes.has(box.id)) {
+      let event: RecordEventListRecordId200ResponseInner | undefined =
+        this.eventBoxes.get(box.id);
+      if (event) {
+        this.eventDetail(box, event);
       }
-
-    }else if (this.trainBoxes.has(box.id)){
+    } else if (this.trainBoxes.has(box.id)) {
       let toi: TrainImageObject | undefined = this.trainBoxes.get(box.id);
-      if (toi){
-        this.detectTrainObjectDetail(box,toi);
+      if (toi) {
+        this.detectTrainObjectDetail(box, toi);
+      }
+    } else {
+      if (!this.lesson._id) return;
+      this.ctx.api.trainer
+        .trainerLessonImageObject({
+          lessonId: this.lesson._id,
+          frame: this.frame.count,
+          labels: [],
+          xstart: box.x,
+          xend: box.x + box.w,
+          ystart: box.y,
+          yend: box.y + box.h,
+          val: true,
+          test: true,
+          train: true,
+        })
+        .subscribe({
+          next: (result) => {
+            this.trainBoxes.set(box.id, result);
+            this.frame.train.push(result);
+            this.detectTrainObjectDetail(box, result);
+          },
+          error: (result) => {
+            console.log(result);
+          },
+        });
+    }
+  }
+
+  boxUpdate(box: ImageAnnotatorBox) {
+    if (this.trainBoxes.has(box.id)) {
+
+      let toi = this.trainBoxes.get(box.id);
+      if (toi && toi._id) {
+        this.ctx.api.trainer
+          .trainerLessonImageObjectUpdate({
+            id: toi._id,
+            labels: toi.labels || [],
+            val: toi.val || true,
+            test: toi.test || true,
+            train: toi.train || true,
+            xstart: box.x,
+            xend: box.x + box.w,
+            ystart: box.y,
+            yend: box.y + box.h,
+          })
+          .subscribe({
+            next: (result) => {},
+            error: (result) => {},
+          });
       }
     }
   }
 
-  detectTrainObjectDetail(box:ImageAnnotatorBox, train: TrainImageObject){
-    this.ctx.openModal<undefined>(RecordBoxTrainObjectComponent, {
-      box: box,
-      train:train,
-      lesson: this.lesson,
-      frame: this.frame
-    })
-    .subscribe({
-      next: (result) => { this.render();},
-      error: (result) => {},
-    });
-  }
-
-  eventDetail(box:ImageAnnotatorBox, event: RecordEventListRecordId200ResponseInner){
-    this.ctx.openModal<RecordBoxEventResult | undefined>(RecordBoxEventComponent, {
-      box: box,
-      event: event
-    })
-    .subscribe({
-      next: (result) => {},
-      error: (result) => {},
-    });
-  }
-
-  detectTextDetail(box:ImageAnnotatorBox, text: DetectText){
-    this.ctx.openModal<RecordBoxDetectedTextResult | undefined>(RecordBoxDetectedTextComponent, {
+  detectTrainObjectDetail(box: ImageAnnotatorBox, train: TrainImageObject) {
+    this.ctx
+      .openModal<undefined>(RecordBoxTrainObjectComponent, {
         box: box,
-        text: text
+        train: train,
+        lesson: this.lesson,
+        frame: this.frame,
+      })
+      .subscribe({
+        next: (result) => {
+
+        },
+        error: (result) => {},
+      });
+  }
+
+  eventDetail(
+    box: ImageAnnotatorBox,
+    event: RecordEventListRecordId200ResponseInner
+  ) {
+    this.ctx
+      .openModal<RecordBoxEventResult | undefined>(RecordBoxEventComponent, {
+        box: box,
+        event: event,
       })
       .subscribe({
         next: (result) => {},
@@ -209,27 +228,50 @@ export class RecordFrameComponent
       });
   }
 
-  detectObjectDetail(box:ImageAnnotatorBox, obj: DetectObject){
-    this.ctx.openModal<RecordBoxDetectedObjectResult| undefined>(RecordBoxDetectedObjectComponent, {
-        box: box,
-        obj: obj
-      })
+  detectTextDetail(box: ImageAnnotatorBox, text: DetectText) {
+    this.ctx
+      .openModal<RecordBoxDetectedTextResult | undefined>(
+        RecordBoxDetectedTextComponent,
+        {
+          box: box,
+          text: text,
+        }
+      )
       .subscribe({
         next: (result) => {},
         error: (result) => {},
       });
   }
 
-  suggestionDetail(box:ImageAnnotatorBox, suggestion: DetectorSuggestion){
-    this.ctx.openModal<RecordBoxSuggestionResult| undefined>(RecordBoxSuggestionComponent, {
-      box: box,
-      suggestion: suggestion,
-      lesson: this.lesson
-    })
-    .subscribe({
-      next: (result) => {},
-      error: (result) => {},
-    });
+  detectObjectDetail(box: ImageAnnotatorBox, obj: DetectObject) {
+    this.ctx
+      .openModal<RecordBoxDetectedObjectResult | undefined>(
+        RecordBoxDetectedObjectComponent,
+        {
+          box: box,
+          obj: obj,
+        }
+      )
+      .subscribe({
+        next: (result) => {},
+        error: (result) => {},
+      });
+  }
+
+  suggestionDetail(box: ImageAnnotatorBox, suggestion: DetectorSuggestion) {
+    this.ctx
+      .openModal<RecordBoxSuggestionResult | undefined>(
+        RecordBoxSuggestionComponent,
+        {
+          box: box,
+          suggestion: suggestion,
+          lesson: this.lesson,
+        }
+      )
+      .subscribe({
+        next: (result) => {},
+        error: (result) => {},
+      });
   }
 
   selectClasses(box: ImageAnnotatorBox) {
@@ -271,15 +313,17 @@ export class RecordFrameComponent
       });
   }
 
-  accept(suggestion: DetectorSuggestion) {
-
-  }
+  accept(suggestion: DetectorSuggestion) {}
 
   loadSuggestions() {
     if (!this.frame.event?._id) return;
     if (!this.frame.lesson.detector) return;
     this.ctx.api.detector
-      .detectorFrameSuggestions(this.frame.lesson.detector, this.frame.event._id, 0.1)
+      .detectorFrameSuggestions(
+        this.frame.lesson.detector,
+        this.frame.event._id,
+        0.1
+      )
       .subscribe({
         next: (result) => {
           this.frame.suggestions = result;
@@ -307,8 +351,7 @@ export class RecordFrameComponent
       });
   }
 
-  render(){
-
+  render() {
     // Reset boxes
     this.boxes.next([]);
 
@@ -319,40 +362,44 @@ export class RecordFrameComponent
     let textBoxes = this.loadTextBoxes();
     let trainBoxes = this.loadTrainBoxes();
     let suggestionBoxes = this.loadSuggestionBoxes();
-    newBoxes = newBoxes.concat(eventBoxes,objectBoxes,textBoxes,trainBoxes,suggestionBoxes);
+    newBoxes = newBoxes.concat(
+      eventBoxes,
+      objectBoxes,
+      textBoxes,
+      trainBoxes,
+      suggestionBoxes
+    );
 
     // Update boxes
     this.boxes.next(newBoxes);
   }
 
-  loadSuggestionBoxes(): ImageAnnotatorBox[]{
+  loadSuggestionBoxes(): ImageAnnotatorBox[] {
     let ret: ImageAnnotatorBox[] = [];
     if (!this.suggestionsVisible) return [];
     this.suggestionBoxes.clear();
-    for (let i = 0; i < this.frame.suggestions.length; i++){
-      let sug:DetectorSuggestion = this.frame.suggestions[i];
+    for (let i = 0; i < this.frame.suggestions.length; i++) {
+      let sug: DetectorSuggestion = this.frame.suggestions[i];
       let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h);
-      this.suggestionBoxes.set(n.id,sug);
+      this.suggestionBoxes.set(n.id, sug);
       n.defaultBorderColor = 'green';
       n.defaultBorderSize = 2;
       n.selectedBorderSize = 2;
       n.canResize = false;
       n.canMove = false;
       ret.push(n);
-
     }
     return ret;
   }
 
-
-  loadObjectBoxes(): ImageAnnotatorBox[]{
+  loadObjectBoxes(): ImageAnnotatorBox[] {
     let ret: ImageAnnotatorBox[] = [];
     if (!this.objectsVisible) return [];
     this.objectBoxes.clear();
-    for (let i = 0 ; i < this.frame.objects.length; i++){
-      let obj:DetectObject = this.frame.objects[i];
+    for (let i = 0; i < this.frame.objects.length; i++) {
+      let obj: DetectObject = this.frame.objects[i];
       let objBox = new ImageAnnotatorBox(obj.x, obj.y, obj.w, obj.h);
-      this.objectBoxes.set(objBox.id,obj);
+      this.objectBoxes.set(objBox.id, obj);
       objBox.canResize = false;
       objBox.canMove = false;
       ret.push(objBox);
@@ -360,14 +407,14 @@ export class RecordFrameComponent
     return ret;
   }
 
-  loadTextBoxes(): ImageAnnotatorBox[]{
+  loadTextBoxes(): ImageAnnotatorBox[] {
     let ret: ImageAnnotatorBox[] = [];
     if (!this.textsVisible) return [];
     this.textBoxes.clear();
-    for (let i = 0 ; i < this.frame.texts.length; i++){
-      let text:DetectText = this.frame.texts[i];
-      let textBox = new ImageAnnotatorBox(text.x, text.y, text.w, text.h,true);
-      this.textBoxes.set(textBox.id,text);
+    for (let i = 0; i < this.frame.texts.length; i++) {
+      let text: DetectText = this.frame.texts[i];
+      let textBox = new ImageAnnotatorBox(text.x, text.y, text.w, text.h, true);
+      this.textBoxes.set(textBox.id, text);
       textBox.canResize = false;
       textBox.canMove = false;
       ret.push(textBox);
@@ -375,14 +422,19 @@ export class RecordFrameComponent
     return ret;
   }
 
-  loadTrainBoxes(): ImageAnnotatorBox[]{
+  loadTrainBoxes(): ImageAnnotatorBox[] {
     let ret: ImageAnnotatorBox[] = [];
     if (!this.trainVisible) return [];
     this.trainBoxes.clear();
-    for (let i = 0 ; i < this.frame.train.length; i++){
-      let tio:TrainImageObject = this.frame.train[i];
-      let tioBox = new ImageAnnotatorBox(tio.xstart, tio.ystart, tio.xend-tio.xstart, tio.yend-tio.ystart);
-      this.trainBoxes.set(tioBox.id,tio);
+    for (let i = 0; i < this.frame.train.length; i++) {
+      let tio: TrainImageObject = this.frame.train[i];
+      let tioBox = new ImageAnnotatorBox(
+        tio.xstart,
+        tio.ystart,
+        tio.xend - tio.xstart,
+        tio.yend - tio.ystart
+      );
+      this.trainBoxes.set(tioBox.id, tio);
       tioBox.canResize = true;
       tioBox.canMove = true;
       ret.push(tioBox);
@@ -390,7 +442,7 @@ export class RecordFrameComponent
     return ret;
   }
 
-  loadEventBoxes(): ImageAnnotatorBox[]{
+  loadEventBoxes(): ImageAnnotatorBox[] {
     if (!this.eventVisible) return [];
     if (!this.frame) return [];
     if (!this.frame.event) return [];
@@ -415,7 +467,7 @@ export class RecordFrameComponent
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
           evt_box.canResize = true;
           evt_box.canMove = false;
-          this.eventBoxes.set(evt_box.id,event);
+          this.eventBoxes.set(evt_box.id, event);
           ret.push(evt_box);
         }
 
@@ -430,7 +482,7 @@ export class RecordFrameComponent
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
           evt_box.canResize = true;
           evt_box.canMove = false;
-          this.eventBoxes.set(evt_box.id,event);
+          this.eventBoxes.set(evt_box.id, event);
           ret.push(evt_box);
         }
         break;
@@ -441,7 +493,9 @@ export class RecordFrameComponent
   }
 
   load() {
-    this.loading.next(this.ctx.translate.instant('workspace.record.frame.loading'));
+    this.loading.next(
+      this.ctx.translate.instant('workspace.record.frame.loading')
+    );
     this.detectObjects();
     this.detectTexts();
     this.loadSuggestions();

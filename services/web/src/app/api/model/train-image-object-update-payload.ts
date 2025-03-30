@@ -15,5 +15,9 @@ export interface TrainImageObjectUpdatePayload {
     val: boolean;
     test: boolean;
     train: boolean;
+    xstart: number;
+    xend: number;
+    ystart: number;
+    yend: number;
 }
 

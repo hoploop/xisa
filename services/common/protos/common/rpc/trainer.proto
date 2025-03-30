@@ -35,6 +35,10 @@ message TrainImageObjectUpdateRequest {
     bool train = 4;
     bool test = 5;
     bool val = 6;
+     float xstart = 7;
+    float xend = 8;
+    float ystart = 9;
+    float yend = 10;
 }
 
 message TrainImageObjectUpdateResponse {

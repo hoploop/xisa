@@ -48,6 +48,7 @@ export class ImageAnnotatorComponent
   @Output() onSelectedBox: EventEmitter<ImageAnnotatorBox> = new EventEmitter();
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
   @Output() onBoxCreated = new EventEmitter<ImageAnnotatorBox>();
+  @Output() onBoxUpdated = new EventEmitter<ImageAnnotatorBox>();
   @Output() loaded = new EventEmitter<boolean>();
   @Input() settings = new BehaviorSubject<ImageAnnotatorSettings>({
     resizeHandleSize: 10,
@@ -261,7 +262,6 @@ export class ImageAnnotatorComponent
     let boxes = this.boxes.getValue();
     let nbox = new ImageAnnotatorBox(mouseX, mouseY, 100, 100)
     boxes.push(nbox);
-    this.onBoxCreated.next(nbox);
     this.boxes.next(boxes);
     this.boxesChange.next(this.denormalizeOutputBoxes(boxes));
     this.draw();
@@ -651,9 +651,19 @@ export class ImageAnnotatorComponent
         this.draw();
       }
     } else if (this.state == State.RESIZING) {
+      let box = this.selectedBox;
+      if (box != undefined) {
+        this.onBoxUpdated.next(box);
+      }
+
+
       this.state = State.SELECTED;
       this.draw();
     } else if (this.state == State.MOVING) {
+      let box = this.selectedBox;
+      if (box != undefined) {
+        this.onBoxUpdated.next(box);
+      }
       this.state = State.SELECTED;
       this.moving.startX = 0;
       this.moving.startY = 0;

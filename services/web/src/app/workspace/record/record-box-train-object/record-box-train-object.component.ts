@@ -43,6 +43,7 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
 
   }
 
+
   onNewLabelChange(value:string){
     this.newLabel = value;
     if (this.newLabel.trim()!=''){
@@ -94,7 +95,7 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
   submit(){
     if (!this.train._id) return;
     let labels = this.labelsToStringList(this.selected);
-    this.ctx.api.trainer.trainerLessonImageObjectUpdate({id:this.train._id,labels:labels,val:true,test:true,train:true}).subscribe({
+    this.ctx.api.trainer.trainerLessonImageObjectUpdate({id:this.train._id,labels:labels,val:true,test:true,train:true,xstart:this.box.x,xend:this.box.x+this.box.w,ystart:this.box.y,yend:this.box.y+this.box.h}).subscribe({
       next: (result)=>{
         this.train.labels = labels;
         this.ctx.closeModal(undefined);
