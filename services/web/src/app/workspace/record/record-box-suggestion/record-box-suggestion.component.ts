@@ -11,9 +11,13 @@ import { BaseComponent } from '@utils/base/base.component';
 })
 export class RecordBoxSuggestionComponent extends BaseComponent{
   @Input() box!:ImageAnnotatorBox;
-  @Input() syggestion!:DetectorSuggestion;
+  @Input() suggestion!:DetectorSuggestion;
 
   dismiss(){
     this.ctx.closeModal(undefined);
   }
+
+  onAcceptSuggestion(value: DetectorSuggestion) {}
+
+  onRejectSuggestion(value: DetectorSuggestion) {}
 }

@@ -20,6 +20,8 @@ import {
   DetectObject,
   DetectText,
   TrainLesson,
+  MouseReleaseLeftEventTypeEnum,
+  MouseReleaseLeftEvent,
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
@@ -75,6 +77,7 @@ export class RecordFrameComponent
 
   toggleTexts() {
     this.textsVisible = !this.textsVisible;
+
     this.render();
   }
 
@@ -207,7 +210,7 @@ export class RecordFrameComponent
       })
       .subscribe({
         next: (result) => {
-
+            this.render();
         },
         error: (result) => {},
       });
@@ -371,6 +374,7 @@ export class RecordFrameComponent
     );
 
     // Update boxes
+
     this.boxes.next(newBoxes);
   }
 
@@ -486,6 +490,20 @@ export class RecordFrameComponent
           ret.push(evt_box);
         }
         break;
+        case MouseReleaseLeftEventTypeEnum.MouseReleaseLeft:
+          let evt3 = event as MouseReleaseLeftEvent;
+          if (evt3.position) {
+            let x = evt3.position[0] - 20;
+            let y = evt3.position[1] - 20;
+            let w = 40;
+            let h = 40;
+            let evt_box = new ImageAnnotatorBox(x, y, w, h);
+            evt_box.canResize = true;
+            evt_box.canMove = false;
+            this.eventBoxes.set(evt_box.id, event);
+            ret.push(evt_box);
+          }
+          break;
       default:
         break;
     }

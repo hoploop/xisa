@@ -102,7 +102,7 @@ export class ImageAnnotatorComponent
       this.highlights.subscribe((highlights)=>{
         if (this.context && this.canvas) {
           highlights.forEach(highlight=>{
-            this.normalizeInitialHighlight(highlight);
+            //this.normalizeInitialHighlight(highlight);
           })
 
           this.draw();

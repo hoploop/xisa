@@ -8,6 +8,7 @@
         <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyRelease" [icon]="FAIconType.keyboard"></app-fa-icon>
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
         <span class="smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
+        <span class="smaller">{{name}}</span>
       </div>
     </ng-container>
   </ng-container>
@@ -15,6 +16,7 @@
     <div class="d-flex flex-column align-items-center">
       <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
       <span class="smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
+      <span class="smaller">{{name}}</span>
     </div>
     </ng-container>
 

@@ -6,7 +6,13 @@
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
 
   <ng-content body>
+    <div class="d-flex justify-content-center align-items-center card mb-2">
+      <div class="card-body">
       <img *ngIf="box.dataUrl" [src]="box.dataUrl"/>
+    </div>
+    </div>
+
+    <app-detector-suggestion  (onAccept)="onAcceptSuggestion($event)" (onReject)="onRejectSuggestion($event)" [suggestion]="suggestion"></app-detector-suggestion>
   </ng-content>
 </app-modal>
 

@@ -3,6 +3,7 @@
     <!-- Event -->
     <button
       class="btn btn-sm w-100"
+      *ngIf="frame && frame.event"
       [class.btn-primary]="eventVisible"
       [class.btn-outline-secondary]="!eventVisible"
       (click)="toggleEvent()"
