@@ -23,16 +23,27 @@
           <div class="d-flex">
             <div class="d-flex flex-column">
               <span><strong>{{detector.name}}</strong></span>
-              <div><span>Images: </span><span>{{detector._id|detectorImageCount|async}}</span></div>
-              <div><span>Classes: </span><span>{{detector._id|detectorClassCount|async}}</span></div>
+              <div><span [translate]="'workspace.detector.images_n'" [translateParams]="{'n':detector._id|detectorImageCount|async}"></span></div>
+              <div><span [translate]="'workspace.detector.classes_n'" [translateParams]="{'n':detector._id|detectorClassCount|async}"></span></div>
+              <div><span [translate]="'workspace.detector.trains_n'" [translateParams]="{'n':detector._id|detectorTrainCountPipe|async}"></span></div>
+
             </div>
             <span class="ms-auto">
               <button class="btn btn-primary btn-sm ms-1" (click)="learn(detector)">
                 <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
               </button>
+              <button class="btn btn-primary btn-sm ms-1" (click)="clone(detector)">
+                <app-fa-icon [icon]="FAIconType.clone"></app-fa-icon>
+              </button>
               <button class="btn btn-primary btn-sm ms-1" (click)="edit(detector)">
                 <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
               </button>
+              <ng-container *ngIf="(detector._id|detectorTrainCountPipe|async) as trains">
+                <button *ngIf="trains > 0" class="btn btn-primary btn-sm ms-1" (click)="train(detector)">
+                  <app-fa-icon [icon]="FAIconType.brain"></app-fa-icon>
+                </button>
+              </ng-container>
+
             </span>
           </div>
       </div>

@@ -81,6 +81,9 @@
         "cancel": "Cancel",
         "errors": { "already_existing": "Detector class already existing" }
       },
+      "images_n":"Images: {{n}}",
+      "classes_n":"Classes: {{n}}",
+      "trains_n":"Objects to train: {{n}}",
       "image": {
         "loadings": "Loading detector images...",
         "training": "Is training image",

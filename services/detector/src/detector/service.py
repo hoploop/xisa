@@ -5,6 +5,7 @@ from io import BytesIO
 import json
 import logging
 import threading
+from pydantic import Field
 import pytesseract
 from pytesseract import Output
 from ultralytics import YOLO
@@ -14,19 +15,76 @@ import shutil
 
 # LIBRARY IMPORTS
 from beanie import PydanticObjectId
-from beanie.operators import And,Or,In,RegEx
+from beanie.operators import And, Or, In, RegEx
 
 from PIL import Image
-#from PIL import ImageFile
-#ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+# from PIL import ImageFile
+# ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # LOCAL IMPORTS
 from common.clients.api import ApiClient
 from common.clients.recorder import RecorderClient
 from common.models import MODELS
 from common.models.auth import User
-from common.models.detector import Detector, DetectorLabel, DetectorImage, DetectorImageLabel, DetectorImageMode, DetectorTrainingSession
-from common.rpc.detector_pb2 import AddDetectorLabelRequest, AddDetectorLabelResponse, AddDetectorImageLabelRequest, AddDetectorImageLabelResponse, CountDetectorLabelRequest, CountDetectorLabelResponse, CountDetectorImageLabelRequest, CountDetectorImageLabelResponse, CountDetectorImageRequest, CountDetectorImageResponse, CountDetectorRequest, CountDetectorResponse, CreateDetectorResponse, DetectObject, DetectObjectsRequest, DetectObjectsResponse, DetectText, DetectTextsRequest, DetectTextsResponse, DetectorStepSuggestion, ExistsDetectorLabelRequest, ExistsDetectorLabelResponse, FindDetectorImageLabelResponse, ListDetectorLabelRequest, ListDetectorLabelResponse, ListDetectorImageLabelRequest, ListDetectorImageLabelResponse, ListDetectorImageRequest, ListDetectorImageResponse, ListDetectorRequest, ListDetectorResponse, LoadDetectorRequest, LoadDetectorResponse, RemoveDetectorImageLabelRequest, RemoveDetectorImageLabelResponse, RemoveDetectorImageRequest, RemoveDetectorImageResponse, RemoveDetectorRequest, RemoveDetectorResponse, SuggestStepRequest, SuggestStepResponse, TrainDetectorRequest, TrainDetectorResponse, UpdateDetectorRequest, UpdateDetectorResponse, UploadDetectorImageRequest, UploadDetectorImageResponse, DetectorImageMode as GrpcDetectorImageMode
+from common.models.detector import (
+    Detector,
+    DetectorLabel,
+    DetectorImage,
+    DetectorImageLabel,
+    DetectorImageMode,
+    DetectorTrainingSession,
+)
+from common.rpc.detector_pb2 import (
+    AddDetectorLabelRequest,
+    AddDetectorLabelResponse,
+    AddDetectorImageLabelRequest,
+    AddDetectorImageLabelResponse,
+    CountDetectorLabelRequest,
+    CountDetectorLabelResponse,
+    CountDetectorImageLabelRequest,
+    CountDetectorImageLabelResponse,
+    CountDetectorImageRequest,
+    CountDetectorImageResponse,
+    CountDetectorRequest,
+    CountDetectorResponse,
+    CreateDetectorResponse,
+    DetectObject,
+    DetectObjectsRequest,
+    DetectObjectsResponse,
+    DetectText,
+    DetectTextsRequest,
+    DetectTextsResponse,
+    DetectorStepSuggestion,
+    ExistsDetectorLabelRequest,
+    ExistsDetectorLabelResponse,
+    FindDetectorImageLabelResponse,
+    ListDetectorLabelRequest,
+    ListDetectorLabelResponse,
+    ListDetectorImageLabelRequest,
+    ListDetectorImageLabelResponse,
+    ListDetectorImageRequest,
+    ListDetectorImageResponse,
+    ListDetectorRequest,
+    ListDetectorResponse,
+    LoadDetectorRequest,
+    LoadDetectorResponse,
+    RemoveDetectorImageLabelRequest,
+    RemoveDetectorImageLabelResponse,
+    RemoveDetectorImageRequest,
+    RemoveDetectorImageResponse,
+    RemoveDetectorRequest,
+    RemoveDetectorResponse,
+    SuggestStepRequest,
+    SuggestStepResponse,
+    TrainDetectorRequest,
+    TrainDetectorResponse,
+    UpdateDetectorRequest,
+    UpdateDetectorResponse,
+    UploadDetectorImageRequest,
+    UploadDetectorImageResponse,
+    DetectorImageMode as GrpcDetectorImageMode,
+)
 from common.service import ClientConfig, Service
 from common.rpc.detector_pb2_grpc import DetectorServicer
 from common.service import ServiceConfig
@@ -37,48 +95,63 @@ from common.utils.mongodb import Mongodb, MongodbConfig
 # INITIALIZATION
 log = logging.getLogger(__name__)
 
+
 class DetectorServiceConfig(ServiceConfig):
     database: MongodbConfig
-    path: str
-    original: str
-    name: str
-    data: str
-    runs: str
-    classes: str
-    video:str
-    recorder:ClientConfig
-    api:ClientConfig
+    path: str = Field(description='Relative path where all detectors are stored')
+    original: str = Field(description="Original basic yolo weights .pt file reference")
+    name: str = Field(description="Default name of .pt new detector weights file")
+    data: str = Field(description='Default name of .yaml configuration file for new detector')
+    runs: str = Field(description="Name of the folder where runs are stored")
+    classes: str = Field(description="Name of .yaml file used for storing the classes")
+    recorder: ClientConfig
+    api: ClientConfig
+
 
 class DetectorService(Service, DetectorServicer):
 
     def __init__(self, config: DetectorServiceConfig):
         DetectorServicer.__init__(self)
         Service.__init__(self)
-        self.config:DetectorServiceConfig = config
+        self.config: DetectorServiceConfig = config
         self.api = ApiClient(self.config.api)
         self.recorder = RecorderClient(self.config.recorder)
-        
-        
+
     async def start(self):
-         await Mongodb.initialize(self.config.database,MODELS)
-         self.CACHE_YOLOS = {}
-         await self.recorder.startup()
-         
+        await Mongodb.initialize(self.config.database, MODELS)
+        
+        # Yolos models cached in memory
+        self.CACHE_YOLOS = {}
+        
+        # Starting up recorder client connectibity
+        await self.recorder.startup()
+
     async def findDetectorImageLabel(self, request, context):
         try:
-            found = await DetectorLabel.find_many(DetectorLabel.detector == PydanticObjectId(request.detector),DetectorLabel.name == request.name).first_or_none()
+            found = await DetectorLabel.find_many(
+                DetectorLabel.detector == PydanticObjectId(request.detector),
+                DetectorLabel.name == request.name,
+            ).first_or_none()
             if found is not None:
-                return FindDetectorImageLabelResponse(status=True,label=Conversions.serialize(found))
-            return FindDetectorImageLabelResponse(status=False,message="workspace.detector.label.errors.not_found")
+                return FindDetectorImageLabelResponse(
+                    status=True, label=Conversions.serialize(found)
+                )
+            return FindDetectorImageLabelResponse(
+                status=False, message="workspace.detector.label.errors.not_found"
+            )
         except Exception as e:
             log.warning(str(e))
-            return FindDetectorImageLabelResponse(status=False,message=str(e))
-         
-    async def suggestStep(self, request:SuggestStepRequest, context) -> SuggestStepResponse:
+            return FindDetectorImageLabelResponse(status=False, message=str(e))
+
+    async def suggestStep(
+        self, request: SuggestStepRequest, context
+    ) -> SuggestStepResponse:
         try:
-            user = await User.find_many(User.id == PydanticObjectId(request.user)).first_or_none()
-            event = await self.recorder.loadEvent(user,PydanticObjectId(request.event))
-            
+            user = await User.find_many(
+                User.id == PydanticObjectId(request.user)
+            ).first_or_none()
+            event = await self.recorder.loadEvent(user, PydanticObjectId(request.event))
+
             b64image = request.data
             log.debug("Loading image")
             if "," in b64image:
@@ -87,90 +160,141 @@ class DetectorService(Service, DetectorServicer):
                 bsource = b64image
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
-            
+
             # If has no position, not suggestions are possible so far
-            if not event.type.startswith('mouse'):
-                return SuggestStepResponse(status=True,suggestions=[])
-            
+            if not event.type.startswith("mouse"):
+                return SuggestStepResponse(status=True, suggestions=[])
+
             x, y = event.position
-            print('{0},{1}'.format(x,y))
-            #x = x / width
-            #y = y / height
-            print('{0},{1}'.format(x,y))
-            
+            print("{0},{1}".format(x, y))
+            # x = x / width
+            # y = y / height
+            print("{0},{1}".format(x, y))
+
             # Matching texts
-            req = DetectTextsRequest(user=request.user,data=request.data,confidence=request.confidence)
-            res = await self.detectTexts(req,context)
-            
+            req = DetectTextsRequest(
+                user=request.user, data=request.data, confidence=request.confidence
+            )
+            res = await self.detectTexts(req, context)
+
             suggestions = []
-            
+
             if res.status == True:
                 matched = None
                 for text in res.texts:
-                    nx = text.x*width
-                    ny = text.y*height
-                    nw = text.w*width
-                    nh = text.h*height
-                    
-                    if x > nx and x < (nx+nw) and y > ny and y < (ny+nh):
+                    nx = text.x * width
+                    ny = text.y * height
+                    nw = text.w * width
+                    nh = text.h * height
+
+                    if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
                         matched = text
-                        log.debug('detected Text: {0},{1} ({2},{3})'.format(nx,ny,nw,nh))
+                        log.debug(
+                            "detected Text: {0},{1} ({2},{3})".format(nx, ny, nw, nh)
+                        )
                         break
-                        
+
                 # Now checking if it is unique
                 if matched:
                     others = []
                     for text in res.texts:
-                        if text!=matched and text.value == matched.value:
+                        if text != matched and text.value == matched.value:
                             others.append(text)
-                    
+
                     # There are no other texts with same value, suggestion is unique for text
-                    if len(others)==0:
-                        suggestions.append(DetectorStepSuggestion(event=request.event,byText=matched.value,confidence=matched.confidence,x=nx,y=ny,w=nw,h=nh))
-                    
+                    if len(others) == 0:
+                        suggestions.append(
+                            DetectorStepSuggestion(
+                                event=request.event,
+                                byText=matched.value,
+                                confidence=matched.confidence,
+                                x=nx,
+                                y=ny,
+                                w=nw,
+                                h=nh,
+                            )
+                        )
+
                     else:
-                        suggestions.append(DetectorStepSuggestion(event=request.event,byText=matched.value,byOrder=[matched.line,matched.block],x=nx,y=ny,w=nw,h=nh,confidence=matched.confidence))
-                        
-            # Mathing objects                            
-            req = DetectObjectsRequest(user=request.user,data=request.data,detector=request.detector,confidence=request.confidence)
-            res = await self.detectObjects(req,context)
-                        
-            #DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col
-            
+                        suggestions.append(
+                            DetectorStepSuggestion(
+                                event=request.event,
+                                byText=matched.value,
+                                byOrder=[matched.line, matched.block],
+                                x=nx,
+                                y=ny,
+                                w=nw,
+                                h=nh,
+                                confidence=matched.confidence,
+                            )
+                        )
+
+            # Mathing objects
+            req = DetectObjectsRequest(
+                user=request.user,
+                data=request.data,
+                detector=request.detector,
+                confidence=request.confidence,
+            )
+            res = await self.detectObjects(req, context)
+
+            # DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col
+
             if res.status == True:
                 matched = None
                 for obj in res.objects:
-                    nx = obj.x*width
-                    ny = obj.y*height
-                    nw = obj.w*width
-                    nh = obj.h*height
-                    if x > nx and x < (nx+nw) and y > ny and y < (ny+nh):
+                    nx = obj.x * width
+                    ny = obj.y * height
+                    nw = obj.w * width
+                    nh = obj.h * height
+                    if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
                         matched = obj
                         break
-                
+
                 # Now checking if it is unique
                 if matched:
                     others = []
                     for obj in res.objects:
                         if obj != matched and matched.name == obj.name:
                             others.append(obj)
-                            
+
                     # There are no other objects with same value
-                    if len(others)==0:
-                        suggestions.append(DetectorStepSuggestion(event=request.event,byLabel=matched.name,confidence=matched.confidence,x=nx,y=ny,w=nw,h=nh))
-                    
+                    if len(others) == 0:
+                        suggestions.append(
+                            DetectorStepSuggestion(
+                                event=request.event,
+                                byLabel=matched.name,
+                                confidence=matched.confidence,
+                                x=nx,
+                                y=ny,
+                                w=nw,
+                                h=nh,
+                            )
+                        )
+
                     else:
-                        suggestions.append(DetectorStepSuggestion(event=request.event,byLabel=matched.name,byOrder=[matched.row,matched.col],x=nx,y=ny,w=nw,h=nh,confidence=matched.confidence))
-                
-            return SuggestStepResponse(status=True,suggestions=suggestions)
-            
-        
+                        suggestions.append(
+                            DetectorStepSuggestion(
+                                event=request.event,
+                                byLabel=matched.name,
+                                byOrder=[matched.row, matched.col],
+                                x=nx,
+                                y=ny,
+                                w=nw,
+                                h=nh,
+                                confidence=matched.confidence,
+                            )
+                        )
+
+            return SuggestStepResponse(status=True, suggestions=suggestions)
+
         except Exception as e:
             log.warning(str(e))
-            return SuggestStepResponse(status=False,message=str(e))
-         
-    
-    async def detectTexts(self, request: DetectTextsRequest, context) -> DetectTextsResponse:
+            return SuggestStepResponse(status=False, message=str(e))
+
+    async def detectTexts(
+        self, request: DetectTextsRequest, context
+    ) -> DetectTextsResponse:
         try:
             b64image = request.data
             log.debug("Loading image")
@@ -180,9 +304,9 @@ class DetectorService(Service, DetectorServicer):
                 bsource = b64image
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
-            
+
             log.debug("Detecting text elements")
-            confidence_level = int(round(request.confidence*100))
+            confidence_level = int(round(request.confidence * 100))
             # Get verbose data including boxes, confidences, line and page numbers
             text_results = pytesseract.image_to_data(img, output_type=Output.DICT)
             n_boxes = len(text_results["text"])
@@ -190,7 +314,7 @@ class DetectorService(Service, DetectorServicer):
             for i in range(n_boxes):
                 confidence = int(text_results["conf"][i])
                 text = text_results["text"][i]
-                if confidence >=  confidence_level and text.strip()!='':
+                if confidence >= confidence_level and text.strip() != "":
                     x = text_results["left"][i] / width
                     y = text_results["top"][i] / height
                     w = text_results["width"][i] / width
@@ -200,38 +324,60 @@ class DetectorService(Service, DetectorServicer):
                     par = text_results["par_num"][i]
                     line = text_results["line_num"][i]
                     word = text_results["word_num"][i]
-                    texts.append(DetectText(x=x,y=y,w=w,h=h,page=page,block=block,par=par,line=line,word=word,value=text,confidence=confidence))
-            return DetectTextsResponse(status=True,texts=texts)
-                    
-            
+                    texts.append(
+                        DetectText(
+                            x=x,
+                            y=y,
+                            w=w,
+                            h=h,
+                            page=page,
+                            block=block,
+                            par=par,
+                            line=line,
+                            word=word,
+                            value=text,
+                            confidence=confidence,
+                        )
+                    )
+            return DetectTextsResponse(status=True, texts=texts)
+
         except Exception as e:
             log.warning(str(e))
-            return DetectTextsResponse(status=False,message=str(e))
-    
-    async def detectObjects(self, request: DetectObjectsRequest, context)-> DetectObjectsResponse:
+            return DetectTextsResponse(status=False, message=str(e))
+
+    async def detectObjects(
+        self, request: DetectObjectsRequest, context
+    ) -> DetectObjectsResponse:
         try:
             log.debug("Loading detector")
             b64image = request.data
             detector_id = PydanticObjectId(request.detector)
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if not detector:
-                return DetectObjectsResponse(status=False,message="workspace.detector.errors.not_fopund")
-            
+                return DetectObjectsResponse(
+                    status=False, message="workspace.detector.errors.not_fopund"
+                )
+
             log.debug("Loading YOLO Model")
             if detector.best is None:
-                path = os.path.join(self.config.path, str(detector_id), self.config.name)
+                path = os.path.join(
+                    self.config.path, str(detector_id), self.config.name
+                )
                 if not os.path.exists(path):
-                    return DetectObjectsResponse(status=False,message="workspace.detector.errors.not_fopund")
+                    return DetectObjectsResponse(
+                        status=False, message="workspace.detector.errors.not_fopund"
+                    )
             else:
                 path = detector.best
-                
-            
+
             if path not in self.CACHE_YOLOS:
                 model = YOLO(path)
-                self.CACHE_YOLOS[path]= model
+                self.CACHE_YOLOS[path] = model
             else:
                 model = self.CACHE_YOLOS[path]
-            
+
             log.debug("Loading image")
             if "," in b64image:
                 bsource = b64image.split(",")[1]
@@ -239,11 +385,13 @@ class DetectorService(Service, DetectorServicer):
                 bsource = b64image
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
-            grid = ImageGrid(width,height)
-            
+            grid = ImageGrid(width, height)
+
             log.debug("Start detection")
-            visual_results = model(img, conf=request.confidence or 0.7)  # predict on an image
-            
+            visual_results = model(
+                img, conf=request.confidence or 0.7
+            )  # predict on an image
+
             boxes = []
             for result in visual_results:
                 detections = json.loads(result.to_json())
@@ -255,28 +403,41 @@ class DetectorService(Service, DetectorServicer):
                     boxes.append((x, y, w, h))
 
             best_rows, best_cols = grid.optimal_grid_size(boxes)
-            
-            
+
             objects = []
             for result in visual_results:
                 detections = json.loads(result.to_json())
                 for detection in detections:
-                    confidence = detection['confidence']
-                    code = detection['class']
-                    name = detection['name']
+                    confidence = detection["confidence"]
+                    code = detection["class"]
+                    name = detection["name"]
                     x = detection["box"]["x1"]
                     y = detection["box"]["y1"]
                     w = detection["box"]["x2"] - detection["box"]["x1"]
                     h = detection["box"]["y2"] - detection["box"]["y1"]
                     row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
-                    objects.append(DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col))
-            return DetectObjectsResponse(status=True,objects=objects)
-            
+                    objects.append(
+                        DetectObject(
+                            x=x,
+                            y=y,
+                            w=w,
+                            h=h,
+                            confidence=confidence,
+                            code=code,
+                            name=name,
+                            row=row,
+                            col=col,
+                        )
+                    )
+            return DetectObjectsResponse(status=True, objects=objects)
+
         except Exception as e:
             log.warning(str(e))
-            return DetectObjectsResponse(status=False, message = str(e))
-         
-    async def removeDetectorImage(self, request: RemoveDetectorImageRequest, context) -> RemoveDetectorImageResponse:
+            return DetectObjectsResponse(status=False, message=str(e))
+
+    async def removeDetectorImage(
+        self, request: RemoveDetectorImageRequest, context
+    ) -> RemoveDetectorImageResponse:
         try:
             image_id = PydanticObjectId(request.id)
             user_id = PydanticObjectId(request.user)
@@ -284,9 +445,13 @@ class DetectorService(Service, DetectorServicer):
                 DetectorImage.id == image_id
             ).first_or_none()
             if found is None:
-                return RemoveDetectorImageResponse(status=False,message="workspace.detector.image.errors.not_found")
+                return RemoveDetectorImageResponse(
+                    status=False, message="workspace.detector.image.errors.not_found"
+                )
             detector_id = found.detector
-            mode = found.mdoe
+            mode = found.mode
+            
+            log.debug('Removing detector image')
             await found.delete()
 
             image_path = os.path.join(
@@ -318,35 +483,38 @@ class DetectorService(Service, DetectorServicer):
             return RemoveDetectorImageResponse(status=True)
         except Exception as e:
             log.warning(str(e))
-            return RemoveDetectorImageResponse(status=False,message=str(e))
-         
-    
-    async def countDetectorImage(self, request: CountDetectorImageRequest, context) -> CountDetectorImageResponse:
+            return RemoveDetectorImageResponse(status=False, message=str(e))
+
+    async def countDetectorImage(
+        self, request: CountDetectorImageRequest, context
+    ) -> CountDetectorImageResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
-                return ListDetectorImageResponse(status=False,message="workspace.detector.errors.not_found")
-                
+                return ListDetectorImageResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
 
             total = await DetectorImage.find_many(
                 DetectorImage.detector == detector_id
             ).count()
-            
-            return CountDetectorImageResponse(status=True,total=total)
+
+            return CountDetectorImageResponse(status=True, total=total)
         except Exception as e:
             log.warning(str(e))
-            return CountDetectorImageResponse(status=False,message=str(e))
-        
-         
-         
-    async def listDetectorImage(self, request: ListDetectorImageRequest, context) -> ListDetectorImageResponse:
+            return CountDetectorImageResponse(status=False, message=str(e))
+
+    async def listDetectorImage(
+        self, request: ListDetectorImageRequest, context
+    ) -> ListDetectorImageResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
-                return ListDetectorImageResponse(status=False,message="workspace.detector.errors.not_found")
-                
+                return ListDetectorImageResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
 
             total = await DetectorImage.find_many(
                 DetectorImage.detector == detector_id
@@ -361,20 +529,21 @@ class DetectorService(Service, DetectorServicer):
             ret = []
             for image in images:
                 ret.append(Conversions.serialize(image))
-            return ListDetectorImageResponse(status=True,total=total,images=ret)
+            return ListDetectorImageResponse(status=True, total=total, images=ret)
         except Exception as e:
             log.warning(str(e))
-            return ListDetectorImageResponse(status=False,message=str(e))
-        
-         
-    async def listDetector(self, request: ListDetectorRequest, context) -> ListDetectorResponse:
+            return ListDetectorImageResponse(status=False, message=str(e))
+
+    async def listDetector(
+        self, request: ListDetectorRequest, context
+    ) -> ListDetectorResponse:
         try:
             project_id = PydanticObjectId(request.project)
             search = request.search
             skip = request.skip
             limit = request.limit
             qry = And(Detector.project == project_id)
-            if search is not None and search.strip()!='':
+            if search is not None and search.strip() != "":
                 qry = And(
                     Detector.project == project_id,
                     Or(
@@ -393,53 +562,71 @@ class DetectorService(Service, DetectorServicer):
             ret = []
             for detector in detectors:
                 ret.append(Conversions.serialize(detector))
-            return ListDetectorResponse(status=True,total=total,detectors=ret)
+            return ListDetectorResponse(status=True, total=total, detectors=ret)
         except Exception as e:
             log.warning(str(e))
-            return ListDetectorResponse(status=False,message=str(e))
-        
-    async def countDetector(self, request: CountDetectorRequest, context) -> CountDetectorResponse:
+            return ListDetectorResponse(status=False, message=str(e))
+
+    async def countDetector(
+        self, request: CountDetectorRequest, context
+    ) -> CountDetectorResponse:
         try:
             project_id = PydanticObjectId(request.project)
             total = await Detector.find_many(Detector.project == project_id).count()
-            return CountDetectorResponse(status=True,total=total)
+            return CountDetectorResponse(status=True, total=total)
 
         except Exception as e:
             log.warning(str(e))
-            return CountDetectorResponse(status=False,message=str(e))
-        
-    async def updateDetector(self, request: UpdateDetectorRequest, context) -> UpdateDetectorResponse:
+            return CountDetectorResponse(status=False, message=str(e))
+
+    async def updateDetector(
+        self, request: UpdateDetectorRequest, context
+    ) -> UpdateDetectorResponse:
         try:
             detector_id = PydanticObjectId(request.id)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
-                return UpdateDetectorResponse(status=False,message="workspace.detector.errors.not_found")
+                return UpdateDetectorResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
             others_found = await Detector.find_many(
                 Detector.project == found.project,
                 Detector.name == request.name,
                 Detector.id != found.id,
             ).first_or_none()
             if others_found:
-                return UpdateDetectorResponse(status=False,message="workspace.detector.errors.already_existing")
+                return UpdateDetectorResponse(
+                    status=False, message="workspace.detector.errors.already_existing"
+                )
             found.name = request.name
             found.description = request.description
             await found.save()
-            return UpdateDetectorResponse(status=True,detector=Conversions.serialize(found))
+            return UpdateDetectorResponse(
+                status=True, detector=Conversions.serialize(found)
+            )
         except Exception as e:
             log.warning(str(e))
-            return UpdateDetectorResponse(status=False,message=str(e))
-        
-    async def loadDetector(self, request:LoadDetectorRequest, context) -> LoadDetectorResponse:
+            return UpdateDetectorResponse(status=False, message=str(e))
+
+    async def loadDetector(
+        self, request: LoadDetectorRequest, context
+    ) -> LoadDetectorResponse:
         try:
             detector_id = PydanticObjectId(request.id)
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if detector is None:
-                return LoadDetectorResponse(status=False,message="workspace.detector.errors.not_found")
-            return LoadDetectorResponse(status=True,detector=Conversions.serialize(detector))
+                return LoadDetectorResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
+            return LoadDetectorResponse(
+                status=True, detector=Conversions.serialize(detector)
+            )
         except Exception as e:
             log.warning(str(e))
-            return LoadDetectorResponse(status=False,message=str(e))
-        
+            return LoadDetectorResponse(status=False, message=str(e))
+
     async def createDetector(self, request, context) -> CreateDetectorResponse:
         try:
             project_id = PydanticObjectId(request.project)
@@ -448,9 +635,12 @@ class DetectorService(Service, DetectorServicer):
             description = request.description
             user_id = PydanticObjectId(request.user)
             others_found = await Detector.find_many(
-            Detector.project == project_id, Detector.name == name).first_or_none()
+                Detector.project == project_id, Detector.name == name
+            ).first_or_none()
             if others_found:
-                return CreateDetectorResponse(status=False,message="workspace.detector.errors.already_existing")
+                return CreateDetectorResponse(
+                    status=False, message="workspace.detector.errors.already_existing"
+                )
 
             detector = Detector(
                 project=project_id, name=name, description=description, users=[user_id]
@@ -462,30 +652,30 @@ class DetectorService(Service, DetectorServicer):
             base_name = self.config.name
             target_path = os.path.join(self.config.path, str(detector.id), base_name)
             folder_name = os.path.join(self.config.path, str(detector.id))
-            
+
             if not os.path.exists(folder_name):
                 os.mkdir(folder_name)
-            
-            labels_path = os.path.join(folder_name,"labels")
+
+            labels_path = os.path.join(folder_name, "labels")
             if not os.path.exists(labels_path):
                 os.mkdir(labels_path)
-            
-            labels_train_path = os.path.join(labels_path,"train")
+
+            labels_train_path = os.path.join(labels_path, "train")
             if not os.path.exists(labels_train_path):
                 os.mkdir(labels_train_path)
-            
-            labels_val_path = os.path.join(labels_path,"val")
+
+            labels_val_path = os.path.join(labels_path, "val")
             if not os.path.exists(labels_val_path):
                 os.mkdir(labels_val_path)
-            
-            labels_test_path = os.path.join(labels_path,"test")
+
+            labels_test_path = os.path.join(labels_path, "test")
             if not os.path.exists(labels_test_path):
                 os.mkdir(labels_test_path)
-            
-            labels_train_path = os.path.join(labels_path,"train")
+
+            labels_train_path = os.path.join(labels_path, "train")
             if not os.path.exists(labels_train_path):
                 os.mkdir(labels_train_path)
-            
+
             images_path = os.path.join(folder_name, "images")
             if not os.path.exists(images_path):
                 os.mkdir(images_path)
@@ -502,7 +692,7 @@ class DetectorService(Service, DetectorServicer):
             if not os.path.exists(val_path):
                 os.mkdir(val_path)
 
-            if origin is None or origin=='':
+            if origin is None or origin == "":
                 base_path = self.config.path
                 original_path = os.path.join(base_path, self.config.original)
                 original_classes_filename = os.path.join(base_path, self.config.classes)
@@ -511,7 +701,10 @@ class DetectorService(Service, DetectorServicer):
                     Detector.id == origin
                 ).first_or_none()
                 if original_detector is None:
-                    return CreateDetectorResponse(status=False,message="workspace.detector.errors.original_not_found")
+                    return CreateDetectorResponse(
+                        status=False,
+                        message="workspace.detector.errors.original_not_found",
+                    )
 
                 base_path = self.config.path
                 original_path = os.path.join(
@@ -530,7 +723,8 @@ class DetectorService(Service, DetectorServicer):
 
             log.debug("Create model configuration")
             data = dict(
-                path=os.path.join(os.getcwd(), self.config.path, str(detector.id)) + "/",
+                path=os.path.join(os.getcwd(), self.config.path, str(detector.id))
+                + "/",
                 train="images/train",
                 val="images/val",
                 test="images/test",
@@ -544,24 +738,32 @@ class DetectorService(Service, DetectorServicer):
             with open(config_filename, "w") as outfile:
                 yaml.dump(data, outfile, default_flow_style=False)
 
-            return CreateDetectorResponse(status=True,detector=Conversions.serialize(detector))
+            return CreateDetectorResponse(
+                status=True, detector=Conversions.serialize(detector)
+            )
         except Exception as e:
             log.warning(str(e))
-            return CreateDetectorResponse(status=False,message=str(e))
-        
-    async def trainDetector(self, request: TrainDetectorRequest, context) -> TrainDetectorResponse:
-        
+            return CreateDetectorResponse(status=False, message=str(e))
+
+    async def trainDetector(
+        self, request: TrainDetectorRequest, context
+    ) -> TrainDetectorResponse:
+
         try:
             epochs = request.epochs
             user_id = PydanticObjectId(request.user)
             detector_id = PydanticObjectId(request.detector)
             session = request.session
             image_size = request.imageSize
-            
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if detector is None:
-                return TrainDetectorResponse(status=False,message="workspace.detector.errors.not_found")
-            
+                return TrainDetectorResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
+
             training_session = DetectorTrainingSession(
                 detector=detector_id,
                 user=user_id,
@@ -582,34 +784,34 @@ class DetectorService(Service, DetectorServicer):
                 epoch = trainer.epoch  # Current epoch number
                 results = trainer.metrics  # Training metrics (loss, mAP, etc.)
 
-                
                 training_session.epoch_progress = epoch
                 # Example: Log the loss
                 if results:
                     pass
-                    #print(results)
+                    # print(results)
                     # print(f"Loss: {results.box.loss:.4f}, "
                     #    f"Label Loss: {results.cls.loss:.4f}, "
                     #    f"Object Loss: {results.dfl.loss:.4f}"
-                    
-                    #training_session.box_loss = results['box']['loss']
-                    #training_session.class_loss = results['cls']['loss']
-                    #training_session.object_loss = results['dfl']['loss']
-                    
-                asyncio.create_task(self.api.updateSession(session,training_session))
-                
-                
+
+                    # training_session.box_loss = results['box']['loss']
+                    # training_session.class_loss = results['cls']['loss']
+                    # training_session.object_loss = results['dfl']['loss']
+
+                asyncio.create_task(self.api.updateSession(session, training_session))
 
             # Load a COCO-pretrained YOLO11n model
             log.debug("Loading YOLO Model")
             if detector.best is None:
-                path = os.path.join(self.config.path, str(detector_id), self.config.name)
+                path = os.path.join(
+                    self.config.path, str(detector_id), self.config.name
+                )
                 if not os.path.exists(path):
-                    return TrainDetectorResponse(status=False,message="workspace.detector.errors.not_found")
+                    return TrainDetectorResponse(
+                        status=False, message="workspace.detector.errors.not_found"
+                    )
             else:
                 path = detector.best
-                
-            
+
             async def training(path):
                 model = YOLO(path)
 
@@ -624,59 +826,86 @@ class DetectorService(Service, DetectorServicer):
                 results = model.train(
                     data=data_path, epochs=epochs, imgsz=image_size, project=runs_path
                 )
-                
+
                 training_session.epoch_progress = epochs
-                await self.api.updateSession(session,training_session)
+                await self.api.updateSession(session, training_session)
                 log.debug("Results are saved into: {0}".format(results.save_dir))
-                detector.best = os.path.join(results.save_dir,'weights/best.pt')
-                detector.last = os.path.join(results.save_dir,'weights/last.pt')
-                
+                detector.best = os.path.join(results.save_dir, "weights/best.pt")
+                detector.last = os.path.join(results.save_dir, "weights/last.pt")
+
                 await detector.save()
-                
-            #train_thread = threading.Thread(target=training, args=(path,), daemon=True)
-            #train_thread.start()
+
+            # train_thread = threading.Thread(target=training, args=(path,), daemon=True)
+            # train_thread.start()
             task1 = asyncio.create_task(training(path))  # Run task_one concurrently
-            
+
             return TrainDetectorResponse(status=True)
         except Exception as e:
             log.warning(str(e))
-            return TrainDetectorResponse(status=False,message=str(e))
-        
-    async def addDetectorLabel(self, request: AddDetectorLabelRequest, context) -> AddDetectorLabelResponse:
+            return TrainDetectorResponse(status=False, message=str(e))
+
+    async def addDetectorLabel(
+        self, request: AddDetectorLabelRequest, context
+    ) -> AddDetectorLabelResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if detector is None:
-                return AddDetectorLabelResponse(status=False,message="workspace.detector.errors.not_found")
-            
-            found = await DetectorLabel.find_many(DetectorLabel.detector == detector_id,DetectorLabel.name == request.name.strip()).first_or_none()
+                return AddDetectorLabelResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
+
+            found = await DetectorLabel.find_many(
+                DetectorLabel.detector == detector_id,
+                DetectorLabel.name == request.name.strip(),
+            ).first_or_none()
             if found is not None:
-                return AddDetectorLabelResponse(status=False,message="workspace.detector.class.errors.already_existing")
-        
-            label = await DetectorLabel(detector=detector_id,name=request.name.strip()).insert()
-            return AddDetectorLabelResponse(status=True,label=Conversions.serialize(label))
+                return AddDetectorLabelResponse(
+                    status=False,
+                    message="workspace.detector.class.errors.already_existing",
+                )
+
+            label = await DetectorLabel(
+                detector=detector_id, name=request.name.strip()
+            ).insert()
+            return AddDetectorLabelResponse(
+                status=True, label=Conversions.serialize(label)
+            )
 
         except Exception as e:
             log.warning(str(e))
-            return AddDetectorLabelResponse(status=False,message=str(e))
-        
-    async def existsDetectorLabel(self, request: ExistsDetectorLabelRequest, context) -> ExistsDetectorLabelResponse:
+            return AddDetectorLabelResponse(status=False, message=str(e))
+
+    async def existsDetectorLabel(
+        self, request: ExistsDetectorLabelRequest, context
+    ) -> ExistsDetectorLabelResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if detector is None:
-                return ExistsDetectorLabelResponse(status=False,message="workspace.detector.errors.not_found")
-            
-            found = await DetectorLabel.find_many(DetectorLabel.detector == detector_id,DetectorLabel.name == request.name.strip()).first_or_none()
+                return ExistsDetectorLabelResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
+
+            found = await DetectorLabel.find_many(
+                DetectorLabel.detector == detector_id,
+                DetectorLabel.name == request.name.strip(),
+            ).first_or_none()
             if found is None:
-                return ExistsDetectorLabelResponse(status=True,label=None)
-                
-            return ExistsDetectorLabelResponse(status=True,label=Conversions.serialize(found))
+                return ExistsDetectorLabelResponse(status=True, label=None)
+
+            return ExistsDetectorLabelResponse(
+                status=True, label=Conversions.serialize(found)
+            )
 
         except Exception as e:
             log.warning(str(e))
-            return ExistsDetectorLabelResponse(status=False,message=str(e))
-        
+            return ExistsDetectorLabelResponse(status=False, message=str(e))
+
     async def update_folder(
         self, user_id: PydanticObjectId, detector_id: PydanticObjectId
     ):
@@ -713,15 +942,15 @@ class DetectorService(Service, DetectorServicer):
             image_labels = await DetectorImageLabel.find_many(
                 DetectorImageLabel.image == image.id
             ).to_list()
-            
-            sub_path = ''
+
+            sub_path = ""
             if image.mode == DetectorImageMode.train:
-                sub_path = 'train'
+                sub_path = "train"
             elif image.mode == DetectorImageMode.val:
-                sub_path = 'val'
+                sub_path = "val"
             else:
-                sub_path = 'test'
-            
+                sub_path = "test"
+
             image_box_file = os.path.join(
                 os.getcwd(),
                 self.config.path,
@@ -737,10 +966,9 @@ class DetectorService(Service, DetectorServicer):
                 ).first_or_none()
                 label_name = dlabel.name
                 w = (label.xend - label.xstart) / image.width
-                h = (label.yend - label.ystart)/image.height
-                x = label.xend/image.width - (w/2)
-                y = label.yend/image.height - (h/2)
-                
+                h = (label.yend - label.ystart) / image.height
+                x = label.xend / image.width - (w / 2)
+                y = label.yend / image.height - (h / 2)
 
                 # 16 0.048093 0.081250 0.051410 0.064583
                 line = "{0} {1:0.6f} {2:0.6f} {3:0.6f} {4:0.6f} ".format(
@@ -750,7 +978,7 @@ class DetectorService(Service, DetectorServicer):
                 lines.append(line)
             with open(image_box_file, "w") as f:
                 f.writelines(line + "\n" for line in lines)
-                
+
         # Failover for no val images
         image_path = os.path.join(
             os.getcwd(), self.config.path, str(detector_id), "images"
@@ -758,15 +986,19 @@ class DetectorService(Service, DetectorServicer):
         image_train_path = os.path.join(image_path, "train")
         image_val_path = os.path.join(image_path, "val")
         image_test_path = os.path.join(image_path, "test")
-        val_images_number = len([name for name in os.listdir(image_val_path) if os.path.isfile(os.path.join(image_val_path, name))])
+        val_images_number = len(
+            [
+                name
+                for name in os.listdir(image_val_path)
+                if os.path.isfile(os.path.join(image_val_path, name))
+            ]
+        )
         if val_images_number == 0:
             for fname in os.listdir(image_train_path):
-    
-                # copying the files to the 
+
+                # copying the files to the
                 # destination directory
-                shutil.copy2(os.path.join(image_train_path,fname), image_val_path)
-                
-    
+                shutil.copy2(os.path.join(image_train_path, fname), image_val_path)
 
     def decode_base64(self, b64image: str):
         # Add padding if needed
@@ -781,30 +1013,40 @@ class DetectorService(Service, DetectorServicer):
         except Exception as e:
             log.warning("Error decoding base64:", e)
             return None
-        
-    async def removeDetector(self, request: RemoveDetectorRequest, context) -> RemoveDetectorResponse:
+
+    async def removeDetector(
+        self, request: RemoveDetectorRequest, context
+    ) -> RemoveDetectorResponse:
         try:
             detector_id = PydanticObjectId(request.id)
-            detector = await Detector.find_many(Detector.id == detector_id).first_or_none()
+            detector = await Detector.find_many(
+                Detector.id == detector_id
+            ).first_or_none()
             if detector:
                 folder_name = os.path.join(self.config.path, str(detector_id))
                 if os.path.exists(folder_name):
                     shutil.rmtree(folder_name)
                 await detector.delete()
                 return RemoveDetectorResponse(status=True)
-            return RemoveDetectorResponse(status=False,message="workspace.detector.errors.not_found")
+            return RemoveDetectorResponse(
+                status=False, message="workspace.detector.errors.not_found"
+            )
         except Exception as e:
             log.warning(str(e))
-            return RemoveDetectorResponse(status=False,message=str(e))
-        
-    async def addDetectorImageLabel(self, request:AddDetectorImageLabelRequest, context) -> AddDetectorImageLabelResponse:
+            return RemoveDetectorResponse(status=False, message=str(e))
+
+    async def addDetectorImageLabel(
+        self, request: AddDetectorImageLabelRequest, context
+    ) -> AddDetectorImageLabelResponse:
         try:
             image_id = PydanticObjectId(request.image)
             found = await DetectorImage.find_many(
                 DetectorImage.id == image_id
             ).first_or_none()
             if found is None:
-                return AddDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.not_found")
+                return AddDetectorImageLabelResponse(
+                    status=False, message="workspace.detector.image.errors.not_found"
+                )
             detector_id = found.detector
 
             class_id = None
@@ -828,12 +1070,16 @@ class DetectorService(Service, DetectorServicer):
             ).insert()
             user_id = PydanticObjectId(request.user)
             await self.update_folder(user_id, detector_id)
-            return AddDetectorImageLabelResponse(status=True,label=Conversions.serialize(detector_image_label))
+            return AddDetectorImageLabelResponse(
+                status=True, label=Conversions.serialize(detector_image_label)
+            )
         except Exception as e:
             log.warning(str(e))
-            return AddDetectorImageLabelResponse(status=False,message=str(e))
+            return AddDetectorImageLabelResponse(status=False, message=str(e))
 
-    async def listDetectorLabel(self, request:ListDetectorLabelRequest, context) -> ListDetectorLabelResponse:
+    async def listDetectorLabel(
+        self, request: ListDetectorLabelRequest, context
+    ) -> ListDetectorLabelResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
             skip = request.skip
@@ -841,7 +1087,9 @@ class DetectorService(Service, DetectorServicer):
             search = request.search
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if found is None:
-                return ListDetectorLabelResponse(status=False,message="workspace.detector.errors.not_found")
+                return ListDetectorLabelResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
 
             if search is not None and search.strip() != "":
                 classes = []
@@ -860,36 +1108,40 @@ class DetectorService(Service, DetectorServicer):
                 .to_list()
             )
             user_id = PydanticObjectId(request.user)
-            #await self.update_folder(user_id, detector_id)
+            # await self.update_folder(user_id, detector_id)
             ret = []
             for label in labels:
                 ret.append(Conversions.serialize(label))
-            return ListDetectorLabelResponse(status=True,total=total,labels=ret)
+            return ListDetectorLabelResponse(status=True, total=total, labels=ret)
         except Exception as e:
             log.warning(str(e))
-            return ListDetectorLabelResponse(status=False,message=str(e))
-        
-    
-    async def countDetectorLabel(self, request:CountDetectorLabelRequest, context) -> CountDetectorLabelResponse:
+            return ListDetectorLabelResponse(status=False, message=str(e))
+
+    async def countDetectorLabel(
+        self, request: CountDetectorLabelRequest, context
+    ) -> CountDetectorLabelResponse:
         try:
             detector_id = PydanticObjectId(request.detector)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if found is None:
-                return ListDetectorLabelResponse(status=False,message="workspace.detector.errors.not_found")
+                return ListDetectorLabelResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
 
             qry = And(DetectorLabel.detector == detector_id)
             total = await DetectorLabel.find_many(qry).count()
-            
+
             user_id = PydanticObjectId(request.user)
             await self.update_folder(user_id, detector_id)
-            
-            return CountDetectorLabelResponse(status=True,total=total)
+
+            return CountDetectorLabelResponse(status=True, total=total)
         except Exception as e:
             log.warning(str(e))
-            return CountDetectorLabelResponse(status=False,message=str(e))
+            return CountDetectorLabelResponse(status=False, message=str(e))
 
-
-    async def listDetectorImageLabel(self, request: ListDetectorImageLabelRequest, context) -> ListDetectorImageLabelResponse:
+    async def listDetectorImageLabel(
+        self, request: ListDetectorImageLabelRequest, context
+    ) -> ListDetectorImageLabelResponse:
         try:
             image_id = PydanticObjectId(request.image)
             user_id = PydanticObjectId(request.user)
@@ -900,7 +1152,9 @@ class DetectorService(Service, DetectorServicer):
                 DetectorImage.id == image_id
             ).first_or_none()
             if found is None:
-                return ListDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.not_found")
+                return ListDetectorImageLabelResponse(
+                    status=False, message="workspace.detector.image.errors.not_found"
+                )
 
             if search is not None and search.strip() != "":
                 classes = []
@@ -928,22 +1182,27 @@ class DetectorService(Service, DetectorServicer):
             ret = []
             for label in labels:
                 ret.append(Conversions.serialize(label))
-            return ListDetectorImageLabelResponse(status=True,total=total,labels=labels)
+            return ListDetectorImageLabelResponse(
+                status=True, total=total, labels=labels
+            )
 
         except Exception as e:
             log.warning(str(e))
-            return ListDetectorImageLabelResponse(status=False,message=str(e))
-        
+            return ListDetectorImageLabelResponse(status=False, message=str(e))
 
-    async def uploadDetectorImage(self, request:UploadDetectorImageRequest, context) -> UploadDetectorImageResponse:
+    async def uploadDetectorImage(
+        self, request: UploadDetectorImageRequest, context
+    ) -> UploadDetectorImageResponse:
         try:
             log.debug("Loading detector")
             b64image = request.data
             detector_id = PydanticObjectId(request.detector)
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
-                return UploadDetectorImageResponse(status=False,message="workspace.detector.errors.not_found")
-            
+                return UploadDetectorImageResponse(
+                    status=False, message="workspace.detector.errors.not_found"
+                )
+
             log.debug("Loading image")
             if "," in b64image:
                 bsource = b64image.split(",")[1]
@@ -955,18 +1214,21 @@ class DetectorService(Service, DetectorServicer):
             log.debug("Creating new detector image document")
             ret = []
             for gmode in request.modes:
-                mode = DetectorImageMode.test;
+                mode = DetectorImageMode.test
                 if gmode == GrpcDetectorImageMode.TRAIN:
                     mode = DetectorImageMode.train
                 elif gmode == GrpcDetectorImageMode.TEST:
                     mode = DetectorImageMode.test
                 elif gmode == GrpcDetectorImageMode.VAL:
                     mode = DetectorImageMode.val
-                
-                detector_image = await DetectorImage(
-                    detector=detector_id, mode=mode, data=b64image, width=width, height=height
-                ).insert()
 
+                detector_image = await DetectorImage(
+                    detector=detector_id,
+                    mode=mode,
+                    data=b64image,
+                    width=width,
+                    height=height,
+                ).insert()
 
                 image_path = os.path.join(
                     os.getcwd(), self.config.path, str(detector_id), "images"
@@ -986,43 +1248,52 @@ class DetectorService(Service, DetectorServicer):
                 log.debug("Saving image")
 
                 img.save(image_filename, quality=100, subsampling=0)
-                
+
                 ret.append(Conversions.serialize(detector_image))
             user_id = PydanticObjectId(request.user)
             await self.update_folder(user_id, detector_id)
-            return UploadDetectorImageResponse(status=True,images=ret)
+            return UploadDetectorImageResponse(status=True, images=ret)
         except Exception as e:
             log.warning(str(e))
-            return UploadDetectorImageResponse(status=False,message=str(e))
-        
-    async def countDetectorImageLabel(self, request:CountDetectorImageLabelRequest, context) -> CountDetectorImageLabelResponse:
+            return UploadDetectorImageResponse(status=False, message=str(e))
+
+    async def countDetectorImageLabel(
+        self, request: CountDetectorImageLabelRequest, context
+    ) -> CountDetectorImageLabelResponse:
         try:
             image_id = PydanticObjectId(request.image)
             found = await DetectorImage.find_many(
                 DetectorImage.id == image_id
             ).first_or_none()
             if found is None:
-                return CountDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.not_found")
+                return CountDetectorImageLabelResponse(
+                    status=False, message="workspace.detector.image.errors.not_found"
+                )
             total = await DetectorImageLabel.find_many(
                 DetectorImageLabel.image == image_id
             ).count()
-            return CountDetectorImageLabelResponse(status=True,total=total)
+            return CountDetectorImageLabelResponse(status=True, total=total)
 
         except Exception as e:
             log.warning(str(e))
-            return RemoveDetectorImageLabelResponse(status=False,message=str(e))
-        
-    async def removeDetectorImageLabel(self, request:RemoveDetectorImageLabelRequest, context)-> RemoveDetectorImageLabelResponse:
+            return RemoveDetectorImageLabelResponse(status=False, message=str(e))
+
+    async def removeDetectorImageLabel(
+        self, request: RemoveDetectorImageLabelRequest, context
+    ) -> RemoveDetectorImageLabelResponse:
         try:
             detector_image_label_id = PydanticObjectId(request.label)
             found = await DetectorImageLabel.find_many(
-            DetectorImageLabel.id == detector_image_label_id
+                DetectorImageLabel.id == detector_image_label_id
             ).first_or_none()
             if found is None:
-                return RemoveDetectorImageLabelResponse(status=False,message="workspace.detector.image.errors.label_not_found")
+                return RemoveDetectorImageLabelResponse(
+                    status=False,
+                    message="workspace.detector.image.errors.label_not_found",
+                )
             await found.delete()
 
             return RemoveDetectorImageLabelResponse(status=True)
         except Exception as e:
             log.warning(str(e))
-            return RemoveDetectorImageLabelResponse(status=False,message=str(e))
+            return RemoveDetectorImageLabelResponse(status=False, message=str(e))

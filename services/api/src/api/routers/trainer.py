@@ -160,6 +160,20 @@ async def lesson_image_object_list(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
+@router.get(
+    "/lesson/image/object/count/detector/{detectorId}",
+    operation_id="trainerLessonImageObjectCountByDetector",
+    response_model=int,
+)
+async def lesson_image_object_count_by_detector(
+    user: CurrentUser, trainer: Trainer, detectorId: PydanticObjectId
+):
+    try:
+        return await trainer.trainImageObjectCountByDetector(user,detectorId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
 @router.delete(
     "/lesson/image/object/remove/{objectId}",
     operation_id="trainerLessonImageObjectRemove",

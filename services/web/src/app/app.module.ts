@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Configuration, ConfigurationParameters } from '@api/configuration';
 import { environment } from '@environments/environment';
 import { ApiModule } from '@api/api.module';
-import { HTTP_INTERCEPTORS, HttpBackend, provideHttpClient } from '@angular/common/http';
+import { HttpBackend, provideHttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { AuthModule } from '@auth/auth.module';
@@ -19,6 +19,7 @@ import { MomentModule } from 'ngx-moment';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { TemplatesModule } from '@templates/templates.module';
 import { UtilsModule } from '@utils/utils.module';
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -53,6 +54,11 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     WorkspaceModule,
     TemplatesModule,
     ApiModule.forRoot(apiConfigFactory),
+    LoggerModule.forRoot({
+      serverLoggingUrl: '/api/logs',
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    }),
     TranslateModule.forRoot({
         defaultLanguage: environment.locale.i18n.default,
         loader: {

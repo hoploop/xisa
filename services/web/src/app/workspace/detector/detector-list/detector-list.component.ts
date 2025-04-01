@@ -5,6 +5,7 @@ import { FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
 import { BehaviorSubject } from 'rxjs';
 import { DetectorFormComponent } from '../detector-form/detector-form.component';
+import { DetectorLearnComponent } from '../detector-learn/detector-learn.component';
 
 @Component({
   selector: 'app-detector-list',
@@ -35,58 +36,92 @@ export class DetectorListComponent implements OnInit {
     this.load();
   }
 
-  onChangeSearch(value:string){
+  onChangeSearch(value: string) {
     this.search = value;
     this.skip = 0;
     this.load();
   }
 
   create() {
-
-      this.ctx
-              .openModal<Detector | undefined>(DetectorFormComponent, {
-                detector: {
-                  project: this.projectId,
-                  name:"",
-                  description:""
-                }
-              })
-              .subscribe({
-                next: (result) => {
-                  if (result){
-                    this.load();
-                  }
-                },
-                error: (result) => {},
-              });
+    this.ctx
+      .openModal<Detector | undefined>(DetectorFormComponent, {
+        detector: {
+          project: this.projectId,
+          name: '',
+          description: '',
+        },
+      })
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this.load();
+          }
+        },
+        error: (result) => {},
+      });
   }
 
-  edit(detector:Detector){
-    if (!detector._id) return;
-      this.ctx
-              .openModal<Detector | undefined>(DetectorFormComponent, {
-                detector: detector
-              })
-              .subscribe({
-                next: (result) => {
-                  this.load();
-                },
-                error: (result) => {},
-              });
+  clone(detector: Detector) {
+    this.ctx
+      .openModal<Detector | undefined>(DetectorFormComponent, {
+        detector: {
+          project: this.projectId,
+          name: '',
+          description: '',
+        },
+        origin: detector,
+      })
+      .subscribe({
+        next: (result) => {
+          if (result) {
+            this.load();
+          }
+        },
+        error: (result) => {},
+      });
   }
 
-  learn(detector:Detector){
+  train(detector:Detector){
     if (!detector._id) return;
-    this.router.navigateByUrl('/detector/learn/'+detector._id);
+    this.ctx
+      .openModal<Detector | undefined>(DetectorLearnComponent, {
+        detector: detector,
+      })
+      .subscribe({
+        next: (result) => {
+          this.load();
+        },
+        error: (result) => {},
+      });
+  }
+
+  edit(detector: Detector) {
+    if (!detector._id) return;
+    this.ctx
+      .openModal<Detector | undefined>(DetectorFormComponent, {
+        detector: detector,
+      })
+      .subscribe({
+        next: (result) => {
+          this.load();
+        },
+        error: (result) => {},
+      });
+  }
+
+  learn(detector: Detector) {
+    if (!detector._id) return;
+    this.router.navigateByUrl('/detector/learn/' + detector._id);
   }
 
   load() {
-
     if (!this.projectId) return;
-    this.loading.next(this.ctx.translate.instant('workspace.detector.loadings'));
+    this.loading.next(
+      this.ctx.translate.instant('workspace.detector.loadings')
+    );
     this.error.next(undefined);
     this.ctx.api.detector
-      .detectorList(this.projectId,this.skip, this.limit, this.search)
+      .detectorList(this.projectId, this.skip, this.limit, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);

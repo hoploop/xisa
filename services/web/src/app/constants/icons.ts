@@ -1,6 +1,6 @@
 import { AnimationProp } from '@fortawesome/angular-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faImages, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
+import { faClone, faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faImages, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import {
   faAnglesDown,
   faAnglesUp,
@@ -15,6 +15,7 @@ import {
   faBarsProgress,
   faBook,
   faBookmark,
+  faBrain,
   faBroom,
   faBug,
   faCamera,
@@ -80,6 +81,7 @@ import {
   faRobot,
   faRss,
   faSave,
+  faSchool,
   faSearch,
   faShapes,
   faSpinner,
@@ -246,9 +248,16 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   handPointRight: faHandPointRight,
   handPointLeft: faHandPointLeft,
   handPointDown: faHandPointDown,
+  clone: faClone,
+  school: faSchool,
+  brain: faBrain
+
 };
 
 export enum FAIconType {
+  clone = 'clone',
+  school = 'school',
+  brain = 'brain',
   handPointer = 'handPointer',
   handPointUp = 'handPointUp',
   handPointDown = 'handPointDown',

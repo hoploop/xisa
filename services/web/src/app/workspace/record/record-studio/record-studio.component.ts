@@ -13,6 +13,7 @@ import { RecordFrameSelectorComponent } from '../record-frame-selector/record-fr
 import { RecordVideoComponent } from '../record-video/record-video.component';
 import { RecordSuggestionsComponent } from '../record-suggestions/record-suggestions.component';
 import { BaseComponent } from '@utils/base/base.component';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-record-studio',
@@ -39,9 +40,10 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   constructor(
     protected override ctx: ContextService,
     protected override router: Router,
-    route: ActivatedRoute
+    protected override route: ActivatedRoute,
+    protected override log: NGXLogger
   ) {
-    super(ctx,router,route);
+    super(ctx,router,route,log);
     this.recordId = route.snapshot.paramMap.get('record_id') || undefined;
     this.detectorId = route.snapshot.paramMap.get('detector_id') || undefined;
   }

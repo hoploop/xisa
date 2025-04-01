@@ -13,6 +13,7 @@ service Trainer {
     
     rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
     rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
+    rpc trainImageObjectCountByDetector(TrainImageObjectCountByDetectorRequest) returns (TrainImageObjectCountByDetectorResponse);
     rpc trainImageObjectRemove(TrainImageObjectRemoveRequest) returns (TrainImageObjectRemoveResponse);
 }
 
@@ -115,4 +116,17 @@ message TrainImageObjectListResponse {
     optional string message = 2;
     int32 total = 3;
     repeated Serialized objects = 4;
+}
+
+
+
+message TrainImageObjectCountByDetectorRequest {
+    string user = 1;
+    string detector = 2;
+}
+
+message TrainImageObjectCountByDetectorResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
 }

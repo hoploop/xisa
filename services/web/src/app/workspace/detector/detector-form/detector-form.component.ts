@@ -11,6 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class DetectorFormComponent extends BaseComponent {
   @Input() detector!: Detector;
+  @Input() origin?:Detector;
   valid = new BehaviorSubject<boolean>(false);
 
 
@@ -58,7 +59,13 @@ export class DetectorFormComponent extends BaseComponent {
   create(){
     this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorCreate(this.detector.project,this.detector.name,undefined,this.detector.description|| '').subscribe({
+
+    this.log.debug('Checking if origin is specified')
+    let originId = undefined;
+    if (this.origin && this.origin._id){
+      originId = this.origin._id;
+    }
+    this.ctx.api.detector.detectorCreate(this.detector.project,this.detector.name,originId,this.detector.description|| '').subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.detector.name = result.name;

@@ -167,3 +167,21 @@ class TrainImageObjectListResponse(_message.Message):
     total: int
     objects: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., objects: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
+
+class TrainImageObjectCountByDetectorRequest(_message.Message):
+    __slots__ = ("user", "detector")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
+
+class TrainImageObjectCountByDetectorResponse(_message.Message):
+    __slots__ = ("status", "message", "total")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ...) -> None: ...

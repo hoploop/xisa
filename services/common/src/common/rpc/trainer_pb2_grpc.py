@@ -70,6 +70,11 @@ class TrainerStub(object):
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectListRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectListResponse.FromString,
                 _registered_method=True)
+        self.trainImageObjectCountByDetector = channel.unary_unary(
+                '/Trainer/trainImageObjectCountByDetector',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorResponse.FromString,
+                _registered_method=True)
         self.trainImageObjectRemove = channel.unary_unary(
                 '/Trainer/trainImageObjectRemove',
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectRemoveRequest.SerializeToString,
@@ -123,6 +128,12 @@ class TrainerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def trainImageObjectCountByDetector(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def trainImageObjectRemove(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -166,6 +177,11 @@ def add_TrainerServicer_to_server(servicer, server):
                     servicer.trainImageObjectList,
                     request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectListRequest.FromString,
                     response_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectListResponse.SerializeToString,
+            ),
+            'trainImageObjectCountByDetector': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainImageObjectCountByDetector,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorResponse.SerializeToString,
             ),
             'trainImageObjectRemove': grpc.unary_unary_rpc_method_handler(
                     servicer.trainImageObjectRemove,
@@ -362,6 +378,33 @@ class Trainer(object):
             '/Trainer/trainImageObjectList',
             common_dot_rpc_dot_trainer__pb2.TrainImageObjectListRequest.SerializeToString,
             common_dot_rpc_dot_trainer__pb2.TrainImageObjectListResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainImageObjectCountByDetector(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainImageObjectCountByDetector',
+            common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainImageObjectCountByDetectorResponse.FromString,
             options,
             channel_credentials,
             insecure,

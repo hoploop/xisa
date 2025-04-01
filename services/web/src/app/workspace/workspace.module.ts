@@ -46,6 +46,7 @@ import { RecordBoxTrainObjectComponent } from './record/record-box-train-object/
 import { RecordBoxEventComponent } from './record/record-box-event/record-box-event.component';
 import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/record-box-suggestion.component';
 import { RecordEventNamePipe } from './record/record-event-name.pipe';
+import { DetectorTrainCountPipePipe } from './detector/detector-train-count-pipe.pipe';
 
 
 
@@ -91,6 +92,7 @@ import { RecordEventNamePipe } from './record/record-event-name.pipe';
     RecordBoxEventComponent,
     RecordBoxSuggestionComponent,
     RecordEventNamePipe,
+    DetectorTrainCountPipePipe,
   ],
   imports: [
     CommonModule,

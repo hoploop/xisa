@@ -13,7 +13,6 @@ import { RecordFormComponent } from '@workspace/record/record-form/record-form.c
 import { DetectorListComponent } from '@workspace/detector/detector-list/detector-list.component';
 import { CommonModule } from '@angular/common';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { DetectorLearnComponent } from '@workspace/detector/detector-learn/detector-learn.component';
 import { RecordStudioComponent } from '@workspace/record/record-studio/record-studio.component';
 import { ImageAnnotatorComponent } from '@train/image-annotator/image-annotator.component';
 
@@ -30,7 +29,6 @@ const routes: Routes = [
   { path: 'record/studio/:record_id/:detector_id', component: RecordStudioComponent,canActivate:[AuthGuard] },
   { path: 'record/controller/:project_id', component: RecordControllerComponent,canActivate:[AuthGuard] },
   { path: 'detector/list/:project_id', component: DetectorListComponent,canActivate:[AuthGuard] },
-  { path: 'detector/learn/:detector_id', component: DetectorLearnComponent,canActivate:[AuthGuard] },
   { path: 'mockup', component: ImageAnnotatorComponent,canActivate:[AuthGuard]  },
   { path: '**', component: NotFoundComponent }
 ];

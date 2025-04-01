@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { ContextService } from '@services/context.service';
 import { BaseComponent } from '@utils/base/base.component';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -20,8 +21,8 @@ export class RecordVideoComponent extends BaseComponent implements OnInit{
   chunkSize: number = 1024 * 1024; // 5MB per chunk, you can adjust this based on your needs
   currentByte: number = 0; // Start byte for video streaming
 
-  constructor(ctx: ContextService, router: Router, route: ActivatedRoute,private http: HttpClient){
-    super(ctx,router,route);
+  constructor(ctx: ContextService, router: Router, route: ActivatedRoute,private http: HttpClient,protected override log: NGXLogger){
+    super(ctx,router,route,log);
   }
 
   ngOnInit(): void {

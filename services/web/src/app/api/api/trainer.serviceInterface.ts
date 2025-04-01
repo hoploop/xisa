@@ -42,6 +42,13 @@ export interface TrainerServiceInterface {
     trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, extraHttpRequestParams?: any): Observable<TrainImageObject>;
 
     /**
+     * Lesson Image Object Count By Detector
+     * 
+     * @param detectorId 
+     */
+    trainerLessonImageObjectCountByDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
      * Lesson Image Object List
      * 
      * @param lessonId 

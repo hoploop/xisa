@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DetectorTrainingSession } from '@api/index';
-import { FAIconType } from '@constants/icons';
-import { ContextService } from '@services/context.service';
-import { BehaviorSubject, filter, map, Subscription } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Detector, DetectorTrainingSession } from '@api/index';
+import { BaseComponent } from '@utils/base/base.component';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-detector-learn',
@@ -11,27 +9,21 @@ import { BehaviorSubject, filter, map, Subscription } from 'rxjs';
   templateUrl: './detector-learn.component.html',
   styleUrl: './detector-learn.component.scss',
 })
-export class DetectorLearnComponent implements OnInit, OnDestroy {
-  FAIconType = FAIconType;
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
+export class DetectorLearnComponent extends BaseComponent implements OnInit, OnDestroy {
   subs = new Subscription();
-  detectorId?: string;
+
+  @Input() detector!:Detector;
   progress: number = -1;
-  constructor(
-    private ctx: ContextService,
-    private router: Router,
-    route: ActivatedRoute
-  ) {
-    this.detectorId = route.snapshot.paramMap.get('detector_id') || undefined;
-  }
 
   train(){
-    if (!this.detectorId) return;
+    if (!this.detector._id) return;
     this.progress = 0;
     this.error.next(undefined);
+
+    // TODO: Prepare the training objects
+
     this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading'));
-    this.ctx.api.detector.detectorTrain(this.detectorId,3).subscribe({
+    this.ctx.api.detector.detectorTrain(this.detector._id,3).subscribe({
       next: (result)=>{},
       error: (result)=>{
         this.loading.next(undefined);
@@ -40,8 +32,13 @@ export class DetectorLearnComponent implements OnInit, OnDestroy {
     })
   }
 
+  dismiss(){
+    this.ctx.dismissModal();
+  }
+
+
   ngOnInit(): void {
-    let filtered = this.ctx.ws.messages$.pipe(filter(msg => msg.type == 'detector.training.session' && msg.detector == this.detectorId));
+    let filtered = this.ctx.ws.messages$.pipe(filter(msg => msg.type == 'detector.training.session' && msg.detector == this.detector._id));
     this.subs.add(filtered.subscribe({
       next: (result)=>{
           let res = result as DetectorTrainingSession;

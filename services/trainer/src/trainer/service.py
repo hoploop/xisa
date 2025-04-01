@@ -10,7 +10,7 @@ from beanie.operators import And, Or
 from common.models import MODELS
 from common.models.detector import Detector, DetectorLabel
 from common.models.trainer import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -63,7 +63,7 @@ class TrainerService(Service, TrainerServicer):
                 return LessonSetDetectorResponse(status=False,message="workspace.trainer.lesson.errors.not_found")
             if detector is None:
                 return LessonSetDetectorResponse(status=False,message="workspace.detector.errors.not_found")
-            lesson.detector= str(detector.id)
+            lesson.detector= detector.id
             await lesson.save()
             return LessonSetDetectorResponse(status=True,lesson=Conversions.serialize(lesson))
         except Exception as e:
@@ -98,6 +98,21 @@ class TrainerService(Service, TrainerServicer):
             log.warning(str(e))
             return TrainImageObjectRemoveResponse(status=False,message=str(e))
         
+    async def trainImageObjectCountByDetector(self, request: TrainImageObjectCountByDetectorRequest, context) -> TrainImageObjectCountByDetectorResponse:
+        try:
+            detectorId= PydanticObjectId(request.detector)
+            log.debug('Finding lesson by detector: '+str(detectorId))
+            total = 0
+            async for lesson in TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)):
+                log.debug('Listing lesson')
+                print('Listing lesson: {0}'.format(lesson.id))
+                ptotal = await TrainImageObject.find_many(TrainImageObject.lesson == lesson.id).count()
+                total += ptotal
+            return TrainImageObjectCountByDetectorResponse(status=True,total=total)
+        except Exception as e:
+            log.warning(str(e))
+            return TrainImageObjectCountByDetectorResponse(status=False,message=str(e))
+        
     async def trainImageObjectUpdate(self, request:TrainImageObjectUpdateRequest, context) -> TrainImageObjectUpdateResponse:
         try:
             found = await TrainImageObject.find_many(TrainImageObject.id == PydanticObjectId(request.id)).first_or_none()
@@ -125,8 +140,6 @@ class TrainerService(Service, TrainerServicer):
             detector = await Detector.find_many(Detector.id == PydanticObjectId(lesson.detector)).first_or_none()
             if detector is None:
                 return TrainImageObjectResponse(status=False,message="workspace.detector.errors.not_found")
-            
-         
             
             tio = await TrainImageObject(
                 lesson=lesson.id,

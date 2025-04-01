@@ -1,6 +1,5 @@
 {
   "address": "${DETECTOR_RPC_HOST}:${DETECTOR_RPC_PORT}",
-  "video": "data/videos",
   "path": "data/detectors",
   "original": "yolo11n.pt",
   "name": "model.pt",
