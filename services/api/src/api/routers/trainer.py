@@ -16,7 +16,7 @@ from starlette.responses import Response
 # LOCAL IMPORTS
 from common.clients.trainer import TrainerClient
 from api.routers.auth import CurrentUser
-from common.models.train import TrainImageObject, TrainLesson
+from common.models.trainer import TrainImageObject, TrainLesson
 
 
 # INITIALIZATION

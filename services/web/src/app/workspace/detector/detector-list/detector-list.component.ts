@@ -4,6 +4,7 @@ import { Detector } from '@api/index';
 import { FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
 import { BehaviorSubject } from 'rxjs';
+import { DetectorFormComponent } from '../detector-form/detector-form.component';
 
 @Component({
   selector: 'app-detector-list',
@@ -41,12 +42,37 @@ export class DetectorListComponent implements OnInit {
   }
 
   create() {
-    this.router.navigateByUrl('/detector/new/'+this.projectId);
+
+      this.ctx
+              .openModal<Detector | undefined>(DetectorFormComponent, {
+                detector: {
+                  project: this.projectId,
+                  name:"",
+                  description:""
+                }
+              })
+              .subscribe({
+                next: (result) => {
+                  if (result){
+                    this.load();
+                  }
+                },
+                error: (result) => {},
+              });
   }
 
   edit(detector:Detector){
     if (!detector._id) return;
-    this.router.navigateByUrl('/detector/edit/'+this.projectId+'/'+detector._id);
+      this.ctx
+              .openModal<Detector | undefined>(DetectorFormComponent, {
+                detector: detector
+              })
+              .subscribe({
+                next: (result) => {
+                  this.load();
+                },
+                error: (result) => {},
+              });
   }
 
   learn(detector:Detector){

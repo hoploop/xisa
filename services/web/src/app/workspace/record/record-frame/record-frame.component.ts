@@ -72,7 +72,7 @@ export class RecordFrameComponent
   settings = new BehaviorSubject<ImageAnnotatorSettings>({
     resizeHandleSize: 10,
     showHighlights: true,
-    canCreateBox: true,
+    canCreateBox: false,
   });
 
   toggleTexts() {
@@ -93,6 +93,13 @@ export class RecordFrameComponent
 
   toggleTrain() {
     this.trainVisible = !this.trainVisible;
+
+    // Update the image annotator so that it can create new box according to the train visibility
+    let currentSettings = this.settings.getValue();
+    currentSettings.canCreateBox = this.trainVisible;
+    this.settings.next(currentSettings);
+
+    // Render the image annotator box again
     this.render();
   }
 

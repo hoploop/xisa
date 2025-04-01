@@ -6,7 +6,7 @@ from beanie import PydanticObjectId
 
 # LOCAL IMPORTS
 from common.models.auth import User
-from common.models.train import TrainImageObject, TrainLesson
+from common.models.trainer import TrainImageObject, TrainLesson
 from common.rpc.base_pb2 import Ping, Pong
 from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub

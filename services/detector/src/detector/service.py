@@ -463,37 +463,46 @@ class DetectorService(Service, DetectorServicer):
             target_path = os.path.join(self.config.path, str(detector.id), base_name)
             folder_name = os.path.join(self.config.path, str(detector.id))
             
-            
-            os.mkdir(folder_name)
+            if not os.path.exists(folder_name):
+                os.mkdir(folder_name)
             
             labels_path = os.path.join(folder_name,"labels")
-            os.mkir(labels_path)
+            if not os.path.exists(labels_path):
+                os.mkdir(labels_path)
             
             labels_train_path = os.path.join(labels_path,"train")
-            os.mkdir(labels_train_path)
+            if not os.path.exists(labels_train_path):
+                os.mkdir(labels_train_path)
             
             labels_val_path = os.path.join(labels_path,"val")
-            os.mkdir(labels_val_path)
+            if not os.path.exists(labels_val_path):
+                os.mkdir(labels_val_path)
             
             labels_test_path = os.path.join(labels_path,"test")
-            os.mkdir(labels_test_path)
+            if not os.path.exists(labels_test_path):
+                os.mkdir(labels_test_path)
             
             labels_train_path = os.path.join(labels_path,"train")
-            os.mkdir(labels_train_path)
+            if not os.path.exists(labels_train_path):
+                os.mkdir(labels_train_path)
             
             images_path = os.path.join(folder_name, "images")
-            os.mkdir(images_path)
+            if not os.path.exists(images_path):
+                os.mkdir(images_path)
 
             train_path = os.path.join(images_path, "train")
-            os.mkdir(train_path)
+            if not os.path.exists(train_path):
+                os.mkdir(train_path)
 
             test_path = os.path.join(images_path, "test")
-            os.mkdir(test_path)
+            if not os.path.exists(test_path):
+                os.mkdir(test_path)
 
             val_path = os.path.join(images_path, "val")
-            os.mkdir(val_path)
+            if not os.path.exists(val_path):
+                os.mkdir(val_path)
 
-            if origin is None:
+            if origin is None or origin=='':
                 base_path = self.config.path
                 original_path = os.path.join(base_path, self.config.original)
                 original_classes_filename = os.path.join(base_path, self.config.classes)
@@ -502,7 +511,7 @@ class DetectorService(Service, DetectorServicer):
                     Detector.id == origin
                 ).first_or_none()
                 if original_detector is None:
-                    return CreateDetectorResponse(sttatus=False,message="worspace.detectors.errors.original_not_found")
+                    return CreateDetectorResponse(status=False,message="workspace.detector.errors.original_not_found")
 
                 base_path = self.config.path
                 original_path = os.path.join(

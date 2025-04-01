@@ -1,18 +1,21 @@
-<div class="card">
-  <div class="card-header">
+
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
     <app-fa-icon [icon]="FAIconType.folder"></app-fa-icon>
-    <span *ngIf="!id" class="ms-1" translate>workspace.detector.create</span>
-    <span *ngIf="id" class="ms-1" translate>workspace.detector.update</span>
-  </div>
-  <div class="card-body">
+    <span *ngIf="!detector._id" class="ms-1" translate>workspace.detector.create</span>
+    <span *ngIf="detector._id" class="ms-1" translate>workspace.detector.update</span>
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
     <div class="d-flex flex-column">
-      <input type="text" class="form-control" [ngModel]="name" (ngModelChange)="onNameChange($event)" [placeholder]="'workspace.detector.name'|translate"/>
-      <textarea class="form-control mt-1" [ngModel]="description"  (ngModelChange)="onDescriptionChange($event)" [placeholder]="'workspace.detector.description'|translate"></textarea>
+      <input type="text" class="form-control" [ngModel]="detector.name" (ngModelChange)="onNameChange($event)" [placeholder]="'workspace.detector.name'|translate"/>
+      <textarea class="form-control mt-1" [ngModel]="detector.description"  (ngModelChange)="onDescriptionChange($event)" [placeholder]="'workspace.detector.description'|translate"></textarea>
       <button class="mt-1 btn btn-primary w-100" (click)="save()" [disabled]="(valid|async) == false">
         <app-fa-icon [icon]="FAIconType.save"></app-fa-icon>
         <span class="ms-1" translate>workspace.detector.save</span>
       </button>
-      <button class="mt-1 btn btn-danger w-100" *ngIf="id" (click)="remove()">
+      <button class="mt-1 btn btn-danger w-100" *ngIf="detector._id" (click)="remove()">
         <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
         <span class="ms-1" translate>workspace.detector.remove</span>
       </button>
@@ -21,7 +24,7 @@
         <span class="ms-1" translate>workspace.detector.cancel</span>
       </button>
     </div>
+  </ng-content>
+</app-modal>
 
-  </div>
-  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-</div>
+

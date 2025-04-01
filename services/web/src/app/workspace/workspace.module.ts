@@ -45,6 +45,7 @@ import { RecordBoxDetectedTextComponent } from './record/record-box-detected-tex
 import { RecordBoxTrainObjectComponent } from './record/record-box-train-object/record-box-train-object.component';
 import { RecordBoxEventComponent } from './record/record-box-event/record-box-event.component';
 import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/record-box-suggestion.component';
+import { RecordEventNamePipe } from './record/record-event-name.pipe';
 
 
 
@@ -89,6 +90,7 @@ import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/rec
     RecordBoxTrainObjectComponent,
     RecordBoxEventComponent,
     RecordBoxSuggestionComponent,
+    RecordEventNamePipe,
   ],
   imports: [
     CommonModule,

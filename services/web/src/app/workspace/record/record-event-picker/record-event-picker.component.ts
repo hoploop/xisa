@@ -14,25 +14,9 @@ export class RecordEventPickerComponent implements OnInit {
   @Input() frame!: Frame;
   FAIconType = FAIconType;
   RecordEventTypes = RecordEventTypes;
-  name: string = '';
 
   ngOnInit(): void {
-      this.name = this.renderEventName();
   }
 
-  renderEventName(): string {
 
-    if (!this.frame.event) return '';
-    console.log(this.frame.event.type);
-    switch (this.frame.event.type){
-      case MouseClickLeftEventTypeEnum.MouseClickLeft:
-          return 'Mouse click left'
-      case MousePressLeftEventTypeEnum.MousePressLeft:
-        return 'Mouse press Left';
-      case MouseReleaseLeftEventTypeEnum.MouseReleaseLeft:
-        return 'Mouse release left';
-      default:
-        return '';
-    }
-  }
 }

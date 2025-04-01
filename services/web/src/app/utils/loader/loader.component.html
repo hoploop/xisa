@@ -8,7 +8,7 @@
         [icon]="FAIconType.circleNotch"
         [animation]="'spin'"
       ></app-fa-icon>
-      <span class="ms-1">{{ msg }}</span>
+      <span class="ms-1" translate>{{msg}}</span>
     </div>
 
     <div
@@ -16,7 +16,7 @@
       *ngIf="error | async as msg"
     >
       <app-fa-icon [icon]="FAIconType.warning"></app-fa-icon>
-      <span class="ms-1">{{ msg }}</span>
+      <span class="ms-1" translate>{{msg}}</span>
     </div>
   </div>
 </ng-container>

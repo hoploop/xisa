@@ -17,9 +17,14 @@
         <div>Confidence: {{text.confidence}}</div>
         <div>Row: {{text.line}}</div>
         <div>Column: {{text.block}}</div>
-
+      </div>
     </div>
-  </div>
+    <div class="d-flex justify-content-end mt-2 align-items-center">
+      <button class="btn btn-primary btn-sm" (click)="dismiss()">
+        <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+        <span class="ms-2" translate>workspace.record.close</span>
+      </button>
+    </div>
 
   </ng-content>
 </app-modal>

@@ -4,6 +4,7 @@ import { Project } from '@api/index';
 import { BIconType, FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
 import { BehaviorSubject } from 'rxjs';
+import { ProjectFormComponent } from '../project-form/project-form.component';
 
 @Component({
   selector: 'app-project-list',
@@ -61,11 +62,34 @@ export class ProjectListComponent implements OnInit {
   }
 
   create(){
-    this.router.navigateByUrl('/project/new');
+     this.ctx
+          .openModal<Project | undefined>(ProjectFormComponent, {
+            project: {
+              name:"",
+              description:""
+            }
+          })
+          .subscribe({
+            next: (result) => {
+              if (result){
+                this.load();
+              }
+            },
+            error: (result) => {},
+          });
   }
 
   edit(project:Project){
-    this.router.navigateByUrl('/project/edit/'+project._id);
+    this.ctx
+    .openModal<undefined>(ProjectFormComponent, {
+      project:project
+    })
+    .subscribe({
+      next: (result) => {
+        this.load();
+      },
+      error: (result) => {},
+    });
   }
 
 

@@ -10,8 +10,8 @@ from beanie import Delete, Document, Insert, PydanticObjectId, SaveChanges, Upda
 from pydantic import BaseModel, Field
 
 # LOCAL IMPORTS
-from common.models.defaults import empty_list, utc_now
-from common.models.train import TrainLesson
+from common.models.defaults import empty_list, utc_now 
+from common.models.trainer import TrainLesson
 
 # INITIALIZATION
 log = logging.getLogger(__name__)

@@ -485,7 +485,7 @@ async def frame_upload(
     description="Performs the removal of a Detector",
     response_model=bool,
 )
-async def remove(detectorId: PydanticObjectId, user: CurrentUser, detector: Detector,):
+async def remove(detectorId: PydanticObjectId, user: CurrentUser, detector: Detector):
     try:
         return await detector.removeDetector(user,detectorId)
     except Exception as e:

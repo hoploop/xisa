@@ -9,7 +9,7 @@ from pydantic import Field
 
 # LOCAL IMPORTS
 from common.models.defaults import empty_list, utc_now
-
+ 
 
 class TrainImageObject(Document):
     lesson: PydanticObjectId
@@ -28,6 +28,7 @@ class TrainImageObject(Document):
     @before_event(Update, SaveChanges, Insert)
     async def update_last(self):
         self.updated = utc_now()
+        
         
 class TrainLesson(Document):
     record: PydanticObjectId

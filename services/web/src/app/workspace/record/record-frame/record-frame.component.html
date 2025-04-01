@@ -13,55 +13,114 @@
     </button>
 
     <!-- Detected Objects -->
-    <button
-      *ngIf="frame"
-      class="btn ms-1 btn-sm w-100"
-      [class.btn-primary]="objectsVisible"
-      [class.btn-outline-secondary]="!objectsVisible"
-      (click)="toggleObjects()"
-    >
-      <app-fa-icon [icon]="FAIconType.shapes"></app-fa-icon>
-      <span class="ms-2" [translate]="'workspace.record.studio.detected_objects'" [translateParams]="{'n':frame.objects.length}"></span>
-    </button>
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
+      <button
+        class="btn ms-1 btn-sm  text-nowrap  w-100"
+        [class.btn-primary]="objectsVisible"
+        [class.btn-outline-secondary]="!objectsVisible"
+        (click)="toggleObjects()"
+      >
+        <app-fa-icon [icon]="FAIconType.shapes"></app-fa-icon>
+        <span
+          class="ms-2 text-nowrap"
+          [translate]="'workspace.record.studio.detected_objects'"
+          [translateParams]="{ n: frame.objects.length }"
+        ></span>
+      </button>
+      <button
+        class="btn btn-sm"
+        [class.btn-primary]="objectsVisible"
+        [class.btn-outline-secondary]="!objectsVisible"
+      >
+        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+      </button>
+    </div>
 
     <!-- Detected Texts -->
-    <button
-    *ngIf="frame"
-      class="btn ms-1 btn-sm w-100"
-      [class.btn-primary]="textsVisible"
-      [class.btn-outline-secondary]="!textsVisible"
-      (click)="toggleTexts()"
-    >
-      <app-b-icon [icon]="BIconType.textareaT"></app-b-icon>
-      <span class="ms-2" [translate]="'workspace.record.studio.detected_texts'" [translateParams]="{'n':frame.texts.length}"></span>
-    </button>
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
+      <button
+        class="btn ms-1 btn-sm w-100  text-nowrap"
+        [class.btn-primary]="textsVisible"
+        [class.btn-outline-secondary]="!textsVisible"
+        (click)="toggleTexts()"
+      >
+        <app-b-icon [icon]="BIconType.textareaT"></app-b-icon>
+        <span
+          class="ms-2  text-nowrap"
+          [translate]="'workspace.record.studio.detected_texts'"
+          [translateParams]="{ n: frame.texts.length }"
+        ></span>
+      </button>
+      <button
+        class="btn btn-sm"
+        [class.btn-primary]="textsVisible"
+        [class.btn-outline-secondary]="!textsVisible"
+      >
+        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+      </button>
+    </div>
 
     <!-- Trains -->
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
     <button
-    *ngIf="frame"
-      class="btn ms-1 btn-sm w-100"
+      class="btn ms-1 btn-sm w-100  text-nowrap"
       [class.btn-primary]="trainVisible"
       [class.btn-outline-secondary]="!trainVisible"
       (click)="toggleTrain()"
     >
       <app-b-icon [icon]="BIconType.boundingBox"></app-b-icon>
-      <span class="ms-2" [translate]="'workspace.record.studio.train'" [translateParams]="{'n':frame.train.length}"></span>
+      <span
+        class="ms-2 text-nowrap"
+        [translate]="'workspace.record.studio.train'"
+        [translateParams]="{ n: frame.train.length }"
+      ></span>
     </button>
+    <button
+        class="btn btn-sm "
+        [class.btn-primary]="trainVisible"
+        [class.btn-outline-secondary]="!trainVisible"
+      >
+        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+      </button>
+    </div>
 
-     <!-- Suggestions Selector-->
-     <button
-     *ngIf="frame"
-     class="btn ms-1 btn-sm w-100"
-     [class.btn-primary]="suggestionsVisible"
-      [class.btn-outline-secondary]="!suggestionsVisible"
-     (click)="toggleSuggestions()"
-   >
-     <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
-     <span class="ms-2" *ngIf="frame.suggestions.length == 0" translate>workspace.detector.suggestion.title</span>
-     <span class="ms-2" *ngIf="frame.suggestions.length  > 0" [translate]="'workspace.detector.suggestion.title_n'" [translateParams]="{n:frame.suggestions.length}"></span>
-   </button>
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
+      <!-- Suggestions Selector-->
+      <button
+        class="btn ms-1 btn-sm w-100  text-nowrap"
+        [class.btn-primary]="suggestionsVisible"
+        [class.btn-outline-secondary]="!suggestionsVisible"
+        (click)="toggleSuggestions()"
+      >
+        <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
+        <span class="ms-2" *ngIf="frame.suggestions.length == 0" translate
+          >workspace.detector.suggestion.title</span
+        >
+        <span
+          class="ms-2"
+          *ngIf="frame.suggestions.length > 0"
+          [translate]="'workspace.detector.suggestion.title_n'"
+          [translateParams]="{ n: frame.suggestions.length }"
+        ></span>
+      </button>
+      <button
+        class="btn btn-sm "
+        [class.btn-primary]="suggestionsVisible"
+        [class.btn-outline-secondary]="!suggestionsVisible"
+      >
+        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+      </button>
+    </div>
   </div>
   <div class="d-flex justify-content-center align-items-center w-100">
-    <app-image-annotator *ngIf="(loading|async) == undefined"  (doubleClicked)="boxDetail($event)" (onBoxUpdated)="boxUpdate($event)"  [settings]="settings" [url]="imageUrl" [highlights]="highlights" [boxes]="boxes"></app-image-annotator>
+    <app-image-annotator
+      *ngIf="(loading | async) == undefined"
+      (doubleClicked)="boxDetail($event)"
+      (onBoxUpdated)="boxUpdate($event)"
+      [settings]="settings"
+      [url]="imageUrl"
+      [highlights]="highlights"
+      [boxes]="boxes"
+    ></app-image-annotator>
   </div>
 </div>

@@ -117,6 +117,7 @@
       "learn": "Learn"
     },
     "record": {
+      
       "errors": {
         "not_found": "Record not found",
         "already_existing": "Another record with this username already found",
@@ -131,9 +132,23 @@
       "event": {
         "errors": {
           "not_found": "Event not found"
+        },
+        "types":{
+          "key_combo_press":"Key combo press ({{value}})",
+          "key_press":"Key press ({{value}})",
+          "key_release":"Key release ({{value}})",
+          "mouse_click_left":"Mouse click left ({{x}},{{y}})",
+          "mouse_click_right":"Mouse click right ({{x}},{{y}})",
+          "mouse_press_left":"Mouse press left ({{x}},{{y}})",
+          "mouse_release_left":"Mouse release left ({{x}},{{y}})",
+          "mouse_press_right":"Mouse press right ({{x}},{{y}})",
+          "mouse_release_right":"Mouse release right ({{x}},{{y}})",
+          "mouse_press_middle":"Mouse press middle ({{x}},{{y}})",
+          "mouse_release_middle":"Mouse release middle ({{x}},{{y}})",
+          "mouse_scroll":"Mouse scroll ({{x}},{{y},{{dx}},{{dy}})"
         }
       },
-
+      "close":"Close",
       "duration": "Duration: ",
       "events": "Events: ",
       "frames": "Frames: ",

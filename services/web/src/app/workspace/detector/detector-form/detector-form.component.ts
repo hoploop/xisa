@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FAIconType } from '@constants/icons';
-import { ContextService } from '@services/context.service';
+import { Detector } from '@api/index';
+import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -10,27 +9,22 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './detector-form.component.html',
   styleUrl: './detector-form.component.scss'
 })
-export class DetectorFormComponent {
-  FAIconType = FAIconType;
+export class DetectorFormComponent extends BaseComponent {
+  @Input() detector!: Detector;
   valid = new BehaviorSubject<boolean>(false);
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
-  name:string = '';
-  description:string|undefined = '';
-  projectId?:string;
-  id?:string;
 
-  constructor(private ctx:ContextService,private router:Router,route:ActivatedRoute){
-    this.projectId = route.snapshot.paramMap.get('project_id') || undefined;
-    this.id = route.snapshot.paramMap.get('id') || undefined;
+
+  dismiss(){
+    this.ctx.dismissModal();
   }
 
+
   ngOnInit(): void {
-      this.load();
+
   }
 
   validate(){
-    if (this.name.trim()==''){
+    if (this.detector.name.trim()==''){
       this.valid.next(false);
       return;
     }
@@ -39,39 +33,21 @@ export class DetectorFormComponent {
   }
 
   cancel(){
-    this.router.navigateByUrl('/detector/list/'+this.projectId);
+    this.ctx.dismissModal();
   }
 
   onNameChange(value:string){
-    this.name = value;
+    this.detector.name = value;
     this.validate();
   }
 
   onDescriptionChange(value:string){
-    this.description = value;
+    this.detector.description = value;
     this.validate();
   }
 
-  load(){
-    if (!this.id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.loading"));
-    this.error.next(undefined);
-    this.ctx.api.detector.detectorLoad(this.id).subscribe({
-      next: (result)=>{
-        this.loading.next(undefined);
-        this.name = result.name;
-        this.description = result.description || '';
-        this.validate();
-      },
-      error: (result)=>{
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
-      }
-    })
-  }
-
   save(){
-    if (!this.id){
+    if (!this.detector._id){
       this.create();
     }else{
       this.update();
@@ -80,15 +56,14 @@ export class DetectorFormComponent {
   }
 
   create(){
-    if (!this.projectId) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorCreate(this.projectId,this.name,undefined,this.description).subscribe({
+    this.ctx.api.detector.detectorCreate(this.detector.project,this.detector.name,undefined,this.detector.description|| '').subscribe({
       next: (result)=>{
         this.loading.next(undefined);
-        this.name = result.name;
-        this.description = result.description || '';
-        this.router.navigateByUrl('/detector/list/'+this.projectId);
+        this.detector.name = result.name;
+        this.detector.description = result.description || '';
+        this.ctx.closeModal(this.detector);
       },
       error: (result)=>{
         this.loading.next(undefined);
@@ -98,14 +73,13 @@ export class DetectorFormComponent {
   }
 
   remove(){
-    if (!this.id) return;
-    if (!this.projectId) return;
+    if (!this.detector._id) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.removing"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorRemove(this.id).subscribe({
+    this.ctx.api.detector.detectorRemove(this.detector._id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
-        this.router.navigateByUrl('/detector/list/'+this.projectId);
+        this.ctx.closeModal(undefined);
       },
       error: (result)=>{
         this.loading.next(undefined);
@@ -115,15 +89,13 @@ export class DetectorFormComponent {
   }
 
   update(){
-    if (!this.id) return;
+    if (!this.detector._id) return;
     this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
     this.error.next(undefined);
-    this.ctx.api.detector.detectorUpdate(this.id,this.name,this.description|| '').subscribe({
+    this.ctx.api.detector.detectorUpdate(this.detector._id,this.detector.name,this.detector.description|| '').subscribe({
       next: (result)=>{
         this.loading.next(undefined);
-        this.name = result.name;
-        this.description = result.description || '';
-        this.router.navigateByUrl('/detector/list/'+this.projectId);
+        this.ctx.closeModal(this.detector);
       },
       error: (result)=>{
         this.loading.next(undefined);

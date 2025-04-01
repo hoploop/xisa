@@ -9,7 +9,7 @@ from pydantic import Field
 
 # LOCAL IMPORTS
 from common.models.defaults import empty_list, utc_now
-from common.models.train import TrainLesson
+from common.models.trainer import TrainLesson
 
 
 class OS(Document):

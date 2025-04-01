@@ -7,16 +7,18 @@
         <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyPress" [icon]="FAIconType.keyboard"></app-fa-icon>
         <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyRelease" [icon]="FAIconType.keyboard"></app-fa-icon>
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
-        <span class="smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
-        <span class="smaller">{{name}}</span>
+        <span class="smaller">Instant: {{frame.milliseconds/1000|number:'0.0-3'}}s</span>
+        <span class="smaller">Frame: {{frame.count}}</span>
+        <span class="smaller">{{frame.event|recordEventName}}</span>
       </div>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="frame.event==undefined">
     <div class="d-flex flex-column align-items-center">
       <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
-      <span class="smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
-      <span class="smaller">{{name}}</span>
+      <span class="smaller">Instant: {{frame.milliseconds/1000|number:'0.0-3'}}s</span>
+      <span class="smaller">Frame: {{frame.count}}</span>
+      <span class="smaller">Empty frame</span>
     </div>
     </ng-container>
 
