@@ -125,6 +125,7 @@ class DetectorService(Service, DetectorServicer):
         
         # Starting up recorder client connectibity
         await self.recorder.startup()
+        await self.api.startup()
 
     async def findDetectorImageLabel(self, request, context):
         try:
@@ -401,8 +402,9 @@ class DetectorService(Service, DetectorServicer):
                     w = detection["box"]["x2"] - detection["box"]["x1"]
                     h = detection["box"]["y2"] - detection["box"]["y1"]
                     boxes.append((x, y, w, h))
-
-            best_rows, best_cols = grid.optimal_grid_size(boxes)
+            log.debug('Found boxes: {0}'.format(len(boxes)))
+            if len(boxes)>1:
+                best_rows, best_cols = grid.optimal_grid_size(boxes)
 
             objects = []
             for result in visual_results:
@@ -415,7 +417,11 @@ class DetectorService(Service, DetectorServicer):
                     y = detection["box"]["y1"]
                     w = detection["box"]["x2"] - detection["box"]["x1"]
                     h = detection["box"]["y2"] - detection["box"]["y1"]
-                    row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
+                    if len(boxes)>1:
+                        row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
+                    else:
+                        row = 0
+                        col = 0
                     objects.append(
                         DetectObject(
                             x=x,
@@ -965,10 +971,10 @@ class DetectorService(Service, DetectorServicer):
                     DetectorLabel.id == image_label.label
                 ).first_or_none()
                 label_name = dlabel.name
-                w = (label.xend - label.xstart) / image.width
-                h = (label.yend - label.ystart) / image.height
-                x = label.xend / image.width - (w / 2)
-                y = label.yend / image.height - (h / 2)
+                w = (image_label.xend - image_label.xstart) / image.width
+                h = (image_label.yend - image_label.ystart) / image.height
+                x = image_label.xend / image.width - (w / 2)
+                y = image_label.yend / image.height - (h / 2)
 
                 # 16 0.048093 0.081250 0.051410 0.064583
                 line = "{0} {1:0.6f} {2:0.6f} {3:0.6f} {4:0.6f} ".format(
@@ -1055,9 +1061,7 @@ class DetectorService(Service, DetectorServicer):
                 DetectorLabel.detector == detector_id, DetectorLabel.name == class_name
             ).first_or_none()
             if found_class is None:
-                found_class = await DetectorLabel(
-                    detector=detector_id, name=class_name
-                ).insert()
+                found_class = await DetectorLabel(detector=detector_id, name=class_name).insert()
             class_id = found_class.id
 
             detector_image_label = await DetectorImageLabel(

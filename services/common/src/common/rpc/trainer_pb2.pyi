@@ -6,6 +6,24 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class TrainImageObjectToDetectorRequest(_message.Message):
+    __slots__ = ("user", "detector")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
+
+class TrainImageObjectToDetectorResponse(_message.Message):
+    __slots__ = ("status", "message", "total")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ...) -> None: ...
+
 class TrainImageObjectRemoveRequest(_message.Message):
     __slots__ = ("user", "id")
     USER_FIELD_NUMBER: _ClassVar[int]

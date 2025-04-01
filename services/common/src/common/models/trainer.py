@@ -24,6 +24,7 @@ class TrainImageObject(Document):
     val:bool = Field(default=True)
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)
+    archived: bool = Field(default=False)
     
     @before_event(Update, SaveChanges, Insert)
     async def update_last(self):

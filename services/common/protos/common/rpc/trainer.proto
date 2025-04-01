@@ -15,8 +15,19 @@ service Trainer {
     rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
     rpc trainImageObjectCountByDetector(TrainImageObjectCountByDetectorRequest) returns (TrainImageObjectCountByDetectorResponse);
     rpc trainImageObjectRemove(TrainImageObjectRemoveRequest) returns (TrainImageObjectRemoveResponse);
+    rpc trainImageObjectToDetector(TrainImageObjectToDetectorRequest) returns (TrainImageObjectToDetectorResponse);
 }
 
+message TrainImageObjectToDetectorRequest {
+    string user = 1;
+    string detector = 2;
+}
+
+message TrainImageObjectToDetectorResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+}
 message TrainImageObjectRemoveRequest {
     string user = 1;
     string id = 2;

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Detector } from '@api/index';
-import { FAIconType } from '@constants/icons';
 import { ContextService } from '@services/context.service';
-import { BehaviorSubject } from 'rxjs';
 import { DetectorFormComponent } from '../detector-form/detector-form.component';
 import { DetectorLearnComponent } from '../detector-learn/detector-learn.component';
+import { BaseComponent } from '@utils/base/base.component';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-detector-list',
@@ -13,22 +13,21 @@ import { DetectorLearnComponent } from '../detector-learn/detector-learn.compone
   templateUrl: './detector-list.component.html',
   styleUrl: './detector-list.component.scss',
 })
-export class DetectorListComponent implements OnInit {
-  FAIconType = FAIconType;
+export class DetectorListComponent extends BaseComponent implements OnInit {
   skip: number = 0;
   limit: number = 10;
   search: string = '';
   total: number = 0;
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
   detectors: Detector[] = [];
   projectId?: string;
 
   constructor(
-    private ctx: ContextService,
-    private router: Router,
-    route: ActivatedRoute
+    protected override ctx: ContextService,
+    protected override router: Router,
+    protected override route: ActivatedRoute,
+    protected override log: NGXLogger
   ) {
+    super(ctx,router,route,log);
     this.projectId = route.snapshot.paramMap.get('project_id') || undefined;
   }
 
@@ -116,6 +115,7 @@ export class DetectorListComponent implements OnInit {
 
   load() {
     if (!this.projectId) return;
+    this.log.debug("Loading detectors");
     this.loading.next(
       this.ctx.translate.instant('workspace.detector.loadings')
     );

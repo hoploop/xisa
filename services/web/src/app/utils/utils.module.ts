@@ -14,6 +14,7 @@ import { BaseComponent } from './base/base.component';
 import { ModalComponent } from './modal/modal.component';
 import { ResizeObserverDirective } from './resize-observer.directive';
 import { ResizeListenerComponent } from './resize-listener/resize-listener.component';
+import { NGXLogger } from 'ngx-logger';
 
 
 
@@ -48,8 +49,8 @@ import { ResizeListenerComponent } from './resize-listener/resize-listener.compo
   ]
 })
 export class UtilsModule {
-  constructor(library: FaIconLibrary) {
-    console.log('Loading icons');
+  constructor(library: FaIconLibrary, log: NGXLogger) {
+    log.info('Loading icons');
     library.addIconPacks(fas, far);
 }
 }

@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ContextService } from '@services/context.service';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
 @Pipe({
@@ -7,7 +8,7 @@ import { Observable } from 'rxjs';
   standalone: false
 })
 export class DetectorTrainCountPipePipe  implements PipeTransform {
-  constructor(private ctx: ContextService) {}
+  constructor(private ctx: ContextService,private log: NGXLogger) {}
 
   transform(
     value: string | undefined | null,
@@ -18,7 +19,6 @@ export class DetectorTrainCountPipePipe  implements PipeTransform {
       if (value == undefined || value == null) {
         observer.next(0);
       } else {
-        console.log('Counting');
         this.ctx.api.trainer.trainerLessonImageObjectCountByDetector(value).subscribe({
           next: (result) => {
             observer.next(result);

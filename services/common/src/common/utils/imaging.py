@@ -25,7 +25,7 @@ class ImageGrid:
 
         return row, col
 
-    def compute_overlap(box1, box2):
+    def compute_overlap(self,box1, box2):
         """Check if two boxes overlap and return the overlap area."""
         x1, y1, w1, h1 = box1
         x2, y2, w2, h2 = box2

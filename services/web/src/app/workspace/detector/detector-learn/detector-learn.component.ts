@@ -20,16 +20,27 @@ export class DetectorLearnComponent extends BaseComponent implements OnInit, OnD
     this.progress = 0;
     this.error.next(undefined);
 
-    // TODO: Prepare the training objects
-
-    this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading'));
-    this.ctx.api.detector.detectorTrain(this.detector._id,3).subscribe({
-      next: (result)=>{},
+    this.log.debug('Preparing the training objects');
+    this.ctx.api.trainer.trainerLessonImageObjectToDetector(this.detector._id).subscribe({
+      next: (result)=>{
+        if (result > 0 && this.detector._id){
+          this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading'));
+          this.ctx.api.detector.detectorTrain(this.detector._id,3).subscribe({
+            next: (result)=>{},
+            error: (result)=>{
+              this.loading.next(undefined);
+              this.error.next(result.error.detail);
+            }
+          })
+        }
+      },
       error: (result)=>{
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
+        this.log.error(result.error.detail);
       }
     })
+
+
+
   }
 
   dismiss(){

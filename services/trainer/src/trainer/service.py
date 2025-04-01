@@ -7,12 +7,16 @@ from beanie import PydanticObjectId
 from beanie.operators import And, Or
 
 # LOCAL IMPORTS
+from common.clients.auth import AuthClient
+from common.clients.detector import DetectorClient
+from common.clients.recorder import RecorderClient
 from common.models import MODELS
-from common.models.detector import Detector, DetectorLabel
+from common.models.auth import User
+from common.models.detector import Detector, DetectorImageMode, DetectorLabel
 from common.models.trainer import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
-from common.service import Service
+from common.service import ClientConfig, Service
 from common.service import ServiceConfig
 from common.utils.conversions import Conversions
 from common.utils.mongodb import Mongodb, MongodbConfig
@@ -23,6 +27,9 @@ RECORDS = {}
 
 class TrainerServiceConfig(ServiceConfig):
     database: MongodbConfig
+    detector: ClientConfig
+    auth: ClientConfig
+    recorder:ClientConfig
 
 class TrainerService(Service, TrainerServicer):
 
@@ -30,10 +37,15 @@ class TrainerService(Service, TrainerServicer):
         TrainerServicer.__init__(self)
         Service.__init__(self)
         self.config:TrainerServiceConfig = config
-    
+        self.detector: DetectorClient = DetectorClient(self.config.detector)
+        self.auth: AuthClient = AuthClient(self.config.auth)
+        self.recorder: RecorderClient = RecorderClient(self.config.recorder)
         
     async def start(self):
-         await Mongodb.initialize(self.config.database,MODELS)
+        await Mongodb.initialize(self.config.database,MODELS)
+        await self.auth.startup()
+        await self.detector.startup()
+        await self.recorder.startup()
          
     async def recordHasLesson(self, request: RecordHasLessonRequest, context) -> RecordHasLessonResponse:
         try:
@@ -73,9 +85,9 @@ class TrainerService(Service, TrainerServicer):
     async def trainImageObjectList(self, request:TrainImageObjectListRequest, context) -> TrainImageObjectListResponse:
         try:
             lessonId = PydanticObjectId(request.lesson)
-            qry = And(TrainImageObject.lesson == lessonId)
+            qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False)
             if request.frame and request.frame >=0:
-                qry = And(TrainImageObject.lesson == lessonId,TrainImageObject.frame == request.frame)
+                qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False,TrainImageObject.frame == request.frame)
             tios = await TrainImageObject.find_many(qry).to_list()
             ret = []
             total = 0
@@ -105,8 +117,7 @@ class TrainerService(Service, TrainerServicer):
             total = 0
             async for lesson in TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)):
                 log.debug('Listing lesson')
-                print('Listing lesson: {0}'.format(lesson.id))
-                ptotal = await TrainImageObject.find_many(TrainImageObject.lesson == lesson.id).count()
+                ptotal = await TrainImageObject.find_many(TrainImageObject.lesson == lesson.id, TrainImageObject.archived == False).count()
                 total += ptotal
             return TrainImageObjectCountByDetectorResponse(status=True,total=total)
         except Exception as e:
@@ -159,3 +170,33 @@ class TrainerService(Service, TrainerServicer):
             log.warning(str(e))
             return TrainImageObjectResponse(status=False,message=str(e))
     
+    async def trainImageObjectToDetector(self, request:TrainImageObjectToDetectorRequest, context) -> TrainImageObjectToDetectorResponse:
+        try:
+            detectorId = PydanticObjectId(request.detector)
+            user = await User.find(User.id == PydanticObjectId(request.user)).first_or_none()
+            lessons = await TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)).to_list()
+            total = 0
+            for lesson in lessons:
+                tios = await TrainImageObject.find(TrainImageObject.lesson == lesson.id).to_list()
+                for tio in tios:
+                    imageData = await self.recorder.loadRecordFrameBase64(user,lesson.record,tio.frame) ##str base 64
+                    modes = []
+                    if tio.test:
+                        modes.append(DetectorImageMode.test)
+                    if tio.train:
+                        modes.append(DetectorImageMode.train)
+                    if tio.val:
+                        modes.append(DetectorImageMode.val)
+                    detectorImages = await self.detector.uploadDetectorImage(user,lesson.detector,imageData,modes)
+                    for detectorImage in detectorImages:
+                        for label in tio.labels:
+                            await self.detector.addDetectorImageLabel(user,detectorImage.id,tio.xstart,tio.xend,tio.ystart,tio.yend,label)
+                            total += 1
+                    tio.archived = True
+                    await tio.save()
+            
+            return TrainImageObjectToDetectorResponse(status=True,total=total)
+        except Exception as e:
+            log.warning(str(e))
+            return TrainImageObjectToDetectorResponse(status=False,message=str(e))
+        

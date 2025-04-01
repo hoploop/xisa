@@ -6,7 +6,7 @@
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
 
   <ng-content body>
-    <img *ngIf="box.dataUrl" [src]="box.dataUrl"/>
+    <img [style.max-height.px]="200"  *ngIf="box.dataUrl" [src]="box.dataUrl"/>
   </ng-content>
 </app-modal>
 

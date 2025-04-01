@@ -8,7 +8,7 @@ from beanie import PydanticObjectId
 from common.models.auth import User
 from common.models.trainer import TrainImageObject, TrainLesson
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -94,6 +94,13 @@ class TrainerClient(Client):
     async def trainImageObjectCountByDetector(self,user:User,detectorId:PydanticObjectId) -> int:
         req = TrainImageObjectCountByDetectorRequest(user=str(user.id),detector=str(detectorId))
         res: TrainImageObjectCountByDetectorResponse = await self.client.trainImageObjectCountByDetector(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.total
+    
+    async def trainImageObjectToDetector(self,user:User,detectorId:PydanticObjectId) -> int:
+        req = TrainImageObjectToDetectorRequest(user=str(user.id),detector=str(detectorId))
+        res: TrainImageObjectToDetectorResponse = await self.client.trainImageObjectToDetector(req)
         if res.status == False:
             raise Exception(res.message)
         return res.total

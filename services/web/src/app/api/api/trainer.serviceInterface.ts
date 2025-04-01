@@ -64,6 +64,13 @@ export interface TrainerServiceInterface {
     trainerLessonImageObjectRemove(objectId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
+     * Lesson Image Object To Detector
+     * 
+     * @param detectorId 
+     */
+    trainerLessonImageObjectToDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
      * Lesson Image Object Update
      * 
      * @param trainImageObjectUpdatePayload 

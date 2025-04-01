@@ -55,9 +55,9 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     TemplatesModule,
     ApiModule.forRoot(apiConfigFactory),
     LoggerModule.forRoot({
-      serverLoggingUrl: '/api/logs',
       level: NgxLoggerLevel.DEBUG,
-      serverLogLevel: NgxLoggerLevel.ERROR
+      serverLogLevel: NgxLoggerLevel.DEBUG,
+      disableConsoleLogging: false
     }),
     TranslateModule.forRoot({
         defaultLanguage: environment.locale.i18n.default,

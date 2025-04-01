@@ -8,7 +8,7 @@
   <ng-content body>
     <div class="d-flex justify-content-center align-items-center card mb-2">
       <div class="card-body">
-      <img *ngIf="box.dataUrl" [src]="box.dataUrl"/>
+        <img [style.max-height.px]="200"  *ngIf="box.dataUrl" [src]="box.dataUrl"/>
     </div>
     </div>
     <div class="d-flex justify-content-center align-items-center card">
