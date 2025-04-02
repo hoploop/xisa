@@ -13,6 +13,7 @@ export class DetectorLearnComponent extends BaseComponent implements OnInit, OnD
   subs = new Subscription();
 
   @Input() detector!:Detector;
+  epochs:number = 3;
   progress: number = -1;
 
   train(){
@@ -23,9 +24,9 @@ export class DetectorLearnComponent extends BaseComponent implements OnInit, OnD
     this.log.debug('Preparing the training objects');
     this.ctx.api.trainer.trainerLessonImageObjectToDetector(this.detector._id).subscribe({
       next: (result)=>{
-        if (result > 0 && this.detector._id){
+        if (this.detector._id){
           this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading'));
-          this.ctx.api.detector.detectorTrain(this.detector._id,3).subscribe({
+          this.ctx.api.detector.detectorTrain(this.detector._id,this.epochs).subscribe({
             next: (result)=>{},
             error: (result)=>{
               this.loading.next(undefined);

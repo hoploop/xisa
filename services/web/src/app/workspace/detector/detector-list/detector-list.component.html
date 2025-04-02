@@ -38,8 +38,8 @@
               <button class="btn btn-primary btn-sm ms-1" (click)="edit(detector)">
                 <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
               </button>
-              <ng-container *ngIf="(detector._id|detectorTrainCountPipe|async) as trains">
-                <button *ngIf="trains > 0" class="btn btn-primary btn-sm ms-1" (click)="train(detector)">
+              <ng-container> <!--*ngIf="(detector._id|detectorTrainCountPipe|async) as trains">-->
+                <button class="btn btn-primary btn-sm ms-1" (click)="train(detector)">
                   <app-fa-icon [icon]="FAIconType.brain"></app-fa-icon>
                 </button>
               </ng-container>

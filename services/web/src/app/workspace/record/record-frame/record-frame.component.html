@@ -31,6 +31,7 @@
         class="btn btn-sm"
         [class.btn-primary]="objectsVisible"
         [class.btn-outline-secondary]="!objectsVisible"
+        (click)="detectorSettings()"
       >
         <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
       </button>

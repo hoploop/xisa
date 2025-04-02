@@ -41,6 +41,7 @@ import { RecordBoxDetectedTextResult } from '../record-box-detected-text/record-
 import { RecordBoxDetectedObjectResult } from '../record-box-detected-object/record-box-detected-object-result';
 import { RecordBoxSuggestionComponent } from '../record-box-suggestion/record-box-suggestion.component';
 import { RecordBoxSuggestionResult } from '../record-box-suggestion/record-box-suggestion-result';
+import { DetectorSettingsComponent } from '@workspace/detector/detector-settings/detector-settings.component';
 
 @Component({
   selector: 'app-record-frame',
@@ -124,6 +125,8 @@ export class RecordFrameComponent
   ngOnInit(): void {
     this.subs.add(this.boxes.subscribe((result) => {}));
   }
+
+
 
   boxDetail(box: ImageAnnotatorBox) {
     if (this.suggestionBoxes.has(box.id)) {
@@ -221,6 +224,24 @@ export class RecordFrameComponent
         },
         error: (result) => {},
       });
+  }
+
+  detectorSettings(){
+    if (!this.lesson.detector) return;
+    this.ctx.api.detector.detectorLoad(this.lesson.detector).subscribe({next:(result)=>{
+      this.ctx
+      .openModal<undefined>(DetectorSettingsComponent, {
+        detector: result
+      })
+      .subscribe({
+        next: (result) => {
+
+        },
+        error: (result) => {},
+      });
+    }})
+
+
   }
 
   eventDetail(

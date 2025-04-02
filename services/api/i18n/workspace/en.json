@@ -83,7 +83,9 @@
       },
       "images_n":"Images: {{n}}",
       "classes_n":"Classes: {{n}}",
+      "epochs_n":"Epochs: {{n}}",
       "trains_n":"Objects to train: {{n}}",
+      "settings":"Detector Settings",
       "image": {
         "loadings": "Loading detector images...",
         "training": "Is training image",

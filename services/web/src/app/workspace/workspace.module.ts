@@ -48,6 +48,7 @@ import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/rec
 import { RecordEventNamePipe } from './record/record-event-name.pipe';
 import { DetectorTrainCountPipePipe } from './detector/detector-train-count-pipe.pipe';
 import { LoggerModule } from 'ngx-logger';
+import { DetectorSettingsComponent } from './detector/detector-settings/detector-settings.component';
 
 
 
@@ -94,6 +95,7 @@ import { LoggerModule } from 'ngx-logger';
     RecordBoxSuggestionComponent,
     RecordEventNamePipe,
     DetectorTrainCountPipePipe,
+    DetectorSettingsComponent,
   ],
   imports: [
     CommonModule,

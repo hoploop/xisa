@@ -177,7 +177,7 @@ class TrainerService(Service, TrainerServicer):
             lessons = await TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)).to_list()
             total = 0
             for lesson in lessons:
-                tios = await TrainImageObject.find(TrainImageObject.lesson == lesson.id).to_list()
+                tios = await TrainImageObject.find(TrainImageObject.lesson == lesson.id, TrainImageObject.archived==False).to_list()
                 for tio in tios:
                     imageData = await self.recorder.loadRecordFrameBase64(user,lesson.record,tio.frame) ##str base 64
                     modes = []

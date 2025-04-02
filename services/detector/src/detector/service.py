@@ -5,18 +5,18 @@ from io import BytesIO
 import json
 import logging
 import threading
-from pydantic import Field
-import pytesseract
-from pytesseract import Output
-from ultralytics import YOLO
 import yaml
 import os
 import shutil
+from queue import Queue
 
 # LIBRARY IMPORTS
 from beanie import PydanticObjectId
+from pydantic import Field
 from beanie.operators import And, Or, In, RegEx
-
+import pytesseract
+from pytesseract import Output
+from ultralytics import YOLO
 from PIL import Image
 
 # from PIL import ImageFile
@@ -91,6 +91,7 @@ from common.service import ServiceConfig
 from common.utils.conversions import Conversions
 from common.utils.imaging import ImageGrid
 from common.utils.mongodb import Mongodb, MongodbConfig
+from detector.train_proc import trainYOLO
 
 # INITIALIZATION
 log = logging.getLogger(__name__)
@@ -98,14 +99,17 @@ log = logging.getLogger(__name__)
 
 class DetectorServiceConfig(ServiceConfig):
     database: MongodbConfig
-    path: str = Field(description='Relative path where all detectors are stored')
+    path: str = Field(description="Relative path where all detectors are stored")
     original: str = Field(description="Original basic yolo weights .pt file reference")
     name: str = Field(description="Default name of .pt new detector weights file")
-    data: str = Field(description='Default name of .yaml configuration file for new detector')
+    data: str = Field(
+        description="Default name of .yaml configuration file for new detector"
+    )
     runs: str = Field(description="Name of the folder where runs are stored")
     classes: str = Field(description="Name of .yaml file used for storing the classes")
     recorder: ClientConfig
     api: ClientConfig
+
 
 
 class DetectorService(Service, DetectorServicer):
@@ -119,10 +123,10 @@ class DetectorService(Service, DetectorServicer):
 
     async def start(self):
         await Mongodb.initialize(self.config.database, MODELS)
-        
+
         # Yolos models cached in memory
         self.CACHE_YOLOS = {}
-        
+
         # Starting up recorder client connectibity
         await self.recorder.startup()
         await self.api.startup()
@@ -388,7 +392,7 @@ class DetectorService(Service, DetectorServicer):
             width, height = img.size
             grid = ImageGrid(width, height)
 
-            log.debug("Start detection")
+            log.debug("Start detection with model: {0} and confidence {1}".format(path,request.confidence or 0.7))
             visual_results = model(
                 img, conf=request.confidence or 0.7
             )  # predict on an image
@@ -402,8 +406,8 @@ class DetectorService(Service, DetectorServicer):
                     w = detection["box"]["x2"] - detection["box"]["x1"]
                     h = detection["box"]["y2"] - detection["box"]["y1"]
                     boxes.append((x, y, w, h))
-            log.debug('Found boxes: {0}'.format(len(boxes)))
-            if len(boxes)>1:
+            log.debug("Found boxes: {0}".format(len(boxes)))
+            if len(boxes) > 1:
                 best_rows, best_cols = grid.optimal_grid_size(boxes)
 
             objects = []
@@ -417,7 +421,7 @@ class DetectorService(Service, DetectorServicer):
                     y = detection["box"]["y1"]
                     w = detection["box"]["x2"] - detection["box"]["x1"]
                     h = detection["box"]["y2"] - detection["box"]["y1"]
-                    if len(boxes)>1:
+                    if len(boxes) > 1:
                         row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
                     else:
                         row = 0
@@ -456,8 +460,8 @@ class DetectorService(Service, DetectorServicer):
                 )
             detector_id = found.detector
             mode = found.mode
-            
-            log.debug('Removing detector image')
+
+            log.debug("Removing detector image")
             await found.delete()
 
             image_path = os.path.join(
@@ -726,6 +730,15 @@ class DetectorService(Service, DetectorServicer):
             log.debug("Loading original classes")
             with open(original_classes_filename, "r") as classes_file:
                 classes = yaml.load(classes_file)
+                for class_name in classes["names"]:
+                    found_label = await DetectorLabel.find(
+                        DetectorLabel.detector == detector.id,
+                        DetectorLabel.name == class_name,
+                    ).first_or_none()
+                    if not found_label:
+                        await DetectorLabel(
+                            name=class_name, detector=detector.id
+                        ).insert()
 
             log.debug("Create model configuration")
             data = dict(
@@ -751,6 +764,46 @@ class DetectorService(Service, DetectorServicer):
             log.warning(str(e))
             return CreateDetectorResponse(status=False, message=str(e))
 
+    async def updateProgress(
+        self,
+        session: str,
+        user_id: PydanticObjectId,
+        detector: Detector,
+        epochs: int,
+        updates: Queue,
+        results: Queue,
+        logs: Queue,
+    ):
+
+        training_session = DetectorTrainingSession(
+            detector=detector.id,
+            user=user_id,
+            epoch_total=epochs,
+            epoch_progress=0,
+            box_loss=0.0,
+            class_loss=0.0,
+            object_loss=0.0,
+        )
+        while results.empty():
+            if not updates.empty():
+                progr = updates.get()
+                log.debug("New epochs: {0}/{1}".format(progr, epochs))
+                training_session.epoch_progress = progr
+                await self.api.updateSession(session, training_session)
+            if not logs.empty():
+                log.debug(logs.get())
+            await asyncio.sleep(0.5)
+
+        save_dir = results.get()
+
+        log.debug("Results are saved into: {0}".format(save_dir))
+        detector.best = os.path.join(save_dir, "weights/best.pt")
+        detector.last = os.path.join(save_dir, "weights/last.pt")
+        training_session.epoch_progress = epochs
+        await self.api.updateSession(session, training_session)
+
+        await detector.save()
+
     async def trainDetector(
         self, request: TrainDetectorRequest, context
     ) -> TrainDetectorResponse:
@@ -761,6 +814,9 @@ class DetectorService(Service, DetectorServicer):
             detector_id = PydanticObjectId(request.detector)
             session = request.session
             image_size = request.imageSize
+            updates = Queue()
+            results = Queue()
+            logs = Queue()
 
             detector = await Detector.find_many(
                 Detector.id == detector_id
@@ -770,46 +826,9 @@ class DetectorService(Service, DetectorServicer):
                     status=False, message="workspace.detector.errors.not_found"
                 )
 
-            training_session = DetectorTrainingSession(
-                detector=detector_id,
-                user=user_id,
-                epoch_total=epochs,
-                epoch_progress=0,
-                box_loss=0.0,
-                class_loss=0.0,
-                object_loss=0.0,
-            )
-
-            def on_train_epoch_end(trainer):
-                """
-                Custom callback executed at the end of each training epoch.
-
-                Args:
-                    trainer: The YOLO Trainer object.
-                """
-                epoch = trainer.epoch  # Current epoch number
-                results = trainer.metrics  # Training metrics (loss, mAP, etc.)
-
-                training_session.epoch_progress = epoch
-                # Example: Log the loss
-                if results:
-                    pass
-                    # print(results)
-                    # print(f"Loss: {results.box.loss:.4f}, "
-                    #    f"Label Loss: {results.cls.loss:.4f}, "
-                    #    f"Object Loss: {results.dfl.loss:.4f}"
-
-                    # training_session.box_loss = results['box']['loss']
-                    # training_session.class_loss = results['cls']['loss']
-                    # training_session.object_loss = results['dfl']['loss']
-
-                asyncio.create_task(self.api.updateSession(session, training_session))
-
-            # Load a COCO-pretrained YOLO11n model
-            log.debug("Loading YOLO Model")
             if detector.best is None:
                 path = os.path.join(
-                    self.config.path, str(detector_id), self.config.name
+                    self.config.path, str(detector.id), self.config.name
                 )
                 if not os.path.exists(path):
                     return TrainDetectorResponse(
@@ -818,32 +837,33 @@ class DetectorService(Service, DetectorServicer):
             else:
                 path = detector.best
 
-            async def training(path):
-                model = YOLO(path)
+            thread = threading.Thread(
+                target=trainYOLO,
+                args=(
+                    str(detector.id),
+                    self.config.path,
+                    self.config.data,
+                    self.config.runs,
+                    path,
+                    image_size,
+                    epochs,
+                    updates,
+                    results,
+                    logs,
+                ),
+                daemon=True
+            )
+            # session:str,user_id:PydanticObjectId,detector:Detector,epochs:int,updates:Queue,results:Queue
 
-                # Train the model on the COCO8 example dataset for 100 epochs
-                data_path = os.path.join(
-                    self.config.path, str(detector_id), self.config.data
-                )
-                runs_path = os.path.join(
-                    self.config.path, str(detector_id), self.config.runs
-                )
-                model.add_callback("on_train_epoch_end", on_train_epoch_end)
-                results = model.train(
-                    data=data_path, epochs=epochs, imgsz=image_size, project=runs_path
-                )
+            thread.start()
 
-                training_session.epoch_progress = epochs
-                await self.api.updateSession(session, training_session)
-                log.debug("Results are saved into: {0}".format(results.save_dir))
-                detector.best = os.path.join(results.save_dir, "weights/best.pt")
-                detector.last = os.path.join(results.save_dir, "weights/last.pt")
-
-                await detector.save()
+            asyncio.create_task(self.updateProgress(
+                session, user_id, detector, epochs, updates, results, logs
+            ))
 
             # train_thread = threading.Thread(target=training, args=(path,), daemon=True)
             # train_thread.start()
-            task1 = asyncio.create_task(training(path))  # Run task_one concurrently
+            # task1 = asyncio.create_task(training(path))  # Run task_one concurrently
 
             return TrainDetectorResponse(status=True)
         except Exception as e:
@@ -1061,7 +1081,9 @@ class DetectorService(Service, DetectorServicer):
                 DetectorLabel.detector == detector_id, DetectorLabel.name == class_name
             ).first_or_none()
             if found_class is None:
-                found_class = await DetectorLabel(detector=detector_id, name=class_name).insert()
+                found_class = await DetectorLabel(
+                    detector=detector_id, name=class_name
+                ).insert()
             class_id = found_class.id
 
             detector_image_label = await DetectorImageLabel(
@@ -1136,8 +1158,7 @@ class DetectorService(Service, DetectorServicer):
             total = await DetectorLabel.find_many(qry).count()
 
             user_id = PydanticObjectId(request.user)
-            await self.update_folder(user_id, detector_id)
-
+            
             return CountDetectorLabelResponse(status=True, total=total)
         except Exception as e:
             log.warning(str(e))
