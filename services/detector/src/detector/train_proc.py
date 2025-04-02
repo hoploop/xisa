@@ -25,24 +25,13 @@ def trainYOLO(
             trainer: The YOLO Trainer object.
         """
         epoch = trainer.epoch  # Current epoch number
-        results = trainer.metrics  # Training metrics (loss, mAP, etc.)
+        metrics = trainer.metrics  # Training metrics (loss, mAP, etc.)
+        keys,vals = list(metrics.keys()), list(metrics.values())
+        print("Values:", vals)
+        print("Keys:",keys)
 
         updates.put(epoch)
-        # Example: Log the loss
-        if results:
-            pass
-            # print(results)
-            # print(f"Loss: {results.box.loss:.4f}, "
-            #    f"Label Loss: {results.cls.loss:.4f}, "
-            #    f"Object Loss: {results.dfl.loss:.4f}"
-
-            # training_session.box_loss = results['box']['loss']
-            # training_session.class_loss = results['cls']['loss']
-            # training_session.object_loss = results['dfl']['loss']
-
-        # updates.put([session,training_session])
-
-        # asyncio.create_task(self.api.updateSession(session, training_session))
+        
 
     # Load a COCO-pretrained YOLO11n model
     logs.put("Loading YOLO Model")

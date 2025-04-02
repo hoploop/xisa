@@ -78,7 +78,6 @@ export class RecordFrameComponent
 
   toggleTexts() {
     this.textsVisible = !this.textsVisible;
-
     this.render();
   }
 
@@ -412,7 +411,7 @@ export class RecordFrameComponent
     this.suggestionBoxes.clear();
     for (let i = 0; i < this.frame.suggestions.length; i++) {
       let sug: DetectorSuggestion = this.frame.suggestions[i];
-      let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h);
+      let n = new ImageAnnotatorBox(sug.x, sug.y, sug.w, sug.h,true,false,true);
       this.suggestionBoxes.set(n.id, sug);
       n.defaultBorderColor = 'green';
       n.defaultBorderSize = 2;
@@ -421,6 +420,7 @@ export class RecordFrameComponent
       n.canMove = false;
       ret.push(n);
     }
+    console.log(ret);
     return ret;
   }
 
@@ -497,8 +497,9 @@ export class RecordFrameComponent
           let w = 40;
           let h = 40;
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
-          evt_box.canResize = true;
+          evt_box.canResize = false;
           evt_box.canMove = false;
+          evt_box.showCross = true;
           this.eventBoxes.set(evt_box.id, event);
           ret.push(evt_box);
         }
@@ -512,8 +513,9 @@ export class RecordFrameComponent
           let w = 40;
           let h = 40;
           let evt_box = new ImageAnnotatorBox(x, y, w, h);
-          evt_box.canResize = true;
+          evt_box.canResize = false;
           evt_box.canMove = false;
+          evt_box.showCross = true;
           this.eventBoxes.set(evt_box.id, event);
           ret.push(evt_box);
         }
@@ -526,8 +528,9 @@ export class RecordFrameComponent
             let w = 40;
             let h = 40;
             let evt_box = new ImageAnnotatorBox(x, y, w, h);
-            evt_box.canResize = true;
+            evt_box.canResize = false;
             evt_box.canMove = false;
+            evt_box.showCross = true;
             this.eventBoxes.set(evt_box.id, event);
             ret.push(evt_box);
           }

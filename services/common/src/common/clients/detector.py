@@ -134,7 +134,7 @@ class DetectorClient(Client):
         for su in res.suggestions:
             ret.append(
                 DetectorSuggestion(
-                    by_class=su.byLabel,
+                    by_label=su.byLabel,
                     by_text=su.byText,
                     by_order=su.byOrder,
                     confidence=su.confidence,

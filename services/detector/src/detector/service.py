@@ -111,7 +111,6 @@ class DetectorServiceConfig(ServiceConfig):
     api: ClientConfig
 
 
-
 class DetectorService(Service, DetectorServicer):
 
     def __init__(self, config: DetectorServiceConfig):
@@ -171,11 +170,9 @@ class DetectorService(Service, DetectorServicer):
                 return SuggestStepResponse(status=True, suggestions=[])
 
             x, y = event.position
-            print("{0},{1}".format(x, y))
             # x = x / width
             # y = y / height
-            print("{0},{1}".format(x, y))
-
+            
             # Matching texts
             req = DetectTextsRequest(
                 user=request.user, data=request.data, confidence=request.confidence
@@ -246,18 +243,19 @@ class DetectorService(Service, DetectorServicer):
             # DetectObject(x=x,y=y,w=w,h=h,confidence=confidence,code=code,name=name,row=row,col=col
 
             if res.status == True:
-                matched = None
+                matches = []
                 for obj in res.objects:
-                    nx = obj.x * width
-                    ny = obj.y * height
-                    nw = obj.w * width
-                    nh = obj.h * height
+                    nx = obj.x #* width
+                    ny = obj.y #* height
+                    nw = obj.w #* width
+                    nh = obj.h #* height
+                    
                     if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
-                        matched = obj
-                        break
+                        matches.append(obj)
+                        
 
                 # Now checking if it is unique
-                if matched:
+                for matched in matches:
                     others = []
                     for obj in res.objects:
                         if obj != matched and matched.name == obj.name:
@@ -270,10 +268,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=request.event,
                                 byLabel=matched.name,
                                 confidence=matched.confidence,
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=matched.x/width,
+                                y=matched.y/height,
+                                w=matched.w/width,
+                                h=matched.h/height,
                             )
                         )
 
@@ -283,10 +281,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=request.event,
                                 byLabel=matched.name,
                                 byOrder=[matched.row, matched.col],
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=matched.x/width,
+                                y=matched.y/height,
+                                w=matched.w/width,
+                                h=matched.h/height,
                                 confidence=matched.confidence,
                             )
                         )
@@ -392,7 +390,11 @@ class DetectorService(Service, DetectorServicer):
             width, height = img.size
             grid = ImageGrid(width, height)
 
-            log.debug("Start detection with model: {0} and confidence {1}".format(path,request.confidence or 0.7))
+            log.debug(
+                "Start detection with model: {0} and confidence {1}".format(
+                    path, request.confidence or 0.7
+                )
+            )
             visual_results = model(
                 img, conf=request.confidence or 0.7
             )  # predict on an image
@@ -851,15 +853,17 @@ class DetectorService(Service, DetectorServicer):
                     results,
                     logs,
                 ),
-                daemon=True
+                daemon=True,
             )
             # session:str,user_id:PydanticObjectId,detector:Detector,epochs:int,updates:Queue,results:Queue
 
             thread.start()
 
-            asyncio.create_task(self.updateProgress(
-                session, user_id, detector, epochs, updates, results, logs
-            ))
+            asyncio.create_task(
+                self.updateProgress(
+                    session, user_id, detector, epochs, updates, results, logs
+                )
+            )
 
             # train_thread = threading.Thread(target=training, args=(path,), daemon=True)
             # train_thread.start()
@@ -932,9 +936,7 @@ class DetectorService(Service, DetectorServicer):
             log.warning(str(e))
             return ExistsDetectorLabelResponse(status=False, message=str(e))
 
-    async def update_folder(
-        self, user_id: PydanticObjectId, detector_id: PydanticObjectId
-    ):
+    async def update_folder(self, user_id: PydanticObjectId, detector_id: PydanticObjectId):
 
         labels = await DetectorLabel.find_many(
             DetectorLabel.detector == detector_id
@@ -1086,19 +1088,32 @@ class DetectorService(Service, DetectorServicer):
                 ).insert()
             class_id = found_class.id
 
-            detector_image_label = await DetectorImageLabel(
-                image=image_id,
-                label=class_id,
-                xstart=request.xstart,
-                xend=request.xend,
-                ystart=request.ystart,
-                yend=request.yend,
-            ).insert()
-            user_id = PydanticObjectId(request.user)
-            await self.update_folder(user_id, detector_id)
-            return AddDetectorImageLabelResponse(
-                status=True, label=Conversions.serialize(detector_image_label)
-            )
+            already_stored = await DetectorImageLabel.find(
+                DetectorImageLabel.image == image_id,
+                DetectorImageLabel.label == class_id,
+                DetectorImageLabel.xstart == request.xstart,
+                DetectorImageLabel.xend == request.xend,
+                DetectorImageLabel.ystart == request.ystart,
+                DetectorImageLabel.yend == request.yend,
+            ).first_or_none()
+            if not already_stored:
+                detector_image_label = await DetectorImageLabel(
+                    image=image_id,
+                    label=class_id,
+                    xstart=request.xstart,
+                    xend=request.xend,
+                    ystart=request.ystart,
+                    yend=request.yend,
+                ).insert()
+                user_id = PydanticObjectId(request.user)
+                await self.update_folder(user_id, detector_id)
+                return AddDetectorImageLabelResponse(
+                    status=True, label=Conversions.serialize(detector_image_label)
+                )
+            else:
+                return AddDetectorImageLabelResponse(
+                    status=True, label=Conversions.serialize(already_stored)
+                )
         except Exception as e:
             log.warning(str(e))
             return AddDetectorImageLabelResponse(status=False, message=str(e))
@@ -1158,7 +1173,7 @@ class DetectorService(Service, DetectorServicer):
             total = await DetectorLabel.find_many(qry).count()
 
             user_id = PydanticObjectId(request.user)
-            
+
             return CountDetectorLabelResponse(status=True, total=total)
         except Exception as e:
             log.warning(str(e))

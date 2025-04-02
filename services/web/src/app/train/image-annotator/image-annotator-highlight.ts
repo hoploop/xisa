@@ -19,7 +19,8 @@ export class ImageAnnotatorHighlight {
     public w: number = 0,
     public h: number = 0,
     public percentage: boolean = false,
-    public isSelected: boolean = false
+    public isSelected: boolean = false,
+    public showCross: boolean = false
   ) {}
 
 
@@ -52,7 +53,14 @@ export class ImageAnnotatorHighlight {
     ctx.strokeRect(this.x, this.y, this.w, this.h);
 
 
-    //ctx.fillText(labels, this.x + 6, this.y + 20 + 3);
+    if (this.showCross){
+      ctx.beginPath(); // Start a new path
+      ctx.moveTo(Math.round(this.x+this.w/2)-5, Math.round(this.y+this.h/2));
+      ctx.lineTo(Math.round(this.x+this.w/2)+5, Math.round(this.y+this.h/2));
+      ctx.moveTo(Math.round(this.x+this.w/2), Math.round(this.y+this.h/2)-5);
+      ctx.lineTo(Math.round(this.x+this.w/2), Math.round(this.y+this.h/2)+5);
+      ctx.stroke(); // Render the path
+    }
 
   }
 
