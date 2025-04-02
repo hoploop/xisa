@@ -1,13 +1,16 @@
-<div class="card">
-  <div class="card-header">
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
     <app-fa-icon [icon]="FAIconType.userMinus"></app-fa-icon>
     <span class="ms-1" translate>auth.unregister</span>
-  </div>
-  <div class="card-body">
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
     <div class="btn btn-primary" (click)="unregister()">
       <app-fa-icon [icon]="FAIconType.userMinus"></app-fa-icon>
       <span class="ms-2" translate>auth.unregister</span>
     </div>
-  </div>
-  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-</div>
+  </ng-content>
+</app-modal>
+
+

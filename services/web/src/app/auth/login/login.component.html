@@ -1,33 +1,34 @@
-<div class="card">
-  <div class="card-header">
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
     <app-b-icon [icon]="BIconType.boxArrowInRight"></app-b-icon>
     <span class="ms-1" translate>auth.login</span>
-  </div>
-  <div class="card-body">
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
     <input
-      class="form-control"
-      type="text"
-      [ngModel]="username"
-      (ngModelChange)="onUsernameChange($event)"
-      (keyup.enter)="login()"
-      [placeholder]="'auth.username' | translate"
-    />
-    <input
-      class="form-control mt-1"
-      type="password"
-      [ngModel]="password"
-      (keyup.enter)="login()"
-      (ngModelChange)="onPasswordChange($event)"
-      [placeholder]="'auth.password' | translate"
-    />
-    <button class="btn btn-primary mt-2 w-100" (click)="login()" [disabled]="(valid|async) == false">
-      <app-b-icon [icon]="BIconType.boxArrowInRight"></app-b-icon>
-      <span class="ms-1" translate>auth.login</span>
-    </button>
-    <button class="btn btn-secondary mt-2 w-100" (click)="register()">
-      <app-fa-icon [icon]="FAIconType.userPlus"></app-fa-icon>
-      <span class="ms-1" translate>auth.register</span>
-    </button>
-  </div>
-  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-</div>
+    class="form-control"
+    type="text"
+    [ngModel]="username"
+    (ngModelChange)="onUsernameChange($event)"
+    (keyup.enter)="login()"
+    [placeholder]="'auth.username' | translate"
+  />
+  <input
+    class="form-control mt-1"
+    type="password"
+    [ngModel]="password"
+    (keyup.enter)="login()"
+    (ngModelChange)="onPasswordChange($event)"
+    [placeholder]="'auth.password' | translate"
+  />
+  <button class="btn btn-primary mt-2 w-100" (click)="login()" [disabled]="(valid|async) == false">
+    <app-b-icon [icon]="BIconType.boxArrowInRight"></app-b-icon>
+    <span class="ms-1" translate>auth.login</span>
+  </button>
+  <button class="btn btn-secondary mt-2 w-100" (click)="register()">
+    <app-fa-icon [icon]="FAIconType.userPlus"></app-fa-icon>
+    <span class="ms-1" translate>auth.register</span>
+  </button>
+  </ng-content>
+</app-modal>

@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
       } else {
         let token = this.ctx.api.getToken();
         if (token == null) {
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl('/welcome');
           this.ctx.beat.auth.logged.next(false);
           observer.next(false);
         } else {
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
             error: (result) => {
               this.ctx.api.remToken();
               this.ctx.beat.auth.logged.next(false);
-              this.router.navigateByUrl('/login');
+              this.router.navigateByUrl('/welcome');
               observer.next(false);
             },
           });

@@ -178,7 +178,7 @@ export class RecordFrameComponent
             this.detectTrainObjectDetail(box, result);
           },
           error: (result) => {
-            console.log(result);
+            this.log.warn(result.error.detail);
           },
         });
     }
@@ -420,7 +420,6 @@ export class RecordFrameComponent
       n.canMove = false;
       ret.push(n);
     }
-    console.log(ret);
     return ret;
   }
 

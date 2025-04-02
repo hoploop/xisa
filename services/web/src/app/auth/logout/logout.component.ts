@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { ContextService } from '@services/context.service';
-import { BehaviorSubject } from 'rxjs';
-import { BIconType } from '@constants/icons';
-import { Router } from '@angular/router';
+import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
   selector: 'app-logout',
@@ -10,26 +7,25 @@ import { Router } from '@angular/router';
   styleUrl: './logout.component.scss',
   standalone: false,
 })
-export class LogoutComponent {
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
-  BIconType = BIconType;
-
-  constructor(private ctx: ContextService,private router: Router) {}
+export class LogoutComponent extends BaseComponent {
+  dismiss() {
+    this.ctx.closeModal(undefined);
+  }
 
   logout() {
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('auth.logging_out'));
     this.ctx.api.auth.authLogout().subscribe({
-      next: (result)=>{
+      next: (result) => {
         this.ctx.api.remToken();
         this.ctx.beat.auth.logged.next(false);
-        this.router.navigateByUrl('login');
+        this.ctx.closeModal(true);
       },
-      error: (result)=>{
+      error: (result) => {
         this.loading.next(undefined);
         this.error.next(result.error.detail);
-      }
-    })
+        this.ctx.dismissModal();
+      },
+    });
   }
 }

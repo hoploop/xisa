@@ -14,6 +14,7 @@ export class ModalComponent {
   @Input() loading = new BehaviorSubject<string|undefined>(undefined);
   @Input() error = new BehaviorSubject<string|undefined>(undefined);
   @Input() showBody: boolean = true;
+  @Input() showHeader: boolean = true;
   constructor(private ctx:ContextService){
 
   }

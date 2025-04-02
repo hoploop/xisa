@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { BIconType, FAIconType } from '@constants/icons';
-import { ContextService } from '@services/context.service';
+import { Component } from '@angular/core';
+import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -9,31 +8,29 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './register.component.scss',
   standalone: false,
 })
-export class RegisterComponent {
+export class RegisterComponent extends BaseComponent {
   username = '';
   password = '';
   email = '';
-  BIconType = BIconType;
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
+
   valid = new BehaviorSubject<boolean>(false);
 
-  FAIconType = FAIconType;
+  dismiss() {
+    this.ctx.closeModal(undefined);
+  }
 
-  constructor(private ctx: ContextService) {}
-
-  validate(){
-    if (this.username.trim() == ''){
+  validate() {
+    if (this.username.trim() == '') {
       this.valid.next(false);
       return;
     }
 
-    if (this.password.trim() == ''){
+    if (this.password.trim() == '') {
       this.valid.next(false);
       return;
     }
 
-    if (this.email.trim() == ''){
+    if (this.email.trim() == '') {
       this.valid.next(false);
       return;
     }
@@ -41,17 +38,17 @@ export class RegisterComponent {
     this.valid.next(true);
   }
 
-  onUsernameChange(value:string){
+  onUsernameChange(value: string) {
     this.username = value;
     this.validate();
   }
 
-  onEmailChange(value:string){
+  onEmailChange(value: string) {
     this.email = value;
     this.validate();
   }
 
-  onPasswordChange(value:string){
+  onPasswordChange(value: string) {
     this.password = value;
     this.validate();
   }
@@ -69,9 +66,7 @@ export class RegisterComponent {
         password: this.password,
       })
       .subscribe({
-        next: (result) => {
-
-        },
+        next: (result) => {},
         error: (result) => {
           this.loading.next(undefined);
           this.error.next(result.error.detail);

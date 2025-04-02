@@ -1,64 +1,35 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ContextService } from '@services/context.service';
-import { BehaviorSubject } from 'rxjs';
-import { FAIconType } from '@constants/icons';
-
+import { Component, Input } from '@angular/core';
+import { BaseComponent } from '@utils/base/base.component';
+import {Record} from '@api/model/record';
 @Component({
   selector: 'app-record-form',
   standalone: false,
   templateUrl: './record-form.component.html',
   styleUrl: './record-form.component.scss',
 })
-export class RecordFormComponent {
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
-  name: string = '';
-  description: string|undefined = '';
-  FAIconType = FAIconType;
-  recordId?:string;
-  projectId?:string;
+export class RecordFormComponent  extends BaseComponent{
+  @Input() record!: Record;
 
-  constructor(
-    private ctx: ContextService,
-    private router: Router,
-    route: ActivatedRoute
-  ) {
-    this.recordId = route.snapshot.paramMap.get('record_id') || undefined;
-  }
+
 
   ngOnInit(): void {
-    this.load();
+
   }
 
-  load(){
-    if (!this.recordId) return;
-    this.error.next(undefined);
-    this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.recorder.recorderLoad(this.recordId).subscribe({
-      next: (result)=>{
-        this.name = result.name;
-        this.description = result.description;
-        this.loading.next(undefined);
-        this.projectId = result.project;
-      },
-      error: (result)=>{
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
-      }
-    })
+  dismiss(){
+    this.ctx.closeModal(undefined);
   }
+
 
    remove(){
-      if (!this.recordId) return;
-      if (!this.projectId) return;
+      if (!this.record._id) return;
       this.error.next(undefined);
 
       this.loading.next(this.ctx.translate.instant('workspace.record.removing'));
-      this.ctx.api.recorder.recorderRemove(this.recordId).subscribe({
+      this.ctx.api.recorder.recorderRemove(this.record._id).subscribe({
         next: (result)=>{
           this.loading.next(undefined);
-          this.router.navigateByUrl('/record/list/'+this.projectId);
+          this.ctx.closeModal(undefined);
         },
         error: (result)=>{
           this.loading.next(undefined);
@@ -69,19 +40,17 @@ export class RecordFormComponent {
 
 
   cancel(){
-    if (!this.projectId) return;
-    this.router.navigateByUrl('/record/list'+this.projectId);
+    this.dismiss();
   }
 
   save(){
-    if (!this.recordId) return;
-    if (!this.projectId) return;
+    if (!this.record._id) return;
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.saving'));
-    this.ctx.api.recorder.recorderEdit(this.recordId,this.name,this.description||'').subscribe({
+    this.ctx.api.recorder.recorderEdit(this.record._id,this.record.name,this.record.description||'').subscribe({
       next: (result)=>{
           this.loading.next(undefined);
-          this.router.navigateByUrl('/record/list/'+this.projectId);
+          this.ctx.closeModal(this.record);
       },
       error: (result)=>{
         this.loading.next(undefined);

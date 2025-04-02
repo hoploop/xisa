@@ -15,19 +15,21 @@ import { CommonModule } from '@angular/common';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RecordStudioComponent } from '@workspace/record/record-studio/record-studio.component';
 import { ImageAnnotatorComponent } from '@train/image-annotator/image-annotator.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { ProjectMenuComponent } from '@workspace/project/project-menu/project-menu.component';
 
 const routes: Routes = [
   { path: '', component: LogoutComponent,canActivate:[AuthGuard] },
   { path: '', component: MenuComponent, outlet: 'menu' },
+  { path: 'welcome', component: WelcomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent,canActivate:[AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'unregister', component: UnregisterComponent },
   { path: 'project/list', component: ProjectListComponent,canActivate:[AuthGuard] },
+  { path: 'project/list', component: ProjectMenuComponent, outlet: 'menu'},
   { path: 'record/list/:project_id', component: RecordListComponent,canActivate:[AuthGuard] },
   { path: 'record/form/:record_id', component: RecordFormComponent,canActivate:[AuthGuard] },
   { path: 'record/studio/:record_id/:detector_id', component: RecordStudioComponent,canActivate:[AuthGuard] },
-  { path: 'record/controller/:project_id', component: RecordControllerComponent,canActivate:[AuthGuard] },
   { path: 'detector/list/:project_id', component: DetectorListComponent,canActivate:[AuthGuard] },
   { path: 'mockup', component: ImageAnnotatorComponent,canActivate:[AuthGuard]  },
   { path: '**', component: NotFoundComponent }

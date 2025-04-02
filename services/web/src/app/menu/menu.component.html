@@ -1,15 +1,19 @@
 <app-resize-listener class="fixed-top " (resized)="onResizeTop($event)">
-  <div  class="d-flex  justify-content-center">
-    <div class="card rounded-0 border-0 shadow-sm menu text-white rounded-bottom w-50">
-    <div class="card-body d-flex w-100" body>
-      <a class="nav-link" href="#">
+  <div class="container-fluid">
+    <div class="card rounded-0 border-0 shadow rounded-bottom">
+    <div class="card-body d-flex w-100 align-items-center" body>
+      <div class="d-flex align-items-center">
         <img src="assets/icon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
         <span translate>menu.title</span>
-      </a>
+      </div>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="nav-link" routerLink="/project/list">Projects</a>
+
+      <ng-content select="[body]"></ng-content>
+      <a class="ms-auto nav-link pointer" *ngIf="(logged|async) == true" (click)="logout()" translate>auth.logout</a>
     </div>
     </div>
   </div>

@@ -1,13 +1,14 @@
-<div class="card">
-  <div class="card-header">
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
     <app-fa-icon [icon]="FAIconType.videoCamera"></app-fa-icon>
     <span class="ms-1" *ngIf="!running" translate>workspace.record.new</span>
     <span class="ms-1" *ngIf="running" translate>workspace.record.manage</span>
-  </div>
-  <div class="card-body">
+  </ng-content>
+
+  <ng-content body>
     <div class="d-flex flex-column">
-      <input type="text" class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.name'|translate" [(ngModel)]="name"/>
-      <textarea class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.description'|translate" [(ngModel)]="description"></textarea>
+      <input type="text" class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.name'|translate" [(ngModel)]="project.name"/>
+      <textarea class="form-control mb-1" [disabled]="running == true" [placeholder]="'workspace.record.description'|translate" [(ngModel)]="project.description"></textarea>
       <button
         class="btn btn-primary btn-sm"
         (click)="start()"
@@ -41,7 +42,5 @@
       </button>
       -->
     </div>
-
-  </div>
-  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-</div>
+  </ng-content>
+</app-modal>

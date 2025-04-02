@@ -20,6 +20,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { TemplatesModule } from '@templates/templates.module';
 import { UtilsModule } from '@utils/utils.module';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { WelcomeComponent } from './welcome/welcome.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -41,6 +42,7 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     AppComponent,
     MenuComponent,
     NotFoundComponent,
+    WelcomeComponent,
   ],
   imports: [
     AppRoutingModule,

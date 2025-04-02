@@ -11,7 +11,6 @@ import { Frame } from '../record-frame';
 import { RecordEventListRecordId200ResponseInner } from '@api/model/record-event-list-record-id200-response-inner';
 import { RecordFrameSelectorComponent } from '../record-frame-selector/record-frame-selector.component';
 import { RecordVideoComponent } from '../record-video/record-video.component';
-import { RecordSuggestionsComponent } from '../record-suggestions/record-suggestions.component';
 import { BaseComponent } from '@utils/base/base.component';
 import { NGXLogger } from 'ngx-logger';
 
@@ -112,23 +111,6 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     return false;
   }
 
-  viewSuggestions() {
-    if (!this.frame) return;
-    this.ctx
-      .openModal<undefined>(
-        RecordSuggestionsComponent,{ frame: this.frame },{ centered: true, size: 'lg' })
-      .subscribe({
-        next: (result) => {
-          if (result) {
-            this.frame = undefined;
-            setTimeout(() => {
-              this.frame = result;
-            });
-          }
-        },
-        error: (result) => {},
-      });
-  }
 
   selectFrame() {
     this.ctx

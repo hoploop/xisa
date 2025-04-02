@@ -1,5 +1,6 @@
 <div class="d-flex flex-column">
   <div class="d-flex justify-content-center mb-2">
+
     <!-- Event -->
     <button
       class="btn btn-sm w-100"
@@ -15,7 +16,8 @@
     <!-- Detected Objects -->
     <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
       <button
-        class="btn ms-1 btn-sm  text-nowrap  w-100"
+        class="btn btn-sm  text-nowrap  w-100"
+        [class.ms-1]="frame.event"
         [class.btn-primary]="objectsVisible"
         [class.btn-outline-secondary]="!objectsVisible"
         (click)="toggleObjects()"

@@ -6,6 +6,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Detector, Record } from '@api/index';
 import { BIconType } from '@constants/icons';
 import { DetectorSelectorComponent } from '@workspace/detector/detector-selector/detector-selector.component';
+import { RecordFormComponent } from '../record-form/record-form.component';
+import { RecordControllerComponent } from '../record-controller/record-controller.component';
+import { BaseComponent } from '../../../utils/base/base.component';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-record-list',
@@ -13,25 +17,22 @@ import { DetectorSelectorComponent } from '@workspace/detector/detector-selector
   templateUrl: './record-list.component.html',
   styleUrl: './record-list.component.scss',
 })
-export class RecordListComponent implements OnInit {
+export class RecordListComponent extends BaseComponent implements OnInit {
   projectId?: string;
-  FAIconType = FAIconType;
-  BIconType = BIconType;
-  skip:number = 0;
-  limit:number = 0;
-  search:string = '';
-  total:number = 0;
-  records: Record[]=[]
-  running?:boolean;
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
-
+  skip: number = 0;
+  limit: number = 0;
+  search: string = '';
+  total: number = 0;
+  records: Record[] = [];
+  running?: boolean;
 
   constructor(
-    private ctx: ContextService,
-    private router: Router,
-    route: ActivatedRoute
+    protected override ctx: ContextService,
+    protected override router: Router,
+    protected override route: ActivatedRoute,
+    protected override log: NGXLogger
   ) {
+    super(ctx,router,route,log);
     this.projectId = route.snapshot.paramMap.get('project_id') || undefined;
   }
 
@@ -39,94 +40,113 @@ export class RecordListComponent implements OnInit {
     this.load();
   }
 
-  onChangeSearch(value:string){
+  onChangeSearch(value: string) {
     this.search = value;
     this.skip = 0;
     this.load();
   }
 
-
-  create(){
-    this.router.navigateByUrl('/record/controller/'+this.projectId);
+  create() {
+    this.ctx.openModal<undefined>(RecordControllerComponent, {}).subscribe({
+      next: (result) => {
+        this.load();
+      },
+      error: (result) => {},
+    });
   }
 
-
-  edit(record:Record){
-    if (!record._id) return;
-    this.router.navigateByUrl('/record/form/'+record._id);
+  edit(record: Record) {
+    this.ctx
+      .openModal<undefined>(RecordFormComponent, { record: record })
+      .subscribe({
+        next: (result) => {
+          this.load();
+        },
+        error: (result) => {},
+      });
   }
 
-  setDetector(record:Record){
+  setDetector(record: Record) {
     if (!record._id) return;
-    this.ctx.api.trainer.trainerLesson(record._id).subscribe({next:(result=>{
+    this.ctx.api.trainer.trainerLesson(record._id).subscribe({
+      next: (result) => {
+        this.ctx
+          .openModal<Detector | undefined>(DetectorSelectorComponent, {
+            projectId: this.projectId,
+          })
+          .subscribe({
+            next: (resultb) => {
+              if (resultb && resultb._id && result._id) {
+                this.ctx.api.trainer
+                  .trainerLessonSetDetector(resultb._id, result._id)
+                  .subscribe({ next: (resultc) => {} });
+              }
+            },
+            error: (result) => {},
+          });
+      },
+    });
+  }
 
-      this.ctx
+  studio(record: Record) {
+    if (!record._id) return;
+    this.ctx.api.trainer.trainerLesson(record._id).subscribe({
+      next: (result) => {
+        if (result.detector == undefined) {
+          this.ctx
             .openModal<Detector | undefined>(DetectorSelectorComponent, {
-              projectId: this.projectId
+              projectId: this.projectId,
             })
             .subscribe({
               next: (resultb) => {
                 if (resultb && resultb._id && result._id) {
-                  this.ctx.api.trainer.trainerLessonSetDetector(resultb._id,result._id).subscribe({next:(resultc)=>{
-
-                  }})
+                  this.ctx.api.trainer
+                    .trainerLessonSetDetector(resultb._id, result._id)
+                    .subscribe({
+                      next: (resultc) => {
+                        this.router.navigateByUrl(
+                          '/record/studio/' + record._id + '/' + resultb._id
+                        );
+                      },
+                    });
                 }
               },
               error: (result) => {},
             });
-
-    })})
-  }
-
-  studio(record:Record){
-    if (!record._id) return;
-    this.ctx.api.trainer.trainerLesson(record._id).subscribe({next:(result=>{
-      if (result.detector == undefined){
-        this.ctx
-              .openModal<Detector | undefined>(DetectorSelectorComponent, {
-                projectId: this.projectId
-              })
-              .subscribe({
-                next: (resultb) => {
-                  if (resultb && resultb._id && result._id) {
-                    this.ctx.api.trainer.trainerLessonSetDetector(resultb._id,result._id).subscribe({next:(resultc)=>{
-                      this.router.navigateByUrl('/record/studio/'+record._id+'/'+resultb._id);
-                    }})
-                  }
-                },
-                error: (result) => {},
-              });
-      }else{
-        this.router.navigateByUrl('/record/studio/'+record._id+'/'+result.detector);
-      }
-    })})
-
-
+        } else {
+          this.router.navigateByUrl(
+            '/record/studio/' + record._id + '/' + result.detector
+          );
+        }
+      },
+    });
   }
 
   load() {
     if (!this.projectId) return;
     this.ctx.api.recorder.recorderRunning().subscribe({
-      next: (result)=>{
+      next: (result) => {
         this.running = result;
       },
-      error: (result)=>{
+      error: (result) => {
         this.running = undefined;
-      }
-    })
+      },
+    });
 
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loadings'));
-    this.ctx.api.recorder.recorderList(this.projectId,this.skip,this.limit,this.search).subscribe(
-     { next: (result)=>{
-        this.loading.next(undefined);
-        this.total = result.total;
-        this.records = result.records;
-      },
-      error: (result)=>{
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
-      }
-  })
+    this.ctx.api.recorder
+      .recorderList(this.projectId, this.skip, this.limit, this.search)
+      .subscribe({
+        next: (result) => {
+          this.loading.next(undefined);
+          this.total = result.total;
+          this.records = result.records;
+        },
+        error: (result) => {
+          this.loading.next(undefined);
+          this.error.next(result.error.detail);
+        },
+      });
   }
 }

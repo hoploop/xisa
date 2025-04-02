@@ -38,7 +38,6 @@ import { DetectorTextsSummaryComponent } from './detector/detector-texts-summary
 import { DetectorSummaryComponent } from './detector/detector-summary/detector-summary.component';
 import { TemplatesModule } from '@templates/templates.module';
 import { RecordFrameSelectorComponent } from './record/record-frame-selector/record-frame-selector.component';
-import { RecordSuggestionsComponent } from './record/record-suggestions/record-suggestions.component';
 import { DetectorTrainSuggestionComponent } from './detector/detector-train-suggestion/detector-train-suggestion.component';
 import { RecordBoxDetectedObjectComponent } from './record/record-box-detected-object/record-box-detected-object.component';
 import { RecordBoxDetectedTextComponent } from './record/record-box-detected-text/record-box-detected-text.component';
@@ -47,8 +46,8 @@ import { RecordBoxEventComponent } from './record/record-box-event/record-box-ev
 import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/record-box-suggestion.component';
 import { RecordEventNamePipe } from './record/record-event-name.pipe';
 import { DetectorTrainCountPipePipe } from './detector/detector-train-count-pipe.pipe';
-import { LoggerModule } from 'ngx-logger';
 import { DetectorSettingsComponent } from './detector/detector-settings/detector-settings.component';
+import { ProjectMenuComponent } from './project/project-menu/project-menu.component';
 
 
 
@@ -86,7 +85,6 @@ import { DetectorSettingsComponent } from './detector/detector-settings/detector
     DetectorTextsSummaryComponent,
     DetectorSummaryComponent,
     RecordFrameSelectorComponent,
-    RecordSuggestionsComponent,
     DetectorTrainSuggestionComponent,
     RecordBoxDetectedObjectComponent,
     RecordBoxDetectedTextComponent,
@@ -96,6 +94,7 @@ import { DetectorSettingsComponent } from './detector/detector-settings/detector
     RecordEventNamePipe,
     DetectorTrainCountPipePipe,
     DetectorSettingsComponent,
+    ProjectMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -112,7 +111,8 @@ import { DetectorSettingsComponent } from './detector/detector-settings/detector
     RecordListComponent,
     RecordFormComponent,
     RecordControllerComponent,
-    DetectorListComponent
+    DetectorListComponent,
+    ProjectMenuComponent
   ]
 })
 export class WorkspaceModule { }

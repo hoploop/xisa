@@ -1,8 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ContextService } from '@services/context.service';
-import { BehaviorSubject } from 'rxjs';
-import { FAIconType } from '@constants/icons';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
   selector: 'app-check',
@@ -10,13 +7,7 @@ import { Router } from '@angular/router';
   styleUrl: './check.component.scss',
   standalone: false,
 })
-export class CheckComponent implements OnInit {
-  loading = new BehaviorSubject<string | undefined>(undefined);
-  error = new BehaviorSubject<string | undefined>(undefined);
-
-  FAIconType = FAIconType;
-
-  constructor(private ctx: ContextService,private router:Router) {}
+export class CheckComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.check();
@@ -26,7 +17,7 @@ export class CheckComponent implements OnInit {
     this.error.next(undefined);
     let token = this.ctx.api.getToken();
     if (token == null) {
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl('/welcome');
       this.ctx.beat.auth.logged.next(false);
       return;
     }
@@ -36,14 +27,14 @@ export class CheckComponent implements OnInit {
       next: (result) => {
         this.loading.next(undefined);
         this.ctx.beat.auth.logged.next(true);
-        this.router.navigateByUrl('/logged');
+        this.router.navigateByUrl('/project/list');
       },
       error: (result) => {
         this.loading.next(undefined);
         this.error.next(result.error.detail);
         this.ctx.api.remToken();
         this.ctx.beat.auth.logged.next(false);
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/welcome');
       },
     });
   }
