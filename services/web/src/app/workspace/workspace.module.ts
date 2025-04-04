@@ -50,6 +50,7 @@ import { DetectorSettingsComponent } from './detector/detector-settings/detector
 import { ProjectMenuComponent } from './project/project-menu/project-menu.component';
 import { RecordActionComponent } from './record/record-action/record-action.component';
 import { RecordActionNamePipe } from './record/record-action-name.pipe';
+import { RecordMenuComponent } from './record/record-menu/record-menu.component';
 
 
 
@@ -99,6 +100,7 @@ import { RecordActionNamePipe } from './record/record-action-name.pipe';
     ProjectMenuComponent,
     RecordActionComponent,
     RecordActionNamePipe,
+    RecordMenuComponent,
   ],
   imports: [
     CommonModule,

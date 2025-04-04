@@ -1,11 +1,17 @@
 <div class="d-flex w-100 justify-content-start">
-  <div class="d-flex align-items-center pointer" (click)="home()">
-    <img src="assets/icon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-    <span translate>menu.title</span>
-  </div>
-  <ng-content select="[start]"></ng-content>
-  <div class="ms-auto">
+  <button  class="btn btn-sm ms-2 btn-outline-primary border-0 rounded-0 pt-2 pb-2" (click)="home()">
+    <div class="d-flex align-items-center">
+      <img src="assets/icon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      <span translate>menu.title</span>
+    </div>
+  </button>
+  <button class="btn btn-sm btn-outline-primary border-0 rounded-0" (click)="projects()">Projects</button>
+  <ng-content *ngIf="(logged|async) == true" select="[start]"></ng-content>
+  <div class="ms-auto d-flex align-items-center">
     <ng-content select="[end]"></ng-content>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == true" (click)="logout()" translate>auth.logout</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == false" (click)="register()" translate>auth.register</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == false" (click)="login()" translate>auth.login</button>
   </div>
 
 </div>

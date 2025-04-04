@@ -45,7 +45,7 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
   }
 
   records(project: Project) {
-    this.router.navigateByUrl('/record/list/' + project._id);
+    this.router.navigate([{outlets:{'primary':'record/list/' + project._id,'menu':'record/list/' + project._id}}]);
   }
 
   detectors(project: Project) {
