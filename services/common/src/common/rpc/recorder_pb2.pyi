@@ -6,6 +6,186 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class ExistRecordEventActionRequest(_message.Message):
+    __slots__ = ("user", "event")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    event: str
+    def __init__(self, user: _Optional[str] = ..., event: _Optional[str] = ...) -> None: ...
+
+class ExistRecordEventActionResponse(_message.Message):
+    __slots__ = ("status", "message", "found")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    FOUND_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    found: bool
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., found: bool = ...) -> None: ...
+
+class UpdateRecordActionRequest(_message.Message):
+    __slots__ = ("user", "id", "event", "byLabel", "byText", "byRegex", "byOrder", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    BYLABEL_FIELD_NUMBER: _ClassVar[int]
+    BYTEXT_FIELD_NUMBER: _ClassVar[int]
+    BYREGEX_FIELD_NUMBER: _ClassVar[int]
+    BYORDER_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    event: str
+    byLabel: str
+    byText: str
+    byRegex: str
+    byOrder: _containers.RepeatedScalarFieldContainer[int]
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class UpdateRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message", "action")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTION_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    action: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., action: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class CreateRecordActionRequest(_message.Message):
+    __slots__ = ("user", "record", "event", "byLabel", "byText", "byRegex", "byOrder", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    BYLABEL_FIELD_NUMBER: _ClassVar[int]
+    BYTEXT_FIELD_NUMBER: _ClassVar[int]
+    BYREGEX_FIELD_NUMBER: _ClassVar[int]
+    BYORDER_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    event: str
+    byLabel: str
+    byText: str
+    byRegex: str
+    byOrder: _containers.RepeatedScalarFieldContainer[int]
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class CreateRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message", "action")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTION_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    action: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., action: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class RemoveRecordActionRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class RemoveRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class LoadRecordActionByEventRequest(_message.Message):
+    __slots__ = ("user", "event")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    event: str
+    def __init__(self, user: _Optional[str] = ..., event: _Optional[str] = ...) -> None: ...
+
+class LoadRecordActionByEventResponse(_message.Message):
+    __slots__ = ("status", "message", "action")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTION_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    action: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., action: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class LoadRecordActionRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class LoadRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message", "action")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTION_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    action: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., action: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class ListRecordActionRequest(_message.Message):
+    __slots__ = ("user", "record", "skip", "limit", "event", "search")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    SKIP_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    SEARCH_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    skip: int
+    limit: int
+    event: str
+    search: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ..., event: _Optional[str] = ..., search: _Optional[str] = ...) -> None: ...
+
+class ListRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message", "total", "actions")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    ACTIONS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    actions: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., actions: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
+
+class CountRecordActionRequest(_message.Message):
+    __slots__ = ("user", "record", "event", "search")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    SEARCH_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    event: str
+    search: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., event: _Optional[str] = ..., search: _Optional[str] = ...) -> None: ...
+
+class CountRecordActionResponse(_message.Message):
+    __slots__ = ("status", "message", "total")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ...) -> None: ...
+
 class LoadEventRequest(_message.Message):
     __slots__ = ("user", "id")
     USER_FIELD_NUMBER: _ClassVar[int]

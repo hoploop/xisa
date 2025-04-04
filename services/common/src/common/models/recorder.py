@@ -1,6 +1,6 @@
 # PYTHON IMPORTS
 from datetime import datetime
-from typing import Annotated, List, Literal, Union
+from typing import Annotated, List, Literal, Optional, Union
 
 
 # LIBRARY IMPORTS
@@ -16,6 +16,20 @@ class OS(Document):
     name: str
     version: str
 
+class Action(Document):
+    record: PydanticObjectId
+    event: PydanticObjectId
+    by_label: Optional[str] = None
+    by_text: Optional[str] = None
+    by_regex: Optional[str] = None
+    confidence:float
+    by_order: List[int] = Field(default_factory=empty_list)
+    created: datetime = Field(default_factory=utc_now)
+    updated: datetime = Field(default_factory=utc_now)    
+    
+    @before_event(Update, SaveChanges)
+    async def update_last(self):
+        self.updated = utc_now()    
 
 class Event(Document):
     type: str
@@ -25,6 +39,13 @@ class Event(Document):
 
     class Settings:
         is_root = True
+        
+    
+    @before_event(Delete)
+    async def remove_related(self):
+        await Action.find_many(Action.event == self.id).delete()
+
+
 
 
 class MouseClickLeftEvent(Event):
@@ -133,4 +154,5 @@ class Record(Document):
     async def remove_related(self):
         await TrainLesson.find_all(TrainLesson.record == self.id).delete()
         await Event.find_many(Event.record == self.id, with_children=True).delete()
+        await Action.find_many(Action.record == self.id, with_children=True).delete()
 

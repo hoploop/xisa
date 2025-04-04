@@ -14,7 +14,7 @@ export class RecordBoxDetectedObjectComponent extends BaseComponent {
   @Input() obj!:DetectObject;
 
   dismiss(){
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
 
   }
 }

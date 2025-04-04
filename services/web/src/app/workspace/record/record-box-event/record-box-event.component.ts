@@ -15,6 +15,6 @@ export class RecordBoxEventComponent extends BaseComponent {
 
 
   dismiss(){
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
 }

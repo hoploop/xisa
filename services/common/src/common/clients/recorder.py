@@ -6,9 +6,9 @@ from beanie import PydanticObjectId
 
 # LOCAL IMPORTS
 from common.models.auth import User
-from common.models.recorder import EVENTS, Record
+from common.models.recorder import EVENTS, Action, Record
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordFrameRequest, CountRecordRequest, DeleteRecordRequest, ListRecordEventRequest, ListRecordRequest, LoadEventRequest, LoadRecordFrameBase64Request, LoadRecordFrameRequest, LoadRecordRequest, RunningRequest, SizeRecordRequest, SizeRecordVideoRequest, StartRecordRequest, StopRecordRequest, StreamRangeRecordVideoRequest, StreamRecordVideoRequest, UpdateRecordRequest
+from common.rpc.recorder_pb2 import CountRecordActionRequest, CountRecordActionResponse, CountRecordEventRequest, CountRecordFrameRequest, CountRecordRequest, CreateRecordActionRequest, CreateRecordActionResponse, DeleteRecordRequest, ExistRecordEventActionRequest, ExistRecordEventActionResponse, ListRecordActionRequest, ListRecordActionResponse, ListRecordEventRequest, ListRecordRequest, LoadEventRequest, LoadRecordActionByEventRequest, LoadRecordActionByEventResponse, LoadRecordActionRequest, LoadRecordActionResponse, LoadRecordFrameBase64Request, LoadRecordFrameRequest, LoadRecordRequest, RemoveRecordActionRequest, RemoveRecordActionResponse, RunningRequest, SizeRecordRequest, SizeRecordVideoRequest, StartRecordRequest, StopRecordRequest, StreamRangeRecordVideoRequest, StreamRecordVideoRequest, UpdateRecordActionRequest, UpdateRecordActionResponse, UpdateRecordRequest
 from common.rpc.recorder_pb2_grpc import RecorderStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -161,3 +161,72 @@ class RecorderClient(Client):
         if res.status == False:
             raise Exception(res.message)
         return res.data
+    
+    async def createRecordAction(self,user:User,recordId:PydanticObjectId,eventId:PydanticObjectId,byLabel:Optional[str]=None,byText:Optional[str]=None,byRegex:Optional[str]=None,byOrder:List[str]=[],confidence:float=0.0)-> Action:
+        req = CreateRecordActionRequest(user=str(user.id),record=str(recordId),event=str(eventId),byLabel=byLabel,byText=byText,byRegex=byRegex,byOrder=byOrder,confidence=confidence)    
+        res: CreateRecordActionResponse = await self.client.createRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.action)
+
+    async def listRecordAction(self,user:User,recordId:PydanticObjectId,eventId:Optional[PydanticObjectId]=None,skip:int=0,limit:int=10,search:Optional[str]=None)-> Tuple[int,List[Action]]:
+        if eventId is None:
+            event = None
+        else:
+            event = str(eventId)
+        req = ListRecordActionRequest(user=str(user.id),record=str(recordId),event=event,skip=skip,limit=limit,search=search)
+        res: ListRecordActionResponse = await self.client.listRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        total = res.total
+        ret = []
+        for act in res.actions:
+            ret.append(Conversions.deserialize(act))
+        return total, ret
+    
+    async def countRecordAction(self,user:User,recordId:PydanticObjectId,eventId:Optional[PydanticObjectId]=None,search:Optional[str]=None)-> int:
+        if eventId is None:
+            event = None
+        else:
+            event = str(eventId)
+        req = CountRecordActionRequest(user=str(user.id),record=str(recordId),event=event,search=search)
+        res: CountRecordActionResponse = await self.client.countRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.total
+    
+    async def loadRecordAction(self,user:User,actionId:PydanticObjectId)-> Action:
+        req = LoadRecordActionRequest(user=str(user.id),id=str(actionId))
+        res: LoadRecordActionResponse = await  self.client.loadRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.action)
+    
+    async def loadRecordActionByEvent(self,user:User,eventId:PydanticObjectId)-> Action:
+        req = LoadRecordActionByEventRequest(user=str(user.id),event=str(eventId))
+        res: LoadRecordActionByEventResponse = await self.client.loadRecordActionByEvent(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.action)
+    
+    async def existRecordEventAction(self,user:User,eventId:PydanticObjectId)-> bool:
+        req = ExistRecordEventActionRequest(user=str(user.id),event=str(eventId))
+        res: ExistRecordEventActionResponse = await self.client.existRecordEventAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.found
+    
+    async def removeRecordAction(self,user:User,actionId:PydanticObjectId)-> bool:
+        req = RemoveRecordActionRequest(user=str(user.id),id=str(actionId))
+        res: RemoveRecordActionResponse = await self.client.removeRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    
+    async def updateRecordAction(self,user:User,actionId:PydanticObjectId,eventId:PydanticObjectId,byLabel:Optional[str]=None,byText:Optional[str]=None,byRegex:Optional[str]=None,byOrder:List[str]=[],confidence:float=0.0)-> Action:
+        req = UpdateRecordActionRequest(user=str(user.id),id=str(actionId),event=str(eventId),byLabel=byLabel,byText=byText,byRegex=byRegex,byOrder=byOrder,confidence=confidence)    
+        res: UpdateRecordActionResponse = await self.client.updateRecordAction(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return Conversions.deserialize(res.action)

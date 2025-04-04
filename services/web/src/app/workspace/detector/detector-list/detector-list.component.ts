@@ -108,10 +108,6 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  learn(detector: Detector) {
-    if (!detector._id) return;
-    this.router.navigateByUrl('/detector/learn/' + detector._id);
-  }
 
   load() {
     if (!this.projectId) return;

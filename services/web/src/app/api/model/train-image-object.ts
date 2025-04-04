@@ -23,5 +23,6 @@ export interface TrainImageObject {
     val?: boolean;
     created?: string;
     updated?: string;
+    archived?: boolean;
 }
 

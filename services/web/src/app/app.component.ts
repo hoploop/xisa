@@ -20,6 +20,10 @@ export class AppComponent implements AfterViewInit {
 
   }
 
+  onResizeTop(event:[number,number]){
+    this.ctx.resizeTop.next(event);
+  }
+
   ngAfterViewInit() {
     this.adjustPadding();
     window.addEventListener('resize', () => this.adjustPadding()); // Adjust padding on window resize
@@ -42,9 +46,6 @@ export class AppComponent implements AfterViewInit {
     })
   }
 
-  onResizeTop(event:[number,number]){
-    console.log(event);
-  }
 
   adjustPadding() {
 

@@ -14,8 +14,8 @@ import grpc
 # LOCAL IMPORTS
 from common.models import MODELS
 from common.models.defaults import utc_now
-from common.models.recorder import OS, Event, Record
-from common.rpc.recorder_pb2 import CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, DeleteRecordRequest, DeleteRecordResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadEventRequest, LoadEventResponse, LoadRecordFrameBase64Request, LoadRecordFrameBase64Response, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordRequest, UpdateRecordResponse
+from common.models.recorder import OS, Action, Event, Record
+from common.rpc.recorder_pb2 import CountRecordActionRequest, CountRecordActionResponse, CountRecordEventRequest, CountRecordEventResponse, CountRecordFrameRequest, CountRecordFrameResponse, CountRecordRequest, CountRecordResponse, CreateRecordActionRequest, CreateRecordActionResponse, DeleteRecordRequest, DeleteRecordResponse, ExistRecordEventActionRequest, ExistRecordEventActionResponse, ListRecordActionRequest, ListRecordActionResponse, ListRecordEventRequest, ListRecordEventResponse, ListRecordRequest, ListRecordResponse, LoadEventRequest, LoadEventResponse, LoadRecordActionByEventRequest, LoadRecordActionByEventResponse, LoadRecordActionRequest, LoadRecordActionResponse, LoadRecordFrameBase64Request, LoadRecordFrameBase64Response, LoadRecordFrameRequest, LoadRecordFrameResponse, LoadRecordRequest, LoadRecordResponse, RemoveRecordActionRequest, RemoveRecordActionResponse, RunningRequest, RunningResponse, SizeRecordRequest, SizeRecordResponse, SizeRecordVideoRequest, SizeRecordVideoResponse, StartRecordRequest, StartRecordResponse, StopRecordRequest, StopRecordResponse, StreamRangeRecordVideoRequest, StreamRangeRecordVideoResponse, StreamRecordVideoRequest, StreamRecordVideoResponse, UpdateRecordActionRequest, UpdateRecordActionResponse, UpdateRecordRequest, UpdateRecordResponse
 from common.rpc.recorder_pb2_grpc import RecorderServicer
 from common.service import Service
 from common.service import ServiceConfig
@@ -410,3 +410,140 @@ class RecorderService(Service, RecorderServicer):
 
         except Exception as e:
             log.warning(str(e))
+            
+    async def createRecordAction(self, request: CreateRecordActionRequest, context) -> CreateRecordActionResponse:
+        try:
+            recordId = PydanticObjectId(request.record)
+            record = await Record.find(Record.id == recordId).first_or_none()
+            if not record:
+                return CreateRecordActionResponse(status=False,message="workspace.record.errors.not_found")
+            eventId = PydanticObjectId(request.event)
+            event = await Event.find(Event.id == eventId, with_children=True).first_or_none()
+            if not event:
+                return CreateRecordActionResponse(status=False,message="workspace.record.event.errors.not_found")
+            
+            action = await Action(record=recordId,event=eventId,by_label=request.byLabel,by_text=request.byText,by_regex=request.byRegex,by_order=request.byOrder,confidence=request.confidence).insert()
+            return CreateRecordActionResponse(status=True,action=Conversions.serialize(action))
+            
+        except Exception as e:
+            log.warning(str(e))
+            return CreateRecordActionResponse(status=False,message=str(e))
+    
+    
+    async def listRecordAction(self, request: ListRecordActionRequest, context) -> ListRecordActionResponse:
+        try:
+            search = request.search
+            skip = request.skip
+            limit = request.limit
+            if request.event is None or request.event == '':
+                eventId = None
+            else:
+                eventId= PydanticObjectId(request.event)
+            
+            recordId = PydanticObjectId(request.record)
+            if eventId:
+                qry = And(Action.record == recordId, Action.event == eventId)
+            else:
+                qry = And(Action.record == recordId)
+            
+            total = await Action.find(qry).count()
+            if limit == -1:
+                limit = None
+            actions = await Action.find(qry).skip(skip).limit(limit).sort(-Action.created).to_list()
+            ret = []
+            for action in actions:
+                ret.append(Conversions.serialize(action))
+            return ListRecordActionResponse(status=True,total=total,actions=ret)
+        except Exception as e:
+            log.warning(str(e))
+            return ListRecordActionResponse(status=False,message=str(e)) 
+        
+        
+    async def countRecordAction(self, request: CountRecordActionRequest, context) -> CountRecordActionResponse:
+        try:
+            search = request.search
+            if request.event is None or request.event == '':
+                eventId = None
+            else:
+                eventId= PydanticObjectId(request.event)
+            
+            recordId = PydanticObjectId(request.record)
+            if eventId:
+                qry = And(Action.record == recordId, Action.event == eventId)
+            else:
+                qry = And(Action.record == recordId)
+            
+            total = await Action.find(qry).count()
+            return CountRecordActionResponse(status=True,total=total)
+        except Exception as e:
+            log.warning(str(e))
+            return CountRecordActionResponse(status=False,message=str(e)) 
+        
+        
+    async def loadRecordAction(self, request: LoadRecordActionRequest, context) -> LoadRecordActionResponse:
+        try:
+            actionId = PydanticObjectId(request.id)
+            found = await Action.find(Action.id == actionId).first_or_none()
+            if not found:
+                return LoadRecordActionResponse(status=False,message="workspace.record.action.errors.not_found")
+            return LoadRecordActionResponse(status=True,action=Conversions.serialize(found))
+        except Exception as e:
+            log.warning(str(e))
+            return LoadRecordActionResponse(status=False,message=str(e)) 
+    
+    async def loadRecordActionByEvent(self, request: LoadRecordActionByEventRequest, context) -> LoadRecordActionByEventResponse:
+        try:
+            eventId = PydanticObjectId(request.event)
+            found = await Action.find(Action.event == eventId).first_or_none()
+            if not found:
+                return LoadRecordActionByEventResponse(status=False,message="workspace.record.action.errors.not_found")
+            return LoadRecordActionByEventResponse(status=True,action=Conversions.serialize(found))
+        except Exception as e:
+            log.warning(str(e))
+            return LoadRecordActionByEventResponse(status=False,message=str(e))     
+        
+    async def existRecordEventAction(self, request: ExistRecordEventActionRequest, context) -> ExistRecordEventActionResponse:
+        try:
+            eventId = PydanticObjectId(request.event)
+            found = await Action.find(Action.event == eventId).first_or_none()
+            if not found:
+                return ExistRecordEventActionResponse(status=True,found=False)
+            return ExistRecordEventActionResponse(status=True,found=True)
+        except Exception as e:
+            log.warning(str(e))
+            return ExistRecordEventActionResponse(status=False,message=str(e))     
+            
+    
+    async def removeRecordAction(self, request: RemoveRecordActionRequest, context) -> RemoveRecordActionResponse:
+        try:
+            actionId = PydanticObjectId(request.id)
+            found = await Action.find(Action.id == actionId).first_or_none()
+            if not found:
+                return RemoveRecordActionResponse(status=False,message="workspace.record.action.errors.not_found")
+            await found.delete()
+            return RemoveRecordActionResponse(status=True)
+        except Exception as e:
+            log.warning(str(e))
+            return RemoveRecordActionResponse(status=False,message=str(e))     
+        
+        
+    async def updateRecordAction(self, request: UpdateRecordActionRequest, context) -> UpdateRecordActionResponse:
+        try:
+            actionId = PydanticObjectId(request.id)
+            found = await Action.find(Action.id == actionId).first_or_none()
+            if not found:
+                return UpdateRecordActionResponse(status=False,message="workspace.record.action.errors.not_found")
+            found.event = PydanticObjectId(request.event)
+            found.by_label = request.byLabel
+            found.by_text = request.byText
+            found.by_regex = request.byRegex
+            found.by_order = request.byOrder
+            found.confidence = request.confidence
+            await found.save()
+            return UpdateRecordActionResponse(status=True,action=Conversions.serialize(found))
+        except Exception as e:
+            log.warning(str(e))
+            return UpdateRecordActionResponse(status=False,message=str(e))     
+        
+    
+    

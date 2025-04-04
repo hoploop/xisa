@@ -339,7 +339,7 @@ class DetectorService(Service, DetectorServicer):
                             line=line,
                             word=word,
                             value=text,
-                            confidence=confidence,
+                            confidence=confidence/100,
                         )
                     )
             return DetectTextsResponse(status=True, texts=texts)

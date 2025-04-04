@@ -11,8 +11,12 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { Action } from '../model/models';
 import { HTTPValidationError } from '../model/models';
 import { Record } from '../model/models';
+import { RecordActionCreatePayload } from '../model/models';
+import { RecordActionListResponse } from '../model/models';
+import { RecordActionUpdatePayload } from '../model/models';
 import { RecordListResponse } from '../model/models';
 import { RecorderEventList200ResponseInner } from '../model/models';
 import { ResponseRecordereventload } from '../model/models';
@@ -25,6 +29,61 @@ import { Configuration }                                     from '../configurat
 export interface RecorderServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * Action Count
+     * 
+     * @param recordId 
+     * @param eventId 
+     * @param search 
+     */
+    recorderActionCount(recordId: string, eventId?: string, search?: string, extraHttpRequestParams?: any): Observable<number>;
+
+    /**
+     * Action Create
+     * 
+     * @param recordActionCreatePayload 
+     */
+    recorderActionCreate(recordActionCreatePayload: RecordActionCreatePayload, extraHttpRequestParams?: any): Observable<Action>;
+
+    /**
+     * Action List
+     * 
+     * @param recordId 
+     * @param eventId 
+     * @param skip 
+     * @param limit 
+     * @param search 
+     */
+    recorderActionList(recordId: string, eventId?: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordActionListResponse>;
+
+    /**
+     * Action Load
+     * 
+     * @param actionId 
+     */
+    recorderActionLoad(actionId: string, extraHttpRequestParams?: any): Observable<Action>;
+
+    /**
+     * Action Load By Event
+     * 
+     * @param eventId 
+     */
+    recorderActionLoadByEvent(eventId: string, extraHttpRequestParams?: any): Observable<Action>;
+
+    /**
+     * Action Remove
+     * 
+     * @param actionId 
+     */
+    recorderActionRemove(actionId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Action Update
+     * 
+     * @param recordActionUpdatePayload 
+     */
+    recorderActionUpdate(recordActionUpdatePayload: RecordActionUpdatePayload, extraHttpRequestParams?: any): Observable<Action>;
 
     /**
      * Count
@@ -41,6 +100,13 @@ export interface RecorderServiceInterface {
      * @param description 
      */
     recorderEdit(recordId: string, name: string, description: string, extraHttpRequestParams?: any): Observable<Record>;
+
+    /**
+     * Event Action Exist
+     * 
+     * @param eventId 
+     */
+    recorderEventActionExist(eventId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
      * Event Count

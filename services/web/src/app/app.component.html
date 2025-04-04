@@ -1,5 +1,12 @@
-<router-outlet name="menu"></router-outlet>
-
+<app-resize-listener class="fixed-top" (resized)="onResizeTop($event)">
+  <div class="container-fluid">
+    <div class="card w-100 rounded-0 border-0 shadow rounded-bottom">
+      <div class="card-body">
+        <router-outlet name="menu"></router-outlet>
+      </div>
+    </div>
+  </div>
+</app-resize-listener>
 <div class="container-fluid pt-2" [style.margin-top.px]="topMargin|async">
   <div class="row">
     <router-outlet></router-outlet>

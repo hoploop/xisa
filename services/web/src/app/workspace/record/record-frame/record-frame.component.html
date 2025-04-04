@@ -2,6 +2,7 @@
   <div class="d-flex justify-content-center mb-2">
 
     <!-- Event -->
+
     <button
       class="btn btn-sm w-100"
       *ngIf="frame && frame.event"
@@ -9,9 +10,25 @@
       [class.btn-outline-secondary]="!eventVisible"
       (click)="toggleEvent()"
     >
-      <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
+    <ng-container [ngSwitch]="frame.event.type">
+      <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyComboPress"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
+        <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyPress"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
+        <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyRelease"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
+        <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
+      </ng-container>
       <span class="ms-2" [translate]="'workspace.record.studio.event'"></span>
     </button>
+
+
 
     <!-- Detected Objects -->
     <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
@@ -87,8 +104,9 @@
       </button>
     </div>
 
-    <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
-      <!-- Suggestions Selector-->
+    <!-- Suggestions Selector-->
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.event && !frame.action">
+
       <button
         class="btn ms-1 btn-sm w-100  text-nowrap"
         [class.btn-primary]="suggestionsVisible"
@@ -111,6 +129,26 @@
         [class.btn-primary]="suggestionsVisible"
         [class.btn-outline-secondary]="!suggestionsVisible"
       >
+        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+      </button>
+    </div>
+
+    <!-- Action Selector-->
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.event && frame.action">
+
+      <button
+        class="btn ms-1 btn-sm w-100  text-nowrap"
+        [class.btn-primary]="suggestionsVisible"
+        [class.btn-outline-secondary]="!suggestionsVisible"
+        (click)="openAction(frame.action)"
+      >
+        <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
+        <span class="ms-2" translate>workspace.record.action.title</span>
+      </button>
+      <button
+        class="btn btn-sm "
+        [class.btn-primary]="suggestionsVisible"
+        [class.btn-outline-secondary]="!suggestionsVisible">
         <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
       </button>
     </div>

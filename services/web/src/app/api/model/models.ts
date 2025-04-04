@@ -1,3 +1,4 @@
+export * from './action';
 export * from './detect-object';
 export * from './detect-text';
 export * from './detector';
@@ -32,6 +33,9 @@ export * from './os';
 export * from './project';
 export * from './project-list-response';
 export * from './record';
+export * from './record-action-create-payload';
+export * from './record-action-list-response';
+export * from './record-action-update-payload';
 export * from './record-list-response';
 export * from './recorder-event-list200-response-inner';
 export * from './register-request';

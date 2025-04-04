@@ -48,6 +48,8 @@ import { RecordEventNamePipe } from './record/record-event-name.pipe';
 import { DetectorTrainCountPipePipe } from './detector/detector-train-count-pipe.pipe';
 import { DetectorSettingsComponent } from './detector/detector-settings/detector-settings.component';
 import { ProjectMenuComponent } from './project/project-menu/project-menu.component';
+import { RecordActionComponent } from './record/record-action/record-action.component';
+import { RecordActionNamePipe } from './record/record-action-name.pipe';
 
 
 
@@ -95,6 +97,8 @@ import { ProjectMenuComponent } from './project/project-menu/project-menu.compon
     DetectorTrainCountPipePipe,
     DetectorSettingsComponent,
     ProjectMenuComponent,
+    RecordActionComponent,
+    RecordActionNamePipe,
   ],
   imports: [
     CommonModule,

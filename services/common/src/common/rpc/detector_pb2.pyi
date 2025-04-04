@@ -37,10 +37,11 @@ class FindDetectorImageLabelResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., label: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
 class DetectorStepSuggestion(_message.Message):
-    __slots__ = ("event", "byLabel", "byText", "byOrder", "confidence", "x", "y", "w", "h")
+    __slots__ = ("event", "byLabel", "byText", "byRegex", "byOrder", "confidence", "x", "y", "w", "h")
     EVENT_FIELD_NUMBER: _ClassVar[int]
     BYLABEL_FIELD_NUMBER: _ClassVar[int]
     BYTEXT_FIELD_NUMBER: _ClassVar[int]
+    BYREGEX_FIELD_NUMBER: _ClassVar[int]
     BYORDER_FIELD_NUMBER: _ClassVar[int]
     CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
     X_FIELD_NUMBER: _ClassVar[int]
@@ -50,13 +51,14 @@ class DetectorStepSuggestion(_message.Message):
     event: str
     byLabel: str
     byText: str
+    byRegex: str
     byOrder: _containers.RepeatedScalarFieldContainer[int]
     confidence: float
     x: float
     y: float
     w: float
     h: float
-    def __init__(self, event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ..., x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ...) -> None: ...
+    def __init__(self, event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ..., x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ...) -> None: ...
 
 class SuggestStepRequest(_message.Message):
     __slots__ = ("user", "data", "event", "detector", "confidence")

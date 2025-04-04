@@ -23,7 +23,125 @@ service Recorder {
     rpc streamRangeRecordVideo(StreamRangeRecordVideoRequest) returns (StreamRangeRecordVideoResponse);
     rpc sizeRecordVideo(SizeRecordVideoRequest) returns (SizeRecordVideoResponse);
     rpc loadEvent(LoadEventRequest) returns (LoadEventResponse);
+ 
+    rpc createRecordAction(CreateRecordActionRequest) returns (CreateRecordActionResponse);
+    rpc listRecordAction(ListRecordActionRequest) returns (ListRecordActionResponse);
+    rpc countRecordAction(CountRecordActionRequest) returns (CountRecordActionResponse);
+    rpc loadRecordAction(LoadRecordActionRequest) returns (LoadRecordActionResponse);
+    rpc loadRecordActionByEvent(LoadRecordActionByEventRequest) returns (LoadRecordActionByEventResponse);
+    rpc existRecordEventAction(ExistRecordEventActionRequest) returns (ExistRecordEventActionResponse);
+    rpc removeRecordAction(RemoveRecordActionRequest) returns (RemoveRecordActionResponse);
+    rpc updateRecordAction(UpdateRecordActionRequest) returns (UpdateRecordActionResponse);
+}
 
+
+message ExistRecordEventActionRequest {
+    string user = 1;
+    string event = 2;
+}
+
+
+message ExistRecordEventActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    bool found = 3;
+}
+
+message UpdateRecordActionRequest {
+    string user = 1;
+    string id = 2;
+    string event = 3;
+    optional string byLabel = 4;
+    optional string byText = 5;
+    optional string byRegex = 6;
+    repeated int32 byOrder = 7;
+    optional float confidence = 8;
+}
+
+message UpdateRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized action = 3;
+}
+
+message CreateRecordActionRequest {
+    string user = 1;
+    string record = 2;
+    string event = 3;
+    optional string byLabel = 4;
+    optional string byText = 5;
+    optional string byRegex = 6;
+    repeated int32 byOrder = 7;
+    optional float confidence = 8;
+}
+
+message CreateRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized action = 3;
+}
+
+message RemoveRecordActionRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message RemoveRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message LoadRecordActionByEventRequest {
+    string user = 1;
+    string event = 2;
+}
+
+
+message LoadRecordActionByEventResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized action = 3;
+}
+
+message LoadRecordActionRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message LoadRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized action = 3;
+}
+
+message ListRecordActionRequest {
+    string user = 1;
+    string record = 2;
+    int32 skip = 3;
+    int32 limit = 4;
+    optional string event = 5;
+    optional string search = 6;
+
+}
+
+message ListRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+    repeated Serialized actions = 4;
+}
+
+message CountRecordActionRequest {
+    string user = 1;
+    string record = 2;
+    optional string event = 3;
+    optional string search = 4;
+}
+
+message CountRecordActionResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
 }
 
 message LoadEventRequest {

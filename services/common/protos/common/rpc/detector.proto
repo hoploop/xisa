@@ -47,12 +47,13 @@ message DetectorStepSuggestion {
   optional string event = 1;
   optional string byLabel = 2;
   optional string byText = 3;
-  repeated int32 byOrder = 4;
-  optional float confidence = 5;
-  float x = 6;
-    float y = 7;
-        float w = 8;
-    float h = 9;
+  optional string byRegex = 4;
+  repeated int32 byOrder = 5;
+  optional float confidence = 6;
+  float x = 7;
+  float y = 8;
+  float w = 9;
+  float h = 10;
 }
 
 message SuggestStepRequest {

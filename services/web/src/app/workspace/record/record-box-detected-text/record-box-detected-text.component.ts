@@ -14,6 +14,6 @@ export class RecordBoxDetectedTextComponent extends BaseComponent{
   @Input() text!: DetectText;
 
   dismiss(){
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
 }

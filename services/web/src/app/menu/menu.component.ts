@@ -13,9 +13,7 @@ export class MenuComponent extends BaseComponent{
   logged = this.ctx.beat.auth.logged;
 
 
-  onResizeTop(event:[number,number]){
-    this.ctx.resizeTop.next(event);
-  }
+
 
   logout(){
     this.ctx.openModal(LogoutComponent,{}).subscribe({
@@ -26,5 +24,9 @@ export class MenuComponent extends BaseComponent{
       },
       error:(result)=>{}
     })
+  }
+
+  projects(){
+    this.router.navigate([{outlets:{'primary':'project/list','menu':'project/list'}}]);
   }
 }

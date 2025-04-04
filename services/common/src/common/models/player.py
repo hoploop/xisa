@@ -66,3 +66,13 @@ class Scenario(Document):
         await StepResult.find_all(StepResult.scenario == self.id).delete()
         await Run.find_all(Run.scenario == self.id).delete()
         
+class Replay(Document):
+    project: PydanticObjectId
+    script: str = Field(default='')
+    created: datetime = Field(default_factory=utc_now)
+    updated: datetime = Field(default_factory=utc_now)    
+    
+    @before_event(Update, SaveChanges)
+    async def update_last(self):
+        self.updated = utc_now()
+      

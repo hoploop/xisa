@@ -1,34 +1,66 @@
 <div class="card shadow border-0">
   <div class="card-header">
     <div class="d-flex w-100">
-    <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
-    <span class="ms-1" translate>workspace.record.studio.title</span>
-    <span class="ms-1">|</span>
-    <span class="ms-1">{{ record?.name }}</span>
-    <span class="ms-auto">
-      <span class="pointer user-select-none">
-        <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
-        <span class="ms-2">Back to record list</span>
+      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+      <span class="ms-1" translate>workspace.record.studio.title</span>
+      <span class="ms-1">|</span>
+      <span class="ms-1">{{ record?.name }}</span>
+      <span class="ms-auto">
+        <span class="pointer user-select-none">
+          <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
+          <span class="ms-2">Back to record list</span>
+        </span>
       </span>
-    </span>
-  </div>
+    </div>
   </div>
 
   <div class="card-body">
-
     <div class="d-flex justify-content-center mb-2">
       <!-- Frame Selector -->
-      <button
-        class="btn btn-sm w-100"
-        (click)="selectFrame()"
-        [class.btn-outline-primary]="frame==undefined"
-        [class.btn-primary]="frame!=undefined"
-      >
-        <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
-        <span *ngIf="frame==undefined" class="ms-2" translate>workspace.record.studio.frames</span>
-        <span *ngIf="frame!=undefined" class="ms-2" [translate]="'workspace.record.studio.selected_frame'" [translateParams]="{'n':frame.count.toString()}"></span>
-        <span *ngIf="frame!=undefined" class="ms-2 smaller">{{frame.milliseconds/1000|number:'0.0-3'}}s</span>
-      </button>
+      <div class="btn-group-sm btn-group w-100">
+
+        <!-- Previous frame -->
+        <button
+        *ngIf="frame && frame.count > 0"
+          class="btn btn-sm"
+          (click)="previousFrame()"
+          [class.btn-outline-primary]="frame == undefined"
+          [class.btn-primary]="frame != undefined"
+        >
+          <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
+        </button>
+        <button
+          class="btn btn-sm w-100"
+          (click)="selectFrame()"
+          [class.btn-outline-primary]="frame == undefined"
+          [class.btn-primary]="frame != undefined"
+        >
+          <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
+          <span *ngIf="frame == undefined" class="ms-2" translate
+            >workspace.record.studio.frames</span
+          >
+          <span
+            *ngIf="frame != undefined"
+            class="ms-2"
+            [translate]="'workspace.record.studio.selected_frame'"
+            [translateParams]="{ n: frame.count.toString() }"
+          ></span>
+          <span *ngIf="frame != undefined" class="ms-2 smaller"
+            >{{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
+          >
+        </button>
+
+        <!-- Next frame -->
+        <button
+          *ngIf="frame && frame.count < frames.length -1"
+          class="btn btn-sm"
+          (click)="nextFrame()"
+          [class.btn-outline-primary]="frame == undefined"
+          [class.btn-primary]="frame != undefined"
+        >
+          <app-fa-icon [icon]="FAIconType.arrowRight"></app-fa-icon>
+        </button>
+      </div>
 
       <!-- Video Selector -->
       <button
@@ -38,20 +70,19 @@
         <app-fa-icon [icon]="FAIconType.video"></app-fa-icon>
         <span class="ms-2" translate>workspace.record.studio.video</span>
       </button>
+    </div>
+    <div>
+      <app-record-frame
+        [frame]="frame"
+        *ngIf="frame && lesson"
+        [lesson]="lesson"
+      ></app-record-frame>
+    </div>
 
-
-
-      </div>
-      <div>
-
-
-    <app-record-frame [frame]="frame" *ngIf="frame && lesson" [lesson]="lesson"></app-record-frame>
-
+    <app-loader
+      [cardFooter]="true"
+      [error]="error"
+      [loading]="loading"
+    ></app-loader>
   </div>
-
-  <app-loader
-    [cardFooter]="true"
-    [error]="error"
-    [loading]="loading"
-  ></app-loader>
 </div>

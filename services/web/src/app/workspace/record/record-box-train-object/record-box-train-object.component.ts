@@ -28,7 +28,7 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
   newLabelValid: boolean = false;
 
   dismiss(){
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
   ngOnInit(): void {
     setTimeout(()=>{

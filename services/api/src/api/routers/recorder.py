@@ -14,7 +14,7 @@ from starlette.responses import Response
 # LOCAL IMPORTS
 from api.routers.auth import CurrentUser
 from common.clients.recorder import RecorderClient
-from common.models.recorder import EVENTS, Record
+from common.models.recorder import EVENTS, Action, Record
 from api.routers import GetApp
 
 
@@ -273,4 +273,154 @@ async def count(
     try:
         return await recorder.countRecord(user, projectId)
     except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class RecordActionListResponse(BaseModel):
+    actions: List[Action]
+    total:int
+    
+
+
+@router.get(
+    "/list/action/{recordId}",
+    operation_id="recorderActionList",
+    response_model=RecordActionListResponse,
+)
+async def action_list(
+    user: CurrentUser,
+    recorder: Recorder,
+    recordId: PydanticObjectId,
+    eventId: Optional[PydanticObjectId]=None,
+    skip: int = 0,
+    limit: int = 10,
+    search: str = None,
+):
+    try:
+        total, actions = await recorder.listRecordAction(user, recordId,eventId, skip, limit, search)
+        return RecordActionListResponse(total=total, actions=actions)
+    except Exception as e:
+        log.debug(str(e))
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+@router.get(
+    "/record/action/count/{recordId}",
+    operation_id="recorderActionCount",
+    response_model=int,
+)
+async def action_count(
+    recordId: PydanticObjectId, user: CurrentUser, recorder: Recorder,eventId: Optional[PydanticObjectId]=None,search:str=None
+):
+    try:
+        return await recorder.countRecordAction(user,recordId,eventId,search)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.delete(
+    "/record/action/remove",
+    operation_id="recorderActionRemove",
+    response_model=bool,
+)
+async def action_remove(
+    actionId: PydanticObjectId, user: CurrentUser, recorder: Recorder
+):
+    try:
+        return await recorder.removeRecordAction(user,actionId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class RecordActionCreatePayload(BaseModel):
+    recordId:PydanticObjectId
+    eventId:PydanticObjectId
+    byLabel: Optional[str]=None
+    byText: Optional[str]=None
+    byRegex: Optional[str]=None
+    byOrder: List[int] = []
+    confidence: float
+    
+
+@router.post(
+    "/record/action/create",
+    operation_id="recorderActionCreate",
+    response_model=Action,
+)
+async def action_create(
+    payload: RecordActionCreatePayload, user: CurrentUser, recorder: Recorder
+):
+    try:
+        return await recorder.createRecordAction(user,payload.recordId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.confidence)
+    except Exception as e:
+        log.warning(str(e))
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class RecordActionUpdatePayload(BaseModel):
+    actionId:PydanticObjectId
+    eventId:PydanticObjectId
+    byLabel: Optional[str]=None
+    byText: Optional[str]=None
+    byRegex: Optional[str]=None
+    byOrder: List[int] = []
+    confidence: float
+    
+
+@router.put(
+    "/record/action/update",
+    operation_id="recorderActionUpdate",
+    response_model=Action,
+)
+async def action_update(
+    payload: RecordActionUpdatePayload, user: CurrentUser, recorder: Recorder
+):
+    try:
+        return await recorder.updateRecordAction(user,payload.actionId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.get(
+    "/record/action/load/{actionId}",
+    operation_id="recorderActionLoad",
+    response_model=Action,
+)
+async def action_load(
+    actionId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
+    try:
+        return await recorder.loadRecordAction(user,actionId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.get(
+    "/record/action/event/{eventId}",
+    operation_id="recorderActionLoadByEvent",
+    response_model=Action,
+)
+async def action_load_by_event(
+    eventId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
+    try:
+        return await recorder.loadRecordActionByEvent(user,eventId)
+    except Exception as e:
+        log.warning(str(e))
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.get(
+    "/record/event/action/exist/{eventId}",
+    operation_id="recorderEventActionExist",
+    response_model=bool,
+)
+async def event_action_exist(
+    eventId: PydanticObjectId, user: CurrentUser, recorder: Recorder):
+    try:
+        return await recorder.existRecordEventAction(user,eventId)
+    except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

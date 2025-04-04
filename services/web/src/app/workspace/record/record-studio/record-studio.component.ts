@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  Action,
   Detector,
   DetectorLabel,
   Record,
@@ -133,11 +134,28 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   }
 
 
+  previousFrame(){
+    if (!this.frame) return;
+    let temp = this.frames[this.frame.count-1];
+    this.frame = undefined;
+            setTimeout(() => {
+              this.frame = temp;
+            });
+  }
+
+  nextFrame(){
+    if (!this.frame) return;
+    let temp = this.frames[this.frame.count+1];
+    this.frame = undefined;
+            setTimeout(() => {
+              this.frame = temp;
+            });
+  }
 
   viewVideo() {
     if (!this.recordId) return;
     this.ctx
-      .openModal<undefined>(RecordVideoComponent, { recordId: this.recordId })
+      .openModal<undefined>(RecordVideoComponent, { recordId: this.recordId },{size:'lg',centered:true})
       .subscribe({
         next: (result) => {},
         error: (result) => {},
@@ -149,6 +167,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     this.ctx.api.trainer.trainerLesson(this.recordId).subscribe({
       next: (result) => {
         this.lesson = result;
+        this.loadActions();
       },
     });
   }
@@ -204,7 +223,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
             this.frames.push({
               count: i,
               event: evt,
-              resolved: false,
+              action:undefined,
               milliseconds: ms,
               suggestions: [],
               lesson: this.lesson,
@@ -227,4 +246,24 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       },
     });
   }
+
+  loadActions(){
+    if (!this.lesson) return;
+    this.ctx.api.recorder.recorderActionList(this.lesson.record,undefined,0,-1).subscribe({
+      next: (result)=>{
+        for (let i = 0; i < result.actions.length; i++){
+          let action:Action = result.actions[i];
+
+          this.frames.forEach((frame, index)=>{
+
+            if (frame.event && frame.event._id == action.event){
+              this.frames[index].action = action;
+            }
+          })
+        }
+      }
+    })
+  }
+
+
 }

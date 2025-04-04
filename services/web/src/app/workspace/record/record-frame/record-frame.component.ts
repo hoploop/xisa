@@ -22,6 +22,7 @@ import {
   TrainLesson,
   MouseReleaseLeftEventTypeEnum,
   MouseReleaseLeftEvent,
+  Action,
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
@@ -40,8 +41,9 @@ import { RecordBoxEventResult } from '../record-box-event/record-box-event-resul
 import { RecordBoxDetectedTextResult } from '../record-box-detected-text/record-box-detected-text-result';
 import { RecordBoxDetectedObjectResult } from '../record-box-detected-object/record-box-detected-object-result';
 import { RecordBoxSuggestionComponent } from '../record-box-suggestion/record-box-suggestion.component';
-import { RecordBoxSuggestionResult } from '../record-box-suggestion/record-box-suggestion-result';
 import { DetectorSettingsComponent } from '@workspace/detector/detector-settings/detector-settings.component';
+import { RecordActionComponent } from '../record-action/record-action.component';
+import { RecordEventTypes } from '../record-event-types.enum';
 
 @Component({
   selector: 'app-record-frame',
@@ -75,6 +77,9 @@ export class RecordFrameComponent
     showHighlights: true,
     canCreateBox: false,
   });
+
+  RecordEventTypes = RecordEventTypes;
+
 
   toggleTexts() {
     this.textsVisible = !this.textsVisible;
@@ -290,7 +295,7 @@ export class RecordFrameComponent
 
   suggestionDetail(box: ImageAnnotatorBox, suggestion: DetectorSuggestion) {
     this.ctx
-      .openModal<RecordBoxSuggestionResult | undefined>(
+      .openModal<undefined>(
         RecordBoxSuggestionComponent,
         {
           box: box,
@@ -299,7 +304,9 @@ export class RecordFrameComponent
         }
       )
       .subscribe({
-        next: (result) => {},
+        next: (result) => {
+          this.loadAction();
+        },
         error: (result) => {},
       });
   }
@@ -321,6 +328,18 @@ export class RecordFrameComponent
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.load();
+    });
+  }
+  openAction(action:Action){
+    this.ctx
+    .openModal<undefined>(RecordActionComponent, {
+      action: action
+    },{size:'lg'})
+    .subscribe({
+      next: (result) => {
+        this.loadAction();
+      },
+      error: (result) => {},
     });
   }
 
@@ -547,7 +566,32 @@ export class RecordFrameComponent
     this.detectObjects();
     this.detectTexts();
     this.loadSuggestions();
+    this.loadAction();
 
     this.loading.next(undefined);
+  }
+
+  loadAction(){
+    if (!this.frame.event) return;
+    if (!this.frame.event._id) return;
+    this.ctx.api.recorder.recorderEventActionExist(this.frame.event._id).subscribe({
+      next: (res)=>{
+        if (res == true && this.frame.event?._id){
+          this.ctx.api.recorder.recorderActionLoadByEvent(this.frame.event._id).subscribe({
+            next: (result)=>{
+              this.frame.action = result;
+              this.suggestionsVisible = false;
+              this.render();
+            },
+            error: (result)=>{
+              this.frame.action = undefined;
+            }
+          })
+        }else{
+          this.frame.action = undefined;
+        }
+      }
+    })
+
   }
 }

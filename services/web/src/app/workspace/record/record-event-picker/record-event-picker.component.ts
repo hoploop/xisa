@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { RecordEventTypes } from '../record-event-types.enum';
 import { FAIconType } from '@constants/icons';
 import { Frame } from '../record-frame';
-import { MouseClickLeftEventTypeEnum, MousePressLeftEventTypeEnum, MouseReleaseLeftEventTypeEnum } from '@api/index';
 
 @Component({
   selector: 'app-record-event-picker',

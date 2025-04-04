@@ -1,25 +1,44 @@
-<button class="btn btn-sm  w-100" [ngClass]="{'btn-secondary':frame.event==undefined,'btn-primary':frame.event!=undefined && frame.resolved,'btn-danger':frame.event!=undefined && !frame.resolved}">
+<button
+  class="btn btn-sm w-100"
+  [ngClass]="{
+    'btn-secondary': frame.event == undefined,
+    'btn-success': frame.event != undefined && frame.action != undefined && frame.action.confidence >=0.5,
+    'btn-warning': frame.event != undefined && frame.action != undefined && frame.action.confidence < 0.5,
+    'btn-danger': frame.event != undefined && frame.action == undefined
+  }"
+>
   <ng-container *ngIf="frame.event">
-
     <ng-container [ngSwitch]="frame.event.type">
       <div class="d-flex flex-column align-items-center">
-        <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyComboPress" [icon]="FAIconType.keyboard"></app-fa-icon>
-        <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyPress" [icon]="FAIconType.keyboard"></app-fa-icon>
-        <app-fa-icon *ngSwitchCase="RecordEventTypes.KeyRelease" [icon]="FAIconType.keyboard"></app-fa-icon>
+        <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyComboPress"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
+        <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyPress"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
+        <app-fa-icon
+          *ngSwitchCase="RecordEventTypes.KeyRelease"
+          [icon]="FAIconType.keyboard"
+        ></app-fa-icon>
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
-        <span class="smaller">Instant: {{frame.milliseconds/1000|number:'0.0-3'}}s</span>
-        <span class="smaller">Frame: {{frame.count}}</span>
-        <span class="smaller">{{frame.event|recordEventName}}</span>
+        <span class="smaller"
+          >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
+        >
+        <span class="smaller">Frame: {{ frame.count }}</span>
+        <span class="smaller">{{ frame.event | recordEventName }}</span>
       </div>
     </ng-container>
   </ng-container>
-  <ng-container *ngIf="frame.event==undefined">
+  <ng-container *ngIf="frame.event == undefined">
     <div class="d-flex flex-column align-items-center">
       <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
-      <span class="smaller">Instant: {{frame.milliseconds/1000|number:'0.0-3'}}s</span>
-      <span class="smaller">Frame: {{frame.count}}</span>
+      <span class="smaller"
+        >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
+      >
+      <span class="smaller">Frame: {{ frame.count }}</span>
       <span class="smaller">Empty frame</span>
     </div>
-    </ng-container>
-
+  </ng-container>
 </button>

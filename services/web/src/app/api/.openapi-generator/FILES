@@ -20,6 +20,7 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/action.ts
 model/detect-object.ts
 model/detect-text.ts
 model/detector-image-label-add.ts
@@ -54,6 +55,9 @@ model/mouse-scroll-event.ts
 model/os.ts
 model/project-list-response.ts
 model/project.ts
+model/record-action-create-payload.ts
+model/record-action-list-response.ts
+model/record-action-update-payload.ts
 model/record-list-response.ts
 model/record.ts
 model/recorder-event-list200-response-inner.ts

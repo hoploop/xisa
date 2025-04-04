@@ -137,6 +137,7 @@ class DetectorClient(Client):
                     by_label=su.byLabel,
                     by_text=su.byText,
                     by_order=su.byOrder,
+                    by_regex=su.byRegex,
                     confidence=su.confidence,
                     event=PydanticObjectId(su.event),
                     x=su.x,

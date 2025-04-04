@@ -1,0 +1,11 @@
+<div class="d-flex w-100 justify-content-start">
+  <div class="d-flex align-items-center pointer" (click)="home()">
+    <img src="assets/icon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+    <span translate>menu.title</span>
+  </div>
+  <ng-content select="[start]"></ng-content>
+  <div class="ms-auto">
+    <ng-content select="[end]"></ng-content>
+  </div>
+
+</div>
