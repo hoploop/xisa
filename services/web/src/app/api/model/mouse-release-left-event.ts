@@ -14,6 +14,7 @@ export interface MouseReleaseLeftEvent {
     type?: MouseReleaseLeftEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     position?: Array<any> | null;
 }

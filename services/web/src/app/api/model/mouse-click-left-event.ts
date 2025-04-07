@@ -14,6 +14,7 @@ export interface MouseClickLeftEvent {
     type?: MouseClickLeftEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     position?: Array<any> | null;
 }

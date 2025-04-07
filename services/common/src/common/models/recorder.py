@@ -1,5 +1,6 @@
 # PYTHON IMPORTS
 from datetime import datetime
+from enum import Enum
 from typing import Annotated, List, Literal, Optional, Union
 
 
@@ -35,6 +36,7 @@ class Event(Document):
     type: str
     record: PydanticObjectId
     frame: int
+    synthetic: bool = Field(default=False)
     timestamp: datetime = Field(default_factory=utc_now)
 
     class Settings:
@@ -46,45 +48,27 @@ class Event(Document):
         await Action.find_many(Action.event == self.id).delete()
 
 
+class MouseButton(str, Enum):
+    left = 'left'
+    middle = 'middle'
+    right = 'right'
 
 
-class MouseClickLeftEvent(Event):
-    type: Literal["mouse.click.left"] = "mouse.click.left"
+class MouseClickEvent(Event):
+    type: Literal["mouse.click"] = "mouse.click"
+    button: MouseButton = Field(default=MouseButton.left)
     position: tuple[float, float] | None = None  # For mouse events
 
 
-class MouseClickRightEvent(Event):
-    type: Literal["mouse.click.right"] = "mouse.click.right"
+class MousePressEvent(Event):
+    type: Literal["mouse.press"] = "mouse.press"
+    button: MouseButton = Field(default=MouseButton.left)
     position: tuple[float, float] | None = None  # For mouse events
 
 
-class MousePressLeftEvent(Event):
-    type: Literal["mouse.press.left"] = "mouse.press.left"
-    position: tuple[float, float] | None = None  # For mouse events
-
-
-class MousePressRightEvent(Event):
-    type: Literal["mouse.press.right"] = "mouse.press.right"
-    position: tuple[float, float] | None = None  # For mouse events
-
-
-class MousePressMiddleEvent(Event):
-    type: Literal["mouse.press.middle"] = "mouse.press.middle"
-    position: tuple[float, float] | None = None  # For mouse events
-
-
-class MouseReleaseLeftEvent(Event):
-    type: Literal["mouse.release.left"] = "mouse.release.left"
-    position: tuple[float, float] | None = None  # For mouse events
-
-
-class MouseReleaseMiddleEvent(Event):
-    type: Literal["mouse.release.middle"] = "mouse.release.middle"
-    position: tuple[float, float] | None = None  # For mouse events
-
-
-class MouseReleaseRightEvent(Event):
-    type: Literal["mouse.release.right"] = "mouse.release.right"
+class MouseReleaseEvent(Event):
+    type: Literal["mouse.release"] = "mouse.release"
+    button: MouseButton = Field(default=MouseButton.left)
     position: tuple[float, float] | None = None  # For mouse events
 
 
@@ -97,7 +81,15 @@ class MouseScrollEvent(Event):
 
 class MouseDoubleClickEvent(Event):
     type: Literal["mouse.double.click"] = "mouse.double.click"
+    button: MouseButton = Field(default=MouseButton.left)
     position: tuple[float, float] | None = None  # For mouse events
+
+
+class MouseDropEvent(Event):
+    type: Literal["mouse.drop"] = "mouse.drop"
+    button: MouseButton = Field(default=MouseButton.left)
+    position: tuple[float, float] | None = None  # For mouse events
+    origin: tuple[float, float] | None = None  # For mouse events
 
 
 class KeyPressEvent(Event):
@@ -116,19 +108,16 @@ class KeyComboPressEvent(Event):
 
 
 EVENT_TYPES = Union[
-    MouseClickLeftEvent,
-    MouseClickRightEvent,
+    MouseClickEvent,
     MouseDoubleClickEvent,
-    MousePressLeftEvent,
-    MousePressMiddleEvent,
-    MousePressRightEvent,
-    MouseReleaseLeftEvent,
-    MouseReleaseMiddleEvent,
-    MouseReleaseRightEvent,
+    MousePressEvent,
+    MouseReleaseEvent,
     MouseScrollEvent,
+    MouseDropEvent,
     KeyComboPressEvent,
     KeyPressEvent,
     KeyReleaseEvent,
+    
 ]
 
 EVENTS = Annotated[EVENT_TYPES, Field(discriminator="type")]

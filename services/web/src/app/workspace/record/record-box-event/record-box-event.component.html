@@ -11,6 +11,11 @@
         <img [style.max-height.px]="200"  *ngIf="box.dataUrl" [src]="box.dataUrl"/>
       </div>
     </div>
+    <div class="d-flex justify-content-center align-items-center card" *ngIf="event!=undefined">
+      <div class="card-body">
+        {{event|recordEventName}}
+        </div>
+        </div>
   </ng-content>
 </app-modal>
 

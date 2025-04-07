@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FAIconType } from '@constants/icons';
-import { ContextService } from '@services/context.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Detector, Record } from '@api/index';
-import { BIconType } from '@constants/icons';
+import { Detector, Project, Record } from '@api/index';
 import { DetectorSelectorComponent } from '@workspace/detector/detector-selector/detector-selector.component';
 import { RecordFormComponent } from '../record-form/record-form.component';
 import { RecordControllerComponent } from '../record-controller/record-controller.component';
 import { BaseComponent } from '../../../utils/base/base.component';
-import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-record-list',
@@ -18,7 +12,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrl: './record-list.component.scss',
 })
 export class RecordListComponent extends BaseComponent implements OnInit {
-  projectId?: string;
+  project?: Project;
   skip: number = 0;
   limit: number = 0;
   search: string = '';
@@ -26,18 +20,10 @@ export class RecordListComponent extends BaseComponent implements OnInit {
   records: Record[] = [];
   running?: boolean;
 
-  constructor(
-    protected override ctx: ContextService,
-    protected override router: Router,
-    protected override route: ActivatedRoute,
-    protected override log: NGXLogger
-  ) {
-    super(ctx,router,route,log);
-    this.projectId = route.snapshot.paramMap.get('project_id') || undefined;
-  }
 
   ngOnInit(): void {
-    this.load();
+    let projectId = this.route.snapshot.paramMap.get('project_id') || undefined;
+    if (projectId) this.loadProject(projectId);
   }
 
   onChangeSearch(value: string) {
@@ -47,7 +33,8 @@ export class RecordListComponent extends BaseComponent implements OnInit {
   }
 
   create() {
-    this.ctx.openModal<undefined>(RecordControllerComponent, {}).subscribe({
+    if (!this.project) return;
+    this.ctx.openModal<undefined>(RecordControllerComponent, {project:this.project}).subscribe({
       next: (result) => {
         this.load();
       },
@@ -67,12 +54,13 @@ export class RecordListComponent extends BaseComponent implements OnInit {
   }
 
   setDetector(record: Record) {
+    if (!this.project) return;
     if (!record._id) return;
     this.ctx.api.trainer.trainerLesson(record._id).subscribe({
       next: (result) => {
         this.ctx
           .openModal<Detector | undefined>(DetectorSelectorComponent, {
-            projectId: this.projectId,
+            project: this.project,
           })
           .subscribe({
             next: (resultb) => {
@@ -90,12 +78,13 @@ export class RecordListComponent extends BaseComponent implements OnInit {
 
   studio(record: Record) {
     if (!record._id) return;
+    if (!this.project) return;
     this.ctx.api.trainer.trainerLesson(record._id).subscribe({
       next: (result) => {
         if (result.detector == undefined) {
           this.ctx
             .openModal<Detector | undefined>(DetectorSelectorComponent, {
-              projectId: this.projectId,
+              project: this.project,
             })
             .subscribe({
               next: (resultb) => {
@@ -104,9 +93,9 @@ export class RecordListComponent extends BaseComponent implements OnInit {
                     .trainerLessonSetDetector(resultb._id, result._id)
                     .subscribe({
                       next: (resultc) => {
-                        this.router.navigateByUrl(
-                          '/record/studio/' + record._id + '/' + resultb._id
-                        );
+                        if (resultb._id){
+                        this.navigateRecordStudio(record,resultb._id);
+                        }
                       },
                     });
                 }
@@ -114,16 +103,26 @@ export class RecordListComponent extends BaseComponent implements OnInit {
               error: (result) => {},
             });
         } else {
-          this.router.navigateByUrl(
-            '/record/studio/' + record._id + '/' + result.detector
-          );
+          this.navigateRecordStudio(record,result.detector);
+
         }
       },
     });
   }
 
+  loadProject(projectId:string){
+    this.ctx.api.workspace.workspaceProjectLoad(projectId).subscribe({
+      next: (result)=>{
+        this.project = result;
+        this.load();
+      }
+    })
+  }
+
+
   load() {
-    if (!this.projectId) return;
+    if (!this.project) return;
+    if (!this.project._id) return;
     this.ctx.api.recorder.recorderRunning().subscribe({
       next: (result) => {
         this.running = result;
@@ -136,7 +135,7 @@ export class RecordListComponent extends BaseComponent implements OnInit {
     this.error.next(undefined);
     this.loading.next(this.ctx.translate.instant('workspace.record.loadings'));
     this.ctx.api.recorder
-      .recorderList(this.projectId, this.skip, this.limit, this.search)
+      .recorderList(this.project._id, this.skip, this.limit, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);

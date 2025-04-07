@@ -14,6 +14,7 @@ export interface MouseReleaseMiddleEvent {
     type?: MouseReleaseMiddleEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     position?: Array<any> | null;
 }

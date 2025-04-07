@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Detector } from '@api/index';
+import { Detector, Project } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
@@ -9,7 +9,7 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './detector-selector.component.scss'
 })
 export class DetectorSelectorComponent extends BaseComponent implements OnInit{
-  @Input() projectId?:string;
+  @Input() project!:Project;
   @Input() detector?:Detector;
   @Input() class:string='';
   @Input() enableCreate: boolean = false;
@@ -44,10 +44,11 @@ export class DetectorSelectorComponent extends BaseComponent implements OnInit{
   }
 
   load(){
-    if (!this.projectId) return;
+    if (!this.project) return;
+    if (!this.project._id) return;
     this.setError(undefined);
     this.setLoading(this.ctx.translate.instant("workspace.detector.loadings"));
-    this.ctx.api.detector.detectorList(this.projectId,this.skip,this.limit,this.search).subscribe({
+    this.ctx.api.detector.detectorList(this.project._id,this.skip,this.limit,this.search).subscribe({
       next: (result)=>{
         this.total = result.total;
         this.detectors = result.detectors;

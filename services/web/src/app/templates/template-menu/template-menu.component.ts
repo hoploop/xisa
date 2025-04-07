@@ -11,15 +11,8 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './template-menu.component.scss'
 })
 export class TemplateMenuComponent extends BaseComponent{
-  home(){
-    this.router.navigate([{outlets:{'primary':'welcome','menu':'welcome'}}]);
-  }
+
   logged = this.ctx.beat.auth.logged;
-
-
-  projects(){
-    this.router.navigate([{outlets:{'primary':'project/list','menu':'project/list'}}]);
-  }
 
   logout(){
     this.ctx.openModal(LogoutComponent,{}).subscribe({

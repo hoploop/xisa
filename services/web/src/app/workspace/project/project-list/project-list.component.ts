@@ -44,13 +44,9 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  records(project: Project) {
-    this.router.navigate([{outlets:{'primary':'record/list/' + project._id,'menu':'record/list/' + project._id}}]);
-  }
 
-  detectors(project: Project) {
-    this.router.navigateByUrl('/detector/list/' + project._id);
-  }
+
+
 
   create() {
     this.ctx
@@ -70,16 +66,5 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  edit(project: Project) {
-    this.ctx
-      .openModal<undefined>(ProjectFormComponent, {
-        project: project,
-      })
-      .subscribe({
-        next: (result) => {
-          this.load();
-        },
-        error: (result) => {},
-      });
-  }
+
 }

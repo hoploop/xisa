@@ -51,6 +51,12 @@ import { ProjectMenuComponent } from './project/project-menu/project-menu.compon
 import { RecordActionComponent } from './record/record-action/record-action.component';
 import { RecordActionNamePipe } from './record/record-action-name.pipe';
 import { RecordMenuComponent } from './record/record-menu/record-menu.component';
+import { RecordEventFilterSyntheticPipe } from './record/record-event-filter-synthetic.pipe';
+import { RecordLoadDetectorNamePipe } from './record/record-load-detector-name.pipe';
+import { ProjectCardComponent } from './project/project-card/project-card.component';
+import { ProjectPageComponent } from './project/project-page/project-page.component';
+import { RecordOsNamePipe } from './record/record-os-name.pipe';
+import { RecordActionCountPipe } from './record/record-action-count.pipe';
 
 
 
@@ -101,6 +107,12 @@ import { RecordMenuComponent } from './record/record-menu/record-menu.component'
     RecordActionComponent,
     RecordActionNamePipe,
     RecordMenuComponent,
+    RecordEventFilterSyntheticPipe,
+    RecordLoadDetectorNamePipe,
+    ProjectCardComponent,
+    ProjectPageComponent,
+    RecordOsNamePipe,
+    RecordActionCountPipe,
   ],
   imports: [
     CommonModule,

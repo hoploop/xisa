@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Detector } from '@api/index';
+import { Detector, Project } from '@api/index';
 import { ContextService } from '@services/context.service';
 import { DetectorFormComponent } from '../detector-form/detector-form.component';
 import { DetectorLearnComponent } from '../detector-learn/detector-learn.component';
@@ -19,7 +19,7 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
   search: string = '';
   total: number = 0;
   detectors: Detector[] = [];
-  projectId?: string;
+  project?: Project;
 
   constructor(
     protected override ctx: ContextService,
@@ -28,11 +28,17 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
     protected override log: NGXLogger
   ) {
     super(ctx,router,route,log);
-    this.projectId = route.snapshot.paramMap.get('project_id') || undefined;
+
   }
 
   ngOnInit(): void {
-    this.load();
+    let projectId = this.route.snapshot.paramMap.get('project_id') || undefined;
+    if (projectId){
+
+      this.loadProject(projectId);
+    }
+
+
   }
 
   onChangeSearch(value: string) {
@@ -42,10 +48,13 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
   }
 
   create() {
+
+
     this.ctx
       .openModal<Detector | undefined>(DetectorFormComponent, {
+        project: this.project,
         detector: {
-          project: this.projectId,
+          project: this.project,
           name: '',
           description: '',
         },
@@ -61,10 +70,12 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
   }
 
   clone(detector: Detector) {
+    if (!this.project) return;
     this.ctx
       .openModal<Detector | undefined>(DetectorFormComponent, {
+        project: this.project,
         detector: {
-          project: this.projectId,
+          project: this.project,
           name: '',
           description: '',
         },
@@ -98,6 +109,7 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
     if (!detector._id) return;
     this.ctx
       .openModal<Detector | undefined>(DetectorFormComponent, {
+        project: this.project,
         detector: detector,
       })
       .subscribe({
@@ -110,14 +122,15 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
 
 
   load() {
-    if (!this.projectId) return;
+    if (!this.project) return;
+    if (!this.project._id) return;
     this.log.debug("Loading detectors");
     this.loading.next(
       this.ctx.translate.instant('workspace.detector.loadings')
     );
     this.error.next(undefined);
     this.ctx.api.detector
-      .detectorList(this.projectId, this.skip, this.limit, this.search)
+      .detectorList(this.project._id, this.skip, this.limit, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);
@@ -129,5 +142,19 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
           this.error.next(result.error.detail);
         },
       });
+  }
+
+  loadProject(projectId:string){
+    this.ctx.api.workspace.workspaceProjectLoad(projectId).subscribe({
+      next: (result)=>{
+        this.loading.next(undefined);
+        this.project = result;
+        this.load();
+      },
+      error: (result)=>{
+        this.loading.next(undefined);
+        this.error.next(result.error.detail);
+      }
+    })
   }
 }

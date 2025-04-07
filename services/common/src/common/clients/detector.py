@@ -325,7 +325,7 @@ class DetectorClient(Client):
         res = await self.client.removeDetector(req)
         if res.status == False:
             raise Exception(res.message)
-        return res.total
+        return res.status
 
     async def addDetectorImageLabel(
         self,

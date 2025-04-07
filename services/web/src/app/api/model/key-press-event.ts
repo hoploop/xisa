@@ -14,6 +14,7 @@ export interface KeyPressEvent {
     type?: KeyPressEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     key: string;
 }

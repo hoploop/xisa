@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Detector } from '@api/index';
+import { Detector, Project } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './detector-form.component.scss'
 })
 export class DetectorFormComponent extends BaseComponent {
+  @Input() project!: Project;
   @Input() detector!: Detector;
   @Input() origin?:Detector;
   valid = new BehaviorSubject<boolean>(false);
@@ -57,6 +58,9 @@ export class DetectorFormComponent extends BaseComponent {
   }
 
   create(){
+    if (!this.project) return;
+    if (!this.project._id) return;
+    this.log.info("Creating detector");
     this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
     this.error.next(undefined);
 
@@ -65,7 +69,7 @@ export class DetectorFormComponent extends BaseComponent {
     if (this.origin && this.origin._id){
       originId = this.origin._id;
     }
-    this.ctx.api.detector.detectorCreate(this.detector.project,this.detector.name,originId,this.detector.description|| '').subscribe({
+    this.ctx.api.detector.detectorCreate(this.project._id,this.detector.name,originId,this.detector.description|| '').subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.detector.name = result.name;

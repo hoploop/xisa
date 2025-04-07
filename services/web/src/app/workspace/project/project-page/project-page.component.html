@@ -1,0 +1,27 @@
+<app-template-card-container *ngIf="project">
+  <div title>
+    <app-fa-icon [icon]="FAIconType.folderOpen"></app-fa-icon>
+    <span class="ms-2">{{project.name}}</span>
+  </div>
+  <ng-content context>
+    <div class="pointer ms-1" (click)="edit(project)">
+      <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
+    </div>
+  </ng-content>
+  <div body>
+    <div class="d-flex">
+      <button class="btn btn-primary btn-sm" (click)="navigateProjectDetectors(project)">
+        <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+        <span class="ms-2" [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span>
+      </button>
+      <button class="btn btn-primary btn-sm ms-1" (click)="navigateProjectRecords(project)">
+        <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
+        <span class="ms-2" [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span>
+      </button>
+
+      </div>
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+
+</app-template-card-container>
+

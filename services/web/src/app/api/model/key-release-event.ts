@@ -14,6 +14,7 @@ export interface KeyReleaseEvent {
     type?: KeyReleaseEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     key: string;
 }

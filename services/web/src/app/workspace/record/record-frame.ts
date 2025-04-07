@@ -1,9 +1,8 @@
-import { Action, DetectObject, DetectorSuggestion, DetectText, TrainImageObject, TrainLesson } from "@api/index";
-import { RecordEventListRecordId200ResponseInner } from "@api/model/record-event-list-record-id200-response-inner";
+import { Action, DetectObject, DetectorSuggestion, DetectText, RecorderEventList200ResponseInner, TrainImageObject, TrainLesson } from "@api/index";
 
 export interface Frame {
   count: number,
-  event?:RecordEventListRecordId200ResponseInner,
+  event?:RecorderEventList200ResponseInner,
   action?: Action,
   milliseconds:number,
   suggestions: DetectorSuggestion[],

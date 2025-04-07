@@ -1,6 +1,10 @@
 {
   "workspace": {
     "project": {
+      "records_n":"Recordings: {{n}}",
+      "detectors_n":"Detectors: {{n}}",
+      "detectors":"Detectors",
+      "recordings":"Recordings",
       "list": "Projects",
       "create": "New project",
       "update": "Update project",
@@ -128,7 +132,8 @@
         "already_existing": "Another record with this username already found",
         "already_running": "Record is already running",
         "not_running": "Record is not running",
-        "video_not_found": "Video not found for this record"
+        "video_not_found": "Video not found for this record",
+        "no_detector":"No detector specified or found for this recording"
       },
       "action":{
         "errors":{"not_found":"Action not found"},
@@ -149,8 +154,12 @@
           "key_combo_press":"Key combo press ({{value}})",
           "key_press":"Key press ({{value}})",
           "key_release":"Key release ({{value}})",
+          "mouse_double_click_left":"Mouse double click left",
+          "mouse_double_click_right":"Mouse double click right",
+          "mouse_double_click_middle":"Mouse double click middle",
           "mouse_click_left":"Mouse click left",
           "mouse_click_right":"Mouse click right",
+          "mouse_click_middle":"Mouse click middle",
           "mouse_press_left":"Mouse press left",
           "mouse_release_left":"Mouse release left",
           "mouse_press_right":"Mouse press right",
@@ -168,12 +177,18 @@
         "errors": {
           "not_found": "Event not found"
         },
+        "synthetic":"Synthetic",
+        "default":"Default",
         "types":{
           "key_combo_press":"Key combo press ({{value}})",
           "key_press":"Key press ({{value}})",
           "key_release":"Key release ({{value}})",
           "mouse_click_left":"Mouse click left ({{x}},{{y}})",
+          "mouse_click_middle":"Mouse click middle ({{x}},{{y}})",
           "mouse_click_right":"Mouse click right ({{x}},{{y}})",
+          "mouse_double_click_left":"Mouse double click left ({{x}},{{y}})",
+          "mouse_double_click_middle":"Mouse double click middle ({{x}},{{y}})",
+          "mouse_double_click_right":"Mouse double click right ({{x}},{{y}})",
           "mouse_press_left":"Mouse press left ({{x}},{{y}})",
           "mouse_release_left":"Mouse release left ({{x}},{{y}})",
           "mouse_press_right":"Mouse press right ({{x}},{{y}})",
@@ -186,8 +201,10 @@
       "close":"Close",
       "duration": "Duration: ",
       "events": "Events: ",
+      "detector":"Detector: ",
       "frames": "Frames: ",
       "size": "Size: ",
+      "actions":"Actions: ",
       "list": "Recordings",
       "name": "Name",
       "studio": {
@@ -215,7 +232,10 @@
       "stop": "Stop",
       "pause": "Pause",
       "empty": "No records",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "os":{
+        "title":"Operating System: "
+      }
     }
   }
 }

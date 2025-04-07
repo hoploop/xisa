@@ -12,6 +12,7 @@ export class RecordFrameSelectorComponent extends BaseComponent {
   frames_count:number = 0;
   @Input() frames: Frame[] = [];
   frame?:Frame = undefined;
+  @Input() synthetic: boolean = false;
 
   dismiss(){
     this.ctx.closeModal(undefined);
@@ -19,6 +20,10 @@ export class RecordFrameSelectorComponent extends BaseComponent {
 
   selectFrame(frame:Frame){
     this.ctx.closeModal(frame);
+  }
+
+  toggleSynthetic(){
+    this.synthetic = !this.synthetic;
   }
 
 }

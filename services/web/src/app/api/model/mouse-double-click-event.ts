@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { MouseButton } from './mouse-button';
 
 
 export interface MouseDoubleClickEvent { 
@@ -14,7 +15,9 @@ export interface MouseDoubleClickEvent {
     type?: MouseDoubleClickEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
+    button?: MouseButton;
     position?: Array<any> | null;
 }
 export enum MouseDoubleClickEventTypeEnum {

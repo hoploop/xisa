@@ -6,11 +6,22 @@
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
 
   <ng-content body>
+    <div class="d-flex w-100 mb-2 justify-content-center align-items-center">
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == true" [class.btn-outline-primary]="synthetic == false">
+            <span class="ms-2" translate>workspace.record.event.synthetic</span>
+        </button>
+        <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == false" [class.btn-outline-primary]="synthetic == true">
+          <span class="ms-2" translate>workspace.record.event.default</span>
+        </button>
+
+      </div>
+    </div>
     <div class="d-flex justify-content-between flex-wrap w-100">
       <app-record-event-picker
         (click)="selectFrame(frame)"
         class="mt-1 me-1"
-        *ngFor="let frame of frames; let i = index"
+        *ngFor="let frame of frames|recordEventFilterSynthetic:synthetic|async; let i = index"
         [frame]="frame">
       </app-record-event-picker>
     </div>

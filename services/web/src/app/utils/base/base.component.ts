@@ -4,6 +4,7 @@ import { ContextService } from '@services/context.service';
 import { FAIconType, BIconType } from '@constants/icons';
 import { BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
+import { Project,Record } from '@api/index';
 
 
 @Component({
@@ -23,6 +24,32 @@ export class BaseComponent {
 
   }
 
+  protected navigateProjects(){
+    this.router.navigate([{outlets:{'primary':'project/list', 'menu':'project/list'}}]);
+  }
+
+  protected navigateProjectRecords(project: Project) {
+    this.router.navigate([{outlets:{'primary':'record/list/' + project._id}}]);
+  }
+
+  protected navigateHome(){
+    this.router.navigate([{outlets:{'primary':'welcome','menu':'welcome'}}]);
+  }
+
+  protected navigateProjectDetectors(project: Project) {
+    this.router.navigate([{outlets:{'primary':'detector/list/' + project._id}}]);
+  }
+
+  protected navigateRecordStudio(record:Record,detectorId:string){
+    this.router.navigate([{outlets:{'primary':'record/studio/' + record._id + '/' + detectorId}}]
+
+    );
+  }
+
+  protected navigateProjectPage(project:Project){
+    this.router.navigate([{outlets:{'primary':'project/page/'+project._id,'menu':'project/page/'+project._id}}]);
+  }
+
   protected setError(value:string|undefined){
     this.error.next(value);
   }
@@ -30,4 +57,11 @@ export class BaseComponent {
   protected setLoading(value:string|undefined){
     this.loading.next(value);
   }
+
+  protected getRouteParam(name:string): string | undefined {
+    return this.route.snapshot.paramMap.get(name) || undefined;
+  }
+
+
 }
+

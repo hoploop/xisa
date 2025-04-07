@@ -1,19 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   Action,
   Detector,
   DetectorLabel,
   Record,
+  RecorderEventList200ResponseInner,
   TrainLesson,
 } from '@api/index';
-import { ContextService } from '@services/context.service';
 import { Frame } from '../record-frame';
-import { RecordEventListRecordId200ResponseInner } from '@api/model/record-event-list-record-id200-response-inner';
 import { RecordFrameSelectorComponent } from '../record-frame-selector/record-frame-selector.component';
 import { RecordVideoComponent } from '../record-video/record-video.component';
 import { BaseComponent } from '@utils/base/base.component';
-import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-record-studio',
@@ -30,30 +27,22 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   record?: Record;
   frames: Frame[] = [];
   frame?: Frame = undefined;
-  events: RecordEventListRecordId200ResponseInner[] = [];
+  events: RecorderEventList200ResponseInner[] = [];
   detector?: Detector;
   detectorId?: string;
-
+  syntheticEvents: boolean = false;
   lesson?: TrainLesson;
 
 
-  constructor(
-    protected override ctx: ContextService,
-    protected override router: Router,
-    protected override route: ActivatedRoute,
-    protected override log: NGXLogger
-  ) {
-    super(ctx,router,route,log);
-    this.recordId = route.snapshot.paramMap.get('record_id') || undefined;
-    this.detectorId = route.snapshot.paramMap.get('detector_id') || undefined;
-  }
 
   ngOnInit(): void {
+    this.recordId = this.route.snapshot.paramMap.get('record_id') || undefined;
+    this.detectorId = this.route.snapshot.paramMap.get('detector_id') || undefined;
     setTimeout(()=>{
-    this.loadDetector();
-    this.load();
-    this.loadLesson();
-    this.loadEvents();
+      this.loadDetector();
+      this.load();
+      this.loadLesson();
+      this.loadEvents();
 
     });
 
@@ -206,20 +195,33 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     }
     this.ctx.api.recorder.recorderFrameCount(this.lesson.record).subscribe({
       next: (result) => {
+        if (this.lesson){
         let totalFrames = result;
         let deltaFrame = delta / totalFrames;
         let ms = 0;
         for (let i = 0; i < totalFrames; i++) {
           let evt = undefined;
 
+          let pushed = false;
           for (let j = 0; j < this.events.length; j++) {
             if (this.events[j].frame == i) {
               evt = this.events[j];
-              break;
+              this.frames.push({
+                count: i,
+                event: evt,
+                action:undefined,
+                milliseconds: ms,
+                suggestions: [],
+                lesson: this.lesson,
+                train: [],
+                objects:[],
+                texts: []
+              });
+              pushed=true;
             }
           }
 
-          if (this.lesson) {
+          if (!pushed){
             this.frames.push({
               count: i,
               event: evt,
@@ -232,6 +234,9 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
               texts: []
             });
           }
+
+
+
           ms += deltaFrame;
         }
         if (this.frames.length > 0) {
@@ -239,7 +244,7 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
         }
         this.loading.next(undefined);
         this.loadTrainImageObjects();
-      },
+      }},
       error: (result) => {
         this.loading.next(undefined);
         this.error.next(result.error.detail);

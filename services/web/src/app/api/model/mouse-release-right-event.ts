@@ -14,6 +14,7 @@ export interface MouseReleaseRightEvent {
     type?: MouseReleaseRightEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     position?: Array<any> | null;
 }

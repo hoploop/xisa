@@ -1,21 +1,15 @@
-<div class="card shadow border-0">
-  <div class="card-header">
-    <div class="d-flex w-100">
-      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
-      <span class="ms-1" translate>workspace.record.studio.title</span>
-      <span class="ms-1">|</span>
-      <span class="ms-1">{{ record?.name }}</span>
-      <span class="ms-auto">
-        <span class="pointer user-select-none">
-          <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
-          <span class="ms-2">Back to record list</span>
-        </span>
-      </span>
-    </div>
+<app-template-card-container>
+  <div title>
+    <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+    <span class="ms-2" translate>workspace.record.studio.title</span>
+    <span class="ms-1">|</span>
+    <span class="ms-1">{{ record?.name }}</span>
   </div>
-
-  <div class="card-body">
-    <div class="d-flex justify-content-center mb-2">
+  <ng-content context>
+    <small *ngIf="record"><span translate>workspace.record.duration</span><span>{{record|recordDuration}}</span></small>
+  </ng-content>
+  <ng-content body>
+    <div body class="d-flex justify-content-center mb-2">
       <!-- Frame Selector -->
       <div class="btn-group-sm btn-group w-100">
 
@@ -84,5 +78,8 @@
       [error]="error"
       [loading]="loading"
     ></app-loader>
-  </div>
-</div>
+
+  </ng-content>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+
+</app-template-card-container>

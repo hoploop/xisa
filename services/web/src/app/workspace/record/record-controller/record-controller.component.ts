@@ -9,10 +9,7 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './record-controller.component.scss',
 })
 export class RecordControllerComponent extends BaseComponent implements OnInit {
-  @Input() project: Project = {
-    name: new Date().toISOString(),
-    description: '',
-  };
+  @Input() project!: Project;
   running?: boolean;
 
   ngOnInit(): void {
@@ -53,7 +50,7 @@ export class RecordControllerComponent extends BaseComponent implements OnInit {
     this.ctx.api.recorder.recorderStop().subscribe({
       next: (result) => {
         this.running = false;
-        this.cancel();
+        this.ctx.closeModal(result);
       },
       error: (result) => {
         this.error.next(result.error.detail);

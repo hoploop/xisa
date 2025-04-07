@@ -13,16 +13,19 @@ import {
   KeyComboPressEventTypeEnum,
   KeyPressEventTypeEnum,
   KeyReleaseEventTypeEnum,
-  MouseClickLeftEvent,
-  MouseClickLeftEventTypeEnum,
-  MousePressLeftEvent,
-  MousePressLeftEventTypeEnum,
+  MousePressEvent,
+  MouseReleaseEvent,
+  MouseClickEvent,
+  MouseDoubleClickEvent,
   DetectObject,
   DetectText,
   TrainLesson,
-  MouseReleaseLeftEventTypeEnum,
-  MouseReleaseLeftEvent,
   Action,
+  MouseClickEventTypeEnum,
+  RecorderEventList200ResponseInner,
+  MousePressEventTypeEnum,
+  MouseReleaseEventTypeEnum,
+  MouseDoubleClickEventTypeEnum,
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
@@ -32,7 +35,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { DetectorLabelSelectComponent } from '@workspace/detector/detector-label-select/detector-label-select.component';
 import { ImageAnnotatorHighlight } from '@train/image-annotator/image-annotator-highlight';
 import { TrainImageObject } from '@api/model/train-image-object';
-import { RecordEventListRecordId200ResponseInner } from '@api/model/record-event-list-record-id200-response-inner';
 import { RecordBoxDetectedObjectComponent } from '../record-box-detected-object/record-box-detected-object.component';
 import { RecordBoxDetectedTextComponent } from '../record-box-detected-text/record-box-detected-text.component';
 import { RecordBoxEventComponent } from '../record-box-event/record-box-event.component';
@@ -63,7 +65,7 @@ export class RecordFrameComponent
   textBoxes = new Map<string, DetectText>();
   objectBoxes = new Map<string, DetectObject>();
   trainBoxes = new Map<string, TrainImageObject>();
-  eventBoxes = new Map<string, RecordEventListRecordId200ResponseInner>();
+  eventBoxes = new Map<string, RecorderEventList200ResponseInner>();
   suggestionBoxes = new Map<string, DetectorSuggestion>();
   textsVisible = false;
   objectsVisible = false;
@@ -151,7 +153,7 @@ export class RecordFrameComponent
         this.detectTextDetail(box, text);
       }
     } else if (this.eventBoxes.has(box.id)) {
-      let event: RecordEventListRecordId200ResponseInner | undefined =
+      let event: RecorderEventList200ResponseInner | undefined =
         this.eventBoxes.get(box.id);
       if (event) {
         this.eventDetail(box, event);
@@ -250,7 +252,7 @@ export class RecordFrameComponent
 
   eventDetail(
     box: ImageAnnotatorBox,
-    event: RecordEventListRecordId200ResponseInner
+    event: RecorderEventList200ResponseInner
   ) {
     this.ctx
       .openModal<RecordBoxEventResult | undefined>(RecordBoxEventComponent, {
@@ -507,8 +509,8 @@ export class RecordFrameComponent
         break;
       case KeyReleaseEventTypeEnum.KeyRelease:
         break;
-      case MouseClickLeftEventTypeEnum.MouseClickLeft:
-        let evt = event as MouseClickLeftEvent;
+      case MouseClickEventTypeEnum.MouseClick:
+        let evt = event as MouseClickEvent;
         if (evt.position) {
           let x = evt.position[0] - 20;
           let y = evt.position[1] - 20;
@@ -523,8 +525,24 @@ export class RecordFrameComponent
         }
 
         break;
-      case MousePressLeftEventTypeEnum.MousePressLeft:
-        let evt2 = event as MousePressLeftEvent;
+        case MouseDoubleClickEventTypeEnum.MouseDoubleClick:
+          let evt4 = event as MouseDoubleClickEvent;
+          if (evt4.position) {
+            let x = evt4.position[0] - 20;
+            let y = evt4.position[1] - 20;
+            let w = 40;
+            let h = 40;
+            let evt_box = new ImageAnnotatorBox(x, y, w, h);
+            evt_box.canResize = false;
+            evt_box.canMove = false;
+            evt_box.showCross = true;
+            this.eventBoxes.set(evt_box.id, event);
+            ret.push(evt_box);
+          }
+
+          break;
+      case MousePressEventTypeEnum.MousePress:
+        let evt2 = event as MousePressEvent;
         if (evt2.position) {
           let x = evt2.position[0] - 20;
           let y = evt2.position[1] - 20;
@@ -538,8 +556,8 @@ export class RecordFrameComponent
           ret.push(evt_box);
         }
         break;
-        case MouseReleaseLeftEventTypeEnum.MouseReleaseLeft:
-          let evt3 = event as MouseReleaseLeftEvent;
+        case MouseReleaseEventTypeEnum.MouseRelease:
+          let evt3 = event as MouseReleaseEvent;
           if (evt3.position) {
             let x = evt3.position[0] - 20;
             let y = evt3.position[1] - 20;

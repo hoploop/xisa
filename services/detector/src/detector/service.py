@@ -710,7 +710,7 @@ class DetectorService(Service, DetectorServicer):
                 original_classes_filename = os.path.join(base_path, self.config.classes)
             else:
                 original_detector = await Detector.find_many(
-                    Detector.id == origin
+                    Detector.id == PydanticObjectId(origin)
                 ).first_or_none()
                 if original_detector is None:
                     return CreateDetectorResponse(
@@ -725,6 +725,10 @@ class DetectorService(Service, DetectorServicer):
                 original_classes_filename = os.path.join(
                     base_path, str(original_detector.id), self.config.classes
                 )
+                if not os.path.exists(original_path) or not os.path.exists(original_classes_filename):
+                    base_path = self.config.path
+                    original_path = os.path.join(base_path, self.config.original)
+                    original_classes_filename = os.path.join(base_path, self.config.classes)
 
             log.debug("Copy detector model")
             shutil.copyfile(original_path, target_path)
@@ -732,7 +736,9 @@ class DetectorService(Service, DetectorServicer):
             log.debug("Loading original classes")
             with open(original_classes_filename, "r") as classes_file:
                 classes = yaml.load(classes_file)
-                for class_name in classes["names"]:
+                for class_name_id in classes["names"]:
+                    class_name = classes["names"][class_name_id]
+                    log.info("Creating class for: '{0}'".format(class_name))
                     found_label = await DetectorLabel.find(
                         DetectorLabel.detector == detector.id,
                         DetectorLabel.name == class_name,

@@ -1,6 +1,21 @@
 <app-template-menu>
   <ng-container start>
-
+    <button class="btn btn-sm btn-outline-primary border-0 rounded-0" (click)="navigateProjects()">
+      <app-fa-icon [icon]="FAIconType.folderTree"></app-fa-icon>
+      <span class="ms-2" translate>workspace.project.list</span>
+    </button>
+    <button class="btn btn-sm btn-outline-primary border-0 rounded-0" *ngIf="project" (click)="navigateProjectPage(project)">
+      <app-fa-icon [icon]="FAIconType.folderOpen"></app-fa-icon>
+      <span class="ms-2">{{project.name}}</span>
+    </button>
+    <button class="btn btn-sm btn-outline-primary border-0 rounded-0" *ngIf="project" (click)="navigateProjectDetectors(project)">
+      <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+      <span class="ms-2" [translate]="'workspace.project.detectors'"></span>
+    </button>
+    <button class="btn btn-sm btn-outline-primary border-0 rounded-0" *ngIf="project" (click)="navigateProjectRecords(project)">
+      <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
+      <span class="ms-2" [translate]="'workspace.project.recordings'"></span>
+    </button>
   </ng-container>
   <ng-container end>
 

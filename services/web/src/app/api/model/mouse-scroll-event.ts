@@ -14,6 +14,7 @@ export interface MouseScrollEvent {
     type?: MouseScrollEventTypeEnum;
     record: string;
     frame: number;
+    synthetic?: boolean;
     timestamp?: string;
     dx: number;
     dy: number;
