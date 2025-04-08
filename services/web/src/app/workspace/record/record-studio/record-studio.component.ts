@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   Action,
   Detector,
@@ -19,76 +19,43 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './record-studio.component.scss',
 })
 export class RecordStudioComponent extends BaseComponent implements OnInit {
-
-  name: string = '';
-  description: string | undefined = '';
-  recordId?: string;
-  projectId?: string;
-  record?: Record;
+  @Input() record!: Record;
   frames: Frame[] = [];
   frame?: Frame = undefined;
   events: RecorderEventList200ResponseInner[] = [];
-  detector?: Detector;
-  detectorId?: string;
   syntheticEvents: boolean = false;
   lesson?: TrainLesson;
-
-
+  detector?: Detector;
 
   ngOnInit(): void {
-    this.recordId = this.route.snapshot.paramMap.get('record_id') || undefined;
-    this.detectorId = this.route.snapshot.paramMap.get('detector_id') || undefined;
-    setTimeout(()=>{
+    setTimeout(() => {
       this.loadDetector();
-      this.load();
       this.loadLesson();
       this.loadEvents();
-
-    });
-
-  }
-
-
-
-  load() {
-    if (!this.recordId) return;
-    this.error.next(undefined);
-    this.loading.next(this.ctx.translate.instant('workspace.record.loading'));
-    this.ctx.api.recorder.recorderLoad(this.recordId).subscribe({
-      next: (result) => {
-        this.record = result;
-        this.projectId = result.project;
-        this.loading.next(undefined);
-      },
-      error: (result) => {
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
-      },
     });
   }
 
-  loadTrainImageObjects(){
+  loadTrainImageObjects() {
     if (!this.frame) return;
-    this.loading.next(this.ctx.translate.instant('workspace.detector.training.loading_objects'));
-    setTimeout(()=>{
+    this.loading.next(
+      this.ctx.translate.instant('workspace.detector.training.loading_objects')
+    );
+    setTimeout(() => {
       if (!this.lesson || !this.lesson._id || !this.frame) return;
-      this.ctx.api.trainer.trainerLessonImageObjectList(this.lesson._id,this.frame.count).subscribe({
-        next: (result)=>{
-          this.loading.next(undefined);
-          if (this.frame)
-          this.frame.train = result.objects;
-        },
-        error: (result)=>{
-          this.loading.next(undefined);
-          this.error.next(result.error.detail);
-        }
-      })
+      this.ctx.api.trainer
+        .trainerLessonImageObjectList(this.lesson._id, this.frame.count)
+        .subscribe({
+          next: (result) => {
+            this.loading.next(undefined);
+            if (this.frame) this.frame.train = result.objects;
+          },
+          error: (result) => {
+            this.loading.next(undefined);
+            this.error.next(result.error.detail);
+          },
+        });
     });
-
   }
-
-
-
 
   labelIsDetected(value: DetectorLabel): boolean {
     if (!this.frame) return false;
@@ -100,7 +67,6 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     }
     return false;
   }
-
 
   selectFrame() {
     this.ctx
@@ -122,29 +88,32 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       });
   }
 
-
-  previousFrame(){
+  previousFrame() {
     if (!this.frame) return;
-    let temp = this.frames[this.frame.count-1];
+    let temp = this.frames[this.frame.count - 1];
     this.frame = undefined;
-            setTimeout(() => {
-              this.frame = temp;
-            });
+    setTimeout(() => {
+      this.frame = temp;
+    });
   }
 
-  nextFrame(){
+  nextFrame() {
     if (!this.frame) return;
-    let temp = this.frames[this.frame.count+1];
+    let temp = this.frames[this.frame.count + 1];
     this.frame = undefined;
-            setTimeout(() => {
-              this.frame = temp;
-            });
+    setTimeout(() => {
+      this.frame = temp;
+    });
   }
 
   viewVideo() {
-    if (!this.recordId) return;
+    if (!this.record._id) return;
     this.ctx
-      .openModal<undefined>(RecordVideoComponent, { recordId: this.recordId },{size:'lg',centered:true})
+      .openModal<undefined>(
+        RecordVideoComponent,
+        { record: this.record },
+        { size: 'lg', centered: true }
+      )
       .subscribe({
         next: (result) => {},
         error: (result) => {},
@@ -152,8 +121,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   }
 
   loadLesson() {
-    if (!this.recordId) return;
-    this.ctx.api.trainer.trainerLesson(this.recordId).subscribe({
+    if (!this.record._id) return;
+    this.ctx.api.trainer.trainerLesson(this.record._id).subscribe({
       next: (result) => {
         this.lesson = result;
         this.loadActions();
@@ -162,8 +131,9 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   }
 
   loadDetector() {
-    if (!this.detectorId) return;
-    this.ctx.api.detector.detectorLoad(this.detectorId).subscribe({
+    if (!this.lesson) return;
+    if (!this.lesson.detector) return;
+    this.ctx.api.detector.detectorLoad(this.lesson.detector).subscribe({
       next: (result) => {
         this.detector = result;
       },
@@ -171,8 +141,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   }
 
   loadEvents() {
-    if (!this.recordId) return;
-    this.ctx.api.recorder.recorderEventList(this.recordId).subscribe({
+    if (!this.record._id) return;
+    this.ctx.api.recorder.recorderEventList(this.record._id).subscribe({
       next: (result) => {
         this.events = result;
         this.loading.next(undefined);
@@ -195,56 +165,55 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     }
     this.ctx.api.recorder.recorderFrameCount(this.lesson.record).subscribe({
       next: (result) => {
-        if (this.lesson){
-        let totalFrames = result;
-        let deltaFrame = delta / totalFrames;
-        let ms = 0;
-        for (let i = 0; i < totalFrames; i++) {
-          let evt = undefined;
+        if (this.lesson) {
+          let totalFrames = result;
+          let deltaFrame = delta / totalFrames;
+          let ms = 0;
+          for (let i = 0; i < totalFrames; i++) {
+            let evt = undefined;
 
-          let pushed = false;
-          for (let j = 0; j < this.events.length; j++) {
-            if (this.events[j].frame == i) {
-              evt = this.events[j];
+            let pushed = false;
+            for (let j = 0; j < this.events.length; j++) {
+              if (this.events[j].frame == i) {
+                evt = this.events[j];
+                this.frames.push({
+                  count: i,
+                  event: evt,
+                  action: undefined,
+                  milliseconds: ms,
+                  suggestions: [],
+                  lesson: this.lesson,
+                  train: [],
+                  objects: [],
+                  texts: [],
+                });
+                pushed = true;
+              }
+            }
+
+            if (!pushed) {
               this.frames.push({
                 count: i,
                 event: evt,
-                action:undefined,
+                action: undefined,
                 milliseconds: ms,
                 suggestions: [],
                 lesson: this.lesson,
                 train: [],
-                objects:[],
-                texts: []
+                objects: [],
+                texts: [],
               });
-              pushed=true;
             }
+
+            ms += deltaFrame;
           }
-
-          if (!pushed){
-            this.frames.push({
-              count: i,
-              event: evt,
-              action:undefined,
-              milliseconds: ms,
-              suggestions: [],
-              lesson: this.lesson,
-              train: [],
-              objects:[],
-              texts: []
-            });
+          if (this.frames.length > 0) {
+            this.frame = this.frames[0];
           }
-
-
-
-          ms += deltaFrame;
+          this.loading.next(undefined);
+          this.loadTrainImageObjects();
         }
-        if (this.frames.length > 0) {
-          this.frame = this.frames[0];
-        }
-        this.loading.next(undefined);
-        this.loadTrainImageObjects();
-      }},
+      },
       error: (result) => {
         this.loading.next(undefined);
         this.error.next(result.error.detail);
@@ -252,23 +221,22 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     });
   }
 
-  loadActions(){
+  loadActions() {
     if (!this.lesson) return;
-    this.ctx.api.recorder.recorderActionList(this.lesson.record,undefined,0,-1).subscribe({
-      next: (result)=>{
-        for (let i = 0; i < result.actions.length; i++){
-          let action:Action = result.actions[i];
+    this.ctx.api.recorder
+      .recorderActionList(this.lesson.record, undefined, 0, -1)
+      .subscribe({
+        next: (result) => {
+          for (let i = 0; i < result.actions.length; i++) {
+            let action: Action = result.actions[i];
 
-          this.frames.forEach((frame, index)=>{
-
-            if (frame.event && frame.event._id == action.event){
-              this.frames[index].action = action;
-            }
-          })
-        }
-      }
-    })
+            this.frames.forEach((frame, index) => {
+              if (frame.event && frame.event._id == action.event) {
+                this.frames[index].action = action;
+              }
+            });
+          }
+        },
+      });
   }
-
-
 }

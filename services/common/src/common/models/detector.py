@@ -10,6 +10,7 @@ from beanie import Delete, Document, Insert, PydanticObjectId, SaveChanges, Upda
 from pydantic import BaseModel, Field
 
 # LOCAL IMPORTS
+from common.models.base import Position
 from common.models.defaults import empty_list, utc_now 
 from common.models.trainer import TrainLesson
 
@@ -21,6 +22,7 @@ class DetectorSuggestion(Document):
     by_text: Optional[str] = None
     by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
+    by_position: Optional[Position] = None
     event:PydanticObjectId
     confidence:float
     x:float

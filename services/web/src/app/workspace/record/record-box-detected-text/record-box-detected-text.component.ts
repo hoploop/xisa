@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DetectText } from '@api/index';
-import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
+import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({

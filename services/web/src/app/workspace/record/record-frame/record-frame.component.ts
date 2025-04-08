@@ -29,11 +29,11 @@ import {
 } from '@api/index';
 import { environment } from '@environments/environment';
 import { BaseComponent } from '@utils/base/base.component';
-import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
-import { ImageAnnotatorSettings } from '@train/image-annotator/image-annotator-settings';
+import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
+import { ImageAnnotatorSettings } from '@utils/image-annotator/image-annotator-settings';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { DetectorLabelSelectComponent } from '@workspace/detector/detector-label-select/detector-label-select.component';
-import { ImageAnnotatorHighlight } from '@train/image-annotator/image-annotator-highlight';
+import { ImageAnnotatorHighlight } from '@utils/image-annotator/image-annotator-highlight';
 import { TrainImageObject } from '@api/model/train-image-object';
 import { RecordBoxDetectedObjectComponent } from '../record-box-detected-object/record-box-detected-object.component';
 import { RecordBoxDetectedTextComponent } from '../record-box-detected-text/record-box-detected-text.component';
@@ -303,7 +303,7 @@ export class RecordFrameComponent
           box: box,
           suggestion: suggestion,
           lesson: this.lesson,
-        }
+        },{size:'lg'}
       )
       .subscribe({
         next: (result) => {

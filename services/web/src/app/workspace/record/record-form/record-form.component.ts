@@ -17,7 +17,7 @@ export class RecordFormComponent  extends BaseComponent{
   }
 
   dismiss(){
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
 
 
@@ -40,7 +40,7 @@ export class RecordFormComponent  extends BaseComponent{
 
 
   cancel(){
-    this.dismiss();
+    this.ctx.dismissModal();
   }
 
   save(){

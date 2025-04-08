@@ -1,14 +1,11 @@
-<div  class="card mt-1">
+<div  class="card mt-1 btn btn-outline-primary" (click)="goToProject()">
   <div class="card-body">
-    <div class="d-flex">
-      <div class="d-flex flex-column">
+    <div class="d-flex w-100">
+      <div class="d-flex w-100 flex-column">
         <span><strong>{{project.name}}</strong></span>
         <div><span [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span></div>
         <div><span [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span></div>
       </div>
-      <span class="ms-auto">
-          <button class="btn btn-primary btn-sm" (click)="goToProject()">Select</button>
-      </span>
     </div>
 </div>
 </div>

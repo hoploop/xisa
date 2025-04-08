@@ -1,40 +1,49 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { environment } from '@environments/environment';
 import { ContextService } from '@services/context.service';
 import { BaseComponent } from '@utils/base/base.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-
+import { Record } from '@api/index';
 @Component({
   selector: 'app-record-video',
   standalone: false,
   templateUrl: './record-video.component.html',
-  styleUrl: './record-video.component.scss'
+  styleUrl: './record-video.component.scss',
 })
-export class RecordVideoComponent extends BaseComponent implements OnInit{
+export class RecordVideoComponent extends BaseComponent implements OnInit {
   @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
 
-  @Input() recordId!:string;
+  @Input() record!: Record;
   videoSize: number = 0; // Total video size in bytes
   chunkSize: number = 1024 * 1024; // 5MB per chunk, you can adjust this based on your needs
   currentByte: number = 0; // Start byte for video streaming
 
-  constructor(ctx: ContextService, router: Router, route: ActivatedRoute,private http: HttpClient,protected override log: NGXLogger){
-    super(ctx,router,route,log);
+  constructor(
+    ctx: ContextService,
+    private http: HttpClient,
+    protected override log: NGXLogger
+  ) {
+    super(ctx, log);
   }
 
   ngOnInit(): void {
     this.loadVideo();
   }
 
-  dismiss(){
+  dismiss() {
     this.ctx.closeModal(undefined);
   }
 
-  getVideoWithRange(url: string, startByte: number, endByte: number): Observable<HttpResponse<Blob>> {
-    const headers = new HttpHeaders().set('Range', `bytes=${startByte}-${endByte}`).set('Authorization','Bearer '+this.ctx.api.getToken() ||'');
+  getVideoWithRange(
+    url: string,
+    startByte: number,
+    endByte: number
+  ): Observable<HttpResponse<Blob>> {
+    const headers = new HttpHeaders()
+      .set('Range', `bytes=${startByte}-${endByte}`)
+      .set('Authorization', 'Bearer ' + this.ctx.api.getToken() || '');
 
     return this.http.get(url, {
       headers,
@@ -70,8 +79,12 @@ export class RecordVideoComponent extends BaseComponent implements OnInit{
   }
 
   loadVideo() {
-
-    this.getVideoWithRange(environment.videoUrl+this.recordId, this.currentByte, this.currentByte + this.chunkSize - 1).subscribe(
+    if (!this.record._id) return;
+    this.getVideoWithRange(
+      environment.videoUrl + this.record._id,
+      this.currentByte,
+      this.currentByte + this.chunkSize - 1
+    ).subscribe(
       (response: HttpResponse<Blob>) => {
         this.handleVideoResponse(response);
       },
@@ -79,6 +92,5 @@ export class RecordVideoComponent extends BaseComponent implements OnInit{
         console.error('Error loading video:', error);
       }
     );
-
   }
 }

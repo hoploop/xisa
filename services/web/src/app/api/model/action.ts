@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Position } from './position';
 
 
 export interface Action { 
@@ -16,8 +17,10 @@ export interface Action {
     by_label?: string | null;
     by_text?: string | null;
     by_regex?: string | null;
-    confidence: number;
+    by_position?: Position | null;
     by_order?: Array<number>;
+    confidence: number;
+    image?: string | null;
     created?: string;
     updated?: string;
 }

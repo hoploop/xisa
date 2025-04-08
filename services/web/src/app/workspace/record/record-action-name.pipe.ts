@@ -32,7 +32,7 @@ export class RecordActionNamePipe implements PipeTransform {
   }
 
   renderSecondPart(action:Action){
-
+    console.log(action);
     if (action.by_label && action.by_order &&  action.by_order.length == 0){
       return this.ctx.translate.instant('workspace.record.action.by_class',{'class':action.by_label});
     }else if (action.by_label && action.by_order && action.by_order.length == 1){
@@ -51,6 +51,10 @@ export class RecordActionNamePipe implements PipeTransform {
       return this.ctx.translate.instant('workspace.record.action.by_regex_order_1',{'regex':action.by_regex,'order':action.by_order[0]});
     } else if (action.by_regex && action.by_order && action.by_order.length == 2){
       return this.ctx.translate.instant('workspace.record.action.by_regex_order_2',{'regex':action.by_regex,'row':action.by_order[0],'col':action.by_order[1]});
+    }else if (action.by_position){
+      return this.ctx.translate.instant('workspace.record.action.by_position',{'x':action.by_position.x.toFixed(3),'y':action.by_position.y.toFixed(3)});
+    } else{
+
     }
   }
 

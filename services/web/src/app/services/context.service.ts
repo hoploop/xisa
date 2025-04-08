@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { ApiService } from './api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageKeys } from '@constants/storage';
@@ -7,7 +7,9 @@ import { BeatService } from './beat.service';
 import { WsService } from './ws.service';
 import { NavigationService } from './navigation.service';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { MenuComponent } from '../menu/menu.component';
+
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,7 @@ export class ContextService {
 
 
   public resizeTop = new Subject<[number,number]>();
+  private mainContainer?:ViewContainerRef;
 
   constructor(
     public api: ApiService,
@@ -28,6 +31,9 @@ export class ContextService {
 
   private activeModal?:NgbActiveModal;
 
+  public initialize(main:ViewContainerRef){
+    this.mainContainer = main;
+  }
 
   public get session(): string {
     let found = localStorage.getItem(StorageKeys.session);
@@ -41,6 +47,25 @@ export class ContextService {
   }
 
 
+
+  public open(componentType: any, values={}): Observable<ComponentRef<any>>{
+    return new Observable<ComponentRef<any>>(observer=>{
+      let refComponent:ComponentRef<any>|undefined = undefined;
+
+      if (this.mainContainer){
+        this.mainContainer.clear();
+        refComponent = this.mainContainer.createComponent(componentType);
+      }
+      if (refComponent){
+        Object.assign(refComponent.instance,values);
+        observer.next(refComponent);
+      }else{
+        observer.error('Cannot create component');
+      }
+    })
+  }
+
+
   public openModal<T>(content:any,values={},options:NgbModalOptions={centered:true}): Observable<T>{
     const modalRef = this.modal.open(content,options);
     this.activeModal = modalRef;
@@ -51,6 +76,7 @@ export class ContextService {
 
 
   }
+
 
   public dismissModal(){
     this.modal.dismissAll();

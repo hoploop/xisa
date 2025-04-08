@@ -27,6 +27,7 @@ export * from './mouse-press-event';
 export * from './mouse-release-event';
 export * from './mouse-scroll-event';
 export * from './os';
+export * from './position';
 export * from './project';
 export * from './project-list-response';
 export * from './record';

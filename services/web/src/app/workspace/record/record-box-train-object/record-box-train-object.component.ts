@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DetectorLabel, TrainImageObject, TrainLesson } from '@api/index';
-import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
+import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 import { Observable } from 'rxjs';
 import { Frame } from '../record-frame';

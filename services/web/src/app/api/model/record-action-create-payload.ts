@@ -16,6 +16,8 @@ export interface RecordActionCreatePayload {
     byText?: string | null;
     byRegex?: string | null;
     byOrder?: Array<number>;
+    byPosition?: Array<number>;
     confidence: number;
+    image?: string | null;
 }
 

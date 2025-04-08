@@ -9,6 +9,7 @@ from beanie import Delete, Document, PydanticObjectId, SaveChanges, Update, befo
 from pydantic import Field
 
 # LOCAL IMPORTS
+from common.models.base import Position
 from common.models.defaults import empty_list, utc_now
 from common.models.trainer import TrainLesson
 
@@ -17,14 +18,17 @@ class OS(Document):
     name: str
     version: str
 
+
 class Action(Document):
     record: PydanticObjectId
     event: PydanticObjectId
     by_label: Optional[str] = None
     by_text: Optional[str] = None
     by_regex: Optional[str] = None
-    confidence:float
+    by_position: Optional[Position] = None
     by_order: List[int] = Field(default_factory=empty_list)
+    confidence:float
+    image: Optional[str] = None
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)    
     

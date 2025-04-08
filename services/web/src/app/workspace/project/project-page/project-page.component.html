@@ -9,17 +9,24 @@
     </div>
   </ng-content>
   <div body>
-    <div class="d-flex">
-      <button class="btn btn-primary btn-sm" (click)="navigateProjectDetectors(project)">
-        <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
-        <span class="ms-2" [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span>
-      </button>
-      <button class="btn btn-primary btn-sm ms-1" (click)="navigateProjectRecords(project)">
-        <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
-        <span class="ms-2" [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span>
-      </button>
-
+    <div class="d-flex flex-column w-100">
+      <div  class="card mb-2 btn btn-outline-primary" (click)="navigateProjectDetectors()">
+        <div class="card-body">
+          <div class="d-flex justify-content-center w-100">
+            <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+              <span class="ms-2" [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span>
+          </div>
+        </div>
       </div>
+      <div  class="card btn btn-outline-primary" (click)="navigateProjectRecords()">
+        <div class="card-body">
+          <div class="d-flex justify-content-center w-100">
+            <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
+        <span class="ms-2" [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
 

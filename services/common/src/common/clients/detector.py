@@ -31,7 +31,6 @@ from common.rpc.detector_pb2 import (
     CreateDetectorRequest,
     DetectObjectsRequest,
     DetectTextsRequest,
-    DetectorStepSuggestion,
     ExistsDetectorLabelRequest,
     ExistsDetectorLabelResponse,
     ListDetectorLabelRequest,
@@ -133,18 +132,7 @@ class DetectorClient(Client):
         ret = []
         for su in res.suggestions:
             ret.append(
-                DetectorSuggestion(
-                    by_label=su.byLabel,
-                    by_text=su.byText,
-                    by_order=su.byOrder,
-                    by_regex=su.byRegex,
-                    confidence=su.confidence,
-                    event=PydanticObjectId(su.event),
-                    x=su.x,
-                    y=su.y,
-                    w=su.w,
-                    h=su.h,
-                )
+                Conversions.deserialize(su)
             )
         return ret
 

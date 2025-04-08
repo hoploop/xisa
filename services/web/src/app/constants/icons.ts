@@ -107,6 +107,8 @@ import {
   faXmark,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { IconType } from '@ng-icons/core';
+import { typDeviceDesktop } from '@ng-icons/typicons';
 
 export enum BIconType {
   person = 'bi-person',
@@ -816,3 +818,12 @@ export const WIIcons = {
     return prefix + scale.toString();
   },
 };
+
+
+export const NGIcons = {
+  typDeviceDesktop
+}
+
+export enum NGIconType {
+  typDeviceDesktop = 'typDeviceDesktop'
+}

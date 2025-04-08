@@ -27,12 +27,14 @@ from common.clients.api import ApiClient
 from common.clients.recorder import RecorderClient
 from common.models import MODELS
 from common.models.auth import User
+from common.models.base import Position
 from common.models.detector import (
     Detector,
     DetectorLabel,
     DetectorImage,
     DetectorImageLabel,
     DetectorImageMode,
+    DetectorSuggestion,
     DetectorTrainingSession,
 )
 from common.rpc.detector_pb2 import (
@@ -55,7 +57,6 @@ from common.rpc.detector_pb2 import (
     DetectText,
     DetectTextsRequest,
     DetectTextsResponse,
-    DetectorStepSuggestion,
     ExistsDetectorLabelRequest,
     ExistsDetectorLabelResponse,
     FindDetectorImageLabelResponse,
@@ -206,9 +207,9 @@ class DetectorService(Service, DetectorServicer):
                     # There are no other texts with same value, suggestion is unique for text
                     if len(others) == 0:
                         suggestions.append(
-                            DetectorStepSuggestion(
-                                event=request.event,
-                                byText=matched.value,
+                            DetectorSuggestion(
+                                event=PydanticObjectId(request.event),
+                                by_text=matched.value,
                                 confidence=matched.confidence,
                                 x=nx,
                                 y=ny,
@@ -219,10 +220,10 @@ class DetectorService(Service, DetectorServicer):
 
                     else:
                         suggestions.append(
-                            DetectorStepSuggestion(
-                                event=request.event,
-                                byText=matched.value,
-                                byOrder=[matched.line, matched.block],
+                            DetectorSuggestion(
+                                event=PydanticObjectId(request.event),
+                                by_text=matched.value,
+                                by_order=[matched.line, matched.block],
                                 x=nx,
                                 y=ny,
                                 w=nw,
@@ -260,36 +261,62 @@ class DetectorService(Service, DetectorServicer):
                     for obj in res.objects:
                         if obj != matched and matched.name == obj.name:
                             others.append(obj)
+                            
+                    if matched.w/width < 0.7 and matched.h/height < 0.7:
 
-                    # There are no other objects with same value
-                    if len(others) == 0:
-                        suggestions.append(
-                            DetectorStepSuggestion(
-                                event=request.event,
-                                byLabel=matched.name,
-                                confidence=matched.confidence,
-                                x=matched.x/width,
-                                y=matched.y/height,
-                                w=matched.w/width,
-                                h=matched.h/height,
+                        # There are no other objects with same value
+                        if len(others) == 0:
+                            suggestions.append(
+                                DetectorSuggestion(
+                                    event=PydanticObjectId(request.event),
+                                    by_label=matched.name,
+                                    confidence=matched.confidence,
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
+                                )
                             )
-                        )
 
-                    else:
-                        suggestions.append(
-                            DetectorStepSuggestion(
-                                event=request.event,
-                                byLabel=matched.name,
-                                byOrder=[matched.row, matched.col],
-                                x=matched.x/width,
-                                y=matched.y/height,
-                                w=matched.w/width,
-                                h=matched.h/height,
-                                confidence=matched.confidence,
+                        else:
+                            suggestions.append(
+                                DetectorSuggestion(
+                                    event=PydanticObjectId(request.event),
+                                    by_label=matched.name,
+                                    by_order=[matched.row, matched.col],
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
+                                    confidence=matched.confidence,
+                                )
                             )
-                        )
+            
+            xs = x-10
+            ys = y-10
+            w = 20
+            h = 20
+            xs = xs / width            
+            ys = ys / height
+            w = w/width
+            h = h/height
+            x = x / width
+            y = y / height
+            
+            suggestions.append(DetectorSuggestion(
+                event=PydanticObjectId(request.event),
+                by_position=Position(x=x,y=y),
+                x = xs,
+                y=ys,
+                w=w,
+                h=h,
+                confidence=0.5
+            ))
+            ret = []
+            for su in suggestions:
+                ret.append(Conversions.serialize(su))
 
-            return SuggestStepResponse(status=True, suggestions=suggestions)
+            return SuggestStepResponse(status=True, suggestions=ret)
 
         except Exception as e:
             log.warning(str(e))

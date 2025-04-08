@@ -22,7 +22,7 @@ export class ImageAnnotatorBox {
   canResize: boolean = true;
   canSelect: boolean = true;
   canMove: boolean = true;
-  dataUrl?: string;
+  public dataUrl?: string;
   labels: DetectorLabel[] = [];
   selectedBorderColor: string = 'blue';
   defaultBorderColor: string = 'red';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Configuration, ConfigurationParameters } from '@api/configuration';
 import { environment } from '@environments/environment';
@@ -10,17 +10,15 @@ import { HttpBackend, provideHttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { AuthModule } from '@auth/auth.module';
-import { TrainModule } from "./train/train.module";
 import { MenuComponent } from './menu/menu.component';
-import { AppRoutingModule } from './app-routing.module';
-import { RouterModule } from '@angular/router';
 import { WorkspaceModule } from '@workspace/workspace.module';
 import { MomentModule } from 'ngx-moment';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { TemplatesModule } from '@templates/templates.module';
 import { UtilsModule } from '@utils/utils.module';
-import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { NgIconsModule } from '@ng-icons/core';
+import { NGIcons } from '@constants/icons';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -28,7 +26,6 @@ export function apiConfigFactory(): Configuration {
   };
   return new Configuration(params);
 }
-
 
 export function HttpLoaderFactory(_httpBackend: HttpBackend) {
   return new MultiTranslateHttpLoader(
@@ -38,15 +35,8 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    NotFoundComponent,
-    WelcomeComponent,
-  ],
+  declarations: [AppComponent, MenuComponent, WelcomeComponent],
   imports: [
-    AppRoutingModule,
-    RouterModule,
     BrowserModule,
     BrowserAnimationsModule,
     FontAwesomeModule,
@@ -56,22 +46,22 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     WorkspaceModule,
     TemplatesModule,
     ApiModule.forRoot(apiConfigFactory),
+    NgIconsModule.withIcons(NGIcons),
     LoggerModule.forRoot({
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.DEBUG,
-      disableConsoleLogging: false
+      disableConsoleLogging: false,
     }),
     TranslateModule.forRoot({
-        defaultLanguage: environment.locale.i18n.default,
-        loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpBackend],
-        },
+      defaultLanguage: environment.locale.i18n.default,
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpBackend],
+      },
     }),
-    TrainModule
-],
+  ],
   providers: [provideHttpClient()],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

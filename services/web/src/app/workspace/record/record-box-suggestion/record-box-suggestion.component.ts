@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DetectorSuggestion, TrainLesson } from '@api/index';
-import { ImageAnnotatorBox } from '@train/image-annotator/image-annotator-box';
+import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
@@ -18,7 +18,13 @@ export class RecordBoxSuggestionComponent extends BaseComponent{
     this.ctx.dismissModal();
   }
 
+
   onAcceptSuggestion(value: DetectorSuggestion) {
+    let position: number[] | undefined = undefined;
+    if (this.suggestion.by_position){
+      position = [this.suggestion.by_position.x,this.suggestion.by_position.y];
+    }
+    console.log(position);
     this.ctx.api.recorder.recorderActionCreate({
       recordId: this.lesson.record,
       eventId: this.suggestion.event,
@@ -26,7 +32,10 @@ export class RecordBoxSuggestionComponent extends BaseComponent{
       byText: this.suggestion.by_text,
       byRegex: this.suggestion.by_regex,
       byOrder: this.suggestion.by_order,
-      confidence: this.suggestion.confidence
+      byPosition: position,
+      confidence: this.suggestion.confidence,
+      image: this.box.dataUrl
+
     }).subscribe({
       next: (result)=>{
         this.loading.next(undefined);

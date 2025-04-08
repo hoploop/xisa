@@ -25,7 +25,7 @@ class ExistRecordEventActionResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., found: bool = ...) -> None: ...
 
 class UpdateRecordActionRequest(_message.Message):
-    __slots__ = ("user", "id", "event", "byLabel", "byText", "byRegex", "byOrder", "confidence")
+    __slots__ = ("user", "id", "event", "byLabel", "byText", "byRegex", "byOrder", "byPosition", "confidence", "image")
     USER_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
     EVENT_FIELD_NUMBER: _ClassVar[int]
@@ -33,7 +33,9 @@ class UpdateRecordActionRequest(_message.Message):
     BYTEXT_FIELD_NUMBER: _ClassVar[int]
     BYREGEX_FIELD_NUMBER: _ClassVar[int]
     BYORDER_FIELD_NUMBER: _ClassVar[int]
+    BYPOSITION_FIELD_NUMBER: _ClassVar[int]
     CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    IMAGE_FIELD_NUMBER: _ClassVar[int]
     user: str
     id: str
     event: str
@@ -41,8 +43,10 @@ class UpdateRecordActionRequest(_message.Message):
     byText: str
     byRegex: str
     byOrder: _containers.RepeatedScalarFieldContainer[int]
+    byPosition: _containers.RepeatedScalarFieldContainer[float]
     confidence: float
-    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ...) -> None: ...
+    image: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., byPosition: _Optional[_Iterable[float]] = ..., confidence: _Optional[float] = ..., image: _Optional[str] = ...) -> None: ...
 
 class UpdateRecordActionResponse(_message.Message):
     __slots__ = ("status", "message", "action")
@@ -55,7 +59,7 @@ class UpdateRecordActionResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., action: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
 class CreateRecordActionRequest(_message.Message):
-    __slots__ = ("user", "record", "event", "byLabel", "byText", "byRegex", "byOrder", "confidence")
+    __slots__ = ("user", "record", "event", "byLabel", "byText", "byRegex", "byOrder", "byPosition", "confidence", "image")
     USER_FIELD_NUMBER: _ClassVar[int]
     RECORD_FIELD_NUMBER: _ClassVar[int]
     EVENT_FIELD_NUMBER: _ClassVar[int]
@@ -63,7 +67,9 @@ class CreateRecordActionRequest(_message.Message):
     BYTEXT_FIELD_NUMBER: _ClassVar[int]
     BYREGEX_FIELD_NUMBER: _ClassVar[int]
     BYORDER_FIELD_NUMBER: _ClassVar[int]
+    BYPOSITION_FIELD_NUMBER: _ClassVar[int]
     CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    IMAGE_FIELD_NUMBER: _ClassVar[int]
     user: str
     record: str
     event: str
@@ -71,8 +77,10 @@ class CreateRecordActionRequest(_message.Message):
     byText: str
     byRegex: str
     byOrder: _containers.RepeatedScalarFieldContainer[int]
+    byPosition: _containers.RepeatedScalarFieldContainer[float]
     confidence: float
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., confidence: _Optional[float] = ...) -> None: ...
+    image: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., event: _Optional[str] = ..., byLabel: _Optional[str] = ..., byText: _Optional[str] = ..., byRegex: _Optional[str] = ..., byOrder: _Optional[_Iterable[int]] = ..., byPosition: _Optional[_Iterable[float]] = ..., confidence: _Optional[float] = ..., image: _Optional[str] = ...) -> None: ...
 
 class CreateRecordActionResponse(_message.Message):
     __slots__ = ("status", "message", "action")

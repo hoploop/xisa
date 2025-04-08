@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Position } from './position';
 
 
 export interface DetectorSuggestion { 
@@ -15,6 +16,7 @@ export interface DetectorSuggestion {
     by_text?: string | null;
     by_regex?: string | null;
     by_order?: Array<number>;
+    by_position?: Position | null;
     event: string;
     confidence: number;
     x: number;

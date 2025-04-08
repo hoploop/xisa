@@ -340,7 +340,9 @@ class RecordActionCreatePayload(BaseModel):
     byText: Optional[str]=None
     byRegex: Optional[str]=None
     byOrder: List[int] = []
+    byPosition: List[float] = []
     confidence: float
+    image: Optional[str]=None
     
 
 @router.post(
@@ -352,7 +354,7 @@ async def action_create(
     payload: RecordActionCreatePayload, user: CurrentUser, recorder: Recorder
 ):
     try:
-        return await recorder.createRecordAction(user,payload.recordId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.confidence)
+        return await recorder.createRecordAction(user,payload.recordId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
     except Exception as e:
         log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
@@ -365,7 +367,9 @@ class RecordActionUpdatePayload(BaseModel):
     byText: Optional[str]=None
     byRegex: Optional[str]=None
     byOrder: List[int] = []
+    byPosition: List[float] = []
     confidence: float
+    image: Optional[str]=None
     
 
 @router.put(
@@ -377,7 +381,7 @@ async def action_update(
     payload: RecordActionUpdatePayload, user: CurrentUser, recorder: Recorder
 ):
     try:
-        return await recorder.updateRecordAction(user,payload.actionId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.confidence)
+        return await recorder.updateRecordAction(user,payload.actionId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

@@ -50,6 +50,7 @@ model/mouse-press-event.ts
 model/mouse-release-event.ts
 model/mouse-scroll-event.ts
 model/os.ts
+model/position.ts
 model/project-list-response.ts
 model/project.ts
 model/record-action-create-payload.ts

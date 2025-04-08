@@ -55,7 +55,9 @@ message UpdateRecordActionRequest {
     optional string byText = 5;
     optional string byRegex = 6;
     repeated int32 byOrder = 7;
-    optional float confidence = 8;
+    repeated float byPosition = 8;
+    optional float confidence = 9;
+    optional string image = 10;
 }
 
 message UpdateRecordActionResponse {
@@ -72,7 +74,9 @@ message CreateRecordActionRequest {
     optional string byText = 5;
     optional string byRegex = 6;
     repeated int32 byOrder = 7;
-    optional float confidence = 8;
+    repeated float byPosition = 8;
+    optional float confidence = 9;
+    optional string image = 10;
 }
 
 message CreateRecordActionResponse {

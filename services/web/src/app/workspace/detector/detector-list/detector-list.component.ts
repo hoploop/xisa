@@ -1,11 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 import { Detector, Project } from '@api/index';
-import { ContextService } from '@services/context.service';
 import { DetectorFormComponent } from '../detector-form/detector-form.component';
 import { DetectorLearnComponent } from '../detector-learn/detector-learn.component';
 import { BaseComponent } from '@utils/base/base.component';
-import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-detector-list',
@@ -14,31 +11,15 @@ import { NGXLogger } from 'ngx-logger';
   styleUrl: './detector-list.component.scss',
 })
 export class DetectorListComponent extends BaseComponent implements OnInit {
+  @Input() project!: Project;
   skip: number = 0;
   limit: number = 10;
   search: string = '';
   total: number = 0;
   detectors: Detector[] = [];
-  project?: Project;
-
-  constructor(
-    protected override ctx: ContextService,
-    protected override router: Router,
-    protected override route: ActivatedRoute,
-    protected override log: NGXLogger
-  ) {
-    super(ctx,router,route,log);
-
-  }
 
   ngOnInit(): void {
-    let projectId = this.route.snapshot.paramMap.get('project_id') || undefined;
-    if (projectId){
-
-      this.loadProject(projectId);
-    }
-
-
+    this.load();
   }
 
   onChangeSearch(value: string) {
@@ -48,8 +29,6 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
   }
 
   create() {
-
-
     this.ctx
       .openModal<Detector | undefined>(DetectorFormComponent, {
         project: this.project,
@@ -91,7 +70,7 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  train(detector:Detector){
+  train(detector: Detector) {
     if (!detector._id) return;
     this.ctx
       .openModal<Detector | undefined>(DetectorLearnComponent, {
@@ -120,11 +99,10 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
       });
   }
 
-
   load() {
     if (!this.project) return;
     if (!this.project._id) return;
-    this.log.debug("Loading detectors");
+    this.log.debug('Loading detectors');
     this.loading.next(
       this.ctx.translate.instant('workspace.detector.loadings')
     );
@@ -142,19 +120,5 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
           this.error.next(result.error.detail);
         },
       });
-  }
-
-  loadProject(projectId:string){
-    this.ctx.api.workspace.workspaceProjectLoad(projectId).subscribe({
-      next: (result)=>{
-        this.loading.next(undefined);
-        this.project = result;
-        this.load();
-      },
-      error: (result)=>{
-        this.loading.next(undefined);
-        this.error.next(result.error.detail);
-      }
-    })
   }
 }

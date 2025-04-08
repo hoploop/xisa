@@ -32,7 +32,7 @@
             <small class="text-muted"><span translate>workspace.record.frames</span><span>{{record._id|recordFramesCount|async}}</span></small>
             <small class="text-muted"><span translate>workspace.record.size</span><span>{{record._id|recordSize|async}}</span></small>
             <small class="text-muted"><span translate>workspace.record.actions</span><span>{{record|recordActionCount|async}}</span></small>
-            <small class="text-muted"><span translate>workspace.record.os.title</span><span>{{record|recordOsName}}</span></small>
+            <small class="text-muted"><app-ng-icon [icon]="NGIconType.typDeviceDesktop"></app-ng-icon><span translate>workspace.record.os.title</span><span>{{record|recordOsName}}</span></small>
           </div>
           <span class="ms-auto">
             <span class="ms-2 text-muted"><small>{{record.created|amCalendar}}</small></span>

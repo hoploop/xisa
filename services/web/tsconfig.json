@@ -12,7 +12,6 @@
       "@workspace/*":["./src/app/workspace/*"],
       "@templates/*":["./src/app/templates/*"],
       "@guards/*":["./src/app/guards/*"],
-      "@train/*":["./src/app/train/*"],
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

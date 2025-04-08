@@ -14,7 +14,7 @@ export class WelcomeComponent extends BaseComponent{
   login(){
     this.ctx.openModal<string|undefined>(LoginComponent,{}).subscribe({
       next: (result)=>{ if (result!=undefined){
-        this.router.navigateByUrl('/project/list');
+
       }},
       error: (result)=>{}
     })

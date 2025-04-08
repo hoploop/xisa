@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ContextService } from './services/context.service';
+import { MenuComponent } from './menu/menu.component';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,9 @@ import { ContextService } from './services/context.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('navbar', { static: false }) navbar!: ElementRef;
+  @ViewChild('main', { read: ViewContainerRef }) mainContainer!: ViewContainerRef;
+  @ViewChild(MenuComponent) menuContainer!: MenuComponent;
+
 
   title = 'web';
   logged = new BehaviorSubject<boolean|undefined>(undefined);
@@ -25,9 +28,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.adjustPadding();
-    window.addEventListener('resize', () => this.adjustPadding()); // Adjust padding on window resize
-
+    this.ctx.initialize(this.mainContainer);
 
     this.ctx.resizeTop.subscribe(result=>{
       this.topMargin.next(result[1]);
@@ -44,11 +45,9 @@ export class AppComponent implements AfterViewInit {
         this.ctx.ws.close();
       }
     })
-  }
-
-
-  adjustPadding() {
 
 
   }
+
+
 }

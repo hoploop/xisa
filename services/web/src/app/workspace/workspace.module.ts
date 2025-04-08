@@ -29,7 +29,6 @@ import { RecordFrameComponent } from './record/record-frame/record-frame.compone
 import { DetectorSelectorComponent } from './detector/detector-selector/detector-selector.component';
 import { RecordVideoComponent } from './record/record-video/record-video.component';
 import { DetectorClassFilterPipe } from './detector/detector-class-filter.pipe';
-import { TrainModule } from "../train/train.module";
 import { DetectorSuggestionComponent } from './detector/detector-suggestion/detector-suggestion.component';
 import { DetectorLabelSelectComponent } from './detector/detector-label-select/detector-label-select.component';
 import { DetectorLabelSuggestionComponent } from './detector/detector-label-suggestion/detector-label-suggestion.component';
@@ -47,10 +46,8 @@ import { RecordBoxSuggestionComponent } from './record/record-box-suggestion/rec
 import { RecordEventNamePipe } from './record/record-event-name.pipe';
 import { DetectorTrainCountPipePipe } from './detector/detector-train-count-pipe.pipe';
 import { DetectorSettingsComponent } from './detector/detector-settings/detector-settings.component';
-import { ProjectMenuComponent } from './project/project-menu/project-menu.component';
 import { RecordActionComponent } from './record/record-action/record-action.component';
 import { RecordActionNamePipe } from './record/record-action-name.pipe';
-import { RecordMenuComponent } from './record/record-menu/record-menu.component';
 import { RecordEventFilterSyntheticPipe } from './record/record-event-filter-synthetic.pipe';
 import { RecordLoadDetectorNamePipe } from './record/record-load-detector-name.pipe';
 import { ProjectCardComponent } from './project/project-card/project-card.component';
@@ -103,10 +100,8 @@ import { RecordActionCountPipe } from './record/record-action-count.pipe';
     RecordEventNamePipe,
     DetectorTrainCountPipePipe,
     DetectorSettingsComponent,
-    ProjectMenuComponent,
     RecordActionComponent,
     RecordActionNamePipe,
-    RecordMenuComponent,
     RecordEventFilterSyntheticPipe,
     RecordLoadDetectorNamePipe,
     ProjectCardComponent,
@@ -120,8 +115,7 @@ import { RecordActionCountPipe } from './record/record-action-count.pipe';
     FormsModule,
     TranslateModule,
     TemplatesModule,
-    MomentModule,
-    TrainModule
+    MomentModule
 ],
   exports: [
     ProjectListComponent,
@@ -130,7 +124,6 @@ import { RecordActionCountPipe } from './record/record-action-count.pipe';
     RecordFormComponent,
     RecordControllerComponent,
     DetectorListComponent,
-    ProjectMenuComponent
   ]
 })
 export class WorkspaceModule { }

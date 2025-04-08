@@ -9,6 +9,7 @@ from beanie import Delete, Document, PydanticObjectId, before_event, Update,Save
 from pydantic import Field
 
 # LOCAL IMPORTS
+from common.models.base import Position
 from common.models.defaults import empty_list, utc_now
 
 class Run(Document):
@@ -41,6 +42,7 @@ class Step(Document):
     by_text: Optional[str] = None
     by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
+    by_position: Optional[Position] = None
     event:PydanticObjectId
     duration: float = 1.0
     retry: int = 10

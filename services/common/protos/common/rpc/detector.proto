@@ -43,18 +43,6 @@ message FindDetectorImageLabelResponse {
     Serialized label = 3;
 }
 
-message DetectorStepSuggestion {
-  optional string event = 1;
-  optional string byLabel = 2;
-  optional string byText = 3;
-  optional string byRegex = 4;
-  repeated int32 byOrder = 5;
-  optional float confidence = 6;
-  float x = 7;
-  float y = 8;
-  float w = 9;
-  float h = 10;
-}
 
 message SuggestStepRequest {
     string user = 1;
@@ -67,7 +55,7 @@ message SuggestStepRequest {
 message SuggestStepResponse {
     bool status = 1;
     optional string message = 2;
-    repeated DetectorStepSuggestion suggestions = 3;
+    repeated Serialized suggestions = 3;
 }
 
 message AddDetectorLabelRequest {

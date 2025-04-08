@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Detector, Project, Record } from '@api/index';
 import { DetectorSelectorComponent } from '@workspace/detector/detector-selector/detector-selector.component';
 import { RecordFormComponent } from '../record-form/record-form.component';
 import { RecordControllerComponent } from '../record-controller/record-controller.component';
-import { BaseComponent } from '../../../utils/base/base.component';
+import { BaseComponent } from '@utils/base/base.component';
+import { RecordStudioComponent } from '../record-studio/record-studio.component';
 
 @Component({
   selector: 'app-record-list',
@@ -12,7 +13,7 @@ import { BaseComponent } from '../../../utils/base/base.component';
   styleUrl: './record-list.component.scss',
 })
 export class RecordListComponent extends BaseComponent implements OnInit {
-  project?: Project;
+  @Input() project!: Project;
   skip: number = 0;
   limit: number = 0;
   search: string = '';
@@ -20,10 +21,8 @@ export class RecordListComponent extends BaseComponent implements OnInit {
   records: Record[] = [];
   running?: boolean;
 
-
   ngOnInit(): void {
-    let projectId = this.route.snapshot.paramMap.get('project_id') || undefined;
-    if (projectId) this.loadProject(projectId);
+    this.load();
   }
 
   onChangeSearch(value: string) {
@@ -34,12 +33,16 @@ export class RecordListComponent extends BaseComponent implements OnInit {
 
   create() {
     if (!this.project) return;
-    this.ctx.openModal<undefined>(RecordControllerComponent, {project:this.project}).subscribe({
-      next: (result) => {
-        this.load();
-      },
-      error: (result) => {},
-    });
+    this.ctx
+      .openModal<undefined>(RecordControllerComponent, {
+        project: this.project,
+      })
+      .subscribe({
+        next: (result) => {
+          this.load();
+        },
+        error: (result) => {},
+      });
   }
 
   edit(record: Record) {
@@ -93,8 +96,8 @@ export class RecordListComponent extends BaseComponent implements OnInit {
                     .trainerLessonSetDetector(resultb._id, result._id)
                     .subscribe({
                       next: (resultc) => {
-                        if (resultb._id){
-                        this.navigateRecordStudio(record,resultb._id);
+                        if (resultb._id) {
+                          this.navigateRecordStudio(record);
                         }
                       },
                     });
@@ -103,22 +106,15 @@ export class RecordListComponent extends BaseComponent implements OnInit {
               error: (result) => {},
             });
         } else {
-          this.navigateRecordStudio(record,result.detector);
-
+          this.navigateRecordStudio(record);
         }
       },
     });
   }
 
-  loadProject(projectId:string){
-    this.ctx.api.workspace.workspaceProjectLoad(projectId).subscribe({
-      next: (result)=>{
-        this.project = result;
-        this.load();
-      }
-    })
+  navigateRecordStudio(record: Record) {
+    this.ctx.open(RecordStudioComponent, { record: record }).subscribe();
   }
-
 
   load() {
     if (!this.project) return;

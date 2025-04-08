@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TemplateMenuComponent } from './template-menu/template-menu.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { TemplateCardContainerComponent } from './template-card-container/template-card-container.component';
 
@@ -8,7 +7,6 @@ import { TemplateCardContainerComponent } from './template-card-container/templa
 
 @NgModule({
   declarations: [
-    TemplateMenuComponent,
     TemplateCardContainerComponent
   ],
   imports: [
@@ -16,7 +14,6 @@ import { TemplateCardContainerComponent } from './template-card-container/templa
     TranslateModule
   ],
   exports : [
-    TemplateMenuComponent,
     TemplateCardContainerComponent
   ]
 })

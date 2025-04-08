@@ -17,7 +17,6 @@ export class CheckComponent extends BaseComponent implements OnInit {
     this.error.next(undefined);
     let token = this.ctx.api.getToken();
     if (token == null) {
-      this.router.navigateByUrl('/welcome');
       this.ctx.beat.auth.logged.next(false);
       return;
     }
@@ -27,14 +26,14 @@ export class CheckComponent extends BaseComponent implements OnInit {
       next: (result) => {
         this.loading.next(undefined);
         this.ctx.beat.auth.logged.next(true);
-        this.router.navigateByUrl('/project/list');
+
       },
       error: (result) => {
         this.loading.next(undefined);
         this.error.next(result.error.detail);
         this.ctx.api.remToken();
         this.ctx.beat.auth.logged.next(false);
-        this.router.navigateByUrl('/welcome');
+
       },
     });
   }
