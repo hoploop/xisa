@@ -49,8 +49,8 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#createStep.
-    def visitCreateStep(self, ctx:GrammarParser.CreateStepContext):
+    # Visit a parse tree produced by GrammarParser#createOperation.
+    def visitCreateOperation(self, ctx:GrammarParser.CreateOperationContext):
         return self.visitChildren(ctx)
 
 
@@ -84,13 +84,18 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#createScenario.
-    def visitCreateScenario(self, ctx:GrammarParser.CreateScenarioContext):
+    # Visit a parse tree produced by GrammarParser#createSequence.
+    def visitCreateSequence(self, ctx:GrammarParser.CreateSequenceContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#action.
-    def visitAction(self, ctx:GrammarParser.ActionContext):
+    # Visit a parse tree produced by GrammarParser#runOperation.
+    def visitRunOperation(self, ctx:GrammarParser.RunOperationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#operation.
+    def visitOperation(self, ctx:GrammarParser.OperationContext):
         return self.visitChildren(ctx)
 
 

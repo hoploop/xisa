@@ -18,7 +18,7 @@ public class GrammarLexer extends Lexer {
 	public static final int
 		LEFT=1, RIGHT=2, MIDDLE=3, KEY_PRESS=4, KEY_RELEASE=5, KEY_TYPE=6, MOUSE_CLICK=7, 
 		MOUSE_DOUBLE_CLICK=8, MOUSE_PRESS=9, MOUSE_RELEASE=10, MOUSE_SCROLL=11, 
-		WAIT=12, TEXT=13, POSITION=14, REGEX=15, COMMA=16, LABEL=17, USE=18, SCENARIO=19, 
+		WAIT=12, TEXT=13, POSITION=14, REGEX=15, COMMA=16, LABEL=17, USE=18, SEQUENCE=19, 
 		DETECTOR=20, ID=21, STRING=22, ESC=23, ORPAR=24, EQ=25, CRPAR=26, OCPAR=27, 
 		CCPAR=28, INT=29, FLOAT=30, WS=31;
 	public static String[] channelNames = {
@@ -33,7 +33,7 @@ public class GrammarLexer extends Lexer {
 		return new String[] {
 			"LEFT", "RIGHT", "MIDDLE", "KEY_PRESS", "KEY_RELEASE", "KEY_TYPE", "MOUSE_CLICK", 
 			"MOUSE_DOUBLE_CLICK", "MOUSE_PRESS", "MOUSE_RELEASE", "MOUSE_SCROLL", 
-			"WAIT", "TEXT", "POSITION", "REGEX", "COMMA", "LABEL", "USE", "SCENARIO", 
+			"WAIT", "TEXT", "POSITION", "REGEX", "COMMA", "LABEL", "USE", "SEQUENCE", 
 			"DETECTOR", "ID", "STRING", "ESC", "ORPAR", "EQ", "CRPAR", "OCPAR", "CCPAR", 
 			"INT", "FLOAT", "WS"
 		};
@@ -45,7 +45,7 @@ public class GrammarLexer extends Lexer {
 			null, "'left'", "'right'", "'middle'", "'keyPress'", "'keyRelease'", 
 			"'keyType'", "'mouseClick'", "'mouseDoubleClick'", "'mousePress'", "'mouseRelease'", 
 			"'mouseScroll'", "'wait'", "'text'", "'position'", "'regex'", "','", 
-			"'label'", "'use'", "'scenario'", "'detector'", null, null, null, "'('", 
+			"'label'", "'use'", "'sequence'", "'detector'", null, null, null, "'('", 
 			"'='", "')'", "'{'", "'}'"
 		};
 	}
@@ -55,7 +55,7 @@ public class GrammarLexer extends Lexer {
 			null, "LEFT", "RIGHT", "MIDDLE", "KEY_PRESS", "KEY_RELEASE", "KEY_TYPE", 
 			"MOUSE_CLICK", "MOUSE_DOUBLE_CLICK", "MOUSE_PRESS", "MOUSE_RELEASE", 
 			"MOUSE_SCROLL", "WAIT", "TEXT", "POSITION", "REGEX", "COMMA", "LABEL", 
-			"USE", "SCENARIO", "DETECTOR", "ID", "STRING", "ESC", "ORPAR", "EQ", 
+			"USE", "SEQUENCE", "DETECTOR", "ID", "STRING", "ESC", "ORPAR", "EQ", 
 			"CRPAR", "OCPAR", "CCPAR", "INT", "FLOAT", "WS"
 		};
 	}
@@ -253,9 +253,9 @@ public class GrammarLexer extends Lexer {
 		"\u00cd\u0005l\u0000\u0000\u00cd\"\u0001\u0000\u0000\u0000\u00ce\u00cf"+
 		"\u0005u\u0000\u0000\u00cf\u00d0\u0005s\u0000\u0000\u00d0\u00d1\u0005e"+
 		"\u0000\u0000\u00d1$\u0001\u0000\u0000\u0000\u00d2\u00d3\u0005s\u0000\u0000"+
-		"\u00d3\u00d4\u0005c\u0000\u0000\u00d4\u00d5\u0005e\u0000\u0000\u00d5\u00d6"+
-		"\u0005n\u0000\u0000\u00d6\u00d7\u0005a\u0000\u0000\u00d7\u00d8\u0005r"+
-		"\u0000\u0000\u00d8\u00d9\u0005i\u0000\u0000\u00d9\u00da\u0005o\u0000\u0000"+
+		"\u00d3\u00d4\u0005e\u0000\u0000\u00d4\u00d5\u0005q\u0000\u0000\u00d5\u00d6"+
+		"\u0005u\u0000\u0000\u00d6\u00d7\u0005e\u0000\u0000\u00d7\u00d8\u0005n"+
+		"\u0000\u0000\u00d8\u00d9\u0005c\u0000\u0000\u00d9\u00da\u0005e\u0000\u0000"+
 		"\u00da&\u0001\u0000\u0000\u0000\u00db\u00dc\u0005d\u0000\u0000\u00dc\u00dd"+
 		"\u0005e\u0000\u0000\u00dd\u00de\u0005t\u0000\u0000\u00de\u00df\u0005e"+
 		"\u0000\u0000\u00df\u00e0\u0005c\u0000\u0000\u00e0\u00e1\u0005t\u0000\u0000"+

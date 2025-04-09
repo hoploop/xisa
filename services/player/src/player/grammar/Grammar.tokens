@@ -16,7 +16,7 @@ REGEX=15
 COMMA=16
 LABEL=17
 USE=18
-SCENARIO=19
+SEQUENCE=19
 DETECTOR=20
 ID=21
 STRING=22
@@ -47,7 +47,7 @@ WS=31
 ','=16
 'label'=17
 'use'=18
-'scenario'=19
+'sequence'=19
 'detector'=20
 '('=24
 '='=25

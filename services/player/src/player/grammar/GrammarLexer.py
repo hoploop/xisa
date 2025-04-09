@@ -88,10 +88,10 @@ def serializedATN():
         198,199,5,44,0,0,199,32,1,0,0,0,200,201,5,108,0,0,201,202,5,97,0,
         0,202,203,5,98,0,0,203,204,5,101,0,0,204,205,5,108,0,0,205,34,1,
         0,0,0,206,207,5,117,0,0,207,208,5,115,0,0,208,209,5,101,0,0,209,
-        36,1,0,0,0,210,211,5,115,0,0,211,212,5,99,0,0,212,213,5,101,0,0,
-        213,214,5,110,0,0,214,215,5,97,0,0,215,216,5,114,0,0,216,217,5,105,
-        0,0,217,218,5,111,0,0,218,38,1,0,0,0,219,220,5,100,0,0,220,221,5,
-        101,0,0,221,222,5,116,0,0,222,223,5,101,0,0,223,224,5,99,0,0,224,
+        36,1,0,0,0,210,211,5,115,0,0,211,212,5,101,0,0,212,213,5,113,0,0,
+        213,214,5,117,0,0,214,215,5,101,0,0,215,216,5,110,0,0,216,217,5,
+        99,0,0,217,218,5,101,0,0,218,38,1,0,0,0,219,220,5,100,0,0,220,221,
+        5,101,0,0,221,222,5,116,0,0,222,223,5,101,0,0,223,224,5,99,0,0,224,
         225,5,116,0,0,225,226,5,111,0,0,226,227,5,114,0,0,227,40,1,0,0,0,
         228,230,7,0,0,0,229,228,1,0,0,0,230,231,1,0,0,0,231,229,1,0,0,0,
         231,232,1,0,0,0,232,236,1,0,0,0,233,235,7,1,0,0,234,233,1,0,0,0,
@@ -136,7 +136,7 @@ class GrammarLexer(Lexer):
     COMMA = 16
     LABEL = 17
     USE = 18
-    SCENARIO = 19
+    SEQUENCE = 19
     DETECTOR = 20
     ID = 21
     STRING = 22
@@ -158,20 +158,20 @@ class GrammarLexer(Lexer):
             "'left'", "'right'", "'middle'", "'keyPress'", "'keyRelease'", 
             "'keyType'", "'mouseClick'", "'mouseDoubleClick'", "'mousePress'", 
             "'mouseRelease'", "'mouseScroll'", "'wait'", "'text'", "'position'", 
-            "'regex'", "','", "'label'", "'use'", "'scenario'", "'detector'", 
+            "'regex'", "','", "'label'", "'use'", "'sequence'", "'detector'", 
             "'('", "'='", "')'", "'{'", "'}'" ]
 
     symbolicNames = [ "<INVALID>",
             "LEFT", "RIGHT", "MIDDLE", "KEY_PRESS", "KEY_RELEASE", "KEY_TYPE", 
             "MOUSE_CLICK", "MOUSE_DOUBLE_CLICK", "MOUSE_PRESS", "MOUSE_RELEASE", 
             "MOUSE_SCROLL", "WAIT", "TEXT", "POSITION", "REGEX", "COMMA", 
-            "LABEL", "USE", "SCENARIO", "DETECTOR", "ID", "STRING", "ESC", 
+            "LABEL", "USE", "SEQUENCE", "DETECTOR", "ID", "STRING", "ESC", 
             "ORPAR", "EQ", "CRPAR", "OCPAR", "CCPAR", "INT", "FLOAT", "WS" ]
 
     ruleNames = [ "LEFT", "RIGHT", "MIDDLE", "KEY_PRESS", "KEY_RELEASE", 
                   "KEY_TYPE", "MOUSE_CLICK", "MOUSE_DOUBLE_CLICK", "MOUSE_PRESS", 
                   "MOUSE_RELEASE", "MOUSE_SCROLL", "WAIT", "TEXT", "POSITION", 
-                  "REGEX", "COMMA", "LABEL", "USE", "SCENARIO", "DETECTOR", 
+                  "REGEX", "COMMA", "LABEL", "USE", "SEQUENCE", "DETECTOR", 
                   "ID", "STRING", "ESC", "ORPAR", "EQ", "CRPAR", "OCPAR", 
                   "CCPAR", "INT", "FLOAT", "WS" ]
 

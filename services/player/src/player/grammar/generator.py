@@ -1,5 +1,6 @@
 from typing import List, Tuple
 from uuid import uuid4
+from common.models.player import CreateSelectorStatement, LabelSelector
 from common.models.recorder import Action, Event, KeyPressEvent, KeyReleaseEvent, MouseButton, MouseClickEvent, MouseDoubleClickEvent, MousePressEvent, MouseReleaseEvent, MouseScrollEvent
 
 
@@ -19,18 +20,17 @@ class GrammarGenerator:
         return starterId+1, '{0}{1}'.format(prefix,starterId+1)
             
     def generateFromLabelAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
-        order = ''
-        if len(action.by_order) > 0:
-            for el in action.by_order:
-                order += ',{0}'.format(el)
-        selector = 'label("{0}"{1})'.format(action.by_label,order)
+         
+        selector = LabelSelector(value=action.by_label,order=action.by_order)
         
         if declarative:
+            
             
             # Selector area
             starterId, selector_id = self.getNextId(starterId)
             
             selector_dec = '{0} = {1}'.format(selector_id,selector) # id = label(...)
+            CreateSelectorStatement(id=selector_id,selector=selector)
             
             # Action area
             starterId, action_id = self.getNextId(starterId)

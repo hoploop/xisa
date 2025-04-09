@@ -80,12 +80,12 @@ class GrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by GrammarParser#createStep.
-    def enterCreateStep(self, ctx:GrammarParser.CreateStepContext):
+    # Enter a parse tree produced by GrammarParser#createOperation.
+    def enterCreateOperation(self, ctx:GrammarParser.CreateOperationContext):
         pass
 
-    # Exit a parse tree produced by GrammarParser#createStep.
-    def exitCreateStep(self, ctx:GrammarParser.CreateStepContext):
+    # Exit a parse tree produced by GrammarParser#createOperation.
+    def exitCreateOperation(self, ctx:GrammarParser.CreateOperationContext):
         pass
 
 
@@ -143,21 +143,30 @@ class GrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by GrammarParser#createScenario.
-    def enterCreateScenario(self, ctx:GrammarParser.CreateScenarioContext):
+    # Enter a parse tree produced by GrammarParser#createSequence.
+    def enterCreateSequence(self, ctx:GrammarParser.CreateSequenceContext):
         pass
 
-    # Exit a parse tree produced by GrammarParser#createScenario.
-    def exitCreateScenario(self, ctx:GrammarParser.CreateScenarioContext):
+    # Exit a parse tree produced by GrammarParser#createSequence.
+    def exitCreateSequence(self, ctx:GrammarParser.CreateSequenceContext):
         pass
 
 
-    # Enter a parse tree produced by GrammarParser#action.
-    def enterAction(self, ctx:GrammarParser.ActionContext):
+    # Enter a parse tree produced by GrammarParser#runOperation.
+    def enterRunOperation(self, ctx:GrammarParser.RunOperationContext):
         pass
 
-    # Exit a parse tree produced by GrammarParser#action.
-    def exitAction(self, ctx:GrammarParser.ActionContext):
+    # Exit a parse tree produced by GrammarParser#runOperation.
+    def exitRunOperation(self, ctx:GrammarParser.RunOperationContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#operation.
+    def enterOperation(self, ctx:GrammarParser.OperationContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#operation.
+    def exitOperation(self, ctx:GrammarParser.OperationContext):
         pass
 
 

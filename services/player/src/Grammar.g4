@@ -8,17 +8,18 @@ stmt: createDetector
     | createSelectorByText
     | createSelectorByRegex
     | createSelectorByPosition
-    | createStep
-    | createScenario
+    | createOperation
+    | createSequence
+    | runOperation
     ;
 
 createDetector: ID EQ DETECTOR ORPAR STRING CRPAR;
-useDetector: USE ID;
+useDetector: USE ID (ORPAR FLOAT CRPAR)?;
 createSelectorByPosition: ID EQ selectorByPosition;
 createSelectorByLabel: ID EQ selectorByLabel;
 createSelectorByText: ID EQ selectorByText ;
 createSelectorByRegex: ID EQ selectorByRegex;
-createStep: ID EQ action;
+createOperation: ID EQ operation;
 
 selector: selectorByLabel 
         | selectorByText 
@@ -30,10 +31,16 @@ selectorByText: TEXT ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByRegex: REGEX ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByPosition: POSITION ORPAR number COMMA number CRPAR; 
 selectorOrder: INT (COMMA INT)*;
-createScenario: ID EQ SCENARIO OCPAR (action|ID)* CCPAR;
+createSequence: ID EQ SEQUENCE OCPAR (operation|ID)* CCPAR;
 
 
-action  : wait
+runOperation
+        : operation
+        | ID
+        ;
+
+operation  
+        : wait
         | waitSelector
         | mousePress
         | mousePressSelector
@@ -85,7 +92,7 @@ REGEX: 'regex';
 COMMA: ',';
 LABEL: 'label';
 USE: 'use';
-SCENARIO: 'scenario';
+SEQUENCE: 'sequence';
 DETECTOR: 'detector';
 ID: [a-zA-Z]+[a-zA-Z0-9]*; 
 STRING: '"' (ESC | ~["\\\r\n]) * '"';  // Match strings with escape sequences
