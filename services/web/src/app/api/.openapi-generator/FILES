@@ -6,6 +6,8 @@ api/auth.service.ts
 api/auth.serviceInterface.ts
 api/detector.service.ts
 api/detector.serviceInterface.ts
+api/player.service.ts
+api/player.serviceInterface.ts
 api/recorder.service.ts
 api/recorder.serviceInterface.ts
 api/train.service.ts

@@ -213,6 +213,7 @@ message LoadRecordFrameRequest {
     string user = 1;
     string record = 2;
     int32 frame = 3;
+    bool thumbnail = 4;
 }
 
 message LoadRecordFrameResponse {
@@ -226,6 +227,7 @@ message LoadRecordFrameBase64Request {
     string user = 1;
     string record = 2;
     int32 frame = 3;
+    bool thumbnail = 4;
 }
 
 message LoadRecordFrameBase64Response {

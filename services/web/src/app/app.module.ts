@@ -13,7 +13,6 @@ import { AuthModule } from '@auth/auth.module';
 import { MenuComponent } from './menu/menu.component';
 import { WorkspaceModule } from '@workspace/workspace.module';
 import { MomentModule } from 'ngx-moment';
-import { TemplatesModule } from '@templates/templates.module';
 import { UtilsModule } from '@utils/utils.module';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -44,7 +43,6 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     MomentModule,
     UtilsModule,
     WorkspaceModule,
-    TemplatesModule,
     ApiModule.forRoot(apiConfigFactory),
     NgIconsModule.withIcons(NGIcons),
     LoggerModule.forRoot({

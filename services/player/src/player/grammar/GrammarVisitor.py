@@ -29,13 +29,13 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#createSelectorByLabel.
-    def visitCreateSelectorByLabel(self, ctx:GrammarParser.CreateSelectorByLabelContext):
+    # Visit a parse tree produced by GrammarParser#createSelectorByPosition.
+    def visitCreateSelectorByPosition(self, ctx:GrammarParser.CreateSelectorByPositionContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#createSelectorByLabels.
-    def visitCreateSelectorByLabels(self, ctx:GrammarParser.CreateSelectorByLabelsContext):
+    # Visit a parse tree produced by GrammarParser#createSelectorByLabel.
+    def visitCreateSelectorByLabel(self, ctx:GrammarParser.CreateSelectorByLabelContext):
         return self.visitChildren(ctx)
 
 
@@ -44,18 +44,8 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by GrammarParser#createSelectorByTexts.
-    def visitCreateSelectorByTexts(self, ctx:GrammarParser.CreateSelectorByTextsContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by GrammarParser#createSelectorByRegex.
     def visitCreateSelectorByRegex(self, ctx:GrammarParser.CreateSelectorByRegexContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by GrammarParser#createSelectorByRegexes.
-    def visitCreateSelectorByRegexes(self, ctx:GrammarParser.CreateSelectorByRegexesContext):
         return self.visitChildren(ctx)
 
 
@@ -64,8 +54,48 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by GrammarParser#selector.
+    def visitSelector(self, ctx:GrammarParser.SelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#selectorByLabel.
+    def visitSelectorByLabel(self, ctx:GrammarParser.SelectorByLabelContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#selectorByText.
+    def visitSelectorByText(self, ctx:GrammarParser.SelectorByTextContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#selectorByRegex.
+    def visitSelectorByRegex(self, ctx:GrammarParser.SelectorByRegexContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#selectorByPosition.
+    def visitSelectorByPosition(self, ctx:GrammarParser.SelectorByPositionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#selectorOrder.
+    def visitSelectorOrder(self, ctx:GrammarParser.SelectorOrderContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#createScenario.
+    def visitCreateScenario(self, ctx:GrammarParser.CreateScenarioContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by GrammarParser#action.
     def visitAction(self, ctx:GrammarParser.ActionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#wait.
+    def visitWait(self, ctx:GrammarParser.WaitContext):
         return self.visitChildren(ctx)
 
 
@@ -79,8 +109,38 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by GrammarParser#mousePressSelector.
+    def visitMousePressSelector(self, ctx:GrammarParser.MousePressSelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#mouseClick.
+    def visitMouseClick(self, ctx:GrammarParser.MouseClickContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#mouseClickSelector.
+    def visitMouseClickSelector(self, ctx:GrammarParser.MouseClickSelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#mouseDoubleClick.
+    def visitMouseDoubleClick(self, ctx:GrammarParser.MouseDoubleClickContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#mouseDoubleClickSelector.
+    def visitMouseDoubleClickSelector(self, ctx:GrammarParser.MouseDoubleClickSelectorContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by GrammarParser#mouseRelease.
     def visitMouseRelease(self, ctx:GrammarParser.MouseReleaseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#mouseReleaseSelector.
+    def visitMouseReleaseSelector(self, ctx:GrammarParser.MouseReleaseSelectorContext):
         return self.visitChildren(ctx)
 
 
@@ -101,6 +161,11 @@ class GrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by GrammarParser#mouseButton.
     def visitMouseButton(self, ctx:GrammarParser.MouseButtonContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#number.
+    def visitNumber(self, ctx:GrammarParser.NumberContext):
         return self.visitChildren(ctx)
 
 

@@ -145,6 +145,14 @@ export interface RecorderServiceInterface {
     recorderFrameLoad(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<any>;
 
     /**
+     * Frame Load Thumbnail
+     * 
+     * @param recordId 
+     * @param frame 
+     */
+    recorderFrameThumbnailLoad(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<any>;
+
+    /**
      * List
      * 
      * @param projectId 

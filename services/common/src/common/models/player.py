@@ -69,7 +69,7 @@ class Scenario(Document):
         await Run.find_all(Run.scenario == self.id).delete()
         
 class Replay(Document):
-    project: PydanticObjectId
+    record: PydanticObjectId
     script: str = Field(default='')
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)    

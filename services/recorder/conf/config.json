@@ -1,6 +1,9 @@
 {
   "address": "${RECORDER_RPC_HOST}:${RECORDER_RPC_PORT}",
   "video":"data/videos",
+  "thumbnail":{
+    "width":200
+  },
   "fps":8.0,
   "security": {
     "key": "${SERVER_KEY}",

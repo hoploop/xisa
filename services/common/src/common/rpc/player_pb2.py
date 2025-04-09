@@ -25,13 +25,25 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ommon/rpc/player.proto\x1a\x15\x63ommon/rpc/base.proto2\x1e\n\x06Player\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pongb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ommon/rpc/player.proto\x1a\x15\x63ommon/rpc/base.proto\"8\n\x18PlayerScriptExistRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x19PlayerScriptExistResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05\x66ound\x18\x03 \x01(\x08\x42\n\n\x08_message\"7\n\x17PlayerScriptLoadRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x18PlayerScriptLoadResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message\"c\n\x1bPlayerScriptGenerateRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65\x63larative\x18\x03 \x01(\x08\x12\x11\n\tsynthetic\x18\x04 \x01(\x08\"`\n\x1cPlayerScriptGenerateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message2\x88\x02\n\x06Player\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12J\n\x11playerScriptExist\x12\x19.PlayerScriptExistRequest\x1a\x1a.PlayerScriptExistResponse\x12G\n\x10playerScriptLoad\x12\x18.PlayerScriptLoadRequest\x1a\x19.PlayerScriptLoadResponse\x12S\n\x14playerScriptGenerate\x12\x1c.PlayerScriptGenerateRequest\x1a\x1d.PlayerScriptGenerateResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common.rpc.player_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_PLAYER']._serialized_start=50
-  _globals['_PLAYER']._serialized_end=80
+  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_start=50
+  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_end=106
+  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_start=108
+  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_end=200
+  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_start=202
+  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_end=257
+  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_start=259
+  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_end=351
+  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_start=353
+  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_end=452
+  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_start=454
+  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_end=550
+  _globals['_PLAYER']._serialized_start=553
+  _globals['_PLAYER']._serialized_end=817
 # @@protoc_insertion_point(module_scope)

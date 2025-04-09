@@ -24,6 +24,9 @@ import { ImageAnnotatorComponent } from './image-annotator/image-annotator.compo
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { ImageDisplayComponent } from './image-display/image-display.component';
 import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
+import { TemplateCardContainerComponent } from './template-card-container/template-card-container.component';
+import { DockScrollerComponent } from './dock-scroller/dock-scroller.component';
+import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-progress-bar.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,7 @@ import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
     LoaderComponent,
     SearchComponent,
     TagsEditorComponent,
+    TemplateCardContainerComponent,
     BaseComponent,
     ModalComponent,
     ResizeListenerComponent,
@@ -41,13 +45,15 @@ import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
     ImageUploadComponent,
     ImageDisplayComponent,
     ImageLabelerComponent,
+    DockScrollerComponent,
+    InfiniteProgressBarComponent,
   ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
     TranslateModule,
-    NgIconsModule,
+    NgIconsModule
   ],
   exports: [
     FaIconComponent,
@@ -62,7 +68,10 @@ import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
     ImageAnnotatorComponent,
     ImageUploadComponent,
     ImageDisplayComponent,
+    TemplateCardContainerComponent,
     ImageLabelerComponent,
+    DockScrollerComponent,
+    InfiniteProgressBarComponent
   ],
 })
 export class UtilsModule {

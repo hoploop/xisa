@@ -289,14 +289,16 @@ class SizeRecordResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., size: _Optional[int] = ...) -> None: ...
 
 class LoadRecordFrameRequest(_message.Message):
-    __slots__ = ("user", "record", "frame")
+    __slots__ = ("user", "record", "frame", "thumbnail")
     USER_FIELD_NUMBER: _ClassVar[int]
     RECORD_FIELD_NUMBER: _ClassVar[int]
     FRAME_FIELD_NUMBER: _ClassVar[int]
+    THUMBNAIL_FIELD_NUMBER: _ClassVar[int]
     user: str
     record: str
     frame: int
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+    thumbnail: bool
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ..., thumbnail: bool = ...) -> None: ...
 
 class LoadRecordFrameResponse(_message.Message):
     __slots__ = ("status", "message", "frame")
@@ -309,14 +311,16 @@ class LoadRecordFrameResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., frame: _Optional[bytes] = ...) -> None: ...
 
 class LoadRecordFrameBase64Request(_message.Message):
-    __slots__ = ("user", "record", "frame")
+    __slots__ = ("user", "record", "frame", "thumbnail")
     USER_FIELD_NUMBER: _ClassVar[int]
     RECORD_FIELD_NUMBER: _ClassVar[int]
     FRAME_FIELD_NUMBER: _ClassVar[int]
+    THUMBNAIL_FIELD_NUMBER: _ClassVar[int]
     user: str
     record: str
     frame: int
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+    thumbnail: bool
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ..., thumbnail: bool = ...) -> None: ...
 
 class LoadRecordFrameBase64Response(_message.Message):
     __slots__ = ("status", "message", "frame")

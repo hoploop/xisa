@@ -1,0 +1,35 @@
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.fileText"></app-fa-icon>
+    <span class="ms-2">Script</span>
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
+    <div class="d-flex w-100 flex-column">
+    <div class="btn-group btn-group-sm mb-2">
+      <button class="btn btn-sm" (click)="toggleDeclarative()" [class.btn-primary]="declarative == true" [class.btn-secondary]="declarative == false">
+          <span class="ms-2">Declarative</span>
+      </button>
+      <button class="btn btn-sm" (click)="toggleDeclarative()" [class.btn-primary]="declarative == false" [class.btn-secondary]="declarative == true">
+        <span class="ms-2">Not Declarative</span>
+      </button>
+    </div>
+    <div class="btn-group btn-group-sm">
+      <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == true" [class.btn-secondary]="synthetic == false">
+          <span class="ms-2" translate>workspace.record.event.synthetic</span>
+      </button>
+      <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == false" [class.btn-secondary]="synthetic == true">
+        <span class="ms-2" translate>workspace.record.event.default</span>
+      </button>
+    </div>
+    <div class="d-flex justify-content-center align-items-center card mb-2">
+      <div class="card-body script-container">
+          {{script}}
+      </div>
+
+    </div>
+  </div>
+  </ng-content>
+</app-modal>
+

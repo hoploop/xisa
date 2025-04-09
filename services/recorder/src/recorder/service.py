@@ -10,6 +10,8 @@ from beanie.operators import In, And, Or, RegEx
 import platform
 import cv2
 import grpc
+import imutils
+from pydantic import BaseModel
 
 # LOCAL IMPORTS
 from common.models import MODELS
@@ -85,10 +87,14 @@ log = logging.getLogger(__name__)
 RECORDS = {}
 
 
+class RecorderThumbnailConfig(BaseModel):
+    width: int
+
 class RecorderServiceConfig(ServiceConfig):
     video: str
     fps: float = 20.0
     database: MongodbConfig
+    thumbnail: RecorderThumbnailConfig
 
 
 class RecorderService(Service, RecorderServicer):
@@ -102,6 +108,8 @@ class RecorderService(Service, RecorderServicer):
         self.events = []
         self.CACHED_FRAMES = {}
         self.CACHED_FRAMES_BASE64 = {}
+        self.CACHED_THUMBNAIL_FRAMES = {}
+        self.CACHED_THUMBNAIL_FRAMES_BASE64 = {}
 
     async def start(self):
         await Mongodb.initialize(self.config.database, MODELS)
@@ -355,13 +363,22 @@ class RecorderService(Service, RecorderServicer):
             frame_number = request.frame
             filename = os.path.join(self.config.video, str(record_id) + VIDEO_EXT)
 
-            if (
-                filename in self.CACHED_FRAMES
-                and frame_number in self.CACHED_FRAMES[filename]
-            ):
-                return LoadRecordFrameResponse(
-                    status=True, frame=self.CACHED_FRAMES[filename][frame_number]
-                )
+            if request.thumbnail == False:
+                if (
+                    filename in self.CACHED_FRAMES
+                    and frame_number in self.CACHED_FRAMES[filename]
+                ):
+                    return LoadRecordFrameResponse(
+                        status=True, frame=self.CACHED_FRAMES[filename][frame_number]
+                    )
+            else:
+                if (
+                    filename in self.CACHED_THUMBNAIL_FRAMES
+                    and frame_number in self.CACHED_THUMBNAIL_FRAMES[filename]
+                ):
+                    return LoadRecordFrameResponse(
+                        status=True, frame=self.CACHED_THUMBNAIL_FRAMES[filename][frame_number]
+                    )
 
             cap = cv2.VideoCapture(filename)
 
@@ -382,20 +399,41 @@ class RecorderService(Service, RecorderServicer):
             # Convert BGR to RGB
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # Encode the frame as PNG image in memory
-            _, encoded_image = cv2.imencode(".png", frame_rgb)
+            
+            
+            if request.thumbnail == False:
+                # Encode the frame as PNG image in memory
+                _, encoded_image = cv2.imencode(".png", frame_rgb)
 
-            # Convert the image to bytes
-            frame_bytes = encoded_image.tobytes()
+                # Convert the image to bytes
+                frame_bytes = encoded_image.tobytes()
 
-            cap.release()
+                cap.release()
 
-            if filename not in self.CACHED_FRAMES:
-                self.CACHED_FRAMES[filename] = {}
-            if frame_number not in self.CACHED_FRAMES[filename]:
-                self.CACHED_FRAMES[filename][frame_number] = frame_bytes
+                if filename not in self.CACHED_FRAMES:
+                    self.CACHED_FRAMES[filename] = {}
+                if frame_number not in self.CACHED_FRAMES[filename]:
+                    self.CACHED_FRAMES[filename][frame_number] = frame_bytes
 
-            return LoadRecordFrameResponse(status=True, frame=frame_bytes)
+                return LoadRecordFrameResponse(status=True, frame=frame_bytes)
+        
+            else:
+                frame_rgb = imutils.resize(frame_rgb, width=self.config.thumbnail.width)
+                
+                # Encode the frame as PNG image in memory
+                _, encoded_image = cv2.imencode(".png", frame_rgb)
+                # Convert the image to bytes
+                frame_bytes = encoded_image.tobytes()
+                
+
+                cap.release()
+
+                if filename not in self.CACHED_THUMBNAIL_FRAMES:
+                    self.CACHED_THUMBNAIL_FRAMES[filename] = {}
+                if frame_number not in self.CACHED_THUMBNAIL_FRAMES[filename]:
+                    self.CACHED_THUMBNAIL_FRAMES[filename][frame_number] = frame_bytes
+
+                return LoadRecordFrameResponse(status=True, frame=frame_bytes)
         except Exception as e:
             log.warning(str(e))
             return LoadRecordFrameResponse(status=False, message=str(e))
@@ -421,14 +459,22 @@ class RecorderService(Service, RecorderServicer):
             record_id = PydanticObjectId(request.record)
             frame_number = request.frame
             filename = os.path.join(self.config.video, str(record_id) + VIDEO_EXT)
-
-            if (
-                filename in self.CACHED_FRAMES_BASE64
-                and frame_number in self.CACHED_FRAMES_BASE64[filename]
-            ):
-                return LoadRecordFrameBase64Response(
-                    status=True, frame=self.CACHED_FRAMES_BASE64[filename][frame_number]
-                )
+            if request.thumbnail == False:
+                if (
+                    filename in self.CACHED_FRAMES_BASE64
+                    and frame_number in self.CACHED_FRAMES_BASE64[filename]
+                ):
+                    return LoadRecordFrameBase64Response(
+                        status=True, frame=self.CACHED_FRAMES_BASE64[filename][frame_number]
+                    )
+            else:
+                if (
+                    filename in self.CACHED_THUMBNAIL_FRAMES_BASE64
+                    and frame_number in self.CACHED_THUMBNAIL_FRAMES_BASE64[filename]
+                ):
+                    return LoadRecordFrameBase64Response(
+                        status=True, frame=self.CACHED_THUMBNAIL_FRAMES_BASE64[filename][frame_number]
+                    )
 
             cap = cv2.VideoCapture(filename)
 
@@ -450,23 +496,37 @@ class RecorderService(Service, RecorderServicer):
             # Check if frame was successfully read
             # Convert BGR to RGB
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            if request.thumbnail == False:
 
-            # Encode the frame as PNG image in memory
-            _, encoded_image = cv2.imencode(".png", frame_rgb)
+                # Encode the frame as PNG image in memory
+                _, encoded_image = cv2.imencode(".png", frame_rgb)
 
-            # Convert the image to bytes
-            frame_bytes = encoded_image.tobytes()
+                # Convert the image to bytes
+                frame_bytes = encoded_image.tobytes()
+            else:
+                frame_rgb = imutils.resize(frame_rgb,width=self.config.thumbnail.width)
+                # Encode the frame as PNG image in memory
+                _, encoded_image = cv2.imencode(".png", frame_rgb)
+
+                # Convert the image to bytes
+                frame_bytes = encoded_image.tobytes()
 
             png_as_text = (
                 "data:image/png;base64," + base64.b64encode(frame_bytes).decode()
             )
 
             cap.release()
-
-            if filename not in self.CACHED_FRAMES_BASE64:
-                self.CACHED_FRAMES_BASE64[filename] = {}
-            if frame_number not in self.CACHED_FRAMES_BASE64[filename]:
-                self.CACHED_FRAMES_BASE64[filename][frame_number] = png_as_text
+            if request.thumbnail == False:
+                if filename not in self.CACHED_FRAMES_BASE64:
+                    self.CACHED_FRAMES_BASE64[filename] = {}
+                if frame_number not in self.CACHED_FRAMES_BASE64[filename]:
+                    self.CACHED_FRAMES_BASE64[filename][frame_number] = png_as_text
+            else:
+                if filename not in self.CACHED_THUMBNAIL_FRAMES_BASE64:
+                    self.CACHED_THUMBNAIL_FRAMES_BASE64[filename] = {}
+                if frame_number not in self.CACHED_THUMBNAIL_FRAMES_BASE64[filename]:
+                    self.CACHED_THUMBNAIL_FRAMES_BASE64[filename][frame_number] = png_as_text
 
             return LoadRecordFrameBase64Response(status=True, frame=png_as_text)
         except Exception as e:

@@ -1,0 +1,16 @@
+<div class="timeline-container">
+  <div
+    class="track"
+    *ngFor="let track of tracks"
+  >
+    <div
+      class="clip"
+      *ngFor="let clip of track.clips"
+      [style.left.%]="clip.start"
+      [style.width.%]="clip.duration"
+      (click)="onClipClick(clip)"
+    >
+      {{ clip.label }}
+    </div>
+  </div>
+</div>

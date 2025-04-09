@@ -4,6 +4,7 @@ import grpc
 import warnings
 
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
+from common.rpc import player_pb2 as common_dot_rpc_dot_player__pb2
 
 GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
@@ -39,6 +40,21 @@ class PlayerStub(object):
                 request_serializer=common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_base__pb2.Pong.FromString,
                 _registered_method=True)
+        self.playerScriptExist = channel.unary_unary(
+                '/Player/playerScriptExist',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptExistRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptExistResponse.FromString,
+                _registered_method=True)
+        self.playerScriptLoad = channel.unary_unary(
+                '/Player/playerScriptLoad',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadResponse.FromString,
+                _registered_method=True)
+        self.playerScriptGenerate = channel.unary_unary(
+                '/Player/playerScriptGenerate',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.FromString,
+                _registered_method=True)
 
 
 class PlayerServicer(object):
@@ -51,6 +67,24 @@ class PlayerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def playerScriptExist(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def playerScriptLoad(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def playerScriptGenerate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PlayerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -58,6 +92,21 @@ def add_PlayerServicer_to_server(servicer, server):
                     servicer.ping,
                     request_deserializer=common_dot_rpc_dot_base__pb2.Ping.FromString,
                     response_serializer=common_dot_rpc_dot_base__pb2.Pong.SerializeToString,
+            ),
+            'playerScriptExist': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerScriptExist,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptExistRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptExistResponse.SerializeToString,
+            ),
+            'playerScriptLoad': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerScriptLoad,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadResponse.SerializeToString,
+            ),
+            'playerScriptGenerate': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerScriptGenerate,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -87,6 +136,87 @@ class Player(object):
             '/Player/ping',
             common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
             common_dot_rpc_dot_base__pb2.Pong.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def playerScriptExist(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerScriptExist',
+            common_dot_rpc_dot_player__pb2.PlayerScriptExistRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerScriptExistResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def playerScriptLoad(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerScriptLoad',
+            common_dot_rpc_dot_player__pb2.PlayerScriptLoadRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerScriptLoadResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def playerScriptGenerate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerScriptGenerate',
+            common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -185,10 +185,10 @@ class RecorderClient(Client):
         return Conversions.deserialize(res.event)
 
     async def loadRecordFrame(
-        self, user: User, recordId: PydanticObjectId, frame: int
+        self, user: User, recordId: PydanticObjectId, frame: int, thumbnail:bool=False
     ) -> bytes:
         req = LoadRecordFrameRequest(
-            user=str(user.id), record=str(recordId), frame=frame
+            user=str(user.id), record=str(recordId), frame=frame, thumbnail=thumbnail
         )
         res = await self.client.loadRecordFrame(req)
         if res.status == False:
@@ -196,10 +196,10 @@ class RecorderClient(Client):
         return res.frame
 
     async def loadRecordFrameBase64(
-        self, user: User, recordId: PydanticObjectId, frame: int
+        self, user: User, recordId: PydanticObjectId, frame: int, thumbnail:bool=False
     ) -> str:
         req = LoadRecordFrameBase64Request(
-            user=str(user.id), record=str(recordId), frame=frame
+            user=str(user.id), record=str(recordId), frame=frame, thumbnail=thumbnail
         )
         res = await self.client.loadRecordFrameBase64(req)
         if res.status == False:

@@ -196,6 +196,20 @@ async def frame_load(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
+
+@router.get("/frame/thumbnail/{recordId}/{frame}", 
+            operation_id="recorderFrameThumbnailLoad")
+async def frame_load_thumbnail(
+    recordId: PydanticObjectId, user: CurrentUser, frame: int, recorder: Recorder
+):
+    try:
+        frame_bytes = await recorder.loadRecordFrame(user, recordId, frame,True)
+        return StreamingResponse(io.BytesIO(frame_bytes), media_type="image/png")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
 @router.get("/video/{recordId}", 
             operation_id="recorderVideo")
 async def video(

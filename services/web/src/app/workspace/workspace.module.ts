@@ -35,7 +35,6 @@ import { DetectorLabelSuggestionComponent } from './detector/detector-label-sugg
 import { DetectorObjectsSummaryComponent } from './detector/detector-objects-summary/detector-objects-summary.component';
 import { DetectorTextsSummaryComponent } from './detector/detector-texts-summary/detector-texts-summary.component';
 import { DetectorSummaryComponent } from './detector/detector-summary/detector-summary.component';
-import { TemplatesModule } from '@templates/templates.module';
 import { RecordFrameSelectorComponent } from './record/record-frame-selector/record-frame-selector.component';
 import { DetectorTrainSuggestionComponent } from './detector/detector-train-suggestion/detector-train-suggestion.component';
 import { RecordBoxDetectedObjectComponent } from './record/record-box-detected-object/record-box-detected-object.component';
@@ -54,6 +53,8 @@ import { ProjectCardComponent } from './project/project-card/project-card.compon
 import { ProjectPageComponent } from './project/project-page/project-page.component';
 import { RecordOsNamePipe } from './record/record-os-name.pipe';
 import { RecordActionCountPipe } from './record/record-action-count.pipe';
+import { RecordScrollerComponent } from './record/record-scroller/record-scroller.component';
+import { RecordScriptPreviewComponent } from './record/record-script-preview/record-script-preview.component';
 
 
 
@@ -108,13 +109,14 @@ import { RecordActionCountPipe } from './record/record-action-count.pipe';
     ProjectPageComponent,
     RecordOsNamePipe,
     RecordActionCountPipe,
+    RecordScrollerComponent,
+    RecordScriptPreviewComponent,
   ],
   imports: [
     CommonModule,
     UtilsModule,
     FormsModule,
     TranslateModule,
-    TemplatesModule,
     MomentModule
 ],
   exports: [

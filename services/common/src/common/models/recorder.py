@@ -11,6 +11,7 @@ from pydantic import Field
 # LOCAL IMPORTS
 from common.models.base import Position
 from common.models.defaults import empty_list, utc_now
+from common.models.player import Replay
 from common.models.trainer import TrainLesson
 
 
@@ -148,4 +149,5 @@ class Record(Document):
         await TrainLesson.find_all(TrainLesson.record == self.id).delete()
         await Event.find_many(Event.record == self.id, with_children=True).delete()
         await Action.find_many(Action.record == self.id, with_children=True).delete()
+        await Replay.find_many(Replay.record == self.id).delete()
 

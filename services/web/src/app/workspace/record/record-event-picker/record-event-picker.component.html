@@ -1,15 +1,22 @@
 <button
-  class="btn btn-sm w-100"
+  class="btn btn-sm w-100 text-nowrap"
   [ngClass]="{
     'btn-secondary': frame.event == undefined,
-    'btn-success': frame.event != undefined && frame.action != undefined && frame.action.confidence >=0.5,
-    'btn-warning': frame.event != undefined && frame.action != undefined && frame.action.confidence < 0.5,
+    'btn-success':
+      frame.event != undefined &&
+      frame.action != undefined &&
+      frame.action.confidence >= 0.5,
+    'btn-warning':
+      frame.event != undefined &&
+      frame.action != undefined &&
+      frame.action.confidence < 0.5,
     'btn-danger': frame.event != undefined && frame.action == undefined
   }"
 >
+<!-- Event frame -->
   <ng-container *ngIf="frame.event">
     <ng-container [ngSwitch]="frame.event.type">
-      <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-column w-100">
         <app-fa-icon
           *ngSwitchCase="RecordEventTypes.KeyComboPress"
           [icon]="FAIconType.keyboard"
@@ -22,23 +29,30 @@
           *ngSwitchCase="RecordEventTypes.KeyRelease"
           [icon]="FAIconType.keyboard"
         ></app-fa-icon>
+
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
-        <span class="smaller"
+        <span class="smaller ms-1" [translate]="'workspace.record.frame.title_n'" [translateParams]="{'n':frame.count}"></span>
+        <span class="smaller ms-1"
           >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
         >
-        <span class="smaller">Frame: {{ frame.count }}</span>
-        <span class="smaller">{{ frame.event | recordEventName }}</span>
+
+        <span class="smaller ms-1">{{ frame.event | recordEventName }}</span>
       </div>
     </ng-container>
   </ng-container>
+
+  <!-- Empty frame -->
   <ng-container *ngIf="frame.event == undefined">
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column w-100">
       <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
-      <span class="smaller"
+      <span class="smaller ms-1" [translate]="'workspace.record.frame.title_n'" [translateParams]="{'n':frame.count}"></span>
+      <span class="ms-1 smaller"
         >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
       >
-      <span class="smaller">Frame: {{ frame.count }}</span>
-      <span class="smaller">Empty frame</span>
+
+      <span class="smaller ms-1">No Events</span>
     </div>
   </ng-container>
+
+  <img [style.max-height.px]="200" *ngIf="imageUrl" [src]="imageUrl"/>
 </button>

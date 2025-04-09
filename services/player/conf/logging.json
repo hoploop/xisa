@@ -78,7 +78,7 @@
             "propagate": false
         },
         "player": {
-            "handlers": ["player"],
+            "handlers": ["player","console"],
             "level": "DEBUG",
             "propagate": false
         },

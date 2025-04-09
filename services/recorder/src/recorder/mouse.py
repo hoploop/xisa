@@ -42,7 +42,7 @@ click_count = 0
 is_dragging = False
 drag_start_pos = None
 pressed_button = None
-
+correlated_event_frame = 0
 
 class MouseListener:
     def __init__(self,record_id, event_callback=None):
@@ -98,15 +98,15 @@ class MouseListener:
                 log.info(f"[DRAGGING] to ({x}, {y})")
 
     def record_pressed(self,x,y,button):
-        global is_dragging, drag_start_pos, pressed_button
+        global is_dragging, drag_start_pos, pressed_button,correlated_event_frame
     
         drag_start_pos = (x, y)
         is_dragging = False
         pressed_button = button
+        correlated_event_frame = self._frame
         evt = MousePressEvent(record=self._record_id,position=(x,y),frame=self._frame,button=self.find_button(button))
         self.on_event(evt)
         
-    
     
     def record_released(self,x,y,button):
         global is_dragging, drag_start_pos, pressed_button, click_count,last_click_time
@@ -154,16 +154,18 @@ class MouseListener:
         self._events.append(MouseScrollEvent(record=self._record_id,dy=dy,dx=dx,position=(x,y),frame=self._frame))
         
     def record_click(self,x,y,button):
-        evt = MouseClickEvent(record=self._record_id,position=(x,y),frame=self._frame,button=self.find_button(button),synthetic=True)
+        global correlated_event_frame
+        evt = MouseClickEvent(record=self._record_id,position=(x,y),frame=correlated_event_frame,button=self.find_button(button),synthetic=True)
         self.on_event(evt)
     
     def record_double_click(self,x,y,button):
-        evt = MouseDoubleClickEvent(record=self._record_id,position=(x,y),frame=self._frame,button=self.find_button(button),synthetic=True)
+        global correlated_event_frame
+        evt = MouseDoubleClickEvent(record=self._record_id,position=(x,y),frame=correlated_event_frame,button=self.find_button(button),synthetic=True)
         self.on_event(evt)
     
     def record_drop(self,x,y,button):
-        global drag_start_pos
-        evt = MouseDropEvent(record=self._record_id,position=(x,y),frame=self._frame,button=self.find_button(button),origin=drag_start_pos,synthetic=True)
+        global drag_start_pos,correlated_event_frame
+        evt = MouseDropEvent(record=self._record_id,position=(x,y),frame=correlated_event_frame,button=self.find_button(button),origin=drag_start_pos,synthetic=True)
         self.on_event(evt)
 
     def stop(self):

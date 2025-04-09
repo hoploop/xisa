@@ -1,20 +1,16 @@
 # PYTHON IMPORTS
-import io
 import logging
-from typing import Annotated
-from bson import ObjectId
-import base64
+from typing import Annotated, Optional
 
 # LIBRARY IMPORTS
+from fastapi import status
+from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi import FastAPI, File, UploadFile
-from starlette.responses import Response
-
 
 # LOCAL IMPORTS
-from api.routers import GetFilesystem
-from common.rpc.player_pb2_grpc import PlayerStub
-from common.service import secure_channel_factory
+from common.clients.player import PlayerClient
+
+from api.routers.auth import CurrentUser
 
 
 # INITIALIZATION
@@ -23,14 +19,28 @@ log = logging.getLogger(__name__)
 
 
 
-async def get_player(request: Request) -> PlayerStub:
+async def get_player(request: Request) -> PlayerClient:
     if not hasattr(request.app.state, "player"):
         config = request.app.state.config.player
-        channel = secure_channel_factory(
-            security_config=config.security, client_config=config
-        )
-        request.app.state.player = PlayerStub(channel)
+        request.app.state.player = PlayerClient(config)
+        await request.app.state.player.startup()
     return request.app.state.player
 
 
-Player = Annotated[PlayerStub, Depends(get_player)]
+Player = Annotated[PlayerClient, Depends(get_player)]
+
+
+@router.post("/generate/script", 
+             operation_id="playerGenerateScript",
+             response_model=str)
+async def generate_script(
+    user: CurrentUser,
+    player: Player,
+    recordId: PydanticObjectId,
+    declarative: Optional[bool]=True,
+    synthetic: Optional[bool]=False,
+):
+    try:
+        return await player.playerScriptGenerate(user,recordId,declarative,synthetic)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

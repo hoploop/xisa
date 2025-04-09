@@ -1,87 +1,135 @@
-<app-template-card-container>
-  <div title>
-    <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
-    <span class="ms-2" translate>workspace.record.studio.title</span>
-    <span class="ms-1">|</span>
-    <span class="ms-1">{{ record.name }}</span>
-  </div>
-  <ng-content context>
-    <small *ngIf="record"><span translate>workspace.record.duration</span><span>{{record|recordDuration}}</span></small>
-  </ng-content>
-  <ng-content body>
-    <div body class="d-flex justify-content-center mb-2">
-
-
-      <!-- Frame Selector -->
-      <div class="btn-group-sm btn-group w-100">
-
-        <!-- Previous frame -->
-        <button
-        *ngIf="frame && frame.count > 0"
-          class="btn btn-sm"
-          (click)="previousFrame()"
-          [class.btn-outline-primary]="frame == undefined"
-          [class.btn-primary]="frame != undefined"
-        >
-          <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
-        </button>
-        <button
-          class="btn btn-sm w-100"
-          (click)="selectFrame()"
-          [class.btn-outline-primary]="frame == undefined"
-          [class.btn-primary]="frame != undefined"
-        >
-          <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
-          <span *ngIf="frame == undefined" class="ms-2" translate
-            >workspace.record.studio.frames</span
-          >
-          <span
-            *ngIf="frame != undefined"
-            class="ms-2"
-            [translate]="'workspace.record.studio.selected_frame'"
-            [translateParams]="{ n: frame.count.toString() }"
-          ></span>
-          <span *ngIf="frame != undefined" class="ms-2 smaller"
-            >{{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
-          >
-        </button>
-
-        <!-- Next frame -->
-        <button
-          *ngIf="frame && frame.count < frames.length -1"
-          class="btn btn-sm"
-          (click)="nextFrame()"
-          [class.btn-outline-primary]="frame == undefined"
-          [class.btn-primary]="frame != undefined"
-        >
-          <app-fa-icon [icon]="FAIconType.arrowRight"></app-fa-icon>
-        </button>
-      </div>
-
+<div [style.margin-bottom.px]="bottomSpace | async">
+  <app-template-card-container>
+    <div title>
+      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+      <span class="ms-2" translate>workspace.record.studio.title</span>
+      <span class="ms-1">|</span>
+      <span class="ms-1">{{ record.name }}</span>
+    </div>
+    <ng-content context>
       <!-- Video Selector -->
-      <button
-        class="btn btn-outline-secondary ms-1 btn-sm w-100"
-        (click)="viewVideo()"
-      >
+      <span class="pointer ms-1 me-2 btn-sm w-100" (click)="previewScript()">
+        <app-fa-icon [icon]="FAIconType.fileText"></app-fa-icon>
+        <span class="ms-2">Script</span>
+      </span>
+      <span class="pointer ms-1 me-2 btn-sm w-100" (click)="viewVideo()">
         <app-fa-icon [icon]="FAIconType.video"></app-fa-icon>
         <span class="ms-2" translate>workspace.record.studio.video</span>
-      </button>
-    </div>
-    <div>
-      <app-record-frame
-        [frame]="frame"
-        *ngIf="frame && lesson"
-        [lesson]="lesson"
-      ></app-record-frame>
-    </div>
+      </span>
+      <small *ngIf="record">
+        <span translate>workspace.record.duration</span>
+        <span>{{ record | recordDuration }}</span></small>
+    </ng-content>
+    <ng-content body>
+      <div body class="d-flex justify-content-center mb-1">
+        <!-- Frame Selector -->
+        <div class="btn-group-sm btn-group w-100" *ngIf="frame">
+          <!-- Previous frame -->
+          <button
+            *ngIf="frame.count > 0"
+            class="btn btn-sm"
+            (click)="previousFrame()"
+            [ngClass]="{
+              'btn-secondary': frame.event == undefined,
+              'btn-success':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence >= 0.5,
+              'btn-warning':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence < 0.5,
+              'btn-danger': frame.event != undefined && frame.action == undefined
+            }"
+          >
+            <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
+          </button>
+          <button
+            class="btn btn-sm w-100"
+            [ngClass]="{
+              'btn-secondary': frame.event == undefined,
+              'btn-success':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence >= 0.5,
+              'btn-warning':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence < 0.5,
+              'btn-danger': frame.event != undefined && frame.action == undefined
+            }"
+          >
+            <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
+            <span *ngIf="frame == undefined" class="ms-2" translate
+              >workspace.record.studio.frames</span
+            >
+            <span
+              *ngIf="frame != undefined"
+              class="ms-2"
+              [translate]="'workspace.record.studio.selected_frame'"
+              [translateParams]="{ n: frame.count.toString() }"
+            ></span>
+            <span *ngIf="frame != undefined" class="ms-2 smaller"
+              >{{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
+            >
+          </button>
 
+          <!-- Next frame -->
+          <button
+            *ngIf="frame.count < frames.length - 1"
+            class="btn btn-sm"
+            (click)="nextFrame()"
+            [ngClass]="{
+              'btn-secondary': frame.event == undefined,
+              'btn-success':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence >= 0.5,
+              'btn-warning':
+                frame.event != undefined &&
+                frame.action != undefined &&
+                frame.action.confidence < 0.5,
+              'btn-danger': frame.event != undefined && frame.action == undefined
+            }"
+          >
+            <app-fa-icon [icon]="FAIconType.arrowRight"></app-fa-icon>
+          </button>
+        </div>
+      </div>
+
+      <app-infinite-progress-bar [loading]="detectionLoading"></app-infinite-progress-bar>
+      <div>
+        <app-record-frame
+          (fullyLoaded)="updateDetectionLoading($event)"
+          [frame]="frame"
+          *ngIf="frame && lesson"
+          [lesson]="lesson"
+        ></app-record-frame>
+      </div>
+
+      <app-loader
+        [cardFooter]="true"
+        [error]="error"
+        [loading]="loading"
+      ></app-loader>
+    </ng-content>
     <app-loader
       [cardFooter]="true"
       [error]="error"
       [loading]="loading"
     ></app-loader>
-
-  </ng-content>
-  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
-
-</app-template-card-container>
+  </app-template-card-container>
+</div>
+<!-- Record scroller-->
+<app-resize-listener
+  *ngIf="frames.length > 0"
+  class="fixed-bottom"
+  (resized)="onResizeBottom($event)"
+>
+  <div class="container-fluid shadow-sm mt-1">
+    <app-record-scroller
+      [frames]="frames"
+      (selectedFrame)="selectSpecificFrame($event)"
+    ></app-record-scroller>
+  </div>
+</app-resize-listener>

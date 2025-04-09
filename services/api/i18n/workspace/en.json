@@ -173,7 +173,8 @@
       },
       "frame": {
         "loading": "Frame is loading",
-        "select": "Select a frame"
+        "select": "Select a frame",
+        "title_n": "Frame {{n}}"
       },
       "event": {
         "errors": {

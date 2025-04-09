@@ -11,6 +11,8 @@ import { Frame } from '../record-frame';
 import { RecordFrameSelectorComponent } from '../record-frame-selector/record-frame-selector.component';
 import { RecordVideoComponent } from '../record-video/record-video.component';
 import { BaseComponent } from '@utils/base/base.component';
+import { BehaviorSubject } from 'rxjs';
+import { RecordScriptPreviewComponent } from '../record-script-preview/record-script-preview.component';
 
 @Component({
   selector: 'app-record-studio',
@@ -26,6 +28,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
   syntheticEvents: boolean = false;
   lesson?: TrainLesson;
   detector?: Detector;
+  bottomSpace = new BehaviorSubject<number>(0);
+  detectionLoading = new BehaviorSubject<boolean>(false);
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -33,6 +37,8 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       this.loadLesson();
       this.loadEvents();
     });
+
+
   }
 
   loadTrainImageObjects() {
@@ -88,6 +94,21 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       });
   }
 
+  previewScript(){
+    this.ctx
+      .openModal<undefined>(
+        RecordScriptPreviewComponent,
+        { record: this.record },
+        { centered: true, size: 'lg' }
+      )
+      .subscribe({
+        next: (result) => {
+
+        },
+        error: (result) => {},
+      });
+  }
+
   previousFrame() {
     if (!this.frame) return;
     let temp = this.frames[this.frame.count - 1];
@@ -104,6 +125,19 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     setTimeout(() => {
       this.frame = temp;
     });
+  }
+
+  selectSpecificFrame(value:Frame){
+
+      this.frame = undefined;
+      setTimeout(() => {
+        this.frame = value;
+      });
+
+  }
+
+  onResizeBottom(value:[number,number]){
+    this.bottomSpace.next(value[1]);
   }
 
   viewVideo() {
@@ -128,6 +162,10 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
         this.loadActions();
       },
     });
+  }
+
+  updateDetectionLoading(value:boolean){
+    setTimeout(()=>{this.detectionLoading.next(!value)});
   }
 
   loadDetector() {

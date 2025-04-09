@@ -1,0 +1,49 @@
+.progress {
+  height: 10px;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* The inner moving bar */
+.progress-loader {
+  width: 30%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 0.25rem;
+  animation: loadingMove 1.5s ease-in-out infinite;
+}
+
+.progress-bar.left {
+  animation: loadingLeft 3s ease-in-out infinite;
+  background-color: #e9ecef;
+}
+
+.progress-bar.right {
+  animation: loadingRight 3s ease-in-out infinite;
+  background-color: #e9ecef;
+}
+
+/* Keyframes to animate left to right movement */
+@keyframes loadingLeft {
+  from {
+    width:0%;
+  }
+  to {
+      width:calc( 90% );
+  }
+}
+
+
+/* Keyframes to animate left to right movement */
+@keyframes loadingRight {
+  from {
+    width:90%;
+  }
+  to {
+      width:calc( 0% );
+  }
+}

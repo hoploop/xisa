@@ -24,12 +24,12 @@ export class ImageAnnotatorBox {
   canMove: boolean = true;
   public dataUrl?: string;
   labels: DetectorLabel[] = [];
-  selectedBorderColor: string = 'blue';
-  defaultBorderColor: string = 'red';
-  defaultBorderSize: number = 1;
-  selectedColor: string = 'rgba(255,255,255,0.4)';
-  defaultColor: string = 'rgba(255,255,255,0.2)';
-  selectedBorderSize: number = 1;
+  public selectedBorderColor: string = 'blue';
+  public defaultBorderColor: string = 'red';
+  public defaultBorderSize: number = 2;
+  public selectedColor: string = 'rgba(255,255,255,0.4)';
+  public defaultColor: string = 'rgba(255,255,255,0.2)';
+  public selectedBorderSize: number = 2;
   id = uuid();
 
   constructor(

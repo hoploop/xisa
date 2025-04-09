@@ -7,6 +7,7 @@ export const environment = {
   apiBearerKey: 'OAuth2PasswordBearer',
   videoUrl: 'http://localhost:8000/recorder/video/',
   imageUrl: 'http://localhost:8000/recorder/frame/',
+  imageThumbnailUrl: 'http://localhost:8000/recorder/frame/thumbnail/',
   wsUrl: 'ws://localhost:8000/ws/connection',
   editorLicense:'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjU2NzAzOTksImp0aSI6ImRkNjQ2NjNlLTA2NzAtNDIxOS04ZWMwLTU1NjZjMTRlMjA3OCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCIsIkJPWCJdLCJ2YyI6IjI2MTM2YjkxIn0.5T1JM73gGmiqJpXchMYDXDcjJ786TvrZf_e1hDOCvcwg-_ws4gksZwt0GLTVgr2weX3RaHC7e1XETur0Fd1ULQ' ,
   googleClientId:

@@ -41,6 +41,7 @@
       "cn": "pin"
     }
   },
+ 
   "auth": {
     "address": "${AUTH_RPC_HOST}:${AUTH_RPC_PORT}",
     "key": "${CLIENT_KEY}",
