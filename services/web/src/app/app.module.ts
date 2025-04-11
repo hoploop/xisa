@@ -18,6 +18,9 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { NgIconsModule } from '@ng-icons/core';
 import { NGIcons } from '@constants/icons';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { RouterModule } from '@angular/router';
+import { routes } from './app.routes';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -33,6 +36,9 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
   ); // /i18n/core/ on angular >= v18 with the new public logic
 }
 
+
+
+
 @NgModule({
   declarations: [AppComponent, MenuComponent, WelcomeComponent],
   imports: [
@@ -43,8 +49,10 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     MomentModule,
     UtilsModule,
     WorkspaceModule,
+    MonacoEditorModule.forRoot(),
     ApiModule.forRoot(apiConfigFactory),
     NgIconsModule.withIcons(NGIcons),
+    RouterModule.forRoot(routes),
     LoggerModule.forRoot({
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.DEBUG,

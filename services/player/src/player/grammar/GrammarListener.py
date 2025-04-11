@@ -269,6 +269,15 @@ class GrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by GrammarParser#mouseScrollSelector.
+    def enterMouseScrollSelector(self, ctx:GrammarParser.MouseScrollSelectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#mouseScrollSelector.
+    def exitMouseScrollSelector(self, ctx:GrammarParser.MouseScrollSelectorContext):
+        pass
+
+
     # Enter a parse tree produced by GrammarParser#keyPress.
     def enterKeyPress(self, ctx:GrammarParser.KeyPressContext):
         pass
@@ -284,6 +293,42 @@ class GrammarListener(ParseTreeListener):
 
     # Exit a parse tree produced by GrammarParser#keyRelease.
     def exitKeyRelease(self, ctx:GrammarParser.KeyReleaseContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyType.
+    def enterKeyType(self, ctx:GrammarParser.KeyTypeContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyType.
+    def exitKeyType(self, ctx:GrammarParser.KeyTypeContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyPressSelector.
+    def enterKeyPressSelector(self, ctx:GrammarParser.KeyPressSelectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyPressSelector.
+    def exitKeyPressSelector(self, ctx:GrammarParser.KeyPressSelectorContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyReleaseSelector.
+    def enterKeyReleaseSelector(self, ctx:GrammarParser.KeyReleaseSelectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyReleaseSelector.
+    def exitKeyReleaseSelector(self, ctx:GrammarParser.KeyReleaseSelectorContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyTypeSelector.
+    def enterKeyTypeSelector(self, ctx:GrammarParser.KeyTypeSelectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyTypeSelector.
+    def exitKeyTypeSelector(self, ctx:GrammarParser.KeyTypeSelectorContext):
         pass
 
 

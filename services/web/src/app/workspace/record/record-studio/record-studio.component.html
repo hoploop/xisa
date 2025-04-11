@@ -29,35 +29,13 @@
             *ngIf="frame.count > 0"
             class="btn btn-sm"
             (click)="previousFrame()"
-            [ngClass]="{
-              'btn-secondary': frame.event == undefined,
-              'btn-success':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence >= 0.5,
-              'btn-warning':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence < 0.5,
-              'btn-danger': frame.event != undefined && frame.action == undefined
-            }"
+            [ngClass]="frame.calculateButtonClass"
           >
             <app-fa-icon [icon]="FAIconType.arrowLeft"></app-fa-icon>
           </button>
           <button
             class="btn btn-sm w-100"
-            [ngClass]="{
-              'btn-secondary': frame.event == undefined,
-              'btn-success':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence >= 0.5,
-              'btn-warning':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence < 0.5,
-              'btn-danger': frame.event != undefined && frame.action == undefined
-            }"
+            [ngClass]="frame.calculateButtonClass"
           >
             <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
             <span *ngIf="frame == undefined" class="ms-2" translate
@@ -79,18 +57,7 @@
             *ngIf="frame.count < frames.length - 1"
             class="btn btn-sm"
             (click)="nextFrame()"
-            [ngClass]="{
-              'btn-secondary': frame.event == undefined,
-              'btn-success':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence >= 0.5,
-              'btn-warning':
-                frame.event != undefined &&
-                frame.action != undefined &&
-                frame.action.confidence < 0.5,
-              'btn-danger': frame.event != undefined && frame.action == undefined
-            }"
+            [ngClass]="frame.calculateButtonClass"
           >
             <app-fa-icon [icon]="FAIconType.arrowRight"></app-fa-icon>
           </button>

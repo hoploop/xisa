@@ -12,7 +12,7 @@ import { RecordFrameSelectorComponent } from '../record-frame-selector/record-fr
 import { RecordVideoComponent } from '../record-video/record-video.component';
 import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
-import { RecordScriptPreviewComponent } from '../record-script-preview/record-script-preview.component';
+import { PlayerScriptPreviewComponent } from '@workspace/player/player-script-preview/player-script-preview.component';
 
 @Component({
   selector: 'app-record-studio',
@@ -37,8 +37,6 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       this.loadLesson();
       this.loadEvents();
     });
-
-
   }
 
   loadTrainImageObjects() {
@@ -94,17 +92,15 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
       });
   }
 
-  previewScript(){
+  previewScript() {
     this.ctx
       .openModal<undefined>(
-        RecordScriptPreviewComponent,
+        PlayerScriptPreviewComponent,
         { record: this.record },
         { centered: true, size: 'lg' }
       )
       .subscribe({
-        next: (result) => {
-
-        },
+        next: (result) => {},
         error: (result) => {},
       });
   }
@@ -127,16 +123,14 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     });
   }
 
-  selectSpecificFrame(value:Frame){
-
-      this.frame = undefined;
-      setTimeout(() => {
-        this.frame = value;
-      });
-
+  selectSpecificFrame(value: Frame) {
+    this.frame = undefined;
+    setTimeout(() => {
+      this.frame = value;
+    });
   }
 
-  onResizeBottom(value:[number,number]){
+  onResizeBottom(value: [number, number]) {
     this.bottomSpace.next(value[1]);
   }
 
@@ -164,8 +158,10 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     });
   }
 
-  updateDetectionLoading(value:boolean){
-    setTimeout(()=>{this.detectionLoading.next(!value)});
+  updateDetectionLoading(value: boolean) {
+    setTimeout(() => {
+      this.detectionLoading.next(!value);
+    });
   }
 
   loadDetector() {
@@ -208,40 +204,26 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
           let deltaFrame = delta / totalFrames;
           let ms = 0;
           for (let i = 0; i < totalFrames; i++) {
-            let evt = undefined;
+            let newFrame: Frame = new Frame(
+              i,
+              [],
+              [],
+              ms,
+              [],
+              [],
+              this.lesson,
+              [],
+              []
+            );
 
-            let pushed = false;
             for (let j = 0; j < this.events.length; j++) {
               if (this.events[j].frame == i) {
-                evt = this.events[j];
-                this.frames.push({
-                  count: i,
-                  event: evt,
-                  action: undefined,
-                  milliseconds: ms,
-                  suggestions: [],
-                  lesson: this.lesson,
-                  train: [],
-                  objects: [],
-                  texts: [],
-                });
-                pushed = true;
+                let newEvent = this.events[j];
+                newFrame.events.push(newEvent);
               }
             }
 
-            if (!pushed) {
-              this.frames.push({
-                count: i,
-                event: evt,
-                action: undefined,
-                milliseconds: ms,
-                suggestions: [],
-                lesson: this.lesson,
-                train: [],
-                objects: [],
-                texts: [],
-              });
-            }
+            this.frames.push(newFrame);
 
             ms += deltaFrame;
           }
@@ -269,9 +251,11 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
             let action: Action = result.actions[i];
 
             this.frames.forEach((frame, index) => {
-              if (frame.event && frame.event._id == action.event) {
-                this.frames[index].action = action;
-              }
+              frame.events.forEach((evt, eindex) => {
+                if (evt._id && evt._id == action.event) {
+                  this.frames[index].actions.push(action);
+                }
+              });
             });
           }
         },

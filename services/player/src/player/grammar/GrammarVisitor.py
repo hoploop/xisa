@@ -154,6 +154,11 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by GrammarParser#mouseScrollSelector.
+    def visitMouseScrollSelector(self, ctx:GrammarParser.MouseScrollSelectorContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by GrammarParser#keyPress.
     def visitKeyPress(self, ctx:GrammarParser.KeyPressContext):
         return self.visitChildren(ctx)
@@ -161,6 +166,26 @@ class GrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by GrammarParser#keyRelease.
     def visitKeyRelease(self, ctx:GrammarParser.KeyReleaseContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyType.
+    def visitKeyType(self, ctx:GrammarParser.KeyTypeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyPressSelector.
+    def visitKeyPressSelector(self, ctx:GrammarParser.KeyPressSelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyReleaseSelector.
+    def visitKeyReleaseSelector(self, ctx:GrammarParser.KeyReleaseSelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyTypeSelector.
+    def visitKeyTypeSelector(self, ctx:GrammarParser.KeyTypeSelectorContext):
         return self.visitChildren(ctx)
 
 

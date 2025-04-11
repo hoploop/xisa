@@ -2,17 +2,19 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BaseComponent } from '@utils/base/base.component';
 import {Record} from '@api/index';
 
+
 @Component({
-  selector: 'app-record-script-preview',
+  selector: 'app-player-script-preview',
   standalone: false,
-  templateUrl: './record-script-preview.component.html',
-  styleUrl: './record-script-preview.component.scss'
+  templateUrl: './player-script-preview.component.html',
+  styleUrl: './player-script-preview.component.scss'
 })
-export class RecordScriptPreviewComponent extends BaseComponent implements OnInit{
+export class PlayerScriptPreviewComponent extends BaseComponent implements OnInit{
   @Input() record!: Record;
   script: string = '';
   declarative: boolean = false;
   synthetic: boolean = false;
+  editorOptions = {language: 'javascript',automaticLayout:true};
 
   ngOnInit(): void {
       this.generate();
@@ -43,5 +45,16 @@ export class RecordScriptPreviewComponent extends BaseComponent implements OnIni
   toggleSynthetic(){
     this.synthetic = !this.synthetic;
     this.generate();
+  }
+
+  execute(){
+    if (this.script!=''){
+      this.ctx.api.player.playerRunRawScript({script:this.script}).subscribe({
+        next: (result)=>{},
+        error: (result)=>{
+          this.log.error(result.error.detail);
+        }
+      })
+    }
   }
 }

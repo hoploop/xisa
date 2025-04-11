@@ -138,7 +138,7 @@
       },
       "action":{
         "errors":{"not_found":"Action not found"},
-        "title":"Action",
+        "title_n":"Actions ({{n}})",
         "cancel":"Cancel",
         "remove":"Remove",
         "close":"Close",
@@ -218,7 +218,7 @@
         "selected_frame":"Frame {{n}}",
         "detected_texts":"Detected texts ({{n}})",
         "detected_objects":"Detected objects ({{n}})",
-        "event":"Event"       
+        "events_n":"Events ({{n}})"       
       },
       "description": "Description",
       "loading": "Loading recording..",

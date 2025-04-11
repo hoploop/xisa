@@ -113,7 +113,7 @@ export class RecordListComponent extends BaseComponent implements OnInit {
   }
 
   navigateRecordStudio(record: Record) {
-    this.ctx.open(RecordStudioComponent, { record: record }).subscribe();
+    this.router.navigate(['record/studio',record._id]);
   }
 
   load() {

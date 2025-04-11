@@ -153,6 +153,7 @@ async def event_list(recordId: PydanticObjectId, user: CurrentUser, recorder: Re
     try:
         return await recorder.listRecordEvent(user, recordId)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 

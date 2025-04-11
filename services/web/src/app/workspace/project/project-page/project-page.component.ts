@@ -2,8 +2,6 @@ import { Component, Input } from '@angular/core';
 import { BaseComponent } from '@utils/base/base.component';
 import { Project } from '@api/index';
 import { ProjectFormComponent } from '../project-form/project-form.component';
-import { DetectorListComponent } from '@workspace/detector/detector-list/detector-list.component';
-import { RecordListComponent } from '@workspace/record/record-list/record-list.component';
 
 @Component({
   selector: 'app-project-page',
@@ -26,10 +24,10 @@ export class ProjectPageComponent extends BaseComponent {
   }
 
   navigateProjectDetectors() {
-    this.ctx.open(DetectorListComponent, { project: this.project }).subscribe();
+    this.router.navigate(['detector/list', this.project._id]);
   }
 
   navigateProjectRecords() {
-    this.ctx.open(RecordListComponent, { project: this.project }).subscribe();
+    this.router.navigate(['record/list', this.project._id]);
   }
 }

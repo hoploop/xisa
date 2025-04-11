@@ -6,7 +6,7 @@ from beanie import PydanticObjectId
 
 from common.models.auth import User
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.player_pb2 import PlayerScriptGenerateRequest, PlayerScriptGenerateResponse
+from common.rpc.player_pb2 import PlayerRawScriptExecuteRequest, PlayerRawScriptExecuteResponse, PlayerScriptExecuteRequest, PlayerScriptExecuteResponse, PlayerScriptGenerateRequest, PlayerScriptGenerateResponse, PlayerScriptUpdateRequest, PlayerScriptUpdateResponse
 from common.rpc.player_pb2_grpc import PlayerStub
 from common.service import Client
 
@@ -34,3 +34,24 @@ class PlayerClient(Client):
         if res.status == False:
             raise Exception(res.message)
         return res.script
+    
+    async def playerScriptUpdate(self,user:User,recordId:PydanticObjectId,script:str)-> bool:
+        req = PlayerScriptUpdateRequest(user=str(user.id),record=str(recordId),script=script)
+        res: PlayerScriptUpdateResponse = await self.client.playerScriptUpdate(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    async def playerScriptExecute(self,user:User,recordId:PydanticObjectId,declarative:bool=True,synthetic:bool=False)-> bool:
+        req = PlayerScriptExecuteRequest(user=str(user.id),record=str(recordId))
+        res: PlayerScriptExecuteResponse = await self.client.playerScriptExecute(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    async def playerRawScriptExecute(self,user:User,script:str)-> bool:
+        req = PlayerRawScriptExecuteRequest(user=str(user.id),script=script)
+        res: PlayerRawScriptExecuteResponse = await self.client.playerRawScriptExecute(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status

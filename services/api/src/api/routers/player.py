@@ -6,6 +6,7 @@ from typing import Annotated, Optional
 from fastapi import status
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
 
 # LOCAL IMPORTS
 from common.clients.player import PlayerClient
@@ -42,5 +43,54 @@ async def generate_script(
 ):
     try:
         return await player.playerScriptGenerate(user,recordId,declarative,synthetic)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.post("/run/script", 
+             operation_id="playerRunScript",
+             response_model=bool)
+async def run_script(
+    user: CurrentUser,
+    player: Player,
+    recordId: PydanticObjectId
+):
+    try:
+        return await player.playerScriptExecute(user,recordId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+class RawPayload(BaseModel):
+    script: str
+
+@router.post("/run/raw/script", 
+             operation_id="playerRunRawScript",
+             response_model=bool)
+async def run_raw_script(
+    user: CurrentUser,
+    player: Player,
+    payload: RawPayload
+):
+    try:
+        return await player.playerRawScriptExecute(user,payload.script)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+
+@router.put("/update/script", 
+             operation_id="playerUpdateScript",
+             response_model=str)
+async def update_script(
+    user: CurrentUser,
+    player: Player,
+    recordId: PydanticObjectId,
+    script: str
+):
+    try:
+        return await player.playerScriptUpdate(user,recordId,script)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))

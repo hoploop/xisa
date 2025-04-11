@@ -7,6 +7,14 @@
       "detector_not_trained":"Detector has not been trained",
       "record_not_found":"Recording not found",
       "replay_not_found":"Replay not found"
+    },
+    "runtime":{
+      "errors":{
+        "detector_not_found":"Detector path not found",
+        "selector_not_found":"Selector not found",
+        "operation_not_found":"Operation not found",
+        "timeout":"Timeout"
+      }
     }
   }
 }

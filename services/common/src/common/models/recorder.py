@@ -101,6 +101,9 @@ class KeyPressEvent(Event):
     type: Literal["key.press"] = "key.press"
     key: str
 
+class KeyTypeEvent(Event):
+    type: Literal["key.type"] = "key.type"
+    key: str
 
 class KeyReleaseEvent(Event):
     type: Literal["key.release"] = "key.release"
@@ -118,10 +121,12 @@ EVENT_TYPES = Union[
     MousePressEvent,
     MouseReleaseEvent,
     MouseScrollEvent,
-    MouseDropEvent,
+    MouseDropEvent, 
+    MouseDoubleClickEvent,
     KeyComboPressEvent,
     KeyPressEvent,
     KeyReleaseEvent,
+    KeyTypeEvent
     
 ]
 

@@ -14,6 +14,7 @@ from common.models.recorder import (
     KeyComboPressEvent,
     KeyPressEvent,
     KeyReleaseEvent,
+    KeyTypeEvent,
 )
 
 # INITIALIZATION
@@ -28,6 +29,8 @@ class KeyboardListener:
         self._listener = None
         self._listener_thread = None
         self._frame = 0
+        self.pressed_keys = set()
+        self.active_combos = set()
         
     def set_frame(self,value:int):
         self._frame = value
@@ -35,31 +38,60 @@ class KeyboardListener:
     def on_event(self, evt: Event):
         if self._event_callback:
             self._event_callback(evt)
+            
+        
+    def format_combo(self,combo):
+        return '+'.join(sorted(str(k) for k in combo))
+
 
     def on_press(self, key):
         try:
-            print('alphanumeric key {0} pressed'.format(
+            log.debug('alphanumeric key {0} pressed'.format(
                 key.char))
             evt = KeyPressEvent(key=str(key.char),record=self._record_id,frame=self._frame)
             self.on_event(evt)
+            
+            if hasattr(key, 'char') and key.char is not None:
+                log.debug(f"Key typed: {key.char}")
+                evt = KeyTypeEvent(key=str(key.char),record=self._record_id,frame=self._frame,synthetic=True)
+                self.on_event(evt)
+                
+            if key not in self.pressed_keys:
+                self.pressed_keys.add(key)
+                combo = frozenset(self.pressed_keys)
+                if combo not in self.active_combos and len(combo) > 1:
+                    self.active_combos.add(combo)
+                    log.debug(f"Combo pressed: {self.format_combo(combo)}")
+                    evt = KeyComboPressEvent(record=self._record_id,frame=self._frame,synthetic=True,keys=list(self.active_combos))
+                    self.on_event(evt)
 
         except AttributeError:
-            print('special key {0} pressed'.format(
+            log.debug('special key {0} pressed'.format(
                 key))
             evt = KeyPressEvent(key=str(key),record=self._record_id,frame=self._frame)
             self.on_event(evt)
 
     def on_release(self, key):
-        print('{0} released'.format(
+        log.debug('{0} released'.format(
             key))
         try:
-            print('alphanumeric key {0} released'.format(
+            log.debug('alphanumeric key {0} released'.format(
                 key.char))
             evt = KeyReleaseEvent(key=str(key.char),record=self._record_id,frame=self._frame)
             self.on_event(evt)
+            
+            if key in self.pressed_keys:
+                self.pressed_keys.remove(key)
+
+            # Clean up any combo that involved the released key
+            combos_to_remove = [c for c in self.active_combos if key in c]
+                
+            for combo in combos_to_remove:
+                self.active_combos.remove(combo)
+                log.debug(f"Combo released: {self.format_combo(combo)}")
 
         except AttributeError:
-            print('special key {0} released'.format(
+            log.debug('special key {0} released'.format(
                 key))
             evt = KeyReleaseEvent(key=str(key),record=self._record_id,frame=self._frame)
             self.on_event(evt)

@@ -193,7 +193,7 @@ class DetectorService(Service, DetectorServicer):
                     if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
                         matched = text
                         log.debug(
-                            "detected Text: {0},{1} ({2},{3})".format(nx, ny, nw, nh)
+                            "detected Text: {0},{1} ({2},{3}) - '{4}'".format(nx, ny, nw, nh,matched.value)
                         )
                         break
 
@@ -211,10 +211,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=PydanticObjectId(request.event),
                                 by_text=matched.value,
                                 confidence=matched.confidence,
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=nx/width,
+                                y=ny/height,
+                                w=nw/width,
+                                h=nh/height,
                             )
                         )
 
@@ -224,10 +224,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=PydanticObjectId(request.event),
                                 by_text=matched.value,
                                 by_order=[matched.line, matched.block],
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=nx/width,
+                                y=ny/height,
+                                w=nw/width,
+                                h=nh/height,
                                 confidence=matched.confidence,
                             )
                         )

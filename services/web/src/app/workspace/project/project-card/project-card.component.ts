@@ -13,7 +13,6 @@ export class ProjectCardComponent extends BaseComponent {
   @Input() project!: Project;
 
   goToProject() {
-    this.ctx.open(ProjectPageComponent, { project: this.project }).subscribe();
-    this.ctx.beat.menu.project.next(this.project);
+    this.router.navigate(['project/page',this.project._id])
   }
 }

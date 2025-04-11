@@ -10,7 +10,7 @@
       "@utils/*":["./src/app/utils/*"],
       "@services/*":["./src/app/services/*"],
       "@workspace/*":["./src/app/workspace/*"],
-      "@templates/*":["src/app/utils/templates/*"],
+      "@grammar/*":["./src/app/grammar/*"],
       "@guards/*":["./src/app/guards/*"],
     },
     "outDir": "./dist/out-tsc",

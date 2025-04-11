@@ -1,12 +1,11 @@
 from typing import List, Tuple
-from uuid import uuid4
-from common.models.player import CreateSelectorStatement, LabelSelector
-from common.models.recorder import Action, Event, KeyPressEvent, KeyReleaseEvent, MouseButton, MouseClickEvent, MouseDoubleClickEvent, MousePressEvent, MouseReleaseEvent, MouseScrollEvent
+from player.models import CreateOperationStatement, CreateSelectorStatement, KeyPressOperation, KeyReleaseOperation, KeyTypeOperation, LabelSelector, MouseClickOperation, MouseDoubleClickOperation, MouseOperationButton, MousePressOperation, MouseReleaseOperation, MouseScrollOperation, Operation, OperationReference, PositionSelector, RegexSelector, RunOperationStatement, Selector, SelectorReference, Statement, TextSelector
+from common.models.recorder import Action, Event, KeyPressEvent, KeyReleaseEvent, KeyTypeEvent, MouseButton, MouseClickEvent, MouseDoubleClickEvent, MousePressEvent, MouseReleaseEvent, MouseScrollEvent
 
 
 class GrammarGenerator:
     
-    def generateFromAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
+    def generateFromAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
         if action.by_label is not None and action.by_label.strip()!='':
             return self.generateFromLabelAction(action,event,declarative,starterId)
         elif action.by_text is not None and action.by_text.strip()!='':
@@ -19,149 +18,112 @@ class GrammarGenerator:
     def getNextId(self,starterId:int=0,prefix='ID_') -> Tuple[int,str]:
         return starterId+1, '{0}{1}'.format(prefix,starterId+1)
             
-    def generateFromLabelAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
+    def generateFromLabelAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
          
         selector = LabelSelector(value=action.by_label,order=action.by_order)
-        
         if declarative:
-            
-            
-            # Selector area
             starterId, selector_id = self.getNextId(starterId)
-            
-            selector_dec = '{0} = {1}'.format(selector_id,selector) # id = label(...)
-            CreateSelectorStatement(id=selector_id,selector=selector)
-            
-            # Action area
-            starterId, action_id = self.getNextId(starterId)
-            action_text = self.generateFromEvent(event,selector_id)
-            action_dec = '{0} = {1}'.format(action_id,action_text)
-            
-            # Finalization area
-            decs = [selector_dec,action_dec]
-            exs = [action_id]
-            return decs, exs, starterId
-    
-        else:
-            decs = []
-            exs = [self.generateFromEvent(event,selector)]
-            return decs, exs,starterId
-        
-    def generateFromTextAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
-        order = ''
-        if len(action.by_order) > 0:
-            for el in action.by_order:
-                order += ',{0}'.format(el)
-        selector = 'text("{0}"{1})'.format(action.by_text,order)
-        
-        if declarative:
-            
-            # Selector area
-            starterId, selector_id = self.getNextId(starterId)
-            
-            selector_dec = '{0} = {1}'.format(selector_id,selector) # id = label(...)
-            
-            # Action area
-            starterId, action_id = self.getNextId(starterId)
-            action_text = self.generateFromEvent(event,selector_id)
-            action_dec = '{0} = {1}'.format(action_id,action_text)
-            
-            # Finalization area
-            decs = [selector_dec,action_dec]
-            exs = [action_id]
-            return decs, exs, starterId
-    
-        else:
-            decs = []
-            exs = [self.generateFromEvent(event,selector)]
-            return decs, exs, starterId
-        
-    def generateFromRegexAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
-        order = ''
-        if len(action.by_order) > 0:
-            for el in action.by_order:
-                order += ',{0}'.format(el)
-        selector = 'regex("{0}"{1})'.format(action.by_regex,order)
-        
-        if declarative:
-            
-            # Selector area
-            starterId, selector_id = self.getNextId(starterId)
-            
-            selector_dec = '{0} = {1}'.format(selector_id,selector) # id = label(...)
-            
-            # Action area
-            starterId, action_id = self.getNextId(starterId)
-            action_text = self.generateFromEvent(event,selector_id)
-            action_dec = '{0} = {1}'.format(action_id,action_text)
-            
-            # Finalization area
-            decs = [selector_dec,action_dec]
-            exs = [action_id]
-            return decs, exs, starterId
-    
-        else:
-            decs = []
-            exs = [self.generateFromEvent(event,selector)]
-            return decs, exs, starterId
-        
-    def generateFromPositionAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[str],List[str],int]:
-        x_text = "{:.2f}".format(action.by_position.x)
-        y_text = "{:.2f}".format(action.by_position.y)
-        selector = 'position({0},{1})'.format(x_text,y_text)
-        
-        if declarative:
-            
-            # Selector area
-            starterId, selector_id = self.getNextId(starterId)
-            
-            selector_dec = '{0} = {1}'.format(selector_id,selector) # id = label(...)
-            
-            # Action area
-            starterId, action_id = self.getNextId(starterId)
-            action_text = self.generateFromEvent(event,selector_id)
-            action_dec = '{0} = {1}'.format(action_id,action_text)
-            
-            # Finalization area
-            decs = [selector_dec,action_dec]
-            exs = [action_id]
+            stmt1 = CreateSelectorStatement(id=selector_id,selector=selector)
+            starterId, operation_id = self.getNextId(starterId)
+            op1 = self.generateOperationFromEvent(event,SelectorReference(reference=selector_id))
+            stmt2 = CreateOperationStatement(id=operation_id,operation=op1)
+            stmt3 = RunOperationStatement(operation=OperationReference(reference=operation_id))
+            decs = [stmt1,stmt2]
+            exs = [stmt3]
             return decs, exs , starterId
-    
         else:
+            op =  self.generateOperationFromEvent(event,selector)
             decs = []
-            exs = [self.generateFromEvent(event,selector)]
+            exs = [RunOperationStatement(operation=op)]
             return decs, exs, starterId
         
-    def generateFromEvent(self,event:Event,selector:str)-> Tuple[str,str]:
+    def generateFromTextAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
+        selector = TextSelector(value=action.by_text,order=action.by_order)
+        if declarative:
+            starterId, selector_id = self.getNextId(starterId)
+            stmt1 = CreateSelectorStatement(id=selector_id,selector=selector)
+            starterId, operation_id = self.getNextId(starterId)
+            op1 = self.generateOperationFromEvent(event,SelectorReference(reference=selector_id))
+            stmt2 = CreateOperationStatement(id=operation_id,operation=op1)
+            stmt3 = RunOperationStatement(operation=OperationReference(reference=operation_id))
+            decs = [stmt1,stmt2]
+            exs = [stmt3]
+            return decs, exs , starterId
+        else:
+            op =  self.generateOperationFromEvent(event,selector)
+            decs = []
+            exs = [RunOperationStatement(operation=op)]
+            return decs, exs, starterId
+        
+    def generateFromRegexAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
+        
+        selector = RegexSelector(value=action.by_regex,order=action.by_order)
+        
+        if declarative:
+            starterId, selector_id = self.getNextId(starterId)
+            stmt1 = CreateSelectorStatement(id=selector_id,selector=selector)
+            starterId, operation_id = self.getNextId(starterId)
+            op1 = self.generateOperationFromEvent(event,SelectorReference(reference=selector_id))
+            stmt2 = CreateOperationStatement(id=operation_id,operation=op1)
+            stmt3 = RunOperationStatement(operation=OperationReference(reference=operation_id))
+            decs = [stmt1,stmt2]
+            exs = [stmt3]
+            return decs, exs , starterId
+        else:
+            op =  self.generateOperationFromEvent(event,selector)
+            decs = []
+            exs = [RunOperationStatement(operation=op)]
+            return decs, exs, starterId
+        
+    def generateFromPositionAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
+        
+        selector = PositionSelector(x=action.by_position.x,y=action.by_position.y)
+        
+        if declarative:
+            starterId, selector_id = self.getNextId(starterId)
+            stmt1 = CreateSelectorStatement(id=selector_id,selector=selector)
+            starterId, operation_id = self.getNextId(starterId)
+            op1 = self.generateOperationFromEvent(event,SelectorReference(reference=selector_id))
+            stmt2 = CreateOperationStatement(id=operation_id,operation=op1)
+            stmt3 = RunOperationStatement(operation=OperationReference(reference=operation_id))
+            decs = [stmt1,stmt2]
+            exs = [stmt3]
+            return decs, exs , starterId
+        else:
+            op =  self.generateOperationFromEvent(event,selector)
+            decs = []
+            exs = [RunOperationStatement(operation=op)]
+            return decs, exs, starterId
+        
+    def generateOperationFromEvent(self,event:Event,selector:Selector)-> Operation:
         if isinstance(event,MousePressEvent):
-            button_text = self.generateFromMouseButton(event.button)
-            return 'mousePress({0},{1})'.format(selector,button_text)
+            return MousePressOperation(selector=selector,button=self.generateFromMouseButton(event.button))
+        
         if isinstance(event,MouseReleaseEvent):
-            button_text = self.generateFromMouseButton(event.button)
-            return 'mouseRelease({0},{1})'.format(selector,button_text)
+            return MouseReleaseOperation(selector=selector,button=self.generateFromMouseButton(event.button))
         if isinstance(event,MouseClickEvent):
-            button_text = self.generateFromMouseButton(event.button)
-            return 'mouseClick({0},{1})'.format(selector,button_text)
+            return MouseClickOperation(selector=selector,button=self.generateFromMouseButton(event.button))
         if isinstance(event,MouseDoubleClickEvent):
-            button_text = self.generateFromMouseButton(event.button)
-            return 'mouseDoubleClick({0},{1})'.format(selector,button_text)
+            return MouseDoubleClickOperation(selector=selector,button=self.generateFromMouseButton(event.button))
         if isinstance(event,MouseScrollEvent):
             dx = event.dx
             dy = event.dy
-            return 'mouseScroll({0},{1})'.format(dx,dy)
+            return MouseScrollOperation(dx=dx,dy=dy,selector=selector)
         if isinstance(event,KeyPressEvent): 
-            key_text = '"{0}"'.format(event.key)
-            return 'keyPress({0})'.format(key_text)
+            return KeyPressOperation(value=event.key,selector=selector)
+        if isinstance(event,KeyTypeEvent): 
+            return KeyTypeOperation(value=event.key,selector=selector)
         if isinstance(event,KeyReleaseEvent): 
-            key_text = '"{0}"'.format(event.key)
-            return 'keyRelease({0})'.format(key_text)
+            return KeyReleaseOperation(value=event.key,selector=selector)
+            
         
         
-    def generateFromMouseButton(self,button:MouseButton) -> str:
+        
+    def generateFromMouseButton(self,button:MouseButton) -> MouseOperationButton:
         if button == MouseButton.right:
-            return 'right'
+            return MouseOperationButton.RIGHT
         elif button == MouseButton.middle:
-            return 'middle'
+            return MouseOperationButton.MIDDLE
         else:
-            return 'left'
+            return MouseOperationButton.LEFT
     

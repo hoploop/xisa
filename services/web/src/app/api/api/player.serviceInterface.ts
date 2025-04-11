@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { HTTPValidationError } from '../model/models';
+import { RawPayload } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -30,5 +31,27 @@ export interface PlayerServiceInterface {
      * @param synthetic 
      */
     playerGenerateScript(recordId: string, declarative?: boolean, synthetic?: boolean, extraHttpRequestParams?: any): Observable<string>;
+
+    /**
+     * Run Raw Script
+     * 
+     * @param rawPayload 
+     */
+    playerRunRawScript(rawPayload: RawPayload, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Run Script
+     * 
+     * @param recordId 
+     */
+    playerRunScript(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Update Script
+     * 
+     * @param recordId 
+     * @param script 
+     */
+    playerUpdateScript(recordId: string, script: string, extraHttpRequestParams?: any): Observable<string>;
 
 }

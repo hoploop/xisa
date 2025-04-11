@@ -50,10 +50,25 @@ class PlayerStub(object):
                 request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadResponse.FromString,
                 _registered_method=True)
+        self.playerScriptExecute = channel.unary_unary(
+                '/Player/playerScriptExecute',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptExecuteRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptExecuteResponse.FromString,
+                _registered_method=True)
+        self.playerScriptUpdate = channel.unary_unary(
+                '/Player/playerScriptUpdate',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptUpdateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptUpdateResponse.FromString,
+                _registered_method=True)
         self.playerScriptGenerate = channel.unary_unary(
                 '/Player/playerScriptGenerate',
                 request_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.FromString,
+                _registered_method=True)
+        self.playerRawScriptExecute = channel.unary_unary(
+                '/Player/playerRawScriptExecute',
+                request_serializer=common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteResponse.FromString,
                 _registered_method=True)
 
 
@@ -79,7 +94,25 @@ class PlayerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def playerScriptExecute(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def playerScriptUpdate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def playerScriptGenerate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def playerRawScriptExecute(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -103,10 +136,25 @@ def add_PlayerServicer_to_server(servicer, server):
                     request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadRequest.FromString,
                     response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptLoadResponse.SerializeToString,
             ),
+            'playerScriptExecute': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerScriptExecute,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptExecuteRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptExecuteResponse.SerializeToString,
+            ),
+            'playerScriptUpdate': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerScriptUpdate,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptUpdateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptUpdateResponse.SerializeToString,
+            ),
             'playerScriptGenerate': grpc.unary_unary_rpc_method_handler(
                     servicer.playerScriptGenerate,
                     request_deserializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.FromString,
                     response_serializer=common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.SerializeToString,
+            ),
+            'playerRawScriptExecute': grpc.unary_unary_rpc_method_handler(
+                    servicer.playerRawScriptExecute,
+                    request_deserializer=common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -201,6 +249,60 @@ class Player(object):
             _registered_method=True)
 
     @staticmethod
+    def playerScriptExecute(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerScriptExecute',
+            common_dot_rpc_dot_player__pb2.PlayerScriptExecuteRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerScriptExecuteResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def playerScriptUpdate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerScriptUpdate',
+            common_dot_rpc_dot_player__pb2.PlayerScriptUpdateRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerScriptUpdateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def playerScriptGenerate(request,
             target,
             options=(),
@@ -217,6 +319,33 @@ class Player(object):
             '/Player/playerScriptGenerate',
             common_dot_rpc_dot_player__pb2.PlayerScriptGenerateRequest.SerializeToString,
             common_dot_rpc_dot_player__pb2.PlayerScriptGenerateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def playerRawScriptExecute(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Player/playerRawScriptExecute',
+            common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteRequest.SerializeToString,
+            common_dot_rpc_dot_player__pb2.PlayerRawScriptExecuteResponse.FromString,
             options,
             channel_credentials,
             insecure,

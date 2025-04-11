@@ -43,6 +43,7 @@ model/http-validation-error.ts
 model/key-combo-press-event.ts
 model/key-press-event.ts
 model/key-release-event.ts
+model/key-type-event.ts
 model/models.ts
 model/mouse-button.ts
 model/mouse-click-event.ts
@@ -55,6 +56,7 @@ model/os.ts
 model/position.ts
 model/project-list-response.ts
 model/project.ts
+model/raw-payload.ts
 model/record-action-create-payload.ts
 model/record-action-list-response.ts
 model/record-action-update-payload.ts

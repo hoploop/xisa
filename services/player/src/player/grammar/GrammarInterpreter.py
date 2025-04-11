@@ -4,7 +4,7 @@ from antlr4 import *
 # LOCAL IMPORTS
 from player.grammar.GrammarLexer import GrammarLexer
 from player.grammar.GrammarParser import GrammarParser
-from player.grammar.PlayerAnalyser import PlayerAnalyser
+from services.player.src.player.grammar.analyzer import PlayerAnalyzer
 
 class GrammarInterpreter:
     
@@ -22,5 +22,5 @@ class GrammarInterpreter:
         tree = parser.expr()
 
         # Visit the parse tree using the ArithmeticEvalVisitor
-        visitor = PlayerAnalyser()
+        visitor = PlayerAnalyzer()
         result = visitor.visit(tree)

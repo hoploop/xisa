@@ -54,7 +54,8 @@ import { ProjectPageComponent } from './project/project-page/project-page.compon
 import { RecordOsNamePipe } from './record/record-os-name.pipe';
 import { RecordActionCountPipe } from './record/record-action-count.pipe';
 import { RecordScrollerComponent } from './record/record-scroller/record-scroller.component';
-import { RecordScriptPreviewComponent } from './record/record-script-preview/record-script-preview.component';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { PlayerScriptPreviewComponent } from './player/player-script-preview/player-script-preview.component';
 
 
 
@@ -110,14 +111,15 @@ import { RecordScriptPreviewComponent } from './record/record-script-preview/rec
     RecordOsNamePipe,
     RecordActionCountPipe,
     RecordScrollerComponent,
-    RecordScriptPreviewComponent,
+    PlayerScriptPreviewComponent,
   ],
   imports: [
     CommonModule,
     UtilsModule,
     FormsModule,
     TranslateModule,
-    MomentModule
+    MomentModule,
+    MonacoEditorModule
 ],
   exports: [
     ProjectListComponent,

@@ -1,14 +1,15 @@
-<div class="d-flex flex-column">
+<div class="d-flex flex-column"  *ngIf="fullyLoaded|async">
   <div class="d-flex justify-content-center mb-2">
 
     <!-- Event -->
     <button
       class="btn btn-sm w-100"
-      *ngIf="frame && frame.event"
-      [class.btn-primary]="eventVisible"
-      [class.btn-outline-secondary]="!eventVisible"
-      (click)="toggleEvent()"
+      *ngIf="frame && frame.hasEvents"
+      [class.btn-primary]="eventsVisible"
+      [class.btn-outline-secondary]="!eventsVisible"
+      (click)="toggleEvents()"
     >
+    <!--
     <ng-container [ngSwitch]="frame.event.type">
       <app-fa-icon
           *ngSwitchCase="RecordEventTypes.KeyComboPress"
@@ -24,7 +25,8 @@
         ></app-fa-icon>
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
       </ng-container>
-      <span class="ms-2" [translate]="'workspace.record.studio.event'"></span>
+      -->
+      <span class="ms-2" [translate]="'workspace.record.studio.events_n'" [translateParams]="{'n':frame.events.length}"></span>
     </button>
 
 
@@ -33,7 +35,7 @@
     <div class="btn-group btn-group-sm  w-100" *ngIf="frame">
       <button
         class="btn btn-sm  text-nowrap  w-100"
-        [class.ms-1]="frame.event"
+        [class.ms-1]="frame.hasEvents"
         [class.btn-primary]="objectsVisible"
         [class.btn-outline-secondary]="!objectsVisible"
         (click)="toggleObjects()"
@@ -104,7 +106,7 @@
     </div>
 
     <!-- Suggestions Selector-->
-    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.event && !frame.action">
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.hasEvents && frame.hasSuggestion">
 
       <button
         class="btn ms-1 btn-sm w-100  text-nowrap"
@@ -128,27 +130,27 @@
         [class.btn-primary]="suggestionsVisible"
         [class.btn-outline-secondary]="!suggestionsVisible"
       >
-        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+        <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
       </button>
     </div>
 
     <!-- Action Selector-->
-    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.event && frame.action">
+    <div class="btn-group btn-group-sm  w-100" *ngIf="frame.hasEvents && frame.hasActions">
 
       <button
         class="btn ms-1 btn-sm w-100  text-nowrap"
-        [class.btn-primary]="suggestionsVisible"
-        [class.btn-outline-secondary]="!suggestionsVisible"
-        (click)="openAction(frame.action)"
+        [class.btn-primary]="actionsVisible"
+        [class.btn-outline-secondary]="!actionsVisible"
+        (click)="toggleActions()"
       >
         <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
-        <span class="ms-2" translate>workspace.record.action.title</span>
+        <span class="ms-2" [translate]="'workspace.record.action.title_n'" [translateParams]="{'n':frame.actions.length}"></span>
       </button>
       <button
         class="btn btn-sm "
-        [class.btn-primary]="suggestionsVisible"
-        [class.btn-outline-secondary]="!suggestionsVisible">
-        <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
+        [class.btn-primary]="actionsVisible"
+        [class.btn-outline-secondary]="!actionsVisible">
+        <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
       </button>
     </div>
   </div>

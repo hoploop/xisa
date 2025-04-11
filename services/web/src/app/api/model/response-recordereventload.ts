@@ -11,6 +11,7 @@ import { MouseReleaseEvent } from './mouse-release-event';
 import { MouseScrollEvent } from './mouse-scroll-event';
 import { MouseDropEvent } from './mouse-drop-event';
 import { KeyPressEvent } from './key-press-event';
+import { KeyTypeEvent } from './key-type-event';
 import { KeyComboPressEvent } from './key-combo-press-event';
 import { MousePressEvent } from './mouse-press-event';
 import { MouseButton } from './mouse-button';
@@ -23,5 +24,5 @@ import { MouseClickEvent } from './mouse-click-event';
  * @type ResponseRecordereventload
  * @export
  */
-export type ResponseRecordereventload = KeyComboPressEvent | KeyPressEvent | KeyReleaseEvent | MouseClickEvent | MouseDoubleClickEvent | MouseDropEvent | MousePressEvent | MouseReleaseEvent | MouseScrollEvent;
+export type ResponseRecordereventload = KeyComboPressEvent | KeyPressEvent | KeyReleaseEvent | KeyTypeEvent | MouseClickEvent | MouseDoubleClickEvent | MouseDropEvent | MousePressEvent | MouseReleaseEvent | MouseScrollEvent;
 

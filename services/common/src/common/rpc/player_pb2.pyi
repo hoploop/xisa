@@ -5,6 +5,56 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class PlayerScriptUpdateRequest(_message.Message):
+    __slots__ = ("user", "record", "script")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    SCRIPT_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    script: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., script: _Optional[str] = ...) -> None: ...
+
+class PlayerScriptUpdateResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class PlayerRawScriptExecuteRequest(_message.Message):
+    __slots__ = ("user", "script")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    SCRIPT_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    script: str
+    def __init__(self, user: _Optional[str] = ..., script: _Optional[str] = ...) -> None: ...
+
+class PlayerRawScriptExecuteResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class PlayerScriptExecuteRequest(_message.Message):
+    __slots__ = ("user", "record")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ...) -> None: ...
+
+class PlayerScriptExecuteResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
 class PlayerScriptExistRequest(_message.Message):
     __slots__ = ("user", "record")
     USER_FIELD_NUMBER: _ClassVar[int]

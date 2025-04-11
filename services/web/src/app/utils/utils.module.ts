@@ -27,6 +27,7 @@ import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
 import { TemplateCardContainerComponent } from './template-card-container/template-card-container.component';
 import { DockScrollerComponent } from './dock-scroller/dock-scroller.component';
 import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-progress-bar.component';
+import { RouteComponent } from './route/route.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-p
     ImageLabelerComponent,
     DockScrollerComponent,
     InfiniteProgressBarComponent,
+    RouteComponent,
   ],
   imports: [
     CommonModule,

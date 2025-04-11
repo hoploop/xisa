@@ -7,8 +7,45 @@ service Player {
     rpc ping(Ping) returns (Pong);
     rpc playerScriptExist(PlayerScriptExistRequest) returns (PlayerScriptExistResponse);
     rpc playerScriptLoad(PlayerScriptLoadRequest) returns (PlayerScriptLoadResponse);
+    rpc playerScriptExecute(PlayerScriptExecuteRequest) returns (PlayerScriptExecuteResponse);
+    rpc playerScriptUpdate(PlayerScriptUpdateRequest) returns (PlayerScriptUpdateResponse);
     rpc playerScriptGenerate(PlayerScriptGenerateRequest) returns (PlayerScriptGenerateResponse);
+    rpc playerRawScriptExecute(PlayerRawScriptExecuteRequest) returns (PlayerRawScriptExecuteResponse);
 }
+
+message PlayerScriptUpdateRequest {
+    string user = 1;
+    string record = 2;
+    string script = 3;
+}
+
+message PlayerScriptUpdateResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message PlayerRawScriptExecuteRequest {
+    string user = 1;
+    string script = 2;
+
+}
+
+message PlayerRawScriptExecuteResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+
+message PlayerScriptExecuteRequest {
+    string user = 1;
+    string record = 2;
+}
+
+message PlayerScriptExecuteResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
 
 message PlayerScriptExistRequest {
     string user = 1;

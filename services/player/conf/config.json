@@ -1,6 +1,6 @@
 {
   "address": "${PLAYER_RPC_HOST}:${PLAYER_RPC_PORT}",
-  "detectors":"data/detectors",
+  "detectors":"../detector/data/detectors",
   "security": {
     "key": "${SERVER_KEY}",
     "cert": "${SERVER_CERT}",
