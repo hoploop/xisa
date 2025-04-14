@@ -34,9 +34,12 @@ class TrainImageObject(Document):
 class TrainLesson(Document):
     record: PydanticObjectId
     detector: Optional[PydanticObjectId] = None
+    textConfidence: float = Field(default=0.1)
+    objectConfidence: float = Field(default=0.1)
     created: datetime = Field(default_factory=utc_now)
     updated: datetime = Field(default_factory=utc_now)
     
+
     
     @before_event(Update, SaveChanges, Insert)
     async def update_last(self):

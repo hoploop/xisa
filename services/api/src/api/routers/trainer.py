@@ -71,6 +71,45 @@ async def lesson_set_detector(
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
+@router.post(
+    "/lesson/text/confidence",
+    operation_id="trainerLessonSetTextConfidence",
+    response_model=TrainLesson,
+)
+async def lesson_set_text_confidence(
+    user: CurrentUser,
+    trainer: Trainer,
+    lessonId: PydanticObjectId,
+    confidence:float
+):
+    try:
+        found = await trainer.lessonSetTextConfidence(user, lessonId, confidence)
+        return found
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+@router.post(
+    "/lesson/object/confidence",
+    operation_id="trainerLessonSetObjectConfidence",
+    response_model=TrainLesson,
+)
+async def lesson_set_object_confidence(
+    user: CurrentUser,
+    trainer: Trainer,
+    lessonId: PydanticObjectId,
+    confidence:float
+):
+    try:
+        found = await trainer.lessonSetObjectConfidence(user, lessonId, confidence)
+        return found
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+
+
 
 class TrainImageObjectUpdatePayload(BaseModel):
     id: PydanticObjectId

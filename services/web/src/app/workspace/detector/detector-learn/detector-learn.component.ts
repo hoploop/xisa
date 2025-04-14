@@ -31,7 +31,7 @@ export class DetectorLearnComponent
         next: (result) => {
           if (this.detector._id) {
             this.loading.next(
-              this.ctx.translate.instant('workspace.detector.training.loading')
+              this.ctx.translate.instant('detector.training.loading')
             );
             this.ctx.api.detector
               .detectorTrain(this.detector._id, this.epochs)

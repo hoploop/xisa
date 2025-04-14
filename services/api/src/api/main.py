@@ -26,10 +26,11 @@ from api.routers import auth
 from api.routers import player
 from api.routers import detector
 from api.routers import train
-from api.routers import recorder, workspace
+from api.routers import recorder
 from api.service import ApiService, ApiServiceConfig
 from common.utils.mongodb import Mongodb, MongodbConfig
 from api.routers import trainer
+from api.routers import project
 
 # CONSTANTS
 ENV_CONF = "../.env"
@@ -147,7 +148,7 @@ app.mount("/i18n", StaticFilesCache(directory=config.translations), name="static
 app.include_router(ws.router, tags=["ws"], prefix="/ws")
 app.include_router(auth.router, tags=["auth"], prefix="/auth")
 app.include_router(detector.router, tags=["detector"], prefix="/detector")
-app.include_router(workspace.router, tags=["workspace"], prefix="/workspace")
+app.include_router(project.router, tags=["project"], prefix="/project")
 app.include_router(recorder.router, tags=["recorder"], prefix="/recorder")
 app.include_router(player.router, tags=["player"], prefix="/player")
 app.include_router(train.router, tags=["train"], prefix="/train")

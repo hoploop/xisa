@@ -2,26 +2,26 @@
 <app-modal [loading]="loading" [error]="error">
   <ng-content header>
     <app-fa-icon [icon]="FAIconType.folder"></app-fa-icon>
-    <span *ngIf="!detector._id" class="ms-1" translate>workspace.detector.create</span>
-    <span *ngIf="detector._id" class="ms-1" translate>workspace.detector.update</span>
+    <span *ngIf="!detector._id" class="ms-1" translate>detector.create</span>
+    <span *ngIf="detector._id" class="ms-1" translate>detector.update</span>
   </ng-content>
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
 
   <ng-content body>
     <div class="d-flex flex-column">
-      <input type="text" class="form-control" [ngModel]="detector.name" (ngModelChange)="onNameChange($event)" [placeholder]="'workspace.detector.name'|translate"/>
-      <textarea class="form-control mt-1" [ngModel]="detector.description"  (ngModelChange)="onDescriptionChange($event)" [placeholder]="'workspace.detector.description'|translate"></textarea>
+      <input type="text" class="form-control" [ngModel]="detector.name" (ngModelChange)="onNameChange($event)" [placeholder]="'detector.name'|translate"/>
+      <textarea class="form-control mt-1" [ngModel]="detector.description"  (ngModelChange)="onDescriptionChange($event)" [placeholder]="'detector.description'|translate"></textarea>
       <button class="mt-1 btn btn-primary w-100" (click)="save()" [disabled]="(valid|async) == false">
         <app-fa-icon [icon]="FAIconType.save"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.save</span>
+        <span class="ms-1" translate>detector.save</span>
       </button>
       <button class="mt-1 btn btn-danger w-100" *ngIf="detector._id" (click)="remove()">
         <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.remove</span>
+        <span class="ms-1" translate>detector.remove</span>
       </button>
       <button class="mt-1 btn btn-secondary w-100" (click)="cancel()">
         <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.cancel</span>
+        <span class="ms-1" translate>detector.cancel</span>
       </button>
     </div>
   </ng-content>

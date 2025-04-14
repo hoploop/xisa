@@ -108,6 +108,46 @@ class TrainImageObjectResponse(_message.Message):
     object: _base_pb2.Serialized
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., object: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
+class LessonSetTextConfidenceRequest(_message.Message):
+    __slots__ = ("user", "lesson", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    LESSON_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    lesson: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class LessonSetTextConfidenceResponse(_message.Message):
+    __slots__ = ("status", "message", "lesson")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    LESSON_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    lesson: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
+class LessonSetObjectConfidenceRequest(_message.Message):
+    __slots__ = ("user", "lesson", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    LESSON_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    lesson: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class LessonSetObjectConfidenceResponse(_message.Message):
+    __slots__ = ("status", "message", "lesson")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    LESSON_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    lesson: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
 class LessonSetDetectorRequest(_message.Message):
     __slots__ = ("user", "detector", "lesson")
     USER_FIELD_NUMBER: _ClassVar[int]

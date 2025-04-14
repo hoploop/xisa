@@ -23,41 +23,41 @@ export class RecordEventNamePipe implements PipeTransform {
           pars['x'] = Math.round(value.position[0]);
           pars['y'] = Math.round(value.position[1]);
         }
-        return this.ctx.translate.instant("workspace.record.event.types.key_combo_press",pars); //keys
+        return this.ctx.translate.instant("recorder.event.types.key_combo_press",pars); //keys
       case KeyPressEventTypeEnum.KeyPress:
         pars['value']=value.key;
         if (value.position){
           pars['x'] = Math.round(value.position[0]);
           pars['y'] = Math.round(value.position[1]);
         }
-        return this.ctx.translate.instant("workspace.record.event.types.key_press",pars); //key
+        return this.ctx.translate.instant("recorder.event.types.key_press",pars); //key
         case KeyTypeEventTypeEnum.KeyType:
           pars['value']=value.key;
         if (value.position){
           pars['x'] = Math.round(value.position[0]);
           pars['y'] = Math.round(value.position[1]);
         }
-          return this.ctx.translate.instant("workspace.record.event.types.key_type",pars); //key
+          return this.ctx.translate.instant("recorder.event.types.key_type",pars); //key
       case KeyReleaseEventTypeEnum.KeyRelease:
         pars['value']=value.key;
         if (value.position){
           pars['x'] = Math.round(value.position[0]);
           pars['y'] = Math.round(value.position[1]);
         }
-        return this.ctx.translate.instant("workspace.record.event.types.key_release",pars); //key
+        return this.ctx.translate.instant("recorder.event.types.key_release",pars); //key
       case MouseClickEventTypeEnum.MouseClick:
         if (value.position){
           pars['x'] = Math.round(value.position[0]);
           pars['y'] = Math.round(value.position[1]);
         }
         if (value.button == MouseButton.Left){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_click_left",pars); //position
+          return this.ctx.translate.instant("recorder.event.types.mouse_click_left",pars); //position
         }
         else if (value.button == MouseButton.Middle){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_click_middle",pars); //position
+          return this.ctx.translate.instant("recorder.event.types.mouse_click_middle",pars); //position
         }
         else {
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_click_right",pars); //position
+          return this.ctx.translate.instant("recorder.event.types.mouse_click_right",pars); //position
         }
 
       case MouseDoubleClickEventTypeEnum.MouseDoubleClick:
@@ -66,13 +66,13 @@ export class RecordEventNamePipe implements PipeTransform {
             pars['y'] = Math.round(value.position[1]);
           }
           if (value.button == MouseButton.Left){
-            return this.ctx.translate.instant("workspace.record.event.types.mouse_double_click_left",pars); //position
+            return this.ctx.translate.instant("recorder.event.types.mouse_double_click_left",pars); //position
           }
           else if (value.button == MouseButton.Middle){
-            return this.ctx.translate.instant("workspace.record.event.types.mouse_double_click_middle",pars); //position
+            return this.ctx.translate.instant("recorder.event.types.mouse_double_click_middle",pars); //position
           }
           else {
-            return this.ctx.translate.instant("workspace.record.event.types.mouse_double_click_right",pars); //position
+            return this.ctx.translate.instant("recorder.event.types.mouse_double_click_right",pars); //position
           }
 
       case MousePressEventTypeEnum.MousePress:
@@ -81,13 +81,13 @@ export class RecordEventNamePipe implements PipeTransform {
           pars['y'] = Math.round(value.position[1]);
         }
         if (value.button == MouseButton.Left){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_press_left",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_press_left",pars);
         }
         else if (value.button == MouseButton.Middle){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_press_middle",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_press_middle",pars);
         }
         else {
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_press_right",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_press_right",pars);
         }
 
       case MouseReleaseEventTypeEnum.MouseRelease:
@@ -96,13 +96,13 @@ export class RecordEventNamePipe implements PipeTransform {
           pars['y'] = Math.round(value.position[1]);
         }
         if (value.button == MouseButton.Left){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_release_left",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_release_left",pars);
         }
         else if (value.button == MouseButton.Middle){
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_release_middle",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_release_middle",pars);
         }
         else {
-          return this.ctx.translate.instant("workspace.record.event.types.mouse_release_right",pars);
+          return this.ctx.translate.instant("recorder.event.types.mouse_release_right",pars);
         }
 
       case  MouseScrollEventTypeEnum.MouseScroll:
@@ -112,7 +112,7 @@ export class RecordEventNamePipe implements PipeTransform {
           pars['dx'] = Math.round(value.dx);
           pars['dy'] = Math.round(value.dy);
         }
-        return this.ctx.translate.instant("workspace.record.event.types.mouse_scroll",pars);
+        return this.ctx.translate.instant("recorder.event.types.mouse_scroll",pars);
       default:
         return '';
     }

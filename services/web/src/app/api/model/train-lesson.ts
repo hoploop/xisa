@@ -13,6 +13,8 @@ export interface TrainLesson {
     _id?: string | null;
     record: string;
     detector?: string | null;
+    textConfidence?: number;
+    objectConfidence?: number;
     created?: string;
     updated?: string;
 }

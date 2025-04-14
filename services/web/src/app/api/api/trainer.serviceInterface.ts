@@ -85,4 +85,20 @@ export interface TrainerServiceInterface {
      */
     trainerLessonSetDetector(detectorId: string, lessonId: string, extraHttpRequestParams?: any): Observable<TrainLesson>;
 
+    /**
+     * Lesson Set Object Confidence
+     * 
+     * @param lessonId 
+     * @param confidence 
+     */
+    trainerLessonSetObjectConfidence(lessonId: string, confidence: number, extraHttpRequestParams?: any): Observable<TrainLesson>;
+
+    /**
+     * Lesson Set Text Confidence
+     * 
+     * @param lessonId 
+     * @param confidence 
+     */
+    trainerLessonSetTextConfidence(lessonId: string, confidence: number, extraHttpRequestParams?: any): Observable<TrainLesson>;
+
 }

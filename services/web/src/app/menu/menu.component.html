@@ -1,5 +1,5 @@
 <div class="d-flex w-100 justify-content-start align-items-center">
-  <button  class="btn btn-sm ms-2 btn-outline-primary border-0 rounded-0 pb-2 pt-2">
+  <button  class="btn btn-sm ms-2 btn-outline-primary border-0 rounded-0 pb-2 pt-2" (click)="navigateHome()">
     <div class="d-flex align-items-center">
       <img src="assets/icon.svg" alt="Logo" width="30" height="22" class="d-inline-block align-text-top">
       <span translate>menu.title</span>
@@ -11,7 +11,7 @@
     <!-- Projects -->
     <button class="btn btn-sm btn-outline-primary border-0 rounded-0 pb-2 pt-2" (click)="navigateProjects()">
       <app-fa-icon [icon]="FAIconType.folderTree"></app-fa-icon>
-      <span class="ms-2" translate>workspace.project.list</span>
+      <span class="ms-2" translate>project.list</span>
     </button>
 
 
@@ -34,7 +34,7 @@
         <li class="pointer">
           <a class="dropdown-item" (click)="navigateProjectDetectors()">
             <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
-            <span class="ms-2" [translate]="'workspace.project.detectors'"></span>
+            <span class="ms-2" [translate]="'project.detectors'"></span>
           </a>
         </li>
 
@@ -42,7 +42,7 @@
         <li class="pointer">
           <a class="dropdown-item" (click)="navigateProjectRecords()">
             <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
-            <span class="ms-2" [translate]="'workspace.project.recordings'"></span>
+            <span class="ms-2" [translate]="'project.recordings'"></span>
           </a>
         </li>
       </ul>
@@ -51,7 +51,11 @@
   </ng-content>
   <div class="ms-auto d-flex align-items-center">
     <ng-content select="[end]"></ng-content>
-    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == true" (click)="logout()" translate>auth.logout</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == true" (click)="logout()">
+      <app-b-icon [icon]="BIconType.boxArrowInLeft"></app-b-icon>
+      <span class="ms-1" translate>auth.logout</span>
+
+      </button>
     <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == false" (click)="register()" translate>auth.register</button>
     <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == false" (click)="login()" translate>auth.login</button>
   </div>

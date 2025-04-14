@@ -13,6 +13,7 @@ import { RecordVideoComponent } from '../record-video/record-video.component';
 import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { PlayerScriptPreviewComponent } from '@workspace/player/player-script-preview/player-script-preview.component';
+import { TreeNode } from '@utils/tree-node/tree-node.component';
 
 @Component({
   selector: 'app-record-studio',
@@ -22,6 +23,8 @@ import { PlayerScriptPreviewComponent } from '@workspace/player/player-script-pr
 })
 export class RecordStudioComponent extends BaseComponent implements OnInit {
   @Input() record!: Record;
+  nodes: TreeNode[] = [];
+  selectedNode?:TreeNode;
   frames: Frame[] = [];
   frame?: Frame = undefined;
   events: RecorderEventList200ResponseInner[] = [];
@@ -39,10 +42,14 @@ export class RecordStudioComponent extends BaseComponent implements OnInit {
     });
   }
 
+  onSelectNode(node:TreeNode){
+    this.selectedNode = node;
+  }
+
   loadTrainImageObjects() {
     if (!this.frame) return;
     this.loading.next(
-      this.ctx.translate.instant('workspace.detector.training.loading_objects')
+      this.ctx.translate.instant('detector.training.loading_objects')
     );
     setTimeout(() => {
       if (!this.lesson || !this.lesson._id || !this.frame) return;

@@ -1,7 +1,7 @@
 <app-modal [loading]="loading" [error]="error">
   <ng-content header>
     <app-b-icon [icon]="BIconType.textareaT"></app-b-icon>
-    <span class="ms-2" translate>workspace.detector.detected_text</span>
+    <span class="ms-2" translate>detector.detected_text</span>
   </ng-content>
   <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
 
@@ -22,7 +22,7 @@
     <div class="d-flex justify-content-end mt-2 align-items-center">
       <button class="btn btn-primary btn-sm" (click)="dismiss()">
         <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
-        <span class="ms-2" translate>workspace.record.close</span>
+        <span class="ms-2" translate>recorder.close</span>
       </button>
     </div>
 

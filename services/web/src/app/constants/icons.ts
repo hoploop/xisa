@@ -130,6 +130,8 @@ export enum BIconType {
   lock = 'bi-lock',
   plusCircle = 'bi-plus-circle',
   plusCircleFill = 'bi-plus-circle-fill',
+  dashCircle = 'bi-dash-circle',
+  dashCircleFill = 'bi-dash-circle-fill',
   plusSquare = 'bi-plus-square',
   plus = 'bi-plus',
   unlockFill = 'bi-unlock-fill',
@@ -142,6 +144,9 @@ export enum BIconType {
   pause = 'bi-pause-btn',
   play = 'bi-play-btn',
   stop = 'bi-stop-btn',
+  circle = 'bi-circle',
+  circleFill = 'bi-circle-fill'
+
 }
 
 export const FAIconValues: { [key: string]: IconDefinition } = {

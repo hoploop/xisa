@@ -1,0 +1,7 @@
+{
+    "trainer":{
+        "errors":{
+            "lesson_not_found":"Train Lesson not found"
+        }
+    }
+}

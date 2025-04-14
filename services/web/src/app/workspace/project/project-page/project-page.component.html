@@ -14,7 +14,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-center w-100">
             <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
-              <span class="ms-2" [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span>
+              <span class="ms-2" [translate]="'project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span>
           </div>
         </div>
       </div>
@@ -22,7 +22,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-center w-100">
             <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
-        <span class="ms-2" [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span>
+        <span class="ms-2" [translate]="'project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span>
           </div>
         </div>
       </div>

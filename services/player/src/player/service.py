@@ -6,6 +6,7 @@ from beanie import PydanticObjectId
 # LIBRARY IMPORTS
 
 # LOCAL IMPORTS
+from common.clients.api import ApiClient
 from common.models import MODELS
 from player.models import CreateSequenceStatement
 from common.models.player import Replay
@@ -25,7 +26,7 @@ from common.rpc.player_pb2 import (
     PlayerScriptUpdateResponse,
 )
 from common.rpc.player_pb2_grpc import PlayerServicer
-from common.service import Service
+from common.service import ClientConfig, Service
 from common.service import ServiceConfig
 from common.utils.mongodb import Mongodb, MongodbConfig
 from player.grammar.generator import GrammarGenerator
@@ -39,6 +40,7 @@ log = logging.getLogger(__name__)
 class PlayerServiceConfig(ServiceConfig):
     database: MongodbConfig
     detectors: str
+    api: ClientConfig
 
 
 class PlayerService(Service, PlayerServicer):
@@ -48,9 +50,11 @@ class PlayerService(Service, PlayerServicer):
         Service.__init__(self)
         self.config: PlayerServiceConfig = config
         self.grammar_generator: GrammarGenerator = GrammarGenerator()
+        self.api = ApiClient(self.config.api)
 
     async def start(self):
         await Mongodb.initialize(self.config.database, MODELS)
+        await self.api.startup()
 
     async def playerScriptExist(
         self, request: PlayerScriptExistRequest, context

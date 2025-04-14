@@ -98,7 +98,7 @@ export class ProjectService implements ProjectServiceInterface {
     }
 
     /**
-     * Create
+     * Project Create
      * Performs the creation of a project
      * @param name 
      * @param description 
@@ -182,24 +182,24 @@ export class ProjectService implements ProjectServiceInterface {
     }
 
     /**
-     * Delete
-     * Performs the creation of a project
-     * @param id 
+     * Project Delete
+     * Performs the removal of a project
+     * @param projectId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public projectDelete(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public projectDelete(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public projectDelete(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public projectDelete(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling projectDelete.');
+    public projectDelete(projectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public projectDelete(projectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public projectDelete(projectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public projectDelete(projectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling projectDelete.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (projectId !== undefined && projectId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>projectId, 'projectId');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -261,17 +261,17 @@ export class ProjectService implements ProjectServiceInterface {
     }
 
     /**
-     * List By User
+     * Project List
      * @param skip 
      * @param limit 
      * @param search 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public projectListUser(skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectListResponse>;
-    public projectListUser(skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectListResponse>>;
-    public projectListUser(skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectListResponse>>;
-    public projectListUser(skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public projectList(skip?: number, limit?: number, search?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectListResponse>;
+    public projectList(skip?: number, limit?: number, search?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectListResponse>>;
+    public projectList(skip?: number, limit?: number, search?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectListResponse>>;
+    public projectList(skip?: number, limit?: number, search?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (skip !== undefined && skip !== null) {
@@ -330,7 +330,7 @@ export class ProjectService implements ProjectServiceInterface {
             }
         }
 
-        let localVarPath = `/project/list/user`;
+        let localVarPath = `/project/list`;
         return this.httpClient.request<ProjectListResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -346,23 +346,23 @@ export class ProjectService implements ProjectServiceInterface {
     }
 
     /**
-     * Load
-     * @param id 
+     * Project Load
+     * @param projectId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public projectLoad(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
-    public projectLoad(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
-    public projectLoad(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
-    public projectLoad(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling projectLoad.');
+    public projectLoad(projectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
+    public projectLoad(projectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
+    public projectLoad(projectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
+    public projectLoad(projectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling projectLoad.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (projectId !== undefined && projectId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>projectId, 'projectId');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -424,100 +424,29 @@ export class ProjectService implements ProjectServiceInterface {
     }
 
     /**
-     * Record Count
+     * Project Update
+     * Performs the update of a project
      * @param projectId 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public projectRecordCountProjectId(projectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public projectRecordCountProjectId(projectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public projectRecordCountProjectId(projectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public projectRecordCountProjectId(projectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (projectId === null || projectId === undefined) {
-            throw new Error('Required parameter projectId was null or undefined when calling projectRecordCountProjectId.');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (OAuth2PasswordBearer) required
-        localVarCredential = this.configuration.lookupCredential('OAuth2PasswordBearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/project/record/count/${this.configuration.encodeParam({name: "projectId", value: projectId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<number>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update
-     * Performs the creation of a project
-     * @param id 
      * @param name 
      * @param description 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public projectUpdate(id: string, name: string, description?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Project>;
-    public projectUpdate(id: string, name: string, description?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Project>>;
-    public projectUpdate(id: string, name: string, description?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Project>>;
-    public projectUpdate(id: string, name: string, description?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling projectUpdate.');
+    public projectUpdate(projectId: string, name: string, description?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public projectUpdate(projectId: string, name: string, description?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public projectUpdate(projectId: string, name: string, description?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public projectUpdate(projectId: string, name: string, description?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (projectId === null || projectId === undefined) {
+            throw new Error('Required parameter projectId was null or undefined when calling projectUpdate.');
         }
         if (name === null || name === undefined) {
             throw new Error('Required parameter name was null or undefined when calling projectUpdate.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (id !== undefined && id !== null) {
+        if (projectId !== undefined && projectId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>id, 'id');
+            <any>projectId, 'projectId');
         }
         if (name !== undefined && name !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -572,7 +501,7 @@ export class ProjectService implements ProjectServiceInterface {
         }
 
         let localVarPath = `/project/update`;
-        return this.httpClient.request<Project>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<boolean>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

@@ -27,6 +27,7 @@ message PlayerScriptUpdateResponse {
 message PlayerRawScriptExecuteRequest {
     string user = 1;
     string script = 2;
+    string session = 3;
 
 }
 
@@ -39,6 +40,7 @@ message PlayerRawScriptExecuteResponse {
 message PlayerScriptExecuteRequest {
     string user = 1;
     string record = 2;
+    string session = 3;
 }
 
 message PlayerScriptExecuteResponse {

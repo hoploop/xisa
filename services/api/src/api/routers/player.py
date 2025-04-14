@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from common.clients.player import PlayerClient
 
 from api.routers.auth import CurrentUser
+from api.routers import GetSession
 
 
 # INITIALIZATION
@@ -53,11 +54,12 @@ async def generate_script(
              response_model=bool)
 async def run_script(
     user: CurrentUser,
+    session: GetSession,
     player: Player,
     recordId: PydanticObjectId
 ):
     try:
-        return await player.playerScriptExecute(user,recordId)
+        return await player.playerScriptExecute(user,session,recordId)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
@@ -70,11 +72,12 @@ class RawPayload(BaseModel):
              response_model=bool)
 async def run_raw_script(
     user: CurrentUser,
+    session: GetSession,
     player: Player,
     payload: RawPayload
 ):
     try:
-        return await player.playerRawScriptExecute(user,payload.script)
+        return await player.playerRawScriptExecute(user,session,payload.script)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

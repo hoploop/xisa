@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService, TrainService, DetectorService, RecorderService, WorkspaceService, TrainerService, PlayerService } from '@api/index';
+import { AuthService, TrainService, DetectorService, RecorderService, ProjectService, TrainerService, PlayerService } from '@api/index';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -13,7 +13,7 @@ export class ApiService {
     private http: HttpClient,
     public auth: AuthService,
     public train: TrainService,
-    public workspace: WorkspaceService,
+    public project: ProjectService,
     public detector: DetectorService,
     public recorder: RecorderService,
     public trainer: TrainerService,
@@ -24,7 +24,7 @@ export class ApiService {
   setSession(session: string) {
     let newHeaders = new HttpHeaders({ 'X-Session': session });
     this.auth.defaultHeaders = newHeaders;
-    this.workspace.defaultHeaders = newHeaders;
+    this.project.defaultHeaders = newHeaders;
     this.recorder.defaultHeaders = newHeaders;
     this.detector.defaultHeaders = newHeaders;
     this.player.defaultHeaders = newHeaders;
@@ -38,7 +38,7 @@ export class ApiService {
       this.auth.configuration.credentials[environment.apiBearerKey] = token;
       this.train.configuration.credentials[environment.apiBearerKey] = token;
       this.recorder.configuration.credentials[environment.apiBearerKey] = token;
-      this.workspace.configuration.credentials[environment.apiBearerKey] = token;
+      this.project.configuration.credentials[environment.apiBearerKey] = token;
       this.detector.configuration.credentials[environment.apiBearerKey] = token;
       this.player.configuration.credentials[environment.apiBearerKey] = token;
       this.trainer.configuration.credentials[environment.apiBearerKey] = token;
@@ -46,7 +46,7 @@ export class ApiService {
     } else {
       delete this.auth.configuration.credentials[environment.apiBearerKey];
       delete this.train.configuration.credentials[environment.apiBearerKey];
-      delete this.workspace.configuration.credentials[environment.apiBearerKey];
+      delete this.project.configuration.credentials[environment.apiBearerKey];
       delete this.recorder.configuration.credentials[environment.apiBearerKey];
       delete this.detector.configuration.credentials[environment.apiBearerKey];
       delete this.player.configuration.credentials[environment.apiBearerKey];
@@ -64,7 +64,7 @@ export class ApiService {
     localStorage.setItem('token', token);
     this.auth.configuration.credentials[environment.apiBearerKey] = token;
     this.train.configuration.credentials[environment.apiBearerKey] = token;
-    this.workspace.configuration.credentials[environment.apiBearerKey] = token;
+    this.project.configuration.credentials[environment.apiBearerKey] = token;
     this.recorder.configuration.credentials[environment.apiBearerKey] = token;
     this.trainer.configuration.credentials[environment.apiBearerKey] = token;
     this.player.configuration.credentials[environment.apiBearerKey] = token;
@@ -75,7 +75,7 @@ export class ApiService {
     localStorage.removeItem('token');
     delete this.auth.configuration.credentials[environment.apiBearerKey];
     delete this.train.configuration.credentials[environment.apiBearerKey];
-    delete this.workspace.configuration.credentials[environment.apiBearerKey];
+    delete this.project.configuration.credentials[environment.apiBearerKey];
     delete this.recorder.configuration.credentials[environment.apiBearerKey];
     delete this.trainer.configuration.credentials[environment.apiBearerKey];
     delete this.player.configuration.credentials[environment.apiBearerKey];

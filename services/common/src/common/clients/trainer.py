@@ -8,7 +8,7 @@ from beanie import PydanticObjectId
 from common.models.auth import User
 from common.models.trainer import TrainImageObject, TrainLesson
 from common.rpc.base_pb2 import Ping, Pong
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, LessonSetObjectConfidenceRequest, LessonSetObjectConfidenceResponse, LessonSetTextConfidenceRequest, LessonSetTextConfidenceResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerStub
 from common.service import Client
 from common.utils.conversions import Conversions
@@ -54,6 +54,26 @@ class TrainerClient(Client):
         res: LessonSetDetectorResponse = await self.client.lessonSetDetector(req)
         if res.status == False:
             raise Exception(res.message)
+        
+        return Conversions.deserialize(res.lesson)
+    
+    async def lessonSetTextConfidence(self,user:User,lessonId:PydanticObjectId,confidence:float) -> TrainLesson:
+        
+        req = LessonSetTextConfidenceRequest(user=str(user.id),lesson=str(lessonId),confidence=confidence)
+        res: LessonSetTextConfidenceResponse = await self.client.lessonSetTextConfidence(req)
+        if res.status == False:
+            raise Exception(res.message)
+        
+        
+        return Conversions.deserialize(res.lesson)
+    
+    async def lessonSetObjectConfidence(self,user:User,lessonId:PydanticObjectId,confidence:float) -> TrainLesson:
+        
+        req = LessonSetObjectConfidenceRequest(user=str(user.id),lesson=str(lessonId),confidence=confidence)
+        res: LessonSetObjectConfidenceResponse = await self.client.lessonSetObjectConfidence(req)
+        if res.status == False:
+            raise Exception(res.message)
+        
         
         return Conversions.deserialize(res.lesson)
     

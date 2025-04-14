@@ -14,7 +14,7 @@ from common.models import MODELS
 from common.models.auth import User
 from common.models.detector import Detector, DetectorImageMode, DetectorLabel
 from common.models.trainer import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, LessonSetObjectConfidenceRequest, LessonSetObjectConfidenceResponse, LessonSetTextConfidenceRequest, LessonSetTextConfidenceResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
 from common.service import ClientConfig, Service
 from common.service import ServiceConfig
@@ -65,6 +65,31 @@ class TrainerService(Service, TrainerServicer):
         except Exception as e:
             log.warning(str(e))
             return RecordCreateLessonResponse(status=False,message=str(e))
+        
+    async def lessonSetObjectConfidence(self, request:LessonSetObjectConfidenceRequest, context) ->LessonSetObjectConfidenceResponse:
+        try:
+            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
+            if lesson is None:
+                return LessonSetObjectConfidenceResponse(status=False,message="trainer.errors.lesson_not_found")
+            lesson.objectConfidence = request.confidence
+            await lesson.save()
+            return LessonSetObjectConfidenceResponse(status=True,lesson=Conversions.serialize(lesson))
+        except Exception as e:
+            log.warning(str(e))
+            return LessonSetObjectConfidenceResponse(status=False,message=str(e))
+        
+    async def lessonSetTextConfidence(self, request:LessonSetTextConfidenceRequest, context) -> LessonSetTextConfidenceResponse:
+        try:
+            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
+            if lesson is None:
+                return LessonSetTextConfidenceResponse(status=False,message="trainer.errors.lesson_not_found")
+            lesson.textConfidence = request.confidence
+            await lesson.save()
+            return LessonSetTextConfidenceResponse(status=True,lesson=Conversions.serialize(lesson))
+        except Exception as e:
+            log.warning(str(e))
+            return LessonSetTextConfidenceResponse(status=False,message=str(e))
+        
         
     async def lessonSetDetector(self, request: LessonSetDetectorRequest, context) -> LessonSetDetectorResponse:
         

@@ -25,7 +25,7 @@ export class RecordFormComponent  extends BaseComponent{
       if (!this.record._id) return;
       this.error.next(undefined);
 
-      this.loading.next(this.ctx.translate.instant('workspace.record.removing'));
+      this.loading.next(this.ctx.translate.instant('recorder.removing'));
       this.ctx.api.recorder.recorderRemove(this.record._id).subscribe({
         next: (result)=>{
           this.loading.next(undefined);
@@ -46,7 +46,7 @@ export class RecordFormComponent  extends BaseComponent{
   save(){
     if (!this.record._id) return;
     this.error.next(undefined);
-    this.loading.next(this.ctx.translate.instant('workspace.record.saving'));
+    this.loading.next(this.ctx.translate.instant('recorder.saving'));
     this.ctx.api.recorder.recorderEdit(this.record._id,this.record.name,this.record.description||'').subscribe({
       next: (result)=>{
           this.loading.next(undefined);

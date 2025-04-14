@@ -129,7 +129,7 @@ export class RecordListComponent extends BaseComponent implements OnInit {
     });
 
     this.error.next(undefined);
-    this.loading.next(this.ctx.translate.instant('workspace.record.loadings'));
+    this.loading.next(this.ctx.translate.instant('recorder.loadings'));
     this.ctx.api.recorder
       .recorderList(this.project._id, this.skip, this.limit, this.search)
       .subscribe({

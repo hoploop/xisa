@@ -27,10 +27,10 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
   }
 
   load() {
-    this.loading.next(this.ctx.translate.instant('workspace.project.loadings'));
+    this.loading.next(this.ctx.translate.instant('project.loadings'));
     this.error.next(undefined);
-    this.ctx.api.workspace
-      .workspaceProjectList(this.skip, this.limit, this.search)
+    this.ctx.api.project
+      .projectList(this.skip, this.limit, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);

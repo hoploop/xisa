@@ -43,7 +43,7 @@ export class DetectorLabelSelectComponent extends BaseComponent implements OnIni
 
   addNewLabel(){
     if (!this.detectorId) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.class.adding"));
+    this.loading.next(this.ctx.translate.instant("detector.class.adding"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorLabelAdd(this.detectorId,this.newLabel).subscribe({
       next: (result)=>{
@@ -97,7 +97,7 @@ export class DetectorLabelSelectComponent extends BaseComponent implements OnIni
 
   load(){
     if (!this.detectorId) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.class.loadings"));
+    this.loading.next(this.ctx.translate.instant("detector.class.loadings"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorLabelList(this.detectorId,this.skip,this.limit,this.search).subscribe({
       next: (result)=>{

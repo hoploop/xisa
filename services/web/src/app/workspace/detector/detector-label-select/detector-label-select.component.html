@@ -1,7 +1,7 @@
 <app-modal [loading]="loading" [error]="error">
   <ng-content header>
     <app-fa-icon [icon]="FAIconType.cubesStacked"></app-fa-icon>
-    <span class="ms-2" translate>workspace.detector.class.selects</span>
+    <span class="ms-2" translate>detector.class.selects</span>
   </ng-content>
   <button
     type="button"
@@ -17,7 +17,7 @@
         type="text"
         class="form form-control-sm form-control"
         [ngModel]="newLabel"
-        [placeholder]="'workspace.detector.class.name' | translate"
+        [placeholder]="'detector.class.name' | translate"
         (ngModelChange)="onNewLabelChange($event)"
       />
       <button
@@ -27,20 +27,20 @@
         [disabled]="!newLabelValid"
       >
         <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.class.add</span>
+        <span class="ms-1" translate>detector.class.add</span>
       </button>
       <div
         class="mt-1 d-flex justify-content-center align-items-center"
         *ngIf="labels.length == 0 && !(loading | async) && !(error | async)"
       >
-        <span translate>workspace.detector.class.empty</span>
+        <span translate>detector.class.empty</span>
       </div>
 
       <app-search
       class="mt-3"
       [value]="search"
       (valueChange)="onSearchChange($event)"
-      [placeholder]="'workspace.detector.class.search' | translate"
+      [placeholder]="'detector.class.search' | translate"
     ></app-search>
 
       <ng-container *ngFor="let otherLabel of labels">
@@ -60,11 +60,11 @@
       </ng-container>
       <button class="btn btn-primary mt-3 btn-sm" (click)="submit()">
         <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.class.confirm</span>
+        <span class="ms-1" translate>detector.class.confirm</span>
       </button>
       <button class="btn btn-secondary mt-1 btn-sm" (click)="dismiss()">
         <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
-        <span class="ms-1" translate>workspace.detector.class.cancel</span>
+        <span class="ms-1" translate>detector.class.cancel</span>
       </button>
     </div>
   </ng-content>

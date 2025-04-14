@@ -2,7 +2,7 @@
 <div class="card">
   <div class="card-header">
     <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
-    <span class="ms-2" [translate]="'workspace.detector.image.title_n'" [translateParams]="{'n':total}"></span>
+    <span class="ms-2" [translate]="'detector.image.title_n'" [translateParams]="{'n':total}"></span>
   </div>
   <div class="card-body">
     <div class="d-flex">
@@ -15,10 +15,10 @@
 </app-pagination>
       </span>
       <span class="ms-auto">
-        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'workspace.detector.image.search'"></app-search>
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'detector.image.search'"></app-search>
       </span>
     </div>
-    <div class="d-flex justify-content-center align-items-center" *ngIf="total == 0" translate>workspace.detector.image.empty</div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="total == 0" translate>detector.image.empty</div>
     <div class="d-flex flex-column" *ngIf="total > 0">
       <div  class="card mt-1" *ngFor="let image of images">
         <div class="d-flex card-body">
@@ -29,7 +29,7 @@
           </div>
           <div class="d-flex flex-column ms-2">
             <!--<div>{{image._id}}</div>-->
-            <span [translate]="'workspace.detector.image.labels_n'" [translateParams]="{'n':image|detectorImageLabelCount|async}"></span>
+            <span [translate]="'detector.image.labels_n'" [translateParams]="{'n':image|detectorImageLabelCount|async}"></span>
             <app-switch [value]="image.mode == DetectorImageMode.Train">Train</app-switch>
             <app-switch [value]="image.mode == DetectorImageMode.Test">Test</app-switch>
             <app-switch [value]="image.mode == DetectorImageMode.Val">Val</app-switch>

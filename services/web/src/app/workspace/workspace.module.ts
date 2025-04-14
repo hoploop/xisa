@@ -57,6 +57,8 @@ import { RecordScrollerComponent } from './record/record-scroller/record-scrolle
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { PlayerScriptPreviewComponent } from './player/player-script-preview/player-script-preview.component';
 import { DetectorImageLabelCountPipe } from './detector/detector-image-label-count.pipe';
+import { DetectorSuggestionListComponent } from './detector/detector-suggestion-list/detector-suggestion-list.component';
+import { DetectorTextSettingsComponent } from './detector/detector-text-settings/detector-text-settings.component';
 
 
 
@@ -114,6 +116,8 @@ import { DetectorImageLabelCountPipe } from './detector/detector-image-label-cou
     RecordScrollerComponent,
     PlayerScriptPreviewComponent,
     DetectorImageLabelCountPipe,
+    DetectorSuggestionListComponent,
+    DetectorTextSettingsComponent,
   ],
   imports: [
     CommonModule,

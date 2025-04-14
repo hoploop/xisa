@@ -26,7 +26,7 @@
         <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
       </ng-container>
       -->
-      <span class="ms-2" [translate]="'workspace.record.studio.events_n'" [translateParams]="{'n':frame.events.length}"></span>
+      <span class="ms-2" [translate]="'recorder.studio.events_n'" [translateParams]="{'n':frame.events.length}"></span>
     </button>
 
 
@@ -43,7 +43,7 @@
         <app-fa-icon [icon]="FAIconType.shapes"></app-fa-icon>
         <span
           class="ms-2 text-nowrap"
-          [translate]="'workspace.record.studio.detected_objects'"
+          [translate]="'recorder.studio.detected_objects'"
           [translateParams]="{ n: frame.objects.length }"
         ></span>
       </button>
@@ -68,7 +68,7 @@
         <app-b-icon [icon]="BIconType.textareaT"></app-b-icon>
         <span
           class="ms-2  text-nowrap"
-          [translate]="'workspace.record.studio.detected_texts'"
+          [translate]="'recorder.studio.detected_texts'"
           [translateParams]="{ n: frame.texts.length }"
         ></span>
       </button>
@@ -76,6 +76,7 @@
         class="btn btn-sm"
         [class.btn-primary]="textsVisible"
         [class.btn-outline-secondary]="!textsVisible"
+        (click)="textDetectionSettings()"
       >
         <app-fa-icon [icon]="FAIconType.cogs"></app-fa-icon>
       </button>
@@ -92,7 +93,7 @@
       <app-b-icon [icon]="BIconType.boundingBox"></app-b-icon>
       <span
         class="ms-2 text-nowrap"
-        [translate]="'workspace.record.studio.train'"
+        [translate]="'recorder.studio.train'"
         [translateParams]="{ n: frame.train.length }"
       ></span>
     </button>
@@ -116,12 +117,12 @@
       >
         <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
         <span class="ms-2" *ngIf="frame.suggestions.length == 0" translate
-          >workspace.detector.suggestion.title</span
+          >detector.suggestion.title</span
         >
         <span
           class="ms-2"
           *ngIf="frame.suggestions.length > 0"
-          [translate]="'workspace.detector.suggestion.title_n'"
+          [translate]="'detector.suggestion.title_n'"
           [translateParams]="{ n: frame.suggestions.length }"
         ></span>
       </button>
@@ -129,6 +130,7 @@
         class="btn btn-sm "
         [class.btn-primary]="suggestionsVisible"
         [class.btn-outline-secondary]="!suggestionsVisible"
+        (click)="listSuggestions()"
       >
         <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
       </button>
@@ -144,7 +146,7 @@
         (click)="toggleActions()"
       >
         <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
-        <span class="ms-2" [translate]="'workspace.record.action.title_n'" [translateParams]="{'n':frame.actions.length}"></span>
+        <span class="ms-2" [translate]="'recorder.action.title_n'" [translateParams]="{'n':frame.actions.length}"></span>
       </button>
       <button
         class="btn btn-sm "

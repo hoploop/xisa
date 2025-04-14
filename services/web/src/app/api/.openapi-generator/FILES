@@ -8,14 +8,14 @@ api/detector.service.ts
 api/detector.serviceInterface.ts
 api/player.service.ts
 api/player.serviceInterface.ts
+api/project.service.ts
+api/project.serviceInterface.ts
 api/recorder.service.ts
 api/recorder.serviceInterface.ts
 api/train.service.ts
 api/train.serviceInterface.ts
 api/trainer.service.ts
 api/trainer.serviceInterface.ts
-api/workspace.service.ts
-api/workspace.serviceInterface.ts
 api/ws.service.ts
 api/ws.serviceInterface.ts
 configuration.ts

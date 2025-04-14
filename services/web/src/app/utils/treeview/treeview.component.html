@@ -1,0 +1,18 @@
+<div class="card" *ngIf="nodes && nodes.length > 0">
+  <div class="card-body p-1">
+    <input
+      type="text"
+      [formControl]="searchControl"
+      class="form-control form-control-sm mb-1"
+      placeholder="Search..."
+    />
+
+    <app-tree-node
+      *ngFor="let node of nodes"
+      [node]="node"
+      [selected]="selected"
+      (selectedChange)="selected = $event; selectedChange.next($event)"
+      [nesting]="0"
+    ></app-tree-node>
+  </div>
+</div>

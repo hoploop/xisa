@@ -19,8 +19,11 @@ export const environment = {
         'http://localhost:8000/i18n/auth/',
         'http://localhost:8000/i18n/train/',
         'http://localhost:8000/i18n/menu/',
-        'http://localhost:8000/i18n/workspace/',
-        'http://localhost:8000/i18n/player/'
+        'http://localhost:8000/i18n/detector/',
+        'http://localhost:8000/i18n/recorder/',
+        'http://localhost:8000/i18n/project/',
+        'http://localhost:8000/i18n/player/',
+        'http://localhost:8000/i18n/trainer/'
       ],
       default: 'en',
     },

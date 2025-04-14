@@ -33,8 +33,8 @@ Workspace = Annotated[WorkspaceClient, Depends(get_workspace)]
 
 
 @router.post(
-    "/project/create",
-    operation_id="workspaceProjectCreate",
+    "/create",
+    operation_id="projectCreate",
     description="Performs the creation of a project",
     response_model=Project,
 )
@@ -52,8 +52,8 @@ async def project_create(
 
 
 @router.delete(
-    "/project/delete",
-    operation_id="workspaceProjectDelete",
+    "/delete",
+    operation_id="projectDelete",
     description="Performs the removal of a project",
     response_model=bool,
 )
@@ -68,8 +68,8 @@ async def project_delete(user: CurrentUser, workspace: Workspace, projectId: Pyd
 
 
 @router.put(
-    "/project/update",
-    operation_id="workspaceProjectUpdate",
+    "/update",
+    operation_id="projectUpdate",
     description="Performs the update of a project",
     response_model=bool,
 )
@@ -95,8 +95,8 @@ class ProjectListResponse(BaseModel):
     
 
 @router.get(
-    "/project/list",
-    operation_id="workspaceProjectList",
+    "/list",
+    operation_id="projectList",
     response_model=ProjectListResponse,
 )
 async def project_list(
@@ -118,8 +118,8 @@ async def project_list(
 
 
 @router.get(
-    "/project/load",
-    operation_id="workspaceProjectLoad",
+    "/load",
+    operation_id="projectLoad",
     response_model=Project,
 )
 async def project_load(

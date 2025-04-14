@@ -37,7 +37,7 @@ export class DetectorImageListComponent extends BaseComponent implements OnInit 
 
   remove(image:DetectorImage){
     if (!image._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.image.removing"));
+    this.loading.next(this.ctx.translate.instant("detector.image.removing"));
     this.ctx.api.detector.detectorImageRemove(image._id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
@@ -52,7 +52,7 @@ export class DetectorImageListComponent extends BaseComponent implements OnInit 
 
   load(){
     if (!this.detector._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.image.loadings"));
+    this.loading.next(this.ctx.translate.instant("detector.image.loadings"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorImageList(this.detector._id,this.skip,this.limit).subscribe({
       next: (result)=>{

@@ -90,6 +90,10 @@ export class MenuComponent extends BaseComponent implements OnInit, OnDestroy {
     });
   }
 
+  navigateHome(){
+    this.router.navigate(['']);
+  }
+
   navigateProjects() {
     this.router.navigate(['project/list']);
   }

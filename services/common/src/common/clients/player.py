@@ -42,15 +42,15 @@ class PlayerClient(Client):
             raise Exception(res.message)
         return res.status
     
-    async def playerScriptExecute(self,user:User,recordId:PydanticObjectId,declarative:bool=True,synthetic:bool=False)-> bool:
-        req = PlayerScriptExecuteRequest(user=str(user.id),record=str(recordId))
+    async def playerScriptExecute(self,user:User,session:str,recordId:PydanticObjectId,declarative:bool=True,synthetic:bool=False)-> bool:
+        req = PlayerScriptExecuteRequest(user=str(user.id),record=str(recordId),session=session)
         res: PlayerScriptExecuteResponse = await self.client.playerScriptExecute(req)
         if res.status == False:
             raise Exception(res.message)
         return res.status
     
-    async def playerRawScriptExecute(self,user:User,script:str)-> bool:
-        req = PlayerRawScriptExecuteRequest(user=str(user.id),script=script)
+    async def playerRawScriptExecute(self,user:User,session:str,script:str)-> bool:
+        req = PlayerRawScriptExecuteRequest(user=str(user.id),script=script,session=session)
         res: PlayerRawScriptExecuteResponse = await self.client.playerRawScriptExecute(req)
         if res.status == False:
             raise Exception(res.message)

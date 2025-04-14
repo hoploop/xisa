@@ -54,9 +54,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit{
   }
 
   create(){
-    this.loading.next(this.ctx.translate.instant("workspace.project.saving"));
+    this.loading.next(this.ctx.translate.instant("project.saving"));
     this.error.next(undefined);
-    this.ctx.api.workspace.workspaceProjectCreate(this.project.name,this.project.description).subscribe({
+    this.ctx.api.project.projectCreate(this.project.name,this.project.description).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.project.name = result.name;
@@ -72,9 +72,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit{
 
   remove(){
     if (!this.project._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.project.removing"));
+    this.loading.next(this.ctx.translate.instant("project.removing"));
     this.error.next(undefined);
-    this.ctx.api.workspace.workspaceProjectDelete(this.project._id).subscribe({
+    this.ctx.api.project.projectDelete(this.project._id).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.ctx.closeModal(undefined);
@@ -88,9 +88,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit{
 
   update(){
     if (!this.project._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.project.saving"));
+    this.loading.next(this.ctx.translate.instant("project.saving"));
     this.error.next(undefined);
-    this.ctx.api.workspace.workspaceProjectUpdate(this.project._id,this.project.name,this.project.description).subscribe({
+    this.ctx.api.project.projectUpdate(this.project._id,this.project.name,this.project.description).subscribe({
       next: (result)=>{
         this.loading.next(undefined);
         this.ctx.closeModal(this.project);

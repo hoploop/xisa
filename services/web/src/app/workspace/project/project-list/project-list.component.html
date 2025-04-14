@@ -1,18 +1,18 @@
 <app-template-card-container>
   <div title>
     <app-fa-icon [icon]="FAIconType.folderTree"></app-fa-icon>
-    <span class="ms-1" translate>workspace.project.list</span>
+    <span class="ms-1" translate>project.list</span>
   </div>
   <div body>
     <div class="d-flex">
       <span>
         <button class="btn btn-primary btn-sm" (click)="create()">
           <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
-          <span class="ms-2" translate>workspace.project.create</span>
+          <span class="ms-2" translate>project.create</span>
         </button>
       </span>
       <span class="ms-auto">
-        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'workspace.project.search'"></app-search>
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'project.search'"></app-search>
       </span>
     </div>
     <div class="d-flex mt-2 flex-column">

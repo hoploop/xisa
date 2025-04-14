@@ -61,7 +61,7 @@ export class DetectorFormComponent extends BaseComponent {
     if (!this.project) return;
     if (!this.project._id) return;
     this.log.info("Creating detector");
-    this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
+    this.loading.next(this.ctx.translate.instant("detector.saving"));
     this.error.next(undefined);
 
     this.log.debug('Checking if origin is specified')
@@ -85,7 +85,7 @@ export class DetectorFormComponent extends BaseComponent {
 
   remove(){
     if (!this.detector._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.removing"));
+    this.loading.next(this.ctx.translate.instant("detector.removing"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorRemove(this.detector._id).subscribe({
       next: (result)=>{
@@ -101,7 +101,7 @@ export class DetectorFormComponent extends BaseComponent {
 
   update(){
     if (!this.detector._id) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.saving"));
+    this.loading.next(this.ctx.translate.instant("detector.saving"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorUpdate(this.detector._id,this.detector.name,this.detector.description|| '').subscribe({
       next: (result)=>{

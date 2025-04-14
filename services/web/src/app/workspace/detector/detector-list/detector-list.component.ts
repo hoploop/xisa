@@ -109,7 +109,7 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
     if (!this.project._id) return;
     this.log.debug('Loading detectors');
     this.loading.next(
-      this.ctx.translate.instant('workspace.detector.loadings')
+      this.ctx.translate.instant('detector.loadings')
     );
     this.error.next(undefined);
     this.ctx.api.detector

@@ -10,7 +10,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { LoaderComponent } from './loader/loader.component';
 import { SearchComponent } from './search/search.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TagsEditorComponent } from './tags-editor/tags-editor.component';
 import { BaseComponent } from './base/base.component';
@@ -30,6 +30,8 @@ import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-p
 import { RouteComponent } from './route/route.component';
 import { SwitchComponent } from './switch/switch.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { TreeviewComponent } from './treeview/treeview.component';
+import { TreeNodeComponent } from './tree-node/tree-node.component';
 
 @NgModule({
   declarations: [
@@ -53,12 +55,15 @@ import { PaginationComponent } from './pagination/pagination.component';
     RouteComponent,
     SwitchComponent,
     PaginationComponent,
+    TreeviewComponent,
+    TreeNodeComponent,
   ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     FormsModule,
     TranslateModule,
+    ReactiveFormsModule,
     NgIconsModule
   ],
   exports: [
@@ -79,7 +84,8 @@ import { PaginationComponent } from './pagination/pagination.component';
     DockScrollerComponent,
     InfiniteProgressBarComponent,
     SwitchComponent,
-    PaginationComponent
+    PaginationComponent,
+    TreeviewComponent
   ],
 })
 export class UtilsModule {

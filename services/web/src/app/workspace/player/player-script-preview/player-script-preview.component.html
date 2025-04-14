@@ -17,10 +17,10 @@
       </div>
       <div class="btn-group btn-group-sm">
         <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == true" [class.btn-secondary]="synthetic == false">
-            <span class="ms-2" translate>workspace.record.event.synthetic</span>
+            <span class="ms-2" translate>recorder.event.synthetic</span>
         </button>
         <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == false" [class.btn-secondary]="synthetic == true">
-          <span class="ms-2" translate>workspace.record.event.default</span>
+          <span class="ms-2" translate>recorder.event.default</span>
         </button>
       </div>
       <button class="btn btn-sm btn-primary mt-2" (click)="execute()">

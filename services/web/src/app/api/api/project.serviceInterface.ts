@@ -25,7 +25,7 @@ export interface ProjectServiceInterface {
     configuration: Configuration;
 
     /**
-     * Create
+     * Project Create
      * Performs the creation of a project
      * @param name 
      * @param description 
@@ -33,42 +33,35 @@ export interface ProjectServiceInterface {
     projectCreate(name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Delete
-     * Performs the creation of a project
-     * @param id 
+     * Project Delete
+     * Performs the removal of a project
+     * @param projectId 
      */
-    projectDelete(id: string, extraHttpRequestParams?: any): Observable<boolean>;
+    projectDelete(projectId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
-     * List By User
+     * Project List
      * 
      * @param skip 
      * @param limit 
      * @param search 
      */
-    projectListUser(skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<ProjectListResponse>;
+    projectList(skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<ProjectListResponse>;
 
     /**
-     * Load
-     * 
-     * @param id 
-     */
-    projectLoad(id: string, extraHttpRequestParams?: any): Observable<Project>;
-
-    /**
-     * Record Count
+     * Project Load
      * 
      * @param projectId 
      */
-    projectRecordCountProjectId(projectId: string, extraHttpRequestParams?: any): Observable<number>;
+    projectLoad(projectId: string, extraHttpRequestParams?: any): Observable<Project>;
 
     /**
-     * Update
-     * Performs the creation of a project
-     * @param id 
+     * Project Update
+     * Performs the update of a project
+     * @param projectId 
      * @param name 
      * @param description 
      */
-    projectUpdate(id: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<Project>;
+    projectUpdate(projectId: string, name: string, description?: string, extraHttpRequestParams?: any): Observable<boolean>;
 
 }

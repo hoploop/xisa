@@ -3,8 +3,8 @@
     <div class="d-flex w-100">
       <div class="d-flex w-100 flex-column">
         <span><strong>{{project.name}}</strong></span>
-        <div><span [translate]="'workspace.project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span></div>
-        <div><span [translate]="'workspace.project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span></div>
+        <div><span [translate]="'project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span></div>
+        <div><span [translate]="'project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span></div>
       </div>
     </div>
 </div>

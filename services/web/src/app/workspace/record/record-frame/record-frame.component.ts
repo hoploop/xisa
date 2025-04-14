@@ -46,6 +46,8 @@ import { RecordBoxSuggestionComponent } from '../record-box-suggestion/record-bo
 import { DetectorSettingsComponent } from '@workspace/detector/detector-settings/detector-settings.component';
 import { RecordActionComponent } from '../record-action/record-action.component';
 import { RecordEventTypes } from '../record-event-types.enum';
+import { DetectorSuggestionListComponent } from '@workspace/detector/detector-suggestion-list/detector-suggestion-list.component';
+import { DetectorTextSettingsComponent } from '@workspace/detector/detector-text-settings/detector-text-settings.component';
 
 @Component({
   selector: 'app-record-frame',
@@ -219,6 +221,26 @@ export class RecordFrameComponent
     }
   }
 
+  listSuggestions() {
+    this.log.info('Loading suggestions');
+    this.suggestionsVisible = true;
+    this.render();
+    this.ctx
+      .openModal<undefined>(
+        DetectorSuggestionListComponent,
+        {
+          suggestions: this.frame.suggestions,
+          suggestionBoxes: this.suggestionBoxes,
+          boxes: this.boxes.getValue(),
+        },
+        { size: 'lg' }
+      )
+      .subscribe({
+        next: (result) => {},
+        error: (result) => {},
+      });
+  }
+
   detectTrainObjectDetail(box: ImageAnnotatorBox, train: TrainImageObject) {
     this.ctx
       .openModal<undefined>(RecordBoxTrainObjectComponent, {
@@ -240,11 +262,24 @@ export class RecordFrameComponent
     this.ctx.api.detector.detectorLoad(this.lesson.detector).subscribe({
       next: (result) => {
         this.ctx
-          .openModal<undefined>(DetectorSettingsComponent, {
+          .openModal<number>(DetectorSettingsComponent, {
             detector: result,
+            confidence: this.lesson.objectConfidence,
           })
           .subscribe({
-            next: (result) => {},
+            next: (result) => {
+              this.lesson.objectConfidence = result;
+              if (this.lesson._id) {
+                this.ctx.api.trainer
+                  .trainerLessonSetObjectConfidence(this.lesson._id, result)
+                  .subscribe({
+                    next: (result) => {},
+                    error: (result) => {
+                      this.log.warn(result.error.detail);
+                    },
+                  });
+              }
+            },
             error: (result) => {},
           });
       },
@@ -357,7 +392,7 @@ export class RecordFrameComponent
       if (!this.frame.lesson.detector) {
         observer.next(true);
         observer.complete();
-        this.log.debug("Object detection completed with no detector specified");
+        this.log.debug('Object detection completed with no detector specified');
         return;
       }
       this.ctx.api.detector
@@ -365,19 +400,19 @@ export class RecordFrameComponent
           this.frame.lesson.record,
           this.frame.lesson.detector,
           this.frame.count,
-          0.1
+          this.lesson.objectConfidence || 0.1
         )
         .subscribe({
           next: (result) => {
             this.frame.objects = result;
             observer.next(true);
             observer.complete();
-            this.log.debug("Object detection completed");
+            this.log.debug('Object detection completed');
           },
           error: (result) => {
             observer.next(true);
             observer.complete();
-            this.log.debug("Object detection completed");
+            this.log.debug('Object detection completed');
           },
         });
     });
@@ -421,12 +456,33 @@ export class RecordFrameComponent
     });
   }
 
+  textDetectionSettings() {
+    this.ctx
+      .openModal<number>(DetectorTextSettingsComponent, {
+        confidence: this.lesson.textConfidence,
+      })
+      .subscribe({
+        next: (result) => {
+          if (this.lesson._id) {
+            this.ctx.api.trainer
+              .trainerLessonSetTextConfidence(this.lesson._id, result)
+              .subscribe({
+                next: (result) => {},
+                error: (result) => {
+                  this.log.warn(result.error.detail);
+                },
+              });
+          }
+        },
+      });
+  }
+
   loadSuggestions(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      if (!this.frame.hasEvents){
+      if (!this.frame.hasEvents) {
         observer.next(true);
         observer.complete();
-        this.log.debug("Suggestions loaded");
+        this.log.debug('Suggestions loaded');
         return;
       }
       this.frame.suggestions = [];
@@ -435,35 +491,35 @@ export class RecordFrameComponent
         calls.push(this.loadSuggestion(i));
       }
 
-
-
       forkJoin(calls).subscribe((results) => {
         observer.next(true);
         observer.complete();
-        this.log.debug("Suggestions loaded");
+        this.log.debug('Suggestions loaded');
       });
     });
   }
 
   detectTexts(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      this.loading.next(
-        this.ctx.translate.instant('workspace.record.frame.loading')
-      );
+      this.loading.next(this.ctx.translate.instant('recorder.frame.loading'));
       this.ctx.api.detector
-        .detectorFrameTexts(this.frame.lesson.record, this.frame.count, 0.1)
+        .detectorFrameTexts(
+          this.frame.lesson.record,
+          this.frame.count,
+          this.lesson.textConfidence || 0.1
+        )
         .subscribe({
           next: (result) => {
             this.frame.texts = result;
             this.loading.next(undefined);
             observer.next(true);
             observer.complete();
-            this.log.debug("Text detection completed");
+            this.log.debug('Text detection completed');
           },
           error: (result) => {
             observer.next(true);
             observer.complete();
-            this.log.debug("Text detection completed");
+            this.log.debug('Text detection completed');
           },
         });
     });
@@ -576,88 +632,27 @@ export class RecordFrameComponent
 
     let ret: ImageAnnotatorBox[] = [];
     for (let i = 0; i < this.frame.events.length; i++) {
-      let event = this.frame.events[i];
+      let evt = this.frame.events[i];
       this.eventBoxes.clear();
-      switch (event.type) {
-        case KeyComboPressEventTypeEnum.KeyComboPress:
-          break;
-        case KeyPressEventTypeEnum.KeyPress:
-          break;
-        case KeyReleaseEventTypeEnum.KeyRelease:
-          break;
-        case MouseClickEventTypeEnum.MouseClick:
-          let evt = event as MouseClickEvent;
-          if (evt.position) {
-            let x = evt.position[0] - 20;
-            let y = evt.position[1] - 20;
-            let w = 40;
-            let h = 40;
-            let evt_box = new ImageAnnotatorBox(x, y, w, h);
-            evt_box.canResize = false;
-            evt_box.canMove = false;
-            evt_box.showCross = true;
-            this.eventBoxes.set(evt_box.id, event);
-            ret.push(evt_box);
-          }
 
-          break;
-        case MouseDoubleClickEventTypeEnum.MouseDoubleClick:
-          let evt4 = event as MouseDoubleClickEvent;
-          if (evt4.position) {
-            let x = evt4.position[0] - 20;
-            let y = evt4.position[1] - 20;
-            let w = 40;
-            let h = 40;
-            let evt_box = new ImageAnnotatorBox(x, y, w, h);
-            evt_box.canResize = false;
-            evt_box.canMove = false;
-            evt_box.showCross = true;
-            this.eventBoxes.set(evt_box.id, event);
-            ret.push(evt_box);
-          }
-
-          break;
-        case MousePressEventTypeEnum.MousePress:
-          let evt2 = event as MousePressEvent;
-          if (evt2.position) {
-            let x = evt2.position[0] - 20;
-            let y = evt2.position[1] - 20;
-            let w = 40;
-            let h = 40;
-            let evt_box = new ImageAnnotatorBox(x, y, w, h);
-            evt_box.canResize = false;
-            evt_box.canMove = false;
-            evt_box.showCross = true;
-            this.eventBoxes.set(evt_box.id, event);
-            ret.push(evt_box);
-          }
-          break;
-        case MouseReleaseEventTypeEnum.MouseRelease:
-          let evt3 = event as MouseReleaseEvent;
-          if (evt3.position) {
-            let x = evt3.position[0] - 20;
-            let y = evt3.position[1] - 20;
-            let w = 40;
-            let h = 40;
-            let evt_box = new ImageAnnotatorBox(x, y, w, h);
-            evt_box.canResize = false;
-            evt_box.canMove = false;
-            evt_box.showCross = true;
-            this.eventBoxes.set(evt_box.id, event);
-            ret.push(evt_box);
-          }
-          break;
-        default:
-          break;
+      if (evt.position) {
+        let x = evt.position[0] - 20;
+        let y = evt.position[1] - 20;
+        let w = 40;
+        let h = 40;
+        let evt_box = new ImageAnnotatorBox(x, y, w, h);
+        evt_box.canResize = false;
+        evt_box.canMove = false;
+        evt_box.showCross = true;
+        this.eventBoxes.set(evt_box.id, evt);
+        ret.push(evt_box);
       }
     }
     return ret;
   }
 
   load() {
-    this.loading.next(
-      this.ctx.translate.instant('workspace.record.frame.loading')
-    );
+    this.loading.next(this.ctx.translate.instant('recorder.frame.loading'));
     this.joinedLoad();
 
     this.loading.next(undefined);
@@ -682,7 +677,7 @@ export class RecordFrameComponent
       if (!this.frame.hasEvents) {
         observer.next(true);
         observer.complete();
-        this.log.debug("Actions loaded without events");
+        this.log.debug('Actions loaded without events');
       } else {
         this.frame.actions = [];
         let calls = [];
@@ -698,7 +693,7 @@ export class RecordFrameComponent
           this.render();
           observer.next(true);
           observer.complete();
-          this.log.debug("Actions loaded");
+          this.log.debug('Actions loaded');
         });
       }
     });

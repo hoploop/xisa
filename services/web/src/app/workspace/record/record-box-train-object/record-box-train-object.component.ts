@@ -56,7 +56,7 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
 
   addNewLabel(){
     if (!this.lesson.detector) return;
-    this.loading.next(this.ctx.translate.instant("workspace.detector.class.adding"));
+    this.loading.next(this.ctx.translate.instant("detector.class.adding"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorLabelAdd(this.lesson.detector,this.newLabel).subscribe({
       next: (result)=>{
@@ -159,7 +159,7 @@ export class RecordBoxTrainObjectComponent extends BaseComponent implements OnIn
   load(){
     if (!this.lesson.detector) return;
 
-    this.loading.next(this.ctx.translate.instant("workspace.detector.class.loadings"));
+    this.loading.next(this.ctx.translate.instant("detector.class.loadings"));
     this.error.next(undefined);
     this.ctx.api.detector.detectorLabelList(this.lesson.detector,this.skip,this.limit,this.search).subscribe({
       next: (result)=>{

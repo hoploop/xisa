@@ -2,37 +2,37 @@
 <div class="card">
   <div class="card-header">
     <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
-    <span class="ms-2" translate>workspace.record.list</span>
+    <span class="ms-2" translate>recorder.list</span>
   </div>
   <div class="card-body">
     <div class="d-flex">
       <span *ngIf="running != undefined">
         <button class="btn btn-primary btn-sm" (click)="create()" *ngIf="!running">
           <app-fa-icon [icon]="FAIconType.film"></app-fa-icon>
-          <span class="ms-2" translate>workspace.record.new</span>
+          <span class="ms-2" translate>recorder.new</span>
         </button>
         <button class="btn btn-danger btn-sm" (click)="create()" *ngIf="running">
           <app-b-icon [icon]="BIconType.record"></app-b-icon>
-          <span class="ms-2" translate>workspace.record.manage</span>
+          <span class="ms-2" translate>recorder.manage</span>
         </button>
       </span>
       <span class="ms-auto">
-        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'workspace.record.search'"></app-search>
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'recorder.search'"></app-search>
       </span>
     </div>
-    <div class="d-flex justify-content-center align-items-center" *ngIf="records.length == 0" translate>workspace.record.empty</div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="records.length == 0" translate>recorder.empty</div>
     <div class="d-flex flex-column" *ngIf="records.length > 0">
       <div  class="card mt-1" *ngFor="let record of records">
         <div class="d-flex card-body">
           <div class="d-flex flex-column">
             <div>{{record.name}}</div>
-            <small class="text-muted"><span translate>workspace.record.detector</span><span>{{record|recordLoadDetectorName|async}}</span></small>
-            <small class="text-muted" ><span translate>workspace.record.duration</span><span>{{record|recordDuration}}</span></small>
-            <small class="text-muted"><span translate>workspace.record.events</span><span>{{record._id|recordEventsCount|async}}</span></small>
-            <small class="text-muted"><span translate>workspace.record.frames</span><span>{{record._id|recordFramesCount|async}}</span></small>
-            <small class="text-muted"><span translate>workspace.record.size</span><span>{{record._id|recordSize|async}}</span></small>
-            <small class="text-muted"><span translate>workspace.record.actions</span><span>{{record|recordActionCount|async}}</span></small>
-            <small class="text-muted"><app-ng-icon [icon]="NGIconType.typDeviceDesktop"></app-ng-icon><span translate>workspace.record.os.title</span><span>{{record|recordOsName}}</span></small>
+            <small class="text-muted"><span translate>recorder.detector</span><span>{{record|recordLoadDetectorName|async}}</span></small>
+            <small class="text-muted" ><span translate>recorder.duration</span><span>{{record|recordDuration}}</span></small>
+            <small class="text-muted"><span translate>recorder.events</span><span>{{record._id|recordEventsCount|async}}</span></small>
+            <small class="text-muted"><span translate>recorder.frames</span><span>{{record._id|recordFramesCount|async}}</span></small>
+            <small class="text-muted"><span translate>recorder.size</span><span>{{record._id|recordSize|async}}</span></small>
+            <small class="text-muted"><span translate>recorder.actions</span><span>{{record|recordActionCount|async}}</span></small>
+            <small class="text-muted"><app-ng-icon [icon]="NGIconType.typDeviceDesktop"></app-ng-icon><span translate>recorder.os.title</span><span>{{record|recordOsName}}</span></small>
           </div>
           <span class="ms-auto">
             <span class="ms-2 text-muted"><small>{{record.created|amCalendar}}</small></span>

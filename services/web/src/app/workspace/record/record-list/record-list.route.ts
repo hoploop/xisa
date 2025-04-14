@@ -11,7 +11,7 @@ export class RecordListRoute extends RouteComponent implements OnInit {
   ngOnInit(): void {
     let projectId = this.getParam('project_id');
     if (!projectId) return;
-    this.ctx.api.workspace.workspaceProjectLoad(projectId).subscribe({
+    this.ctx.api.project.projectLoad(projectId).subscribe({
       next: (result) => {
         this.ctx.open(RecordListComponent, { project: result }).subscribe();
       },

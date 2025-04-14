@@ -16,13 +16,13 @@ export class RecordLoadDetectorNamePipe implements PipeTransform {
     return new Observable<string>(observer=>{
       if (!record._id){
         observer.next(
-          this.ctx.translate.instant("workspace.record.errors.no_detector")
+          this.ctx.translate.instant("recorder.errors.no_detector")
         );
       }else{
         this.ctx.api.trainer.trainerLesson(record._id).subscribe({
           next: (result)=>{
             if (!result.detector){
-              observer.next(this.ctx.translate.instant("workspace.record.errors.no_detector"));
+              observer.next(this.ctx.translate.instant("recorder.errors.no_detector"));
             }else{
               this.ctx.api.detector.detectorLoad(result.detector).subscribe({
                 next: (resultb)=>{

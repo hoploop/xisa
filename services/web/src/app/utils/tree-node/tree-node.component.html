@@ -1,0 +1,20 @@
+
+<div class="d-flex align-items-center" *ngIf="node.visible !== false" [attr.id]="'node-' + node.id">
+  <span *ngFor="let i of [].constructor(nesting);">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  <span class="pointer" (click)="toggle()">
+    <small *ngIf="isSelected">
+      <app-b-icon [icon]="BIconType.plusCircleFill" *ngIf="!node.expanded && node.children.length > 0"></app-b-icon>
+      <app-b-icon [icon]="BIconType.dashCircleFill" *ngIf="node.expanded && node.children.length > 0"></app-b-icon>
+      <app-b-icon [icon]="BIconType.circleFill" *ngIf="node.children.length == 0"></app-b-icon>
+    </small>
+    <small *ngIf="!isSelected">
+      <app-b-icon [icon]="BIconType.plusCircle" *ngIf="!node.expanded && node.children.length > 0"></app-b-icon>
+      <app-b-icon [icon]="BIconType.dashCircle" *ngIf="node.expanded && node.children.length > 0"></app-b-icon>
+      <app-b-icon [icon]="BIconType.circle" *ngIf="node.children.length == 0"></app-b-icon>
+    </small>
+  </span>
+  <span class="ms-1 pointer" [class.fw-bold]="isSelected" (click)="selected=node; selectedChange.next(node)">{{node.label}}</span>
+</div>
+<ng-container *ngIf="node.expanded && node.children.length > 0">
+<app-tree-node [selected]="selected" (selectedChange)="selected=$event; selectedChange.next($event)"  [nesting]="nesting+1" [node]="child" *ngFor="let child of node.children"></app-tree-node>
+</ng-container>

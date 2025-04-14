@@ -8,6 +8,8 @@ service Trainer {
     
     rpc recordHasLesson(RecordHasLessonRequest) returns (RecordHasLessonResponse);
     rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
+    rpc lessonSetTextConfidence(LessonSetTextConfidenceRequest) returns (LessonSetTextConfidenceResponse);
+    rpc lessonSetObjectConfidence(LessonSetObjectConfidenceRequest) returns (LessonSetObjectConfidenceResponse);
     rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
     rpc trainImageObjectUpdate(TrainImageObjectUpdateRequest) returns (TrainImageObjectUpdateResponse);
     
@@ -77,6 +79,31 @@ message TrainImageObjectResponse {
     bool status = 1;
     optional string message = 2;
     Serialized object = 3;
+}
+
+message LessonSetTextConfidenceRequest {
+    string user = 1;
+    string lesson = 2;
+    float confidence = 3;
+}
+
+message LessonSetTextConfidenceResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized lesson = 3;
+}
+
+
+message LessonSetObjectConfidenceRequest {
+    string user = 1;
+    string lesson = 2;
+    float confidence = 3;
+}
+
+message LessonSetObjectConfidenceResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized lesson = 3;
 }
 
 
