@@ -51,9 +51,9 @@
   </ng-content>
   <div class="ms-auto d-flex align-items-center">
     <ng-content select="[end]"></ng-content>
-    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == true" (click)="logout()" translate>auth.logout</button>
-    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == false" (click)="register()" translate>auth.register</button>
-    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100" *ngIf="(logged|async) == false" (click)="login()" translate>auth.login</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == true" (click)="logout()" translate>auth.logout</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == false" (click)="register()" translate>auth.register</button>
+    <button class="btn btn-sm me-2 btn-outline-primary border-0 rounded-0 h-100 pb-2 pt-2" *ngIf="(logged|async) == false" (click)="login()" translate>auth.login</button>
   </div>
 
 </div>

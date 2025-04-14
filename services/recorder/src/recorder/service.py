@@ -240,6 +240,9 @@ class RecorderService(Service, RecorderServicer):
     def update_frame(self, value: int):
         self.keyboard_listener.set_frame(value)
         self.mouse_listener.set_frame(value)
+        
+    def update_mouse_position(self,x:int,y:int):
+        self.keyboard_listener.set_mouse_position(x,y)
 
     def collect_event(self, evt):
         self.events.append(evt)
@@ -268,7 +271,7 @@ class RecorderService(Service, RecorderServicer):
                 os=os,
             )
             await self.record.insert()
-            self.mouse_listener = MouseListener(self.record.id, self.collect_event)
+            self.mouse_listener = MouseListener(self.record.id, self.collect_event,self.update_mouse_position)
             self.keyboard_listener = KeyboardListener(
                 self.record.id, self.collect_event
             )

@@ -16,9 +16,9 @@ export interface MouseScrollEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
+    position?: Array<any> | null;
     dx: number;
     dy: number;
-    position?: Array<any> | null;
 }
 export enum MouseScrollEventTypeEnum {
     MouseScroll = 'mouse.scroll'

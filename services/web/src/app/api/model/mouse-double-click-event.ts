@@ -17,8 +17,8 @@ export interface MouseDoubleClickEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
-    button?: MouseButton;
     position?: Array<any> | null;
+    button?: MouseButton;
 }
 export enum MouseDoubleClickEventTypeEnum {
     MouseDoubleClick = 'mouse.double.click'

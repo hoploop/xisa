@@ -79,6 +79,11 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by GrammarParser#selectorByImage.
+    def visitSelectorByImage(self, ctx:GrammarParser.SelectorByImageContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by GrammarParser#selectorOrder.
     def visitSelectorOrder(self, ctx:GrammarParser.SelectorOrderContext):
         return self.visitChildren(ctx)
@@ -156,6 +161,16 @@ class GrammarVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by GrammarParser#mouseScrollSelector.
     def visitMouseScrollSelector(self, ctx:GrammarParser.MouseScrollSelectorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyCombo.
+    def visitKeyCombo(self, ctx:GrammarParser.KeyComboContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by GrammarParser#keyComboSelector.
+    def visitKeyComboSelector(self, ctx:GrammarParser.KeyComboSelectorContext):
         return self.visitChildren(ctx)
 
 

@@ -29,7 +29,10 @@
 
             </div>
             <span class="ms-auto">
-
+              <button class="btn btn-primary btn-sm ms-1" (click)="images(detector)">
+                <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
+                <span class="ms-2" translate>workspace.detector.image.list</span>
+              </button>
               <button class="btn btn-primary btn-sm ms-1" (click)="clone(detector)">
                 <app-fa-icon [icon]="FAIconType.clone"></app-fa-icon>
               </button>

@@ -134,6 +134,15 @@ class GrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by GrammarParser#selectorByImage.
+    def enterSelectorByImage(self, ctx:GrammarParser.SelectorByImageContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#selectorByImage.
+    def exitSelectorByImage(self, ctx:GrammarParser.SelectorByImageContext):
+        pass
+
+
     # Enter a parse tree produced by GrammarParser#selectorOrder.
     def enterSelectorOrder(self, ctx:GrammarParser.SelectorOrderContext):
         pass
@@ -275,6 +284,24 @@ class GrammarListener(ParseTreeListener):
 
     # Exit a parse tree produced by GrammarParser#mouseScrollSelector.
     def exitMouseScrollSelector(self, ctx:GrammarParser.MouseScrollSelectorContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyCombo.
+    def enterKeyCombo(self, ctx:GrammarParser.KeyComboContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyCombo.
+    def exitKeyCombo(self, ctx:GrammarParser.KeyComboContext):
+        pass
+
+
+    # Enter a parse tree produced by GrammarParser#keyComboSelector.
+    def enterKeyComboSelector(self, ctx:GrammarParser.KeyComboSelectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#keyComboSelector.
+    def exitKeyComboSelector(self, ctx:GrammarParser.KeyComboSelectorContext):
         pass
 
 

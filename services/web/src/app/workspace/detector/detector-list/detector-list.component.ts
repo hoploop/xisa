@@ -48,6 +48,11 @@ export class DetectorListComponent extends BaseComponent implements OnInit {
       });
   }
 
+  images(detector:Detector){
+    if (!detector._id) return;
+    this.router.navigate(['detector/image/list',detector._id]);
+  }
+
   clone(detector: Detector) {
     if (!this.project) return;
     this.ctx

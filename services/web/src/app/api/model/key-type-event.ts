@@ -16,6 +16,7 @@ export interface KeyTypeEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
+    position?: Array<any> | null;
     key: string;
 }
 export enum KeyTypeEventTypeEnum {

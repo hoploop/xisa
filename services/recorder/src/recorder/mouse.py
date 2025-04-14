@@ -32,7 +32,7 @@ DOUBLE_CLICK_TIME = 0.3  # seconds
 # State
 
 class MouseListener:
-    def __init__(self,record_id, event_callback=None):
+    def __init__(self,record_id, event_callback=None,mouse_move_callback=None):
         self._record_id = record_id
         self._recording: bool = False
         self._event_callback = event_callback
@@ -48,11 +48,14 @@ class MouseListener:
         self.drag_start_pos = None
         self.pressed_button = None
         self.correlated_event_frame = 0
+        self._mouse_move_callback = mouse_move_callback
+        
 
         
     def set_frame(self,value:int):
         self._frame = value
-
+        
+    
     def on_event(self, evt: Event):
         if self._event_callback:
             self._event_callback(evt)
@@ -83,7 +86,8 @@ class MouseListener:
         self._listener_thread.start()
 
     def record_move(self, x, y):
-        
+        if self._mouse_move_callback:
+            self._mouse_move_callback(x,y)
         if self.pressed_button and self.drag_start_pos:
             if not self.is_dragging:
                 log.info(f"[DRAG START] from {self.drag_start_pos}")

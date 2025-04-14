@@ -43,7 +43,7 @@ class Event(Document):
     frame: int
     synthetic: bool = Field(default=False)
     timestamp: datetime = Field(default_factory=utc_now)
-
+    position: tuple[float, float] | None = None  # For mouse events
     class Settings:
         is_root = True
         
@@ -62,38 +62,33 @@ class MouseButton(str, Enum):
 class MouseClickEvent(Event):
     type: Literal["mouse.click"] = "mouse.click"
     button: MouseButton = Field(default=MouseButton.left)
-    position: tuple[float, float] | None = None  # For mouse events
+    
 
 
 class MousePressEvent(Event):
     type: Literal["mouse.press"] = "mouse.press"
     button: MouseButton = Field(default=MouseButton.left)
-    position: tuple[float, float] | None = None  # For mouse events
-
+    
 
 class MouseReleaseEvent(Event):
     type: Literal["mouse.release"] = "mouse.release"
     button: MouseButton = Field(default=MouseButton.left)
-    position: tuple[float, float] | None = None  # For mouse events
-
+    
 
 class MouseScrollEvent(Event):
     type: Literal["mouse.scroll"] = "mouse.scroll"
     dx: int
     dy: int
-    position: tuple[float, float] | None = None  # For mouse events
-
+    
 
 class MouseDoubleClickEvent(Event):
     type: Literal["mouse.double.click"] = "mouse.double.click"
     button: MouseButton = Field(default=MouseButton.left)
-    position: tuple[float, float] | None = None  # For mouse events
-
+    
 
 class MouseDropEvent(Event):
     type: Literal["mouse.drop"] = "mouse.drop"
     button: MouseButton = Field(default=MouseButton.left)
-    position: tuple[float, float] | None = None  # For mouse events
     origin: tuple[float, float] | None = None  # For mouse events
 
 

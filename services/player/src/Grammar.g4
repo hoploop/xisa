@@ -25,11 +25,13 @@ selector: selectorByLabel
         | selectorByText 
         | selectorByRegex
         | selectorByPosition
+        | selectorByImage
         ;
 selectorByLabel:  LABEL ORPAR STRING (COMMA selectorOrder)? CRPAR ;
 selectorByText: TEXT ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByRegex: REGEX ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByPosition: POSITION ORPAR number COMMA number CRPAR; 
+selectorByImage: IMAGE ORPAR STRING COMMA FLOAT (COMMA selectorOrder)? (COMMA GRAY)?  CRPAR;
 selectorOrder: INT (COMMA INT)*;
 createSequence: ID EQ SEQUENCE OCPAR (stmt)* CCPAR;
 
@@ -55,6 +57,8 @@ operation
         | keyPress
         | keyRelease
         | keyType
+        | keyCombo
+        | keyComboSelector
         | keyPressSelector
         | keyReleaseSelector
         | keyTypeSelector
@@ -69,10 +73,13 @@ mouseClickSelector: MOUSE_CLICK ORPAR selector (COMMA mouseButton)? CRPAR;
 mouseDoubleClick: MOUSE_DOUBLE_CLICK ORPAR ID (COMMA mouseButton)? CRPAR;
 mouseDoubleClickSelector: MOUSE_DOUBLE_CLICK ORPAR selector (COMMA mouseButton)? CRPAR;
 
+
 mouseRelease: MOUSE_RELEASE ORPAR ID (COMMA mouseButton)? CRPAR;
 mouseReleaseSelector: MOUSE_RELEASE ORPAR selector (COMMA mouseButton)? CRPAR;
 mouseScroll: MOUSE_SCROLL ORPAR ID COMMA INT (COMMA INT)? CRPAR;
 mouseScrollSelector: MOUSE_SCROLL ORPAR selector COMMA INT (COMMA INT)? CRPAR;
+keyCombo: KEY_COMBO ORPAR ID STRING (COMMA STRING)+ CRPAR;
+keyComboSelector: KEY_COMBO ORPAR selector STRING (COMMA STRING)+ CRPAR;
 keyPress: KEY_PRESS ORPAR ID COMMA STRING CRPAR;
 keyRelease: KEY_RELEASE ORPAR ID COMMA STRING CRPAR;
 keyType: KEY_TYPE ORPAR ID COMMA STRING CRPAR;
@@ -84,11 +91,15 @@ mouseButton: LEFT|MIDDLE|RIGHT;
 
 number: INT | FLOAT;
 
+CONFIDENCE: 'conf'|'confidence';
+GRAY: 'gray';
 LEFT: 'left';
 RIGHT: 'right';
 MIDDLE: 'middle';
+IMAGE: 'image';
 KEY_PRESS: 'keyPress';
 KEY_TYPE: 'keyType';
+KEY_COMBO: 'keyCombo';
 KEY_RELEASE: 'keyRelease';
 MOUSE_CLICK: 'mouseClick';
 MOUSE_DOUBLE_CLICK: 'mouseDoubleClick';

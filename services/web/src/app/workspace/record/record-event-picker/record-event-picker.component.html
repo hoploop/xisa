@@ -3,49 +3,63 @@
   [ngClass]="frame.calculateButtonClass"
 >
   <div class="d-flex flex-column h-100">
-  <!-- Event frame -->
-  <ng-container *ngIf="frame.hasEvents">
-    <ng-container *ngFor="let event of frame.events">
-    <ng-container [ngSwitch]="event.type">
-      <div class="d-flex flex-column w-100 mb-2">
-        <app-fa-icon
-          *ngSwitchCase="RecordEventTypes.KeyComboPress"
-          [icon]="FAIconType.keyboard"
-        ></app-fa-icon>
-        <app-fa-icon
-          *ngSwitchCase="RecordEventTypes.KeyPress"
-          [icon]="FAIconType.keyboard"
-        ></app-fa-icon>
-        <app-fa-icon
-          *ngSwitchCase="RecordEventTypes.KeyRelease"
-          [icon]="FAIconType.keyboard"
-        ></app-fa-icon>
+    <!-- Event frame -->
+    <ng-container *ngIf="frame.hasEvents">
+      <ng-container *ngFor="let event of frame.events">
+        <ng-container [ngSwitch]="event.type">
+          <div class="d-flex flex-column w-100 mb-2">
+            <app-fa-icon
+              *ngSwitchCase="RecordEventTypes.KeyComboPress"
+              [icon]="FAIconType.keyboard"
+            ></app-fa-icon>
+            <app-fa-icon
+              *ngSwitchCase="RecordEventTypes.KeyPress"
+              [icon]="FAIconType.keyboard"
+            ></app-fa-icon>
+            <app-fa-icon
+              *ngSwitchCase="RecordEventTypes.KeyRelease"
+              [icon]="FAIconType.keyboard"
+            ></app-fa-icon>
+            <app-fa-icon
+              *ngSwitchCase="RecordEventTypes.KeyType"
+              [icon]="FAIconType.keyboard"
+            ></app-fa-icon>
+            <app-fa-icon
+              *ngSwitchDefault
+              [icon]="FAIconType.mouse"
+            ></app-fa-icon>
+            <span
+              class="smaller ms-1"
+              [translate]="'workspace.record.frame.title_n'"
+              [translateParams]="{ n: frame.count }"
+            ></span>
+            <span class="smaller ms-1"
+              >Instant:
+              {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
+            >
+            <span class="smaller ms-1">{{ event | recordEventName }}</span>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
 
-        <app-fa-icon *ngSwitchDefault [icon]="FAIconType.mouse"></app-fa-icon>
-        <span class="smaller ms-1" [translate]="'workspace.record.frame.title_n'" [translateParams]="{'n':frame.count}"></span>
-        <span class="smaller ms-1"
+    <!-- Empty frame -->
+    <ng-container *ngIf="!frame.hasEvents">
+      <div class="d-flex flex-column w-100 mb-2">
+        <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
+        <span
+          class="smaller ms-1"
+          [translate]="'workspace.record.frame.title_n'"
+          [translateParams]="{ n: frame.count }"
+        ></span>
+        <span class="ms-1 smaller"
           >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
         >
-
-        <span class="smaller ms-1">{{ event | recordEventName }}</span>
+        <span class="smaller ms-1">No Events</span>
       </div>
     </ng-container>
-    </ng-container>
-  </ng-container>
-
-  <!-- Empty frame -->
-  <ng-container *ngIf="!frame.hasEvents">
-    <div class="d-flex flex-column w-100 mb-2">
-      <app-fa-icon [icon]="FAIconType.camera"></app-fa-icon>
-      <span class="smaller ms-1" [translate]="'workspace.record.frame.title_n'" [translateParams]="{'n':frame.count}"></span>
-      <span class="ms-1 smaller"
-        >Instant: {{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span
-      >
-      <span class="smaller ms-1">No Events</span>
+    <div class="mt-auto">
+      <img [style.max-height.px]="200" *ngIf="imageUrl" [src]="imageUrl" />
     </div>
-  </ng-container>
-  <div class="mt-auto">
-    <img [style.max-height.px]="200" *ngIf="imageUrl" [src]="imageUrl"/>
-</div>
-</div>
+  </div>
 </button>

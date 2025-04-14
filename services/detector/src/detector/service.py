@@ -166,10 +166,6 @@ class DetectorService(Service, DetectorServicer):
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
 
-            # If has no position, not suggestions are possible so far
-            if not event.type.startswith("mouse"):
-                return SuggestStepResponse(status=True, suggestions=[])
-
             x, y = event.position
             # x = x / width
             # y = y / height
@@ -489,7 +485,7 @@ class DetectorService(Service, DetectorServicer):
                 )
             detector_id = found.detector
             mode = found.mode
-
+ 
             log.debug("Removing detector image")
             await found.delete()
 
@@ -500,7 +496,7 @@ class DetectorService(Service, DetectorServicer):
             image_val_path = os.path.join(image_path, "val")
             image_test_path = os.path.join(image_path, "test")
 
-            suffix_name = str(image_id.id) + ".png"
+            suffix_name = str(image_id) + ".png"
             if mode == DetectorImageMode.train:
                 image_filename = os.path.join(image_train_path, suffix_name)
             elif mode == DetectorImageMode.test:
@@ -513,7 +509,7 @@ class DetectorService(Service, DetectorServicer):
                 os.remove(image_filename)
 
             log.debug("Removing class files")
-            classes_filename = os.path.join(image_path, str(image_id.id) + ".txt")
+            classes_filename = os.path.join(image_path, str(image_id) + ".txt")
             if os.path.exists(classes_filename):
                 os.remove(classes_filename)
 

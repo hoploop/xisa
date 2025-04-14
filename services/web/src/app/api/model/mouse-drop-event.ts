@@ -17,8 +17,8 @@ export interface MouseDropEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
-    button?: MouseButton;
     position?: Array<any> | null;
+    button?: MouseButton;
     origin?: Array<any> | null;
 }
 export enum MouseDropEventTypeEnum {

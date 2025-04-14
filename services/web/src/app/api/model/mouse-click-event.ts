@@ -17,8 +17,8 @@ export interface MouseClickEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
-    button?: MouseButton;
     position?: Array<any> | null;
+    button?: MouseButton;
 }
 export enum MouseClickEventTypeEnum {
     MouseClick = 'mouse.click'

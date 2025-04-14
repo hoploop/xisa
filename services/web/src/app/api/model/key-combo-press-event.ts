@@ -16,6 +16,7 @@ export interface KeyComboPressEvent {
     frame: number;
     synthetic?: boolean;
     timestamp?: string;
+    position?: Array<any> | null;
     keys: Array<string>;
 }
 export enum KeyComboPressEventTypeEnum {

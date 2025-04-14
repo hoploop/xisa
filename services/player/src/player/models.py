@@ -1,5 +1,6 @@
 
 # PYTHON IMPORTS
+import platform, sys
 from datetime import time
 from enum import Enum
 import json
@@ -27,8 +28,6 @@ def get_indent(value:int=0) -> str:
     for i in range(value):
         t += '\t'
     return t
-
-
 
 
 class GrammarContext(BaseModel):
@@ -68,7 +67,13 @@ class Runtime:
     def __init__(self):
         self.registry = RuntimeRegistry()
         self.screenWidth, self.screenHeight = pyautogui.size()
-    
+        self.platformSystem: str = platform.system()
+        self.platformRelease: str = platform.release()
+        self.pythonVersion: str = sys.version
+        log.debug('Platform: {0}'.format(self.platformSystem))
+        log.debug('Platform version: {0}'.format(self.platformRelease))
+        log.debug('Python version: {0}'.format(self.pythonVersion))
+        log.debug('Screen size: {0}x{1}'.format(self.screenWidth,self.screenHeight))
 
 class Selector(BaseModel):
     type: str
@@ -392,12 +397,99 @@ class RegexSelector(Selector):
             torder += ",{0}".format(el)
         return get_indent(indent)+'regex("{0}"{1})'.format(self.value, torder)
 
+
+class ImageSelector(Selector):
+    type: Literal["selector.image"] = "selector.image"
+    value: str
+    gray: bool = False
+    confidence:float = 0.9
+    order: List[int] = Field(default_factory=empty_list)
+    
+    def render(self,indent:int=0) -> str:
+        torder = ""
+        for el in self.order:
+            torder += ",{0}".format(el)
+        gray = ""
+        if self.gray:
+            gray=',gray'
+        return get_indent(indent)+'image("{0}"{1}{2})'.format(self.value,torder, gray)
+
+    def execute(self, runtime):
+        img = pyautogui.screenshot()
+
+        log.debug("Detecting images in image")
+        visual_matches = []
+        try:
+            poses = pyautogui.locateAllOnScreen(self.value,grayscale=self.gray,cnfidence=self.confidence)
+            for pos in poses:
+                x,y,w,h = pos
+                x = x / runtime.screenWidth
+                y = y / runtime.screenHeight
+                w = w / runtime.screenWidth
+                h = h / runtime.screenHeight
+                visual_matches.append((x,y,w,h))
+        except pyautogui.ImageNotFoundException as e:
+            return None
+
+        if len(visual_matches) == 1:
+            x,y,w,h = visual_matches[0]
+            return x,y,w,h,self.confidence
+            
+
+        if (
+            len(visual_matches) > 1
+            and len(self.order) == 0
+        ):
+            msg = "There are too many images matching this step ({0}) and no further order has been specified".format(
+                len(visual_matches)
+            )
+            log.debug(msg)
+            return None
+
+        if (
+            len(visual_matches) > 1
+            and len(self.order) > 0
+        ):
+            if len(self.order) == 1:
+                ordering = self.order[0]
+                if len(visual_matches) < ordering:
+                    msg = "The image cannot match the order({0})".format(
+                        ordering
+                    )
+                    log.debug(msg)
+                    return None
+                else:
+                    visual_match = visual_matches[ordering]
+                    x,y,w,h = visual_match
+                    return x,y,w,h,self.confidence
+            else:
+                target_x = self.order[0]
+                target_y = self.order[1]
+                grid = ImageGrid(img.size[0], img.size[1])
+                boxes = []
+                for visual_match in visual_matches:
+                    x,y,w,h = visual_match
+                    boxes.append((x, y, w, h))
+
+                best_rows, best_cols = grid.optimal_grid_size(boxes)
+
+                for visual_match in visual_matches:
+                    x,y,w,h = visual_match
+                    row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
+                    
+                    if row == target_y and col == target_x:
+                        return x,y,w,h,self.confidence
+                return None
+
+       
+
 SELECTOR_TYPES = Union[
     LabelSelector,
     PositionSelector,
     TextSelector,
     RegexSelector,
-    SelectorReference
+    SelectorReference,
+    ImageSelector
 ]
 
 SELECTORS = Annotated[SELECTOR_TYPES, Field(discriminator="type")]
@@ -621,6 +713,31 @@ class KeyPressOperation(Operation):
     
 
 
+class KeyComboOperation(Operation):
+    type: Literal["operation.key.combo"] = "operation.key.combo"
+    values: List[str]
+    selector: SELECTOR_TYPES
+    
+
+    def render(self,indent:int=0):
+        return get_indent(indent)+'keyPress({0},"{1}")'.format(self.selector.render(),self.value)
+    
+    def execute(self, runtime):
+        found = self.selector.execute(runtime)
+        if found is None:
+            raise RuntimeException('player.runtime.errors.timeout',self.ctx)
+        x,y,w,h,conf = found
+        guiX = (x+w/2)*runtime.screenWidth
+        guiY = (y+h/2)*runtime.screenHeight
+        #pyautogui.click(guiX,guiY)
+        #with pyautogui.hold(self.values[0]):
+        #    pyautogui.press(self.values[1:])
+        pyautogui.hotkey(*self.values)
+        
+        return True
+    
+
+
 class KeyTypeOperation(Operation):
     type: Literal["operation.key.type"] = "operation.key.type"
     value: str
@@ -673,6 +790,7 @@ OPERATION_TYPES = Union[
     KeyPressOperation,
     KeyReleaseOperation,
     KeyTypeOperation,
+    KeyComboOperation,
     WaitOperation,
     OperationReference
 ]

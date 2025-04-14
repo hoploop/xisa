@@ -7,6 +7,8 @@ from player.models import (
     CreateSelectorStatement,
     CreateSequenceStatement,
     GrammarContext,
+    ImageSelector,
+    KeyComboOperation,
     KeyPressOperation,
     KeyReleaseOperation,
     KeyTypeOperation,
@@ -134,6 +136,25 @@ class PlayerAnalyzer(GrammarVisitor):
             return self.visitSelectorByPosition(ctx.selectorByPosition())
         elif ctx.selectorByRegex():
             return self.visitSelectorByRegex(ctx.selectorByRegex())
+        elif ctx.selectorByImage():
+            return self.visitSelectorByImage(ctx.selectorByImage())
+
+      # Visit a parse tree produced by GrammarParser#selectorByLabel.
+    def visitSelectorByImage(
+        self, ctx: GrammarParser.SelectorByImageContext
+    ) -> ImageSelector:
+
+        order = []
+        if ctx.selectorOrder():
+            order = self.visitSelectorOrder(ctx.selectorOrder())
+        value = str(ctx.STRING().getText())[1:-1]
+        gray=False
+        if ctx.GRAY():
+            gray=True
+        conf = 0.9
+        if ctx.FLOAT():
+            conf =float(str(ctx.FLOAT().getText()))
+        return ImageSelector(value=value, order=order,gray=gray,confidence=conf,ctx=self.buildGrammarCtx(ctx))
 
     # Visit a parse tree produced by GrammarParser#selectorByLabel.
     def visitSelectorByLabel(
@@ -209,6 +230,10 @@ class PlayerAnalyzer(GrammarVisitor):
             return self.visitKeyType(ctx.keyType())
         elif ctx.keyPressSelector():
             return self.visitKeyPressSelector(ctx.keyPressSelector())
+        elif ctx.keyCombo():
+            return self.visitKeyCombo(ctx.keyCombo())
+        elif ctx.keyComboSelector():
+            return self.visitKeyComboSelector(ctx.keyComboSelector())
         elif ctx.keyReleaseSelector():
             return self.visitKeyReleaseSelector(ctx.keyReleaseSelector())
         elif ctx.keyTypeSelector():
@@ -387,7 +412,25 @@ class PlayerAnalyzer(GrammarVisitor):
         value = str(ctx.STRING().getText())[1:-1]
         return KeyReleaseOperation(value=value,ctx=self.buildGrammarCtx(ctx),selector=sel)
     
-    
+     # Visit a parse tree produced by GrammarParser#keyPressSelector.
+    def visitKeyCombo(self, ctx:GrammarParser.KeyComboContext):
+        sel = self.visitSelector(ctx.selector)
+        values = []
+        for strCtx in ctx.STRING():
+            values.append(str(strCtx.getText())[1:-1])
+        return KeyComboOperation(values=values,ctx=self.buildGrammarCtx(ctx),selector=sel)
+
+
+    # Visit a parse tree produced by GrammarParser#keyReleaseSelector.
+    def visitKeyComboSelector(self, ctx:GrammarParser.KeyComboSelectorContext):
+        id = str(ctx.ID().getText())
+        sel = SelectorReference(reference=id)
+        values = []
+        for strCtx in ctx.STRING():
+            values.append(str(strCtx.getText())[1:-1])
+        return KeyComboOperation(values=values,ctx=self.buildGrammarCtx(ctx),selector=sel)
+
+
     
     # Visit a parse tree produced by GrammarParser#keyPressSelector.
     def visitKeyPressSelector(self, ctx:GrammarParser.KeyPressSelectorContext):

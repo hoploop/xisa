@@ -56,6 +56,7 @@ import { RecordActionCountPipe } from './record/record-action-count.pipe';
 import { RecordScrollerComponent } from './record/record-scroller/record-scroller.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { PlayerScriptPreviewComponent } from './player/player-script-preview/player-script-preview.component';
+import { DetectorImageLabelCountPipe } from './detector/detector-image-label-count.pipe';
 
 
 
@@ -112,6 +113,7 @@ import { PlayerScriptPreviewComponent } from './player/player-script-preview/pla
     RecordActionCountPipe,
     RecordScrollerComponent,
     PlayerScriptPreviewComponent,
+    DetectorImageLabelCountPipe,
   ],
   imports: [
     CommonModule,
@@ -119,7 +121,7 @@ import { PlayerScriptPreviewComponent } from './player/player-script-preview/pla
     FormsModule,
     TranslateModule,
     MomentModule,
-    MonacoEditorModule
+    MonacoEditorModule,
 ],
   exports: [
     ProjectListComponent,

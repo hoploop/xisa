@@ -59,6 +59,7 @@
         "remove":"Remove",
         "by_user_class": "You are suggesting to use a select by class '{{class}}'"
       },
+      
       "training":{
         "titles":"Train new objects",
         "title":"Train new object",
@@ -93,9 +94,15 @@
       "settings":"Detector Settings",
       "image": {
         "loadings": "Loading detector images...",
+        "empty":"No images",
+        "list":"Images",
+        "labels_n":"Labels: {{n}}",
+        "search":"Search",
+        "removing":"Removing image...",
         "training": "Is training image",
         "evaluating": "Is eval image",
         "testing": "Is testing image",
+        "title_n":"Detector images ({{n}})",
         "errors": {
           "not_found": "Detector Image not found",
           "label_not_found": "Image label not found"
@@ -155,6 +162,7 @@
         "types":{
           "key_combo_press":"Key combo press ({{value}})",
           "key_press":"Key press ({{value}})",
+          "key_type":"Key type ({{value}})",
           "key_release":"Key release ({{value}})",
           "mouse_double_click_left":"Mouse double click left",
           "mouse_double_click_right":"Mouse double click right",
@@ -183,9 +191,10 @@
         "synthetic":"Synthetic",
         "default":"Default",
         "types":{
-          "key_combo_press":"Key combo press ({{value}})",
-          "key_press":"Key press ({{value}})",
-          "key_release":"Key release ({{value}})",
+          "key_combo_press":"Key combo press ({{value}},{{x}},{{y}})",
+          "key_press":"Key press ({{value}},{{x}},{{y}})",
+          "key_release":"Key release ({{value}},{{x}},{{y}})",
+          "key_type":"Key type ({{value}},{{x}},{{y}})",
           "mouse_click_left":"Mouse click left ({{x}},{{y}})",
           "mouse_click_middle":"Mouse click middle ({{x}},{{y}})",
           "mouse_click_right":"Mouse click right ({{x}},{{y}})",

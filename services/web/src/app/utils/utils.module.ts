@@ -28,6 +28,8 @@ import { TemplateCardContainerComponent } from './template-card-container/templa
 import { DockScrollerComponent } from './dock-scroller/dock-scroller.component';
 import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-progress-bar.component';
 import { RouteComponent } from './route/route.component';
+import { SwitchComponent } from './switch/switch.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { RouteComponent } from './route/route.component';
     DockScrollerComponent,
     InfiniteProgressBarComponent,
     RouteComponent,
+    SwitchComponent,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -73,7 +77,9 @@ import { RouteComponent } from './route/route.component';
     TemplateCardContainerComponent,
     ImageLabelerComponent,
     DockScrollerComponent,
-    InfiniteProgressBarComponent
+    InfiniteProgressBarComponent,
+    SwitchComponent,
+    PaginationComponent
   ],
 })
 export class UtilsModule {
