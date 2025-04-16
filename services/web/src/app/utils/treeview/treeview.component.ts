@@ -120,6 +120,16 @@ export class TreeviewComponent implements OnInit {
     });
   }
 
+  onSelect(node:TreeNode){
+    this.selected=node;
+    this.selectedChange.next(node);
+    if (node.callback){
+      node.callback.subscribe(result=>{
+
+      })
+    }
+  }
+
   applySearch(node: TreeNode, term: string): boolean {
     term = term || '';
 

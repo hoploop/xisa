@@ -11,7 +11,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { AuthModule } from '@auth/auth.module';
 import { MenuComponent } from './menu/menu.component';
-import { WorkspaceModule } from '@workspace/workspace.module';
 import { MomentModule } from 'ngx-moment';
 import { UtilsModule } from '@utils/utils.module';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
@@ -21,6 +20,7 @@ import { NGIcons } from '@constants/icons';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { RouterModule } from '@angular/router';
 import { routes } from './app.routes';
+import { PagesModule } from '@pages/pages.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -38,7 +38,6 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
 
 
 
-
 @NgModule({
   declarations: [AppComponent, MenuComponent, WelcomeComponent],
   imports: [
@@ -48,7 +47,7 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     AuthModule,
     MomentModule,
     UtilsModule,
-    WorkspaceModule,
+    PagesModule,
     MonacoEditorModule.forRoot(),
     ApiModule.forRoot(apiConfigFactory),
     NgIconsModule.withIcons(NGIcons),

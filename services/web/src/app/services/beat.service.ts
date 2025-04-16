@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Project } from '@api/index';
+import { Project, Record } from '@api/index';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,8 @@ export class BeatService {
   };
 
   public menu = {
-    project : new BehaviorSubject<Project|undefined>(undefined)
+    project : new BehaviorSubject<Project|undefined>(undefined),
+    record: new BehaviorSubject<Record|undefined>(undefined)
   }
 
 }

@@ -39,6 +39,7 @@ from common.rpc.recorder_pb2 import (
     StartRecordRequest,
     StopRecordRequest,
     StreamRangeRecordVideoRequest,
+    StreamRangeRecordVideoResponse,
     StreamRecordVideoRequest,
     UpdateRecordActionRequest,
     UpdateRecordActionResponse,
@@ -233,7 +234,8 @@ class RecorderClient(Client):
             start_byte=start_byte,
             end_byte=end_byte,
         )
-        res = await self.client.streamRangeRecordVideo(req)
+        res:StreamRangeRecordVideoResponse = await self.client.streamRangeRecordVideo(req)
+        
         if res.status == False:
             raise Exception(res.message)
         return res.data

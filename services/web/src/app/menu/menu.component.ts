@@ -1,17 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '@api/index';
 import { LoginComponent } from '@auth/login/login.component';
 import { LogoutComponent } from '@auth/logout/logout.component';
 import { RegisterComponent } from '@auth/register/register.component';
-import { ContextService } from '@services/context.service';
 import { BaseComponent } from '@utils/base/base.component';
-import { DetectorListComponent } from '@workspace/detector/detector-list/detector-list.component';
-import { ProjectListComponent } from '@workspace/project/project-list/project-list.component';
-import { ProjectPageComponent } from '@workspace/project/project-page/project-page.component';
-import { RecordListComponent } from '@workspace/record/record-list/record-list.component';
-import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -22,9 +14,6 @@ import { Subscription } from 'rxjs';
 export class MenuComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() project?: Project;
   logged = this.ctx.beat.auth.logged;
-  subs = new Subscription();
-
-
 
   ngOnInit(): void {
     this.check();

@@ -1,18 +1,14 @@
 <app-resize-listener class="fixed-top" (resized)="onResizeTop($event)">
-  <div class="container-fluid">
-    <div class="card w-100 rounded-0 border-0 shadow rounded-bottom">
-      <div class="card-body p-0">
-        <app-menu #menu></app-menu>
-      </div>
-    </div>
-  </div>
+  <app-menu #menu></app-menu>
 </app-resize-listener>
-<div class="container-fluid  pt-2" [style.margin-top.px]="topMargin|async">
-  <div class="row ps-1 pe-1">
-    <ng-template #main></ng-template>
+<div class="container-fluid  pt-2" [style.margin-top.px]="topMargin|async" [style.margin-bottom.px]="bottomMargin|async">
+  <div class="row">
     <router-outlet></router-outlet>
   </div>
   <div class="row">
     <ng-template #bottom></ng-template>
   </div>
 </div>
+<app-resize-listener class="fixed-bottom" (resized)="onResizeBottom($event)">
+
+</app-resize-listener>

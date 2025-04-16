@@ -59,7 +59,7 @@ class PlayerService(Service, PlayerServicer):
     async def playerScriptExist(
         self, request: PlayerScriptExistRequest, context
     ) -> PlayerScriptExistResponse:
-        try:
+        try: 
             found = await Replay.find_many(
                 Replay.record == PydanticObjectId(request.record)
             ).first_or_none()

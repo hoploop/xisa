@@ -8,7 +8,6 @@ import { WsService } from './ws.service';
 import { NavigationService } from './navigation.service';
 import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
-import { MenuComponent } from '../menu/menu.component';
 
 
 @Injectable({
@@ -18,6 +17,7 @@ export class ContextService {
 
 
   public resizeTop = new Subject<[number,number]>();
+  public resizeBottom = new Subject<[number,number]>();
   private mainContainer?:ViewContainerRef;
 
   constructor(
@@ -31,9 +31,6 @@ export class ContextService {
 
   private activeModal?:NgbActiveModal;
 
-  public initialize(main:ViewContainerRef){
-    this.mainContainer = main;
-  }
 
   public get session(): string {
     let found = localStorage.getItem(StorageKeys.session);
@@ -47,23 +44,6 @@ export class ContextService {
   }
 
 
-
-  public open(componentType: any, values={}): Observable<ComponentRef<any>>{
-    return new Observable<ComponentRef<any>>(observer=>{
-      let refComponent:ComponentRef<any>|undefined = undefined;
-
-      if (this.mainContainer){
-        this.mainContainer.clear();
-        refComponent = this.mainContainer.createComponent(componentType);
-      }
-      if (refComponent){
-        Object.assign(refComponent.instance,values);
-        observer.next(refComponent);
-      }else{
-        observer.error('Cannot create component');
-      }
-    })
-  }
 
 
   public openModal<T>(content:any,values={},options:NgbModalOptions={centered:true}): Observable<T>{

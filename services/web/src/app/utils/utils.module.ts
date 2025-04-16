@@ -27,11 +27,11 @@ import { ImageLabelerComponent } from './image-labeler/image-labeler.component';
 import { TemplateCardContainerComponent } from './template-card-container/template-card-container.component';
 import { DockScrollerComponent } from './dock-scroller/dock-scroller.component';
 import { InfiniteProgressBarComponent } from './infinite-progress-bar/infinite-progress-bar.component';
-import { RouteComponent } from './route/route.component';
 import { SwitchComponent } from './switch/switch.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TreeNodeComponent } from './tree-node/tree-node.component';
+import { IconComponent } from './icon/icon.component';
 
 @NgModule({
   declarations: [
@@ -52,11 +52,11 @@ import { TreeNodeComponent } from './tree-node/tree-node.component';
     ImageLabelerComponent,
     DockScrollerComponent,
     InfiniteProgressBarComponent,
-    RouteComponent,
     SwitchComponent,
     PaginationComponent,
     TreeviewComponent,
     TreeNodeComponent,
+    IconComponent,
   ],
   imports: [
     CommonModule,

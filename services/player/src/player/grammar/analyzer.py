@@ -448,7 +448,7 @@ class PlayerAnalyzer(GrammarVisitor):
 
     # Visit a parse tree produced by GrammarParser#keyTypeSelector.
     def visitKeyTypeSelector(self, ctx:GrammarParser.KeyTypeSelectorContext):
-        sel = self.visitSelector(ctx.selector)
+        sel = self.visitSelector(ctx.selector())
         value = str(ctx.STRING().getText())[1:-1]
         return KeyTypeOperation(value=value,ctx=self.buildGrammarCtx(ctx),selector=sel)
 

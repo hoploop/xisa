@@ -1,53 +1,56 @@
-import { AfterViewInit, Component, ComponentRef, ElementRef, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ContextService } from './services/context.service';
-import { MenuComponent } from './menu/menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: false,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('main', { read: ViewContainerRef }) mainContainer!: ViewContainerRef;
-  @ViewChild(MenuComponent) menuContainer!: MenuComponent;
-
-
-  title = 'web';
-  logged = new BehaviorSubject<boolean|undefined>(undefined);
-  registering = new BehaviorSubject<boolean|undefined>(undefined);
+  loaded = false;
+  logged = new BehaviorSubject<boolean | undefined>(undefined);
+  registering = new BehaviorSubject<boolean | undefined>(undefined);
   topMargin = new BehaviorSubject<number>(0);
+  bottomMargin = new BehaviorSubject<number>(0);
 
-  constructor(private ctx:ContextService,private renderer: Renderer2){
+  constructor(private ctx: ContextService) {}
 
-  }
-
-  onResizeTop(event:[number,number]){
+  onResizeTop(event: [number, number]) {
     this.ctx.resizeTop.next(event);
   }
 
-  ngAfterViewInit() {
-    this.ctx.initialize(this.mainContainer);
-
-    this.ctx.resizeTop.subscribe(result=>{
-      this.topMargin.next(result[1]);
-    })
-
-    this.ctx.beat.auth.logged.subscribe(result=>{
-      if (result){
-        let token = this.ctx.api.getToken();
-        if (token){
-          this.ctx.ws.connect(token,this.ctx.session);
-        }
-
-      }else{
-        this.ctx.ws.close();
-      }
-    })
-
-
+  onResizeBottom(event: [number, number]) {
+    this.ctx.resizeBottom.next(event);
   }
 
+  ngAfterViewInit() {
 
+    this.ctx.resizeTop.subscribe((result) => {
+      this.topMargin.next(result[1]);
+    });
+
+    this.ctx.resizeBottom.subscribe((result) => {
+      this.bottomMargin.next(result[1]);
+    });
+
+    this.ctx.beat.auth.logged.subscribe((result) => {
+      if (result) {
+        let token = this.ctx.api.getToken();
+        if (token) {
+          this.ctx.ws.connect(token, this.ctx.session);
+        }
+      } else {
+        this.ctx.ws.close();
+      }
+    });
+
+    this.ctx.translate.use('en').subscribe((result) => {
+      this.loaded = true;
+    });
+  }
 }

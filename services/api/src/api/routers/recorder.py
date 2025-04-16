@@ -220,36 +220,57 @@ async def video(
     request: Request,
     recorder: Recorder,
 ):
-    video_stream = await recorder.streamRecordVideo(user, recordId)
+    try:
 
-    async def video_generator():
-        for chunk in video_stream:
-            yield chunk.chunk_data
+        async def video_generator():
+            video_stream = await recorder.streamRecordVideo(user, recordId)
+            for chunk in video_stream:
+                yield chunk.chunk_data
 
-    file_size = await recorder.sizeRecordVideo(user, recordId)
-    range_header = request.headers.get("range")
+        file_size = await recorder.sizeRecordVideo(user, recordId)
+        log.debug('Downloading video file with size: {0}'.format(file_size))
+        range_header = request.headers.get("range")
+        
+        def _invalid_range():
+            return HTTPException(
+                status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE,
+                detail=f"Invalid request range (Range:{range_header!r})",
+            )
 
-    if range_header:
-        # Parse the range header
-        start, end = range_header.replace("bytes=", "").split("-")
-        start = int(start)
-        # end = min(int(end), file_size - 1)
-        end = int(end) if end else file_size - 1
-        chunk_size = end - start + 1
+        if range_header:
+            # Parse the range header
+            start, end = range_header.replace("bytes=", "").split("-")
+            start = int(start)
+            # end = min(int(end), file_size - 1)
+            end = int(end) if end else file_size - 1
+            #end = min(end,file_size)
+            chunk_size = end - start + 1
+            
+            
+            #if end > file_size -1:
+            #    end = file_size
+                
+            log.debug('Returning chunk: {0} -> {1}'.format(start,end))
+            
+            #if start > end or start < 0 or end > file_size - 1:
+            #    raise _invalid_range()
 
-        chunk = await recorder.streamRangeRecordVideo(user, recordId, start, end)
+            chunk = await recorder.streamRangeRecordVideo(user, recordId, start, end)
 
-        headers = {
-            "Content-Range": f"bytes {start}-{end}/{file_size}",
-            "Accept-Ranges": "bytes",
-            "Content-Length": str(len(chunk)),
-            "Content-Type": "video/mp4",
-        }
-        return Response(chunk, status_code=206, headers=headers)
+            headers = {
+                "Content-Range": f"bytes {start}-{end}/{file_size}",
+                "Accept-Ranges": "bytes",
+                "Content-Length": str(len(chunk)),
+                "Content-Type": "video/mp4",
+            }
+            return Response(chunk, status_code=206, headers=headers)
 
-    return StreamingResponse(
-        video_generator(), media_type="video/mp4", headers={"Accept-Ranges": "bytes"}
-    )
+        return StreamingResponse(
+            video_generator(), media_type="video/mp4", headers={"Accept-Ranges": "bytes"}
+        )
+    except Exception as e:
+        log.warning(str(e))
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 class RecordListResponse(BaseModel):

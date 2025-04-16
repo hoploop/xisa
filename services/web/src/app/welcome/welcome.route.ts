@@ -3,7 +3,7 @@ import { RouteComponent } from '@utils/route/route.component';
 import { WelcomeComponent } from './welcome.component';
 
 @Component({
-  selector: 'app-detector-list-route',
+  selector: 'app-welcome-route',
   standalone: false,
   template: '',
 })
