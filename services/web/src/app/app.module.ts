@@ -9,18 +9,17 @@ import { ApiModule } from '@api/api.module';
 import { HttpBackend, provideHttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { AuthModule } from '@auth/auth.module';
-import { MenuComponent } from './menu/menu.component';
 import { MomentModule } from 'ngx-moment';
 import { UtilsModule } from '@utils/utils.module';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { WelcomeComponent } from './welcome/welcome.component';
 import { NgIconsModule } from '@ng-icons/core';
 import { NGIcons } from '@constants/icons';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { RouterModule } from '@angular/router';
 import { routes } from './app.routes';
 import { PagesModule } from '@pages/pages.module';
+import { ModalsModule } from '@modals/modals.module';
+import { CardsModule } from '@cards/cards.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -39,13 +38,14 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
 
 
 @NgModule({
-  declarations: [AppComponent, MenuComponent, WelcomeComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FontAwesomeModule,
-    AuthModule,
     MomentModule,
+    ModalsModule,
+    CardsModule,
     UtilsModule,
     PagesModule,
     MonacoEditorModule.forRoot(),

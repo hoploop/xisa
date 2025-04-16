@@ -3,12 +3,12 @@ import { BaseComponent } from '@utils/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  selector: 'app-auth-register-modal',
   standalone: false,
+  templateUrl: './auth-register-modal.component.html',
+  styleUrl: './auth-register-modal.component.scss'
 })
-export class RegisterComponent extends BaseComponent {
+export class AuthRegisterModalComponent extends BaseComponent {
   username = '';
   password = '';
   email = '';

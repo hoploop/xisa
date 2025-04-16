@@ -18,6 +18,8 @@ import { RecordListCardComponent } from './record-list-card/record-list-card.com
 import { RecordFrameScrollerCardComponent } from './record-frame-scroller-card/record-frame-scroller-card.component';
 import { RecordStudioCardComponent } from './record-studio-card/record-studio-card.component';
 import { RecordFrameCardComponent } from './record-frame-card/record-frame-card.component';
+import { FormsModule } from '@angular/forms';
+import { MenuCardComponent } from './menu-card/menu-card.component';
 
 
 
@@ -36,14 +38,16 @@ import { RecordFrameCardComponent } from './record-frame-card/record-frame-card.
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
     RecordStudioCardComponent,
-    RecordFrameCardComponent
+    RecordFrameCardComponent,
+    MenuCardComponent
   ],
   imports: [
     CommonModule,
     UtilsModule,
     TranslateModule,
     PipesModule,
-    MomentModule
+    MomentModule,
+    FormsModule
 
   ],
   exports: [
@@ -60,7 +64,8 @@ import { RecordFrameCardComponent } from './record-frame-card/record-frame-card.
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
     RecordStudioCardComponent,
-    RecordFrameCardComponent
+    RecordFrameCardComponent,
+    MenuCardComponent
   ]
 })
 export class CardsModule { }

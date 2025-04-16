@@ -1,5 +1,6 @@
 {
   "player": {
+    "title":"Play",
     "errors": {
       "scenario_not_found": "Scenario not found",
       "scenario_no_steps":"Scenario has no steps, at least one step is required",

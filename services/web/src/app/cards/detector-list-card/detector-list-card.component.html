@@ -1,11 +1,13 @@
 
-<div class="card">
-  <div class="card-header">
+<div class="card border-0">
+  <img src="assets/detector.jpg" height="200px" width="auto" class="card-img-top object-fit-cover" alt="...">
+
+  <div class="card-body">
+    <h6>
     <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
     <span class="ms-1" translate>detector.list</span>
-  </div>
-  <div class="card-body">
-    <div class="d-flex">
+  </h6>
+    <div class="d-flex mt-2">
       <span>
         <button class="btn btn-primary btn-sm" (click)="create()">
           <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
@@ -17,8 +19,8 @@
       </span>
     </div>
     <div class="d-flex justify-content-center align-items-center" *ngIf="detectors.length == 0" translate>detector.empty</div>
-    <div class="d-flex mt-2 flex-column" *ngIf="detectors.length > 0" >
-      <div  class="card mt-1" *ngFor="let detector of detectors">
+    <div class="d-flex mt-1 flex-column" *ngIf="detectors.length > 0" >
+      <div  class="card item-primary mt-1" *ngFor="let detector of detectors">
         <div class="card-body">
           <div class="d-flex">
             <div class="d-flex flex-column">

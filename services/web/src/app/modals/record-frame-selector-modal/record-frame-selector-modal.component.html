@@ -17,12 +17,12 @@
       </div>
     </div>
     <div class="d-flex justify-content-between flex-wrap w-100">
-      <app-record-event-picker
+      <app-record-event-card
         (click)="selectFrame(frame)"
         class="mt-1 me-1"
         *ngFor="let frame of frames|recordEventFilterSynthetic:synthetic|async; let i = index"
         [frame]="frame">
-      </app-record-event-picker>
+      </app-record-event-card>
     </div>
   </ng-content>
 </app-modal>

@@ -1,0 +1,116 @@
+<div class="d-flex w-100 justify-content-start align-items-center menu">
+  <button
+    class="btn btn-sm ms-2 btn-outline-light border-0 rounded-0 pb-2 pt-2 item"
+    (click)="navigateHome()"
+  >
+    <div class="d-flex align-items-center">
+      <img
+        src="assets/icon.svg"
+        alt="Logo"
+        width="30"
+        height="22"
+        class="d-inline-block align-text-top"
+      />
+      <span translate>menu.title</span>
+    </div>
+  </button>
+
+  <ng-container *ngIf="(logged | async) == true">
+    <!-- Projects -->
+    <button
+    [ngClass]="area == MenuArea.PROJECTS ? 'btn-light' : 'btn-outline-light'"
+    class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+      (click)="navigateProjects()"
+    >
+      <app-fa-icon [icon]="FAIconType.folderTree"></app-fa-icon>
+      <span class="ms-2" translate>project.list</span>
+    </button>
+
+    <!-- Project -->
+    <ng-container *ngIf="project">
+      <button
+      (click)="navigateProjectPage()"
+      [ngClass]="area == MenuArea.PROJECT ? 'btn-light' : 'btn-outline-light'"
+      class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+        type="button"
+      >
+        <app-fa-icon [icon]="FAIconType.folderOpen"></app-fa-icon>
+        <span class="ms-2">{{ project.name }}</span>
+      </button>
+
+      <!-- Record -->
+      <button
+        (click)="navigateRecordPage()"
+        [ngClass]="area == MenuArea.RECORD ? 'btn-light' : 'btn-outline-light'"
+        class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+        type="button"
+      >
+        <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
+        <span class="ms-2" translate>recorder.title</span>
+      </button>
+
+      <!-- Train -->
+      <button
+        [ngClass]="area == MenuArea.TRAIN ? 'btn-light' : 'btn-outline-light'"
+        class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+        (click)="navigateTrainerPage()"
+        type="button"
+      >
+        <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+        <span class="ms-2" translate>trainer.title</span>
+      </button>
+
+      <!-- Automate -->
+      <button
+        (click)="navigateAutoPage()"
+        [ngClass]="area == MenuArea.AUTO ? 'btn-light' : 'btn-outline-light'"
+        class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+        type="button"
+      >
+        <app-fa-icon [icon]="FAIconType.robot"></app-fa-icon>
+        <span class="ms-2" translate>auto.title</span>
+      </button>
+
+      <!-- Play -->
+      <button
+        (click)="navigatePlayerPage()"
+        [ngClass]="area == MenuArea.PLAY ? 'btn-light' : 'btn-outline-light'"
+        class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+        type="button"
+      >
+        <app-fa-icon [icon]="FAIconType.play"></app-fa-icon>
+        <span class="ms-2" translate>player.title</span>
+      </button>
+    </ng-container>
+    </ng-container>
+
+
+    <div class="ms-auto d-flex align-items-center">
+      <ng-content select="[end]"></ng-content>
+      <button
+        class="btn btn-sm me-2 btn-outline-light border-0 rounded-0 h-100 pb-2 pt-2 item"
+        *ngIf="(logged | async) == true"
+        (click)="logout()"
+      >
+        <app-b-icon [icon]="BIconType.boxArrowInLeft"></app-b-icon>
+        <span class="ms-1" translate>auth.logout</span>
+      </button>
+      <button
+        class="btn btn-sm me-2 btn-outline-light border-0 rounded-0 h-100 pb-2 pt-2 item"
+        *ngIf="(logged | async) == false"
+        (click)="register()"
+        translate
+      >
+        auth.register
+      </button>
+      <button
+        class="btn btn-sm me-2 btn-outline-light border-0 rounded-0 h-100 pb-2 pt-2 item"
+        *ngIf="(logged | async) == false"
+        (click)="login()"
+        translate
+      >
+        auth.login
+      </button>
+    </div>
+
+</div>

@@ -1,7 +1,7 @@
 <app-resize-listener class="fixed-top" (resized)="onResizeTop($event)">
-  <app-menu #menu></app-menu>
+  <app-menu-page></app-menu-page>
 </app-resize-listener>
-<div class="container-fluid  pt-2" [style.margin-top.px]="topMargin|async" [style.margin-bottom.px]="bottomMargin|async">
+<div class="container-fluid  pt-4" [style.margin-top.px]="topMargin|async" [style.margin-bottom.px]="bottomMargin|async">
   <div class="row">
     <router-outlet></router-outlet>
   </div>

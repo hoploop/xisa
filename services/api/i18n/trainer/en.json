@@ -1,5 +1,6 @@
 {
     "trainer":{
+        "title":"Train",
         "errors":{
             "lesson_not_found":"Train Lesson not found"
         }

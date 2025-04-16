@@ -25,6 +25,11 @@ import { RecordFrameSelectorModalComponent } from './record-frame-selector-modal
 import { PlayerScriptPreviewModalComponent } from './player-script-preview-modal/player-script-preview-modal.component';
 import { RecordVideoModalComponent } from './record-video-modal/record-video-modal.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { AuthCheckModalComponent } from './auth-check-modal/auth-check-modal.component';
+import { AuthLoginModalComponent } from './auth-login-modal/auth-login-modal.component';
+import { AuthLogoutModalComponent } from './auth-logout-modal/auth-logout-modal.component';
+import { AuthRegisterModalComponent } from './auth-register-modal/auth-register-modal.component';
+import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unregister-modal.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +52,11 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordFrameSelectorModalComponent,
     PlayerScriptPreviewModalComponent,
     RecordVideoModalComponent,
+    AuthCheckModalComponent,
+    AuthLoginModalComponent,
+    AuthLogoutModalComponent,
+    AuthRegisterModalComponent,
+    AuthUnregisterModalComponent,
   ],
   imports: [
     CommonModule,
@@ -77,6 +87,11 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordFrameSelectorModalComponent,
     PlayerScriptPreviewModalComponent,
     RecordVideoModalComponent,
+    AuthCheckModalComponent,
+    AuthLoginModalComponent,
+    AuthLogoutModalComponent,
+    AuthRegisterModalComponent,
+    AuthUnregisterModalComponent,
   ],
 })
 export class ModalsModule {}

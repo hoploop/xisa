@@ -1,4 +1,7 @@
 { "recorder": {
+
+    "title":"Record",
+    "summary":"By recording a new automation scenario you will be able to have the full video of your interactions with the screen, together with the keyboard and mouse actions you performed",
     "errors": {
         "not_found": "Record not found",
         "already_existing": "Another record with this username already found",

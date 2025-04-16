@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { BaseComponent } from '@utils/base/base.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  selector: 'app-auth-login-modal',
   standalone: false,
+  templateUrl: './auth-login-modal.component.html',
+  styleUrl: './auth-login-modal.component.scss'
 })
-export class LoginComponent extends BaseComponent {
+export class AuthLoginModalComponent extends BaseComponent {
   username = '';
   password = '';
   valid = new BehaviorSubject<boolean>(false);

@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
-  selector: 'app-logout',
-  templateUrl: './logout.component.html',
-  styleUrl: './logout.component.scss',
+  selector: 'app-auth-logout-modal',
   standalone: false,
+  templateUrl: './auth-logout-modal.component.html',
+  styleUrl: './auth-logout-modal.component.scss'
 })
-export class LogoutComponent extends BaseComponent {
+export class AuthLogoutModalComponent extends BaseComponent {
   dismiss() {
     this.ctx.closeModal(undefined);
   }

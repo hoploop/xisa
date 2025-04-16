@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
-  selector: 'app-unregister',
-  templateUrl: './unregister.component.html',
-  styleUrl: './unregister.component.scss',
+  selector: 'app-auth-unregister-modal',
   standalone: false,
+  templateUrl: './auth-unregister-modal.component.html',
+  styleUrl: './auth-unregister-modal.component.scss'
 })
-export class UnregisterComponent extends BaseComponent {
+export class AuthUnregisterModalComponent extends BaseComponent {
   dismiss() {
     this.ctx.closeModal(undefined);
   }

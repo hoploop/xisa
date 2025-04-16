@@ -12,6 +12,7 @@ export class ProjectDetailCardComponent extends BaseComponent {
   @Input() project!: Project;
 
   goToProject() {
-    this.router.navigate(['project/page', this.project._id]);
+    this.router.navigate(['project/page',this.project._id]);
+    this.ctx.beat.project.next(this.project);
   }
 }

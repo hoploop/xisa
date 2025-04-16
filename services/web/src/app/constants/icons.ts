@@ -1,6 +1,6 @@
 import { AnimationProp } from '@fortawesome/angular-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faClone, faFolderOpen, faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faImages, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
+import { faClock, faClone, faFolderOpen, faHandPointDown, faHandPointer, faHandPointLeft, faHandPointRight, faHandPointUp, faImages, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import {
   faAnglesDown,
   faAnglesUp,
@@ -97,6 +97,7 @@ import {
   faTrash,
   faTriangleExclamation,
   faUniversity,
+  faUpload,
   faUpRightAndDownLeftFromCenter,
   faUser,
   faUserMinus,
@@ -161,6 +162,7 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   upRightAndDownLeftFromCenter: faUpRightAndDownLeftFromCenter,
   pen: faPen,
   refresh: faRefresh,
+  upload: faUpload,
   arrowLeft: faArrowLeft,
   shapes: faShapes,
   images: faImages,
@@ -264,15 +266,18 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   handPointDown: faHandPointDown,
   clone: faClone,
   school: faSchool,
-  brain: faBrain
+  brain: faBrain,
+  clock: faClock
 
 };
 
 export enum FAIconType {
   clone = 'clone',
   school = 'school',
+  clock = 'clock',
   brain = 'brain',
   list = 'list',
+  upload = 'upload',
   folderTree = 'folderTree',
   folderOpen = 'folderOpen',
   handPointer = 'handPointer',

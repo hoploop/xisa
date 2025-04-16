@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
-  selector: 'app-check',
-  templateUrl: './check.component.html',
-  styleUrl: './check.component.scss',
+  selector: 'app-auth-check-modal',
   standalone: false,
+  templateUrl: './auth-check-modal.component.html',
+  styleUrl: './auth-check-modal.component.scss'
 })
-export class CheckComponent extends BaseComponent implements OnInit {
+export class AuthCheckModalComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.check();

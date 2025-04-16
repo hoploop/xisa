@@ -18,6 +18,7 @@ import { RecordEventsCountPipe } from './record-events-count.pipe';
 import { RecordVideoPipe } from './record-video.pipe';
 import { RecordSizePipe } from './record-size.pipe';
 import { RecordActionNamePipe } from './record-action-name.pipe';
+import { RecordLoadDetectorNamePipe } from './record-load-detector-name.pipe';
 
 
 
@@ -33,6 +34,7 @@ import { RecordActionNamePipe } from './record-action-name.pipe';
     RecordEventNamePipe,
     RecordActionNamePipe,
     RecordVideoPipe,
+    RecordLoadDetectorNamePipe,
     RecordFramePipe,
     RecordEventsCountPipe,
     RecordDurationPipe,
@@ -58,6 +60,7 @@ import { RecordActionNamePipe } from './record-action-name.pipe';
     RecordActionNamePipe,
     RecordVideoPipe,
     RecordFramePipe,
+    RecordLoadDetectorNamePipe,
     RecordEventsCountPipe,
     RecordDurationPipe,
     RecordFramesCountPipe,

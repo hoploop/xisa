@@ -12,3 +12,18 @@ body {
 .pointer {
   cursor: pointer !important;
 }
+.item-danger {
+  border-left: 4px solid var(--bs-danger);
+}
+
+.item-warning {
+  border-left: 4px solid var(--bs-warning);
+}
+
+.item-primary{
+  border-left: 4px solid var(--bs-primary);
+}
+
+.item-success{
+  border-left: 4px solid var(--bs-success);
+}

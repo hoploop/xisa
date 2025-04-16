@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Project, Record } from '@api/index';
+import { MenuArea } from '@models/menu-area-enum';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -10,9 +11,6 @@ export class BeatService {
     logged: new BehaviorSubject<boolean | undefined>(undefined),
   };
 
-  public menu = {
-    project : new BehaviorSubject<Project|undefined>(undefined),
-    record: new BehaviorSubject<Record|undefined>(undefined)
-  }
-
+  project = new BehaviorSubject<Project|undefined>(undefined)
+  area = new BehaviorSubject<MenuArea>(MenuArea.UNKNOWN);
 }

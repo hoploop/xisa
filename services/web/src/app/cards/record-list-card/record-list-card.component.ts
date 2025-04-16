@@ -97,7 +97,6 @@ export class RecordListCardComponent extends BaseComponent implements OnInit {
                       next: (resultc) => {
                         if (resultb._id) {
                           this.navigateRecordStudio(record);
-                          this.ctx.beat.menu.record.next(record);
                         }
                       },
                     });

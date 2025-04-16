@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
@@ -9,6 +10,7 @@ import { BaseComponent } from '@utils/base/base.component';
 })
 export class ProjectListPageComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
-    this.ctx.beat.menu.project.next(undefined);
+    this.ctx.beat.project.next(undefined);
+    this.ctx.beat.area.next(MenuArea.PROJECTS);
   }
 }

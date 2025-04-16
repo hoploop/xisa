@@ -1,0 +1,43 @@
+<div class="card border-0">
+  <img src="assets/university.jpg" height="200px" width="auto" class="card-img-top object-fit-cover" alt="...">
+
+  <div class="card-body">
+    <h6>
+      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+      <span class="ms-2" translate>trainer.title</span>
+    </h6>
+    <div translate>recorder.summary</div>
+    <div class="d-flex mt-3">
+      <div class="card item-danger">
+        <div class="card-body">
+          <h5 class="card-title">Create a new detector</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary">
+            <app-b-icon [icon]="BIconType.plus "></app-b-icon>
+            <span class="ms-2">New detector</span>
+          </button>
+        </div>
+      </div>
+      <div class="card ms-2 item-warning">
+        <div class="card-body">
+          <h5 class="card-title">Train your detector</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary">
+            <app-b-icon [icon]="BIconType.boundingBox "></app-b-icon>
+            <span class="ms-2">Train a detector</span>
+          </button>
+        </div>
+      </div>
+      <div class="card ms-2 item-primary" >
+        <div class="card-body">
+          <h5 class="card-title">Manage your detectors</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary" (click)="navigateDetectors()">
+            <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
+            <span class="ms-2">Go to detectors</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
