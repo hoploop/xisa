@@ -10,7 +10,5 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './menu-page.component.scss'
 })
 export class MenuPageComponent extends BaseComponent {
-  project?:Project;
-  area:MenuArea = MenuArea.UNKNOWN;
 
 }

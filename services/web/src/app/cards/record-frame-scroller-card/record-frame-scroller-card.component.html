@@ -1,16 +1,7 @@
-<div class="card bg-darker shadow rounded-0 rounded-top">
+<div class="card bg-darker shadow rounded-0 border-0 mt-2">
   <div class="card-body p-0">
-    <div class="d-flex justify-content-center w-100 mt-2 ps-2 pe-2 mb-1">
-      <div class="btn-group btn-group-sm">
-        <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == true" [class.btn-secondary]="synthetic == false">
-            <span class="ms-2" translate>recorder.event.synthetic</span>
-        </button>
-        <button class="btn btn-sm" (click)="toggleSynthetic()" [class.btn-primary]="synthetic == false" [class.btn-secondary]="synthetic == true">
-          <span class="ms-2" translate>recorder.event.default</span>
-        </button>
-      </div>
-
-      <span class="ms-auto text-white">
+    <div class="d-flex justify-content-center w-100 ps-2 pe-2 mb-1">
+      <span class="text-white">
         <span class="pointer" (click)="collapsed.next(!collapsed.getValue())">
           <app-fa-icon *ngIf="!(collapsed|async)" [icon]="FAIconType.chevronDown"></app-fa-icon>
           <app-fa-icon *ngIf="collapsed|async" [icon]="FAIconType.chevronUp"></app-fa-icon>
@@ -23,7 +14,6 @@
             <app-record-event-card (click)="selectFrame(frame)" [class.ms-1]="i>0" [frame]="frame"></app-record-event-card>
         </ng-content>
       </div>
-
     </div>
   </div>
 </div>

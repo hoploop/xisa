@@ -12,18 +12,24 @@ import { BaseComponent } from '@utils/base/base.component';
 export class TrainerPageComponent extends BaseComponent implements OnInit{
 
   project?:Project;
-  projectId?:string| null;
 
     ngOnInit(): void {
         this.ctx.beat.area.next(MenuArea.TRAIN);
-        this.projectId = this.getRouteParam('project_id');
-
+        let projectId = this.getRouteParam('project_id');
+        if (projectId){
+          this.ctx.api.project.projectLoad(projectId).subscribe({
+            next: (result)=>{
+              this.project = result;
+              this.ctx.beat.project.next(result);
+              this.ctx.beat.area.next(MenuArea.TRAIN);
+            },
+            error: (result)=>{
+              this.log.warn(result.error.detail);
+            }
+          })
+        }
     }
 
-    navigateDetectors(){
-      if (!this.projectId) return;
-      this.router.navigate(['detector/list',this.projectId]);
-    }
 
 
 }

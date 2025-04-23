@@ -11,6 +11,27 @@
   ></button>
 
   <ng-content body>
+    <div class="d-flex">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column"></div>
+        </div>
+      </div>
+      <div class="d-flex flex-column h-100 ms-1">
+        <button class="btn btn-sm btn-primary">
+          <app-fa-icon [icon]="FAIconType.chevronRight"></app-fa-icon>
+        </button>
+        <button class="btn btn-sm btn-primary mt-1">
+          <app-fa-icon [icon]="FAIconType.chevronLeft"></app-fa-icon>
+        </button>
+      </div>
+      <div class="card ms-1">
+        <div class="card-body">
+          <div class="d-flex flex-column">a</div>
+        </div>
+      </div>
+    </div>
+
     <div class="d-flex flex-column m-1">
 
       <input
@@ -58,6 +79,10 @@
         </div>
 
       </ng-container>
+      <button class="btn btn-danger mt-3 btn-sm" (click)="remove()">
+        <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
+        <span class="ms-1" translate>detector.object.remove</span>
+      </button>
       <button class="btn btn-primary mt-3 btn-sm" (click)="submit()">
         <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
         <span class="ms-1" translate>detector.class.confirm</span>

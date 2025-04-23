@@ -172,6 +172,26 @@ class ListRecordActionResponse(_message.Message):
     actions: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., actions: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
 
+class ListRecordActionByFrameRequest(_message.Message):
+    __slots__ = ("user", "record", "frame")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
+    FRAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    record: str
+    frame: int
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+
+class ListRecordActionByFrameResponse(_message.Message):
+    __slots__ = ("status", "message", "actions")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTIONS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    actions: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., actions: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
+
 class CountRecordActionRequest(_message.Message):
     __slots__ = ("user", "record", "event", "search")
     USER_FIELD_NUMBER: _ClassVar[int]

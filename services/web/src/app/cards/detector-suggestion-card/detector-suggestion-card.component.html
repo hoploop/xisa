@@ -1,9 +1,12 @@
-<div class="card mb-1">
-  <div class="card-body">
+<div class="card border-0 bg-light">
+  <div class="card-body p-2">
     <div class="d-flex align-items-center" *ngIf="event">
-      <span>{{event|recordEventName}}</span>
+      <app-fa-icon (click)="toggleCheck()" *ngIf="!checked" [icon]="FAIconType.square"></app-fa-icon>
+      <app-fa-icon (click)="toggleCheck()" *ngIf="checked" [icon]="FAIconType.squareCheck"></app-fa-icon>
+      <small class="ms-1"><span>{{event|recordEventName}}</span></small>
     </div>
     <div class="d-flex align-items-start flex-nowrap">
+      <small>
       <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
       <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order &&  suggestion.by_order.length == 0"  [translate]="'detector.suggestion.by_class'"  [translateParams]="{'class':suggestion.by_label}"></span>
       <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'detector.suggestion.by_classes_order_1'" [translateParams]="{'class':suggestion.by_label,'order':suggestion.by_order[0]}"></span>
@@ -26,6 +29,7 @@
           <span class="ms-1" translate>detector.suggestion.reject</span>
         </button>
       </div>
+    </small>
   </div>
 </div>
 </div>

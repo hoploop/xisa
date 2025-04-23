@@ -58,6 +58,14 @@ export interface RecorderServiceInterface {
     recorderActionList(recordId: string, eventId?: string, skip?: number, limit?: number, search?: string, extraHttpRequestParams?: any): Observable<RecordActionListResponse>;
 
     /**
+     * Action List By Frame
+     * 
+     * @param recordId 
+     * @param frame 
+     */
+    recorderActionListByFrame(recordId: string, frame: number, extraHttpRequestParams?: any): Observable<Array<Action>>;
+
+    /**
      * Action Load
      * 
      * @param actionId 

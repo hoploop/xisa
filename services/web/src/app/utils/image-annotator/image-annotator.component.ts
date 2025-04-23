@@ -18,6 +18,7 @@ import {
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ImageAnnotatorHighlight } from './image-annotator-highlight';
+import { FAIconType } from '../../constants/icons';
 
 export enum State {
   EMPTY = 0,
@@ -38,6 +39,7 @@ export class ImageAnnotatorComponent
 {
   @ViewChild('canvasElement', { static: false })
   canvas!: ElementRef<HTMLCanvasElement>;
+  FAIconType = FAIconType;
   @Input() dataUrl?: string;
   @Input() url?: string =
     'http://localhost:8000/record/frame/67dad716d009b25b6b6e66e5/21';
@@ -49,7 +51,7 @@ export class ImageAnnotatorComponent
   @Output() boxesChange = new EventEmitter<ImageAnnotatorBox[]>();
   @Output() onBoxCreated = new EventEmitter<ImageAnnotatorBox>();
   @Output() onBoxUpdated = new EventEmitter<ImageAnnotatorBox>();
-  @Output() loaded = new EventEmitter<boolean>();
+  @Output() loaded = new BehaviorSubject<boolean>(false);
   @Input() settings = new BehaviorSubject<ImageAnnotatorSettings>({
     resizeHandleSize: 10,
     showHighlights: true,
@@ -434,7 +436,6 @@ export class ImageAnnotatorComponent
         this.boxes.next(boxes);
         this.updateSelectedBox();
         this.boxesChange.next(this.denormalizeOutputBoxes(boxes));
-        this.onBoxCreated.next(nbox)
         this.draw();
       }
     } else if (overType == ImageAnnotatorMouseOverType.INSIDE) {
@@ -640,8 +641,11 @@ export class ImageAnnotatorComponent
           box.w = w;
           box.h = h;
           this.draw();
+          this.onBoxCreated.next(box)
         }
         this.state = State.SELECTED;
+
+
       } else {
         let boxes = this.boxes.getValue();
         boxes.splice(this.selectedBoxIndex, 1);

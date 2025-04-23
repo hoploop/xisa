@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  OnInit,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ContextService } from './services/context.service';
@@ -11,7 +12,7 @@ import { ContextService } from './services/context.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   loaded = false;
   logged = new BehaviorSubject<boolean | undefined>(undefined);
   registering = new BehaviorSubject<boolean | undefined>(undefined);
@@ -26,6 +27,10 @@ export class AppComponent implements AfterViewInit {
 
   onResizeBottom(event: [number, number]) {
     this.ctx.resizeBottom.next(event);
+  }
+
+  ngOnInit(): void {
+
   }
 
   ngAfterViewInit() {

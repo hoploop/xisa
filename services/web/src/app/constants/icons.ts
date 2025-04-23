@@ -267,7 +267,8 @@ export const FAIconValues: { [key: string]: IconDefinition } = {
   clone: faClone,
   school: faSchool,
   brain: faBrain,
-  clock: faClock
+  clock: faClock,
+
 
 };
 

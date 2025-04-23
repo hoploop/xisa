@@ -33,6 +33,8 @@ from common.rpc.recorder_pb2 import (
     DeleteRecordResponse,
     ExistRecordEventActionRequest,
     ExistRecordEventActionResponse,
+    ListRecordActionByFrameRequest,
+    ListRecordActionByFrameResponse,
     ListRecordActionRequest,
     ListRecordActionResponse,
     ListRecordEventRequest,
@@ -656,6 +658,31 @@ class RecorderService(Service, RecorderServicer):
         except Exception as e:
             log.warning(str(e))
             return CreateRecordActionResponse(status=False, message=str(e))
+        
+    
+    async def listRecordActionByFrame(
+        self, request: ListRecordActionByFrameRequest, context
+    ) -> ListRecordActionByFrameResponse:
+        try:
+            frameNumber = request.frame
+            recordId = PydanticObjectId(request.record)
+            
+            events = await Event.find(Event.frame == frameNumber,Event.record == recordId,with_children=True).to_list()
+            for event in events:
+                qry = And(Action.record == recordId, Action.event == event.id)
+            
+                actions = (
+                    await Action.find(qry)
+                    .sort(-Action.created)
+                    .to_list()
+                )
+                ret = []
+                for action in actions:
+                    ret.append(Conversions.serialize(action))
+            return ListRecordActionByFrameResponse(status=True, actions=ret)
+        except Exception as e:
+            log.warning(str(e))
+            return ListRecordActionByFrameResponse(status=False, message=str(e))
 
     async def listRecordAction(
         self, request: ListRecordActionRequest, context

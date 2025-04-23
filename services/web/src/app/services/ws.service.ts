@@ -12,8 +12,12 @@ import {
   distinctUntilChanged,
   Observable,
   take,
+  retryWhen,
+  catchError,
+  throwError,
+  share,
 } from 'rxjs';
-import { webSocket } from 'rxjs/webSocket';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 export const WS_ENDPOINT = environment.wsUrl;
 export const RECONNECT_INTERVAL = environment.wsReconnect;
@@ -22,6 +26,8 @@ export const RECONNECT_INTERVAL = environment.wsReconnect;
   providedIn: 'root',
 })
 export class WsService {
+
+
   private readonly URL = environment.wsUrl;
   private status$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
@@ -42,6 +48,7 @@ export class WsService {
 
   private create(token: string, session: string) {
     if (this.ws) {
+      return;
       this.ws.unsubscribe();
     }
     let queryParams = `?&token=${token}`;

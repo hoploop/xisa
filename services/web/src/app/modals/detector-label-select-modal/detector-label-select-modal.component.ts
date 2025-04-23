@@ -13,7 +13,7 @@ export class DetectorLabelSelectModalComponent
   implements OnInit
 {
   @Input() detectorId?: string;
-  labels: DetectorLabel[] = [];
+
   @Input() enableCreate: boolean = true;
   @Input() selected: DetectorLabel[] = [];
   @Output() selectedChange = new EventEmitter<DetectorLabel[]>();
@@ -21,6 +21,7 @@ export class DetectorLabelSelectModalComponent
   skip: number = 0;
   limit: number = 10;
   search: string = '';
+  labels: DetectorLabel[] = [];
 
   newLabel: string = '';
   newLabelValid: boolean = false;
@@ -84,6 +85,10 @@ export class DetectorLabelSelectModalComponent
     this.ctx.closeModal(this.selected);
   }
 
+  remove(){
+    this.ctx.closeModal(undefined);
+  }
+
   select(label: DetectorLabel) {
     let found = this.selected.findIndex((item) => item._id === label._id);
     if (found != -1) {
@@ -115,6 +120,6 @@ export class DetectorLabelSelectModalComponent
   }
 
   dismiss() {
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
 }

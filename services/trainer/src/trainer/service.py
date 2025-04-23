@@ -111,7 +111,7 @@ class TrainerService(Service, TrainerServicer):
         try:
             lessonId = PydanticObjectId(request.lesson)
             qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False)
-            if request.frame and request.frame >=0:
+            if request.frame >=0:
                 qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False,TrainImageObject.frame == request.frame)
             tios = await TrainImageObject.find_many(qry).to_list()
             ret = []

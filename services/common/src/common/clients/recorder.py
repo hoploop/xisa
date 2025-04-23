@@ -19,6 +19,8 @@ from common.rpc.recorder_pb2 import (
     DeleteRecordRequest,
     ExistRecordEventActionRequest,
     ExistRecordEventActionResponse,
+    ListRecordActionByFrameRequest,
+    ListRecordActionByFrameResponse,
     ListRecordActionRequest,
     ListRecordActionResponse,
     ListRecordEventRequest,
@@ -299,6 +301,26 @@ class RecorderClient(Client):
         for act in res.actions:
             ret.append(Conversions.deserialize(act))
         return total, ret
+    
+    async def listRecordActionByFrame(
+        self,
+        user: User,
+        recordId: PydanticObjectId,
+        frame:int
+    ) -> List[Action]:
+        
+        req = ListRecordActionByFrameRequest(
+            user=str(user.id),
+            record=str(recordId),
+            frame=frame,
+        )
+        res: ListRecordActionByFrameResponse = await self.client.listRecordActionByFrame(req)
+        if res.status == False:
+            raise Exception(res.message)
+        ret = []
+        for act in res.actions:
+            ret.append(Conversions.deserialize(act))
+        return ret
 
     async def countRecordAction(
         self,

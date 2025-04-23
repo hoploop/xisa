@@ -43,22 +43,21 @@
         (click)="navigateRecordPage()"
         [ngClass]="area == MenuArea.RECORD ? 'btn-light' : 'btn-outline-light'"
         class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
-        type="button"
-      >
+        type="button">
         <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
         <span class="ms-2" translate>recorder.title</span>
       </button>
 
       <!-- Train -->
       <button
-        [ngClass]="area == MenuArea.TRAIN ? 'btn-light' : 'btn-outline-light'"
-        class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
-        (click)="navigateTrainerPage()"
-        type="button"
-      >
-        <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
-        <span class="ms-2" translate>trainer.title</span>
-      </button>
+      (click)="navigateTrainerPage()"
+      [ngClass]="area == MenuArea.TRAIN ? 'btn-light' : 'btn-outline-light'"
+      class="btn btn-sm border-0 rounded-0 pb-2 pt-2"
+      type="button">
+      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+      <span class="ms-2" translate>trainer.title</span>
+    </button>
+
 
       <!-- Automate -->
       <button

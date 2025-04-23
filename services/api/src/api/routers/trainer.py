@@ -193,6 +193,7 @@ async def lesson_image_object_list(
     user: CurrentUser, trainer: Trainer, lessonId: PydanticObjectId, frame:int = -1
 ):
     try:
+        log.debug('Loading lesosn image for frame: {0}'.format(frame))
         total, ret = await trainer.trainImageObjectList(user,lessonId,frame)
         return TrainImageObjectListResponse(total=total,objects=ret)
     except Exception as e:

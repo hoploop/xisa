@@ -140,6 +140,11 @@ class RecorderStub(object):
                 request_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionResponse.FromString,
                 _registered_method=True)
+        self.listRecordActionByFrame = channel.unary_unary(
+                '/Recorder/listRecordActionByFrame',
+                request_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameResponse.FromString,
+                _registered_method=True)
         self.countRecordAction = channel.unary_unary(
                 '/Recorder/countRecordAction',
                 request_serializer=common_dot_rpc_dot_recorder__pb2.CountRecordActionRequest.SerializeToString,
@@ -302,6 +307,12 @@ class RecorderServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def listRecordActionByFrame(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def countRecordAction(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -445,6 +456,11 @@ def add_RecorderServicer_to_server(servicer, server):
                     servicer.listRecordAction,
                     request_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionRequest.FromString,
                     response_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionResponse.SerializeToString,
+            ),
+            'listRecordActionByFrame': grpc.unary_unary_rpc_method_handler(
+                    servicer.listRecordActionByFrame,
+                    request_deserializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameResponse.SerializeToString,
             ),
             'countRecordAction': grpc.unary_unary_rpc_method_handler(
                     servicer.countRecordAction,
@@ -1044,6 +1060,33 @@ class Recorder(object):
             '/Recorder/listRecordAction',
             common_dot_rpc_dot_recorder__pb2.ListRecordActionRequest.SerializeToString,
             common_dot_rpc_dot_recorder__pb2.ListRecordActionResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def listRecordActionByFrame(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Recorder/listRecordActionByFrame',
+            common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameRequest.SerializeToString,
+            common_dot_rpc_dot_recorder__pb2.ListRecordActionByFrameResponse.FromString,
             options,
             channel_credentials,
             insecure,

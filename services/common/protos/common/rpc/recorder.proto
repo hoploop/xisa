@@ -26,6 +26,7 @@ service Recorder {
  
     rpc createRecordAction(CreateRecordActionRequest) returns (CreateRecordActionResponse);
     rpc listRecordAction(ListRecordActionRequest) returns (ListRecordActionResponse);
+    rpc listRecordActionByFrame(ListRecordActionByFrameRequest) returns (ListRecordActionByFrameResponse);
     rpc countRecordAction(CountRecordActionRequest) returns (CountRecordActionResponse);
     rpc loadRecordAction(LoadRecordActionRequest) returns (LoadRecordActionResponse);
     rpc loadRecordActionByEvent(LoadRecordActionByEventRequest) returns (LoadRecordActionByEventResponse);
@@ -128,12 +129,30 @@ message ListRecordActionRequest {
 
 }
 
+
 message ListRecordActionResponse {
     bool status = 1;
     optional string message = 2;
     int32 total = 3;
     repeated Serialized actions = 4;
 }
+
+
+message ListRecordActionByFrameRequest {
+    string user = 1;
+    string record = 2;
+    int32 frame = 3;
+
+}
+
+
+
+message ListRecordActionByFrameResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated Serialized actions = 4;
+}
+
 
 message CountRecordActionRequest {
     string user = 1;

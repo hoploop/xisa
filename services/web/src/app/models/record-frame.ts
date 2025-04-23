@@ -60,15 +60,15 @@ export class Frame {
 
   get calculateButtonClass(): string {
     if (!this.hasEvents) {
-      return 'btn-secondary';
+      return 'bg-light';
     } else if (this.hasEvents && this.hasActions && this.avgConfidence >= 0.5) {
-      return 'btn-success';
+      return 'bg-success text-white';
     } else if (this.hasEvents && this.hasActions && this.avgConfidence < 0.5) {
-      return 'btn-warning';
+      return 'bg-warning';
     } else if (this.hasEvents && !this.hasActions) {
-      return 'btn-danger';
+      return 'bg-danger text-white';
     } else {
-      return 'btn-info';
+      return 'bg-info';
     }
   }
 }

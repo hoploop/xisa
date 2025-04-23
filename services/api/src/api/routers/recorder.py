@@ -341,6 +341,24 @@ async def action_list(
 
 
 @router.get(
+    "/list/action/frame/{recordId}",
+    operation_id="recorderActionListByFrame",
+    response_model=List[Action],
+)
+async def action_list_by_frame(
+    user: CurrentUser,
+    recorder: Recorder,
+    recordId: PydanticObjectId,
+    frame:int
+):
+    try:
+        return await recorder.listRecordActionByFrame(user, recordId,frame)
+    except Exception as e:
+        log.debug(str(e))
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+@router.get(
     "/record/action/count/{recordId}",
     operation_id="recorderActionCount",
     response_model=int,

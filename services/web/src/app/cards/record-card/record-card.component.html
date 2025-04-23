@@ -1,0 +1,43 @@
+<div class="card border-0">
+  <img src="assets/recording.jpg" height="200px" width="auto" class="card-img-top object-fit-cover" alt="...">
+
+  <div class="card-body">
+    <h6>
+      <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
+      <span class="ms-2" translate>recorder.title</span>
+    </h6>
+    <div translate>recorder.summary</div>
+    <div class="d-flex mt-3">
+      <div class="card item-danger">
+        <div class="card-body">
+          <h5 class="card-title">Create a new video</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary">
+            <app-b-icon [icon]="BIconType.record"></app-b-icon>
+            <span class="ms-2">Register a video</span>
+          </button>
+        </div>
+      </div>
+      <div class="card ms-2 item-warning">
+        <div class="card-body">
+          <h5 class="card-title">Import an existing video</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary">
+            <app-fa-icon [icon]="FAIconType.upload"></app-fa-icon>
+            <span class="ms-2">Upload a video</span>
+          </button>
+        </div>
+      </div>
+      <div class="card ms-2 item-primary">
+        <div class="card-body">
+          <h5 class="card-title">Manage your video recordings</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-primary" (click)="navigateVideoList()">
+            <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
+            <span class="ms-2">Go to videos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>

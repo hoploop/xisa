@@ -20,6 +20,19 @@ import { RecordStudioCardComponent } from './record-studio-card/record-studio-ca
 import { RecordFrameCardComponent } from './record-frame-card/record-frame-card.component';
 import { FormsModule } from '@angular/forms';
 import { MenuCardComponent } from './menu-card/menu-card.component';
+import { AutoCardComponent } from './auto-card/auto-card.component';
+import { DetectorCardComponent } from './detector-card/detector-card.component';
+import { HomeCardComponent } from './home-card/home-card.component';
+import { PlayerCardComponent } from './player-card/player-card.component';
+import { ProjectCardComponent } from './project-card/project-card.component';
+import { RecordCardComponent } from './record-card/record-card.component';
+import { TrainerCardComponent } from './trainer-card/trainer-card.component';
+import { TrainerLessonCardComponent } from './trainer-lesson-card/trainer-lesson-card.component';
+import { TrainerLessonFrameCardComponent } from './trainer-lesson-frame-card/trainer-lesson-frame-card.component';
+import { TrainerLessonSuggestionCardComponent } from './trainer-lesson-suggestion-card/trainer-lesson-suggestion-card.component';
+import { TrainerLessonEventCardComponent } from './trainer-lesson-event-card/trainer-lesson-event-card.component';
+import { TrainerLessonTrainCardComponent } from './trainer-lesson-train-card/trainer-lesson-train-card.component';
+import { TrainerLessonActionCardComponent } from './trainer-lesson-action-card/trainer-lesson-action-card.component';
 
 
 
@@ -39,7 +52,20 @@ import { MenuCardComponent } from './menu-card/menu-card.component';
     RecordFrameScrollerCardComponent,
     RecordStudioCardComponent,
     RecordFrameCardComponent,
-    MenuCardComponent
+    MenuCardComponent,
+    AutoCardComponent,
+    DetectorCardComponent,
+    HomeCardComponent,
+    PlayerCardComponent,
+    ProjectCardComponent,
+    RecordCardComponent,
+    TrainerCardComponent,
+    TrainerLessonCardComponent,
+    TrainerLessonFrameCardComponent,
+    TrainerLessonSuggestionCardComponent,
+    TrainerLessonEventCardComponent,
+    TrainerLessonTrainCardComponent,
+    TrainerLessonActionCardComponent
   ],
   imports: [
     CommonModule,
@@ -65,7 +91,20 @@ import { MenuCardComponent } from './menu-card/menu-card.component';
     RecordFrameScrollerCardComponent,
     RecordStudioCardComponent,
     RecordFrameCardComponent,
-    MenuCardComponent
+    MenuCardComponent,
+    AutoCardComponent,
+    DetectorCardComponent,
+    HomeCardComponent,
+    PlayerCardComponent,
+    ProjectCardComponent,
+    RecordCardComponent,
+    TrainerCardComponent,
+    TrainerLessonCardComponent,
+    TrainerLessonFrameCardComponent,
+    TrainerLessonSuggestionCardComponent,
+    TrainerLessonEventCardComponent,
+    TrainerLessonTrainCardComponent,
+    TrainerLessonActionCardComponent
   ]
 })
 export class CardsModule { }

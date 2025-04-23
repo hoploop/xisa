@@ -12,6 +12,8 @@ import { RecordPageComponent } from "@pages/record-page/record-page.component";
 import { TrainerPageComponent } from "@pages/trainer-page/trainer-page.component";
 import { AutoPageComponent } from "@pages/auto-page/auto-page.component";
 import { PlayerPageComponent } from "@pages/player-page/player-page.component";
+import { DetectorPageComponent } from "@pages/detector-page/detector-page.component";
+import { TrainerLessonPageComponent } from "@pages/trainer-lesson-page/trainer-lesson-page.component";
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -25,6 +27,8 @@ export const routes: Routes = [
   { path: 'auto/page/:project_id', component: AutoPageComponent, canActivate: [AuthGuard] },
   { path: 'player/page/:project_id', component: PlayerPageComponent, canActivate: [AuthGuard] },
   { path: 'detector/list/:project_id', component: DetectorListPageComponent, canActivate: [AuthGuard] },
+  { path: 'detector/page/:detector_id', component: DetectorPageComponent, canActivate: [AuthGuard] },
   { path: 'detector/image/list/:detector_id', component: DetectorImageListPageComponent, canActivate: [AuthGuard] },
+  { path: 'trainer/lesson/:detector_id/:record_id', component: TrainerLessonPageComponent, canActivate: [AuthGuard] },
   { path: 'mockup',component:TreeviewComponent}
 ];

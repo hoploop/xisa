@@ -7,6 +7,7 @@ import { BaseComponent } from '@utils/base/base.component';
 import { TreeNode } from '@utils/tree-node/tree-node.component';
 import { Frame } from '@models/record-frame';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-record-studio-card',
@@ -38,6 +39,15 @@ export class RecordStudioCardComponent  extends BaseComponent implements OnInit 
   onSelectNode(node:TreeNode){
     this.selectedNode = node;
   }
+
+  imageUrl(frame: Frame): string {
+      return (
+        environment.imageUrl +
+        frame.lesson.record +
+        '/' +
+        frame.count.toString()
+      );
+    }
 
   loadTrainImageObjects() {
     if (!this.frame) return;

@@ -119,6 +119,11 @@ export class MenuCardComponent  extends BaseComponent implements OnInit, OnDestr
     this.router.navigate(['player/page',this.project._id]);
   }
 
+  navigateDetectors(){
+    if (!this.project) return;
+    this.router.navigate(['detector/list',this.project._id]);
+  }
+
   navigateAutoPage(){
     if (!this.project) return;
     this.router.navigate(['auto/page',this.project._id]);

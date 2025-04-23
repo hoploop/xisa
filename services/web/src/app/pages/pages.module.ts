@@ -16,6 +16,8 @@ import { AutoPageComponent } from './auto-page/auto-page.component';
 import { PlayerPageComponent } from './player-page/player-page.component';
 import { TrainerPageComponent } from './trainer-page/trainer-page.component';
 import { MenuPageComponent } from './menu-page/menu-page.component';
+import { DetectorPageComponent } from './detector-page/detector-page.component';
+import { TrainerLessonPageComponent } from './trainer-lesson-page/trainer-lesson-page.component';
 
 
 
@@ -32,7 +34,9 @@ import { MenuPageComponent } from './menu-page/menu-page.component';
     AutoPageComponent,
     PlayerPageComponent,
     TrainerPageComponent,
-    MenuPageComponent
+    MenuPageComponent,
+    DetectorPageComponent,
+    TrainerLessonPageComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +57,9 @@ import { MenuPageComponent } from './menu-page/menu-page.component';
     AutoPageComponent,
     PlayerPageComponent,
     TrainerPageComponent,
-    MenuPageComponent
+    MenuPageComponent,
+    DetectorPageComponent,
+    TrainerLessonPageComponent
   ]
 })
 export class PagesModule { }

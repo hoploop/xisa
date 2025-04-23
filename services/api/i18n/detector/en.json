@@ -36,7 +36,8 @@
       "settings":"Object detections settings",
       "accept":"Accept",
       "cancel":"Cancel",
-      "path":"Best path weights: {{value}}"
+      "path":"Best path weights: {{value}}",
+      "remove":"Remove"
     },
     "training": {
       "titles": "Train new objects",

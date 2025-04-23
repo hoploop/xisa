@@ -487,7 +487,8 @@ export class RecordFrameCardComponent
         {
           detectorId: this.frame.lesson.detector,
           selected: box.labels,
-        }
+        },
+        {size: 'lg'}
       )
       .subscribe({
         next: (result) => {
