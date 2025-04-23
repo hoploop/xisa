@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from '@api/index';
+import { Record } from '@api/index';
 import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
 
@@ -10,16 +10,23 @@ import { BaseComponent } from '@utils/base/base.component';
   styleUrl: './record-page.component.scss'
 })
 export class RecordPageComponent extends BaseComponent implements OnInit {
-  project?:Project;
+  record?:Record;
+
 
   ngOnInit(): void {
-
       this.ctx.beat.area.next(MenuArea.RECORD);
-      let projectId = this.getRouteParam('project_id');
-      if (projectId){
-      this.ctx.api.project.projectLoad(projectId).subscribe({
+
+      let recordId = this.getRouteParam('record_id');
+      if (recordId){
+      this.ctx.api.recorder.recorderLoad(recordId).subscribe({
         next: (result)=>{
-          this.project = result;
+          this.record = result;
+          this.ctx.beat.record.next(result);
+          this.ctx.api.project.projectLoad(result.project).subscribe({
+            next: (resultb)=>{
+              this.ctx.beat.project.next(resultb);
+            }
+          })
         },
         error: (result)=>{
           this.log.warn(result.error.detail);

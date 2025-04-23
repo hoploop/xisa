@@ -16,6 +16,40 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class CanRemoveDetectorLabelRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class CanRemoveDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "result")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    RESULT_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    result: bool
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., result: bool = ...) -> None: ...
+
+class RemoveDetectorLabelRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class RemoveDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
 class FindDetectorImageLabelRequest(_message.Message):
     __slots__ = ("user", "detector", "name")
     USER_FIELD_NUMBER: _ClassVar[int]
@@ -243,18 +277,20 @@ class CountDetectorLabelResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ...) -> None: ...
 
 class ListDetectorLabelRequest(_message.Message):
-    __slots__ = ("user", "detector", "skip", "limit", "search")
+    __slots__ = ("user", "detector", "skip", "limit", "search", "exclude")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
     SKIP_FIELD_NUMBER: _ClassVar[int]
     LIMIT_FIELD_NUMBER: _ClassVar[int]
     SEARCH_FIELD_NUMBER: _ClassVar[int]
+    EXCLUDE_FIELD_NUMBER: _ClassVar[int]
     user: str
     detector: str
     skip: int
     limit: int
     search: str
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ..., search: _Optional[str] = ...) -> None: ...
+    exclude: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ..., search: _Optional[str] = ..., exclude: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class ListDetectorLabelResponse(_message.Message):
     __slots__ = ("status", "message", "total", "labels")

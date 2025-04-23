@@ -11,10 +11,17 @@ import { FAIconType } from '@constants/icons';
 export class SearchComponent implements OnInit{
   @Input() debounce:number = 500;
   @Input() placeholder:string = '';
+  @Input() icon:FAIconType = FAIconType.search
+
   valueChanges = new EventEmitter<string>();
   @Output() valueChange = new EventEmitter<string>();
+  @Output() onSubmit = new EventEmitter<string>();
   FAIconType = FAIconType;
   @Input() value:string = '';
+
+  submit(){
+    this.onSubmit.next(this.value);
+  }
 
   ngOnInit() {
     this.valueChanges

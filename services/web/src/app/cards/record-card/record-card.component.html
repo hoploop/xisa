@@ -5,36 +5,68 @@
     <h6>
       <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
       <span class="ms-2" translate>recorder.title</span>
+      <span class="ms-2">-</span>
+      <span class="ms-2">{{record.name}}</span>
+
     </h6>
     <div translate>recorder.summary</div>
-    <div class="d-flex mt-3">
-      <div class="card item-danger">
+    <div class="d-flex mt-1 align-items-center">
+        <div class="badge bg-info">{{record.name}}</div>
+        <div class="badge bg-info ms-1"><span translate>recorder.detector</span><span>{{record|recordLoadDetectorName|async}}</span></div>
+        <div class="badge bg-info ms-1"><span translate>recorder.duration</span><span>{{record|recordDuration}}</span></div>
+        <div class="badge bg-info ms-1"><span translate>recorder.events</span><span>{{record._id|recordEventsCount|async}}</span></div>
+        <div class="badge bg-info ms-1"><span translate>recorder.frames</span><span>{{record._id|recordFramesCount|async}}</span></div>
+        <div class="badge bg-info ms-1"><span translate>recorder.size</span><span>{{record._id|recordSize|async}}</span></div>
+        <div class="badge bg-info ms-1"><span translate>recorder.actions</span><span>{{record|recordActionCount|async}}</span></div>
+        <div class="badge bg-info ms-1"><app-ng-icon [icon]="NGIconType.typDeviceDesktop"></app-ng-icon><span class="ms-2" translate>recorder.os.title</span><span>{{record|recordOsName}}</span></div>
+        <div class="badge bg-info ms-1">{{record.created|amCalendar}}</div>
+        <button class="ms-auto btn btn-sm btn-primary" (click)="edit()">
+          <app-fa-icon [icon]="FAIconType.pen"></app-fa-icon>
+          <span class="ms-2">Edit</span>
+        </button>
+      </div>
+
+
+    <div class="d-flex mt-2 w-100">
+      <div class="card item-info border-info w-100">
         <div class="card-body">
-          <h5 class="card-title">Create a new video</h5>
+          <h5 class="card-title">Video</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <button class="btn btn-primary">
-            <app-b-icon [icon]="BIconType.record"></app-b-icon>
-            <span class="ms-2">Register a video</span>
+          <button class="btn btn-info" (click)="video()">
+            <app-fa-icon [icon]="FAIconType.video"></app-fa-icon>
+            <span class="ms-2">View the video</span>
           </button>
         </div>
       </div>
-      <div class="card ms-2 item-warning">
+      <div class="card item-primary border-primary ms-2 w-100">
         <div class="card-body">
-          <h5 class="card-title">Import an existing video</h5>
+          <h5 class="card-title">Train</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <button class="btn btn-primary">
-            <app-fa-icon [icon]="FAIconType.upload"></app-fa-icon>
-            <span class="ms-2">Upload a video</span>
+          <button class="btn btn-primary" (click)="train()">
+            <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+            <span class="ms-2">Train the detection</span>
           </button>
         </div>
       </div>
-      <div class="card ms-2 item-primary">
+    </div>
+    <div class="d-flex mt-2">
+      <div class="card item-warning border-warning w-100">
         <div class="card-body">
-          <h5 class="card-title">Manage your video recordings</h5>
+          <h5 class="card-title">Automate</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <button class="btn btn-primary" (click)="navigateVideoList()">
-            <app-fa-icon [icon]="FAIconType.list"></app-fa-icon>
-            <span class="ms-2">Go to videos</span>
+          <button class="btn btn-warning" (click)="automate()">
+            <app-fa-icon [icon]="FAIconType.robot"></app-fa-icon>
+            <span class="ms-2">Refine the automation</span>
+          </button>
+        </div>
+      </div>
+      <div class="card ms-2 item-success border-success w-100">
+        <div class="card-body">
+          <h5 class="card-title">Play</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <button class="btn btn-success" (click)="play()">
+            <app-fa-icon [icon]="FAIconType.play"></app-fa-icon>
+            <span class="ms-2">Execute the scenario</span>
           </button>
         </div>
       </div>

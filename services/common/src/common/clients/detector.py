@@ -24,6 +24,8 @@ from common.rpc.detector_pb2 import (
     AddDetectorLabelRequest,
     AddDetectorImageLabelRequest,
     AddDetectorLabelResponse,
+    CanRemoveDetectorLabelRequest,
+    CanRemoveDetectorLabelResponse,
     CountDetectorLabelRequest,
     CountDetectorImageLabelRequest,
     CountDetectorImageRequest,
@@ -41,6 +43,8 @@ from common.rpc.detector_pb2 import (
     LoadDetectorRequest,
     RemoveDetectorImageLabelRequest,
     RemoveDetectorImageRequest,
+    RemoveDetectorLabelRequest,
+    RemoveDetectorLabelResponse,
     RemoveDetectorRequest,
     SuggestStepRequest,
     SuggestStepResponse,
@@ -366,6 +370,20 @@ class DetectorClient(Client):
         for image in res.images:
             ret.append(Conversions.deserialize(image))
         return ret
+    
+    async def removeDetectorLabel(self,user:User,labelId:PydanticObjectId) -> bool:
+        req = RemoveDetectorLabelRequest(user=str(user.id),id=str(labelId))
+        res: RemoveDetectorLabelResponse = await self.client.removeDetectorLabel(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.status
+    
+    async def canRemoveDetectorLabel(self,user:User,labelId:PydanticObjectId) -> bool:
+        req = CanRemoveDetectorLabelRequest(user=str(user.id),id=str(labelId))
+        res: CanRemoveDetectorLabelResponse = await self.client.canRemoveDetectorLabel(req)
+        if res.status == False:
+            raise Exception(res.message)
+        return res.result
 
     async def listDetectorImageLabel(
         self, user: User, imageId: PydanticObjectId, skip: int, limit: int, search: str
@@ -389,6 +407,7 @@ class DetectorClient(Client):
         skip: int,
         limit: int,
         search: str,
+        exclude: List[str]=[]
     ) -> Tuple[int, List[DetectorLabel]]:
         req = ListDetectorLabelRequest(
             user=str(user.id),
@@ -396,6 +415,7 @@ class DetectorClient(Client):
             skip=skip,
             limit=limit,
             search=search,
+            exclude=exclude
         )
         res: ListDetectorLabelResponse = await self.client.listDetectorLabel(req)
         if res.status == False:

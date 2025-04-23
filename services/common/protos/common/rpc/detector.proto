@@ -25,10 +25,33 @@ service Detector {
     rpc findDetectorImageLabel(FindDetectorImageLabelRequest) returns (FindDetectorImageLabelResponse);
     rpc listDetectorImageLabel(ListDetectorImageLabelRequest) returns (ListDetectorImageLabelResponse);
     rpc listDetectorLabel(ListDetectorLabelRequest) returns (ListDetectorLabelResponse);
+    rpc canRemoveDetectorLabel(CanRemoveDetectorLabelRequest) returns (CanRemoveDetectorLabelResponse);
+    rpc removeDetectorLabel(RemoveDetectorLabelRequest) returns (RemoveDetectorLabelResponse);
     rpc existsDetectorLabel(ExistsDetectorLabelRequest) returns (ExistsDetectorLabelResponse);
     rpc addDetectorLabel(AddDetectorLabelRequest) returns (AddDetectorLabelResponse);
     rpc countDetectorLabel(CountDetectorLabelRequest) returns (CountDetectorLabelResponse);
     rpc suggestStep(SuggestStepRequest) returns (SuggestStepResponse);
+}
+
+message CanRemoveDetectorLabelRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message CanRemoveDetectorLabelResponse {
+    bool status = 1;
+    optional string message = 2;
+    bool result = 3;
+}
+
+message RemoveDetectorLabelRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message RemoveDetectorLabelResponse {
+    bool status = 1;
+    optional string message = 2;
 }
 
 message FindDetectorImageLabelRequest {
@@ -174,6 +197,7 @@ message ListDetectorLabelRequest {
     int32 skip = 3;
     int32 limit = 4;
     string search = 5;
+    repeated string exclude = 6;
 }
 
 message ListDetectorLabelResponse {

@@ -13,7 +13,7 @@ from queue import Queue
 # LIBRARY IMPORTS
 from beanie import PydanticObjectId
 from pydantic import Field
-from beanie.operators import And, Or, In, RegEx
+from beanie.operators import And, Or, In, RegEx, NotIn
 import pytesseract
 from pytesseract import Output
 from ultralytics import YOLO
@@ -42,6 +42,8 @@ from common.rpc.detector_pb2 import (
     AddDetectorLabelResponse,
     AddDetectorImageLabelRequest,
     AddDetectorImageLabelResponse,
+    CanRemoveDetectorLabelRequest,
+    CanRemoveDetectorLabelResponse,
     CountDetectorLabelRequest,
     CountDetectorLabelResponse,
     CountDetectorImageLabelRequest,
@@ -74,6 +76,8 @@ from common.rpc.detector_pb2 import (
     RemoveDetectorImageLabelResponse,
     RemoveDetectorImageRequest,
     RemoveDetectorImageResponse,
+    RemoveDetectorLabelRequest,
+    RemoveDetectorLabelResponse,
     RemoveDetectorRequest,
     RemoveDetectorResponse,
     SuggestStepRequest,
@@ -142,7 +146,7 @@ class DetectorService(Service, DetectorServicer):
                     status=True, label=Conversions.serialize(found)
                 )
             return FindDetectorImageLabelResponse(
-                status=False, message="workspace.detector.label.errors.not_found"
+                status=False, message="detector.label.errors.not_found"
             )
         except Exception as e:
             log.warning(str(e))
@@ -383,7 +387,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if not detector:
                 return DetectObjectsResponse(
-                    status=False, message="workspace.detector.errors.not_fopund"
+                    status=False, message="detector.errors.not_fopund"
                 )
 
             log.debug("Loading YOLO Model")
@@ -393,7 +397,7 @@ class DetectorService(Service, DetectorServicer):
                 )
                 if not os.path.exists(path):
                     return DetectObjectsResponse(
-                        status=False, message="workspace.detector.errors.not_fopund"
+                        status=False, message="detector.errors.not_fopund"
                     )
             else:
                 path = detector.best
@@ -481,7 +485,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if found is None:
                 return RemoveDetectorImageResponse(
-                    status=False, message="workspace.detector.image.errors.not_found"
+                    status=False, message="detector.image.errors.not_found"
                 )
             detector_id = found.detector
             mode = found.mode
@@ -528,7 +532,7 @@ class DetectorService(Service, DetectorServicer):
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
                 return ListDetectorImageResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             total = await DetectorImage.find_many(
@@ -548,7 +552,7 @@ class DetectorService(Service, DetectorServicer):
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
                 return ListDetectorImageResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             total = await DetectorImage.find_many(
@@ -622,7 +626,7 @@ class DetectorService(Service, DetectorServicer):
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
                 return UpdateDetectorResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
             others_found = await Detector.find_many(
                 Detector.project == found.project,
@@ -631,7 +635,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if others_found:
                 return UpdateDetectorResponse(
-                    status=False, message="workspace.detector.errors.already_existing"
+                    status=False, message="detector.errors.already_existing"
                 )
             found.name = request.name
             found.description = request.description
@@ -653,7 +657,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if detector is None:
                 return LoadDetectorResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
             return LoadDetectorResponse(
                 status=True, detector=Conversions.serialize(detector)
@@ -674,7 +678,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if others_found:
                 return CreateDetectorResponse(
-                    status=False, message="workspace.detector.errors.already_existing"
+                    status=False, message="detector.errors.already_existing"
                 )
 
             detector = Detector(
@@ -738,7 +742,7 @@ class DetectorService(Service, DetectorServicer):
                 if original_detector is None:
                     return CreateDetectorResponse(
                         status=False,
-                        message="workspace.detector.errors.original_not_found",
+                        message="detector.errors.original_not_found",
                     )
 
                 base_path = self.config.path
@@ -854,7 +858,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if detector is None:
                 return TrainDetectorResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             if detector.best is None:
@@ -863,7 +867,7 @@ class DetectorService(Service, DetectorServicer):
                 )
                 if not os.path.exists(path):
                     return TrainDetectorResponse(
-                        status=False, message="workspace.detector.errors.not_found"
+                        status=False, message="detector.errors.not_found"
                     )
             else:
                 path = detector.best
@@ -913,7 +917,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if detector is None:
                 return AddDetectorLabelResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             found = await DetectorLabel.find_many(
@@ -923,7 +927,7 @@ class DetectorService(Service, DetectorServicer):
             if found is not None:
                 return AddDetectorLabelResponse(
                     status=False,
-                    message="workspace.detector.class.errors.already_existing",
+                    message="detector.class.errors.already_existing",
                 )
 
             label = await DetectorLabel(
@@ -947,7 +951,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if detector is None:
                 return ExistsDetectorLabelResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             found = await DetectorLabel.find_many(
@@ -1086,7 +1090,7 @@ class DetectorService(Service, DetectorServicer):
                 await detector.delete()
                 return RemoveDetectorResponse(status=True)
             return RemoveDetectorResponse(
-                status=False, message="workspace.detector.errors.not_found"
+                status=False, message="detector.errors.not_found"
             )
         except Exception as e:
             log.warning(str(e))
@@ -1102,7 +1106,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if found is None:
                 return AddDetectorImageLabelResponse(
-                    status=False, message="workspace.detector.image.errors.not_found"
+                    status=False, message="detector.image.errors.not_found"
                 )
             detector_id = found.detector
 
@@ -1155,10 +1159,11 @@ class DetectorService(Service, DetectorServicer):
             skip = request.skip
             limit = request.limit
             search = request.search
+            exclude = request.exclude
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if found is None:
                 return ListDetectorLabelResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             if search is not None and search.strip() != "":
@@ -1166,9 +1171,10 @@ class DetectorService(Service, DetectorServicer):
                 qry = And(
                     DetectorLabel.detector == detector_id,
                     RegEx(DetectorLabel.name, search, "i"),
+                    NotIn(DetectorLabel.name,(exclude))
                 )
             else:
-                qry = And(DetectorLabel.detector == detector_id)
+                qry = And(DetectorLabel.detector == detector_id,NotIn(DetectorLabel.name,(exclude)))
             total = await DetectorLabel.find_many(qry).count()
             labels = (
                 await DetectorLabel.find_many(qry)
@@ -1186,6 +1192,37 @@ class DetectorService(Service, DetectorServicer):
         except Exception as e:
             log.warning(str(e))
             return ListDetectorLabelResponse(status=False, message=str(e))
+        
+    async def removeDetectorLabel(self, request: RemoveDetectorLabelRequest, context) -> RemoveDetectorLabelResponse:
+        try:
+            found = await DetectorLabel.find(DetectorLabel.id == PydanticObjectId(request.id)).first_or_none()
+            if found:
+                total = await DetectorImageLabel.find(DetectorImageLabel.label == PydanticObjectId(request.id)).count()
+                if total == 0:
+                    await found.delete()
+                    return RemoveDetectorLabelResponse(status=True)
+                else:
+                    return RemoveDetectorLabelResponse(status=False,message="detector.class.errors.has_images")
+            else:
+                return RemoveDetectorLabelResponse(status=False,message="detector.class.errors.not_found")
+        except Exception as e:
+            log.warning(str(e))
+            return RemoveDetectorLabelResponse(status=False,message=str(e))
+    
+    async def canRemoveDetectorLabel(self, request:CanRemoveDetectorLabelRequest, context) -> CanRemoveDetectorLabelResponse:
+        try:
+            found = await DetectorLabel.find(DetectorLabel.id == PydanticObjectId(request.id)).first_or_none()
+            if found:
+                total = await DetectorImageLabel.find(DetectorImageLabel.label == PydanticObjectId(request.id)).count()
+                if total == 0:
+                    return CanRemoveDetectorLabelResponse(status=True,result=True)
+                else:
+                    return CanRemoveDetectorLabelResponse(status=True,result=False)
+            else:
+                return CanRemoveDetectorLabelResponse(status=False,message="detector.class.errors.not_found")
+        except Exception as e:
+            log.warning(str(e))
+            return CanRemoveDetectorLabelResponse(status=False,message=str(e))
 
     async def countDetectorLabel(
         self, request: CountDetectorLabelRequest, context
@@ -1195,7 +1232,7 @@ class DetectorService(Service, DetectorServicer):
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if found is None:
                 return ListDetectorLabelResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             qry = And(DetectorLabel.detector == detector_id)
@@ -1222,7 +1259,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if found is None:
                 return ListDetectorImageLabelResponse(
-                    status=False, message="workspace.detector.image.errors.not_found"
+                    status=False, message="detector.image.errors.not_found"
                 )
 
             if search is not None and search.strip() != "":
@@ -1269,7 +1306,7 @@ class DetectorService(Service, DetectorServicer):
             found = await Detector.find_many(Detector.id == detector_id).first_or_none()
             if not found:
                 return UploadDetectorImageResponse(
-                    status=False, message="workspace.detector.errors.not_found"
+                    status=False, message="detector.errors.not_found"
                 )
 
             log.debug("Loading image")
@@ -1336,7 +1373,7 @@ class DetectorService(Service, DetectorServicer):
             ).first_or_none()
             if found is None:
                 return CountDetectorImageLabelResponse(
-                    status=False, message="workspace.detector.image.errors.not_found"
+                    status=False, message="detector.image.errors.not_found"
                 )
             total = await DetectorImageLabel.find_many(
                 DetectorImageLabel.image == image_id
@@ -1358,7 +1395,7 @@ class DetectorService(Service, DetectorServicer):
             if found is None:
                 return RemoveDetectorImageLabelResponse(
                     status=False,
-                    message="workspace.detector.image.errors.label_not_found",
+                    message="detector.image.errors.label_not_found",
                 )
             await found.delete()
 

@@ -33,7 +33,7 @@ import { TrainerLessonSuggestionCardComponent } from './trainer-lesson-suggestio
 import { TrainerLessonEventCardComponent } from './trainer-lesson-event-card/trainer-lesson-event-card.component';
 import { TrainerLessonTrainCardComponent } from './trainer-lesson-train-card/trainer-lesson-train-card.component';
 import { TrainerLessonActionCardComponent } from './trainer-lesson-action-card/trainer-lesson-action-card.component';
-
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 
 @NgModule({
@@ -73,6 +73,7 @@ import { TrainerLessonActionCardComponent } from './trainer-lesson-action-card/t
     TranslateModule,
     PipesModule,
     MomentModule,
+    MonacoEditorModule,
     FormsModule
 
   ],

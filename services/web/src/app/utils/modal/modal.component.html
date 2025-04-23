@@ -2,7 +2,13 @@
   <h5 class="modal-title" id="modalTitle">
     <ng-content select="[header]"></ng-content>
   </h5>
-  <button type="button" class="btn btn-close" (click)="dismiss()" aria-label="Close"></button>
+  <button
+  type="button"
+  class="btn-close"
+  (click)="dismiss()"
+  aria-label="Close"
+></button>
+
 </div>
 <div class="modal-body" *ngIf="showBody">
   <ng-content select="[body]"></ng-content>

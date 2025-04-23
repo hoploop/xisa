@@ -11,6 +11,7 @@ export class BeatService {
     logged: new BehaviorSubject<boolean | undefined>(undefined),
   };
 
-  project = new BehaviorSubject<Project|undefined>(undefined)
+  project = new BehaviorSubject<Project|undefined>(undefined);
+  record = new BehaviorSubject<Record|undefined>(undefined);
   area = new BehaviorSubject<MenuArea>(MenuArea.UNKNOWN);
 }

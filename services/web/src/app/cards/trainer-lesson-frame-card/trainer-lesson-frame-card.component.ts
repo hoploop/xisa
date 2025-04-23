@@ -119,7 +119,7 @@ export class TrainerLessonFrameCardComponent
       .openModal<DetectorLabel[] | undefined>(
         DetectorLabelSelectModalComponent,
         { detectorId: this.frame.lesson.detector },
-        {size: 'lg'}
+        {size: 'lg',centered:true}
       )
       .subscribe({
         next: (result) => {
@@ -170,7 +170,8 @@ export class TrainerLessonFrameCardComponent
     this.ctx
       .openModal<DetectorLabel[] | undefined>(
         DetectorLabelSelectModalComponent,
-        { detectorId: this.frame.lesson.detector, selected: box.labels }
+        { detectorId: this.frame.lesson.detector, selected: box.labels },
+        {size: 'lg',centered:true}
       )
       .subscribe({
         next: (result) => {

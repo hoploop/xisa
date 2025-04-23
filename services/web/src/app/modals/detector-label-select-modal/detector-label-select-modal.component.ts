@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DetectorLabel } from '@api/index';
+import { FAIconType } from '@constants/icons';
 import { BaseComponent } from '@utils/base/base.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-detector-label-select-modal',
@@ -22,9 +24,8 @@ export class DetectorLabelSelectModalComponent
   limit: number = 10;
   search: string = '';
   labels: DetectorLabel[] = [];
+  adding = new BehaviorSubject<FAIconType>(FAIconType.search);
 
-  newLabel: string = '';
-  newLabelValid: boolean = false;
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -32,31 +33,41 @@ export class DetectorLabelSelectModalComponent
     });
   }
 
-  onNewLabelChange(value: string) {
-    this.newLabel = value;
-    if (this.newLabel.trim() != '') {
-      this.newLabelValid = true;
-    } else {
-      this.newLabelValid = false;
-    }
-  }
+
 
   addNewLabel() {
     if (!this.detectorId) return;
+    if (this.adding.getValue() != FAIconType.plus) return;
+    if (this.search.trim()=='') return;
     this.loading.next(this.ctx.translate.instant('detector.class.adding'));
     this.error.next(undefined);
     this.ctx.api.detector
-      .detectorLabelAdd(this.detectorId, this.newLabel)
+      .detectorLabelAdd(this.detectorId, this.search)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);
-          this.load();
+          this.search = '';
+          this.adding.next(FAIconType.search);
+          this.labels.push(result);
         },
         error: (result) => {
           this.error.next(result.error.detail);
           this.loading.next(undefined);
         },
       });
+  }
+
+  removeLabel(value:DetectorLabel){
+    if (!value._id) return;
+    this.ctx.api.detector.detectorLabelRemove(value._id).subscribe({
+      next: (result)=>{
+        let foundIndex = this.labels.findIndex(item=> item._id == value._id);
+        if (foundIndex!=-1){
+          this.labels.splice(foundIndex,1);
+        }
+      },
+      error: (result)=>{}
+    })
   }
 
   onChangeSearch(value: string) {
@@ -91,26 +102,49 @@ export class DetectorLabelSelectModalComponent
 
   select(label: DetectorLabel) {
     let found = this.selected.findIndex((item) => item._id === label._id);
+    if (found == -1) {
+      this.selected.push(label);
+      this.selectedChange.next(this.selected);
+    }
+
+    found = this.labels.findIndex((item)=> item._id == label._id);
+    if (found!=-1){
+      this.labels.splice(found,1);
+    }
+  }
+
+  unselect(label: DetectorLabel) {
+    let found = this.selected.findIndex((item) => item._id === label._id);
     if (found != -1) {
       this.selected.splice(found, 1);
-    } else {
-      this.selected.push(label);
+      this.selectedChange.next(this.selected);
     }
-    this.selectedChange.next(this.selected);
-    this.load();
+    found = this.labels.findIndex((item)=> item._id == label._id);
+    if (found==-1){
+      this.labels.push(label);
+    }
   }
 
   load() {
     if (!this.detectorId) return;
     this.loading.next(this.ctx.translate.instant('detector.class.loadings'));
     this.error.next(undefined);
+    let flattenExclude: string[] = [];
+    for (let i = 0; i < this.selected.length; i++){
+      flattenExclude.push(this.selected[i].name);
+    }
     this.ctx.api.detector
-      .detectorLabelList(this.detectorId, this.skip, this.limit, this.search)
+      .detectorLabelList(this.detectorId, this.skip, this.limit, this.search,flattenExclude)
       .subscribe({
         next: (result) => {
           this.total = result.total;
           this.labels = result.labels;
           this.loading.next(undefined);
+          if (this.total == 0 && this.search.trim() !=''){
+            this.adding.next(FAIconType.plus);
+          }else{
+            this.adding.next(FAIconType.search);
+          }
         },
         error: (result) => {
           this.error.next(result.error.detail);

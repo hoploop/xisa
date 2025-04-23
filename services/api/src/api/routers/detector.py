@@ -273,7 +273,8 @@ async def image_label_list(
     imageId: PydanticObjectId,
     skip: int = 0,
     limit: int = 10,
-    search: str = None,
+    search: str = None
+    
 ):
     try:
         total, labels = await detector.listDetectorImageLabel(user,imageId,skip,limit,search)
@@ -299,9 +300,10 @@ async def label_list(
     skip: int = 0,
     limit: int = 10,
     search: str = None,
+    exclude: List[str] = []
 ):
     try:
-        total, labels = await detector.listDetectorLabel(user,detectorId,skip,limit,search)
+        total, labels = await detector.listDetectorLabel(user,detectorId,skip,limit,search,exclude)
         return DetectorLabelListResponse(total=total, labels=labels)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
@@ -344,6 +346,31 @@ async def label_add(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+
+
+@router.delete(
+    "/label/remove",
+    operation_id="detectorLabelRemove",
+    description="Removes a label from a detector",
+    response_model=bool,
+)
+async def label_remove(user: CurrentUser, detector: Detector,labelId: PydanticObjectId):
+    try:
+        return await detector.removeDetectorLabel(user,labelId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+@router.get(
+    "/label/removable/{labelId}",
+    operation_id="detectorLabelCanRemove",
+    response_model=bool,
+)
+async def label_can_remove(user: CurrentUser, detector: Detector, labelId: PydanticObjectId):
+    try:
+        return await detector.canRemoveDetectorLabel(user,labelId)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 

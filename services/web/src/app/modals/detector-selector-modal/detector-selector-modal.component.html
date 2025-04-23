@@ -41,7 +41,7 @@
       </div>
       <ng-container *ngFor="let otherDetector of detectors">
         <div
-          class="btn btn-secondary btn-sm mt-1"
+          class="btn btn-primary btn-sm mt-1"
           (click)="select(otherDetector)"
           *ngIf="detector == undefined || otherDetector._id != detector._id"
         >

@@ -115,6 +115,11 @@ export class RecordListCardComponent extends BaseComponent implements OnInit {
     this.router.navigate(['record/studio',record._id]);
   }
 
+  open(record:Record){
+
+    this.router.navigate(['record/page',record._id]);
+  }
+
   load() {
     if (!this.project) return;
     if (!this.project._id) return;

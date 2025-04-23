@@ -1,6 +1,6 @@
 <div class="input-group input-group-sm">
   <input type="text"  class="form-control search form-control-sm" [ngModel]="value" [placeholder]="placeholder|translate" (ngModelChange)="onChange($event)"/>
-  <span class="input-group-text" id="basic-addon2">
-    <app-fa-icon [icon]="FAIconType.search"></app-fa-icon>
+  <span class="input-group-text" id="basic-addon2" (click)="submit()">
+    <app-fa-icon [icon]="icon"></app-fa-icon>
   </span>
 </div>

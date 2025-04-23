@@ -135,6 +135,16 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.FromString,
                 _registered_method=True)
+        self.canRemoveDetectorLabel = channel.unary_unary(
+                '/Detector/canRemoveDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelResponse.FromString,
+                _registered_method=True)
+        self.removeDetectorLabel = channel.unary_unary(
+                '/Detector/removeDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelResponse.FromString,
+                _registered_method=True)
         self.existsDetectorLabel = channel.unary_unary(
                 '/Detector/existsDetectorLabel',
                 request_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.SerializeToString,
@@ -281,6 +291,18 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def canRemoveDetectorLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def removeDetectorLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def existsDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -407,6 +429,16 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.listDetectorLabel,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.SerializeToString,
+            ),
+            'canRemoveDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.canRemoveDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelResponse.SerializeToString,
+            ),
+            'removeDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.removeDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelResponse.SerializeToString,
             ),
             'existsDetectorLabel': grpc.unary_unary_rpc_method_handler(
                     servicer.existsDetectorLabel,
@@ -969,6 +1001,60 @@ class Detector(object):
             '/Detector/listDetectorLabel',
             common_dot_rpc_dot_detector__pb2.ListDetectorLabelRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.ListDetectorLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def canRemoveDetectorLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/canRemoveDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.CanRemoveDetectorLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def removeDetectorLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/removeDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.RemoveDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,

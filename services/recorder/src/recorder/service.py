@@ -664,6 +664,7 @@ class RecorderService(Service, RecorderServicer):
         self, request: ListRecordActionByFrameRequest, context
     ) -> ListRecordActionByFrameResponse:
         try:
+            ret = []
             frameNumber = request.frame
             recordId = PydanticObjectId(request.record)
             
@@ -676,7 +677,7 @@ class RecorderService(Service, RecorderServicer):
                     .sort(-Action.created)
                     .to_list()
                 )
-                ret = []
+                
                 for action in actions:
                     ret.append(Conversions.serialize(action))
             return ListRecordActionByFrameResponse(status=True, actions=ret)

@@ -19,6 +19,7 @@ import { RecordVideoPipe } from './record-video.pipe';
 import { RecordSizePipe } from './record-size.pipe';
 import { RecordActionNamePipe } from './record-action-name.pipe';
 import { RecordLoadDetectorNamePipe } from './record-load-detector-name.pipe';
+import { DetectorLabelRemovablePipe } from './detector-label-removable.pipe';
 
 
 
@@ -43,6 +44,7 @@ import { RecordLoadDetectorNamePipe } from './record-load-detector-name.pipe';
     RecordOsNamePipe,
     RecordActionCountPipe,
     RecordEventFilterSyntheticPipe,
+    DetectorLabelRemovablePipe,
   ],
 
   imports: [
@@ -67,7 +69,8 @@ import { RecordLoadDetectorNamePipe } from './record-load-detector-name.pipe';
     RecordSizePipe,
     RecordOsNamePipe,
     RecordActionCountPipe,
-    RecordEventFilterSyntheticPipe
+    RecordEventFilterSyntheticPipe,
+    DetectorLabelRemovablePipe
   ]
 })
 export class PipesModule { }

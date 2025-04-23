@@ -58,13 +58,14 @@
       "loadings": "Loading detector classes...",
       "selects": "Select detector classes",
       "search": "Search detector class",
+      "search_add":"Search or add a detector class",
       "empty": "No detector classes",
       "add": "Add detector class",
       "adding": "Adding new detector class",
       "name": "Detector class name",
       "confirm": "Save selected classes",
       "cancel": "Cancel",
-      "errors": { "already_existing": "Detector class already existing" }
+      "errors": { "already_existing": "Detector class already existing","not_found":"Detector class not found","has_images":"This detector class has images connected" }
     },
     "images_n": "Images: {{n}}",
     "classes_n": "Classes: {{n}}",
