@@ -1,4 +1,6 @@
 export * from './action';
+export * from './app-started-event';
+export * from './app-stopped-event';
 export * from './detect-object';
 export * from './detect-text';
 export * from './detector';
@@ -44,6 +46,5 @@ export * from './train-image-object';
 export * from './train-image-object-list-response';
 export * from './train-image-object-payload';
 export * from './train-image-object-update-payload';
-export * from './train-lesson';
 export * from './validation-error';
 export * from './validation-error-loc-inner';

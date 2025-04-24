@@ -58,6 +58,9 @@ export class RecordCardComponent extends BaseComponent implements OnInit {
       })
       .subscribe({
         next: (result) => {
+
+
+
           if (result) {
             this.router.navigate([
               'trainer/lesson',

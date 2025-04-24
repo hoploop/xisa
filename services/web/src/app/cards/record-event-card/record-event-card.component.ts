@@ -20,7 +20,7 @@ export class RecordEventCardComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.loadUrlImage(
       environment.imageThumbnailUrl +
-        this.frame.lesson.record +
+        this.frame.record._id +
         '/' +
         this.frame.count.toString()
     );

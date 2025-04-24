@@ -40,31 +40,6 @@ class TrainerStub(object):
                 request_serializer=common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_base__pb2.Pong.FromString,
                 _registered_method=True)
-        self.recordHasLesson = channel.unary_unary(
-                '/Trainer/recordHasLesson',
-                request_serializer=common_dot_rpc_dot_trainer__pb2.RecordHasLessonRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_trainer__pb2.RecordHasLessonResponse.FromString,
-                _registered_method=True)
-        self.recordCreateLesson = channel.unary_unary(
-                '/Trainer/recordCreateLesson',
-                request_serializer=common_dot_rpc_dot_trainer__pb2.RecordCreateLessonRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_trainer__pb2.RecordCreateLessonResponse.FromString,
-                _registered_method=True)
-        self.lessonSetTextConfidence = channel.unary_unary(
-                '/Trainer/lessonSetTextConfidence',
-                request_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceResponse.FromString,
-                _registered_method=True)
-        self.lessonSetObjectConfidence = channel.unary_unary(
-                '/Trainer/lessonSetObjectConfidence',
-                request_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceResponse.FromString,
-                _registered_method=True)
-        self.lessonSetDetector = channel.unary_unary(
-                '/Trainer/lessonSetDetector',
-                request_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.SerializeToString,
-                response_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.FromString,
-                _registered_method=True)
         self.trainImageObjectUpdate = channel.unary_unary(
                 '/Trainer/trainImageObjectUpdate',
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectUpdateRequest.SerializeToString,
@@ -103,36 +78,6 @@ class TrainerServicer(object):
     def ping(self, request, context):
         """Performs synchronous ping of service
         """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def recordHasLesson(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def recordCreateLesson(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def lessonSetTextConfidence(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def lessonSetObjectConfidence(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def lessonSetDetector(self, request, context):
-        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -180,31 +125,6 @@ def add_TrainerServicer_to_server(servicer, server):
                     servicer.ping,
                     request_deserializer=common_dot_rpc_dot_base__pb2.Ping.FromString,
                     response_serializer=common_dot_rpc_dot_base__pb2.Pong.SerializeToString,
-            ),
-            'recordHasLesson': grpc.unary_unary_rpc_method_handler(
-                    servicer.recordHasLesson,
-                    request_deserializer=common_dot_rpc_dot_trainer__pb2.RecordHasLessonRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_trainer__pb2.RecordHasLessonResponse.SerializeToString,
-            ),
-            'recordCreateLesson': grpc.unary_unary_rpc_method_handler(
-                    servicer.recordCreateLesson,
-                    request_deserializer=common_dot_rpc_dot_trainer__pb2.RecordCreateLessonRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_trainer__pb2.RecordCreateLessonResponse.SerializeToString,
-            ),
-            'lessonSetTextConfidence': grpc.unary_unary_rpc_method_handler(
-                    servicer.lessonSetTextConfidence,
-                    request_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceResponse.SerializeToString,
-            ),
-            'lessonSetObjectConfidence': grpc.unary_unary_rpc_method_handler(
-                    servicer.lessonSetObjectConfidence,
-                    request_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceResponse.SerializeToString,
-            ),
-            'lessonSetDetector': grpc.unary_unary_rpc_method_handler(
-                    servicer.lessonSetDetector,
-                    request_deserializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.FromString,
-                    response_serializer=common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.SerializeToString,
             ),
             'trainImageObjectUpdate': grpc.unary_unary_rpc_method_handler(
                     servicer.trainImageObjectUpdate,
@@ -264,141 +184,6 @@ class Trainer(object):
             '/Trainer/ping',
             common_dot_rpc_dot_base__pb2.Ping.SerializeToString,
             common_dot_rpc_dot_base__pb2.Pong.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def recordHasLesson(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/Trainer/recordHasLesson',
-            common_dot_rpc_dot_trainer__pb2.RecordHasLessonRequest.SerializeToString,
-            common_dot_rpc_dot_trainer__pb2.RecordHasLessonResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def recordCreateLesson(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/Trainer/recordCreateLesson',
-            common_dot_rpc_dot_trainer__pb2.RecordCreateLessonRequest.SerializeToString,
-            common_dot_rpc_dot_trainer__pb2.RecordCreateLessonResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def lessonSetTextConfidence(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/Trainer/lessonSetTextConfidence',
-            common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceRequest.SerializeToString,
-            common_dot_rpc_dot_trainer__pb2.LessonSetTextConfidenceResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def lessonSetObjectConfidence(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/Trainer/lessonSetObjectConfidence',
-            common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceRequest.SerializeToString,
-            common_dot_rpc_dot_trainer__pb2.LessonSetObjectConfidenceResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def lessonSetDetector(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/Trainer/lessonSetDetector',
-            common_dot_rpc_dot_trainer__pb2.LessonSetDetectorRequest.SerializeToString,
-            common_dot_rpc_dot_trainer__pb2.LessonSetDetectorResponse.FromString,
             options,
             channel_credentials,
             insecure,

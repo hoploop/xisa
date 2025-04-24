@@ -38,7 +38,6 @@ export class RecordActionNamePipe implements PipeTransform {
   }
 
   renderSecondPart(action: Action) {
-    console.log(action);
     if (action.by_label && action.by_order && action.by_order.length == 0) {
       return this.ctx.translate.instant('recorder.action.by_class', {
         class: action.by_label,

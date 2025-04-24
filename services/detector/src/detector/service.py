@@ -169,8 +169,13 @@ class DetectorService(Service, DetectorServicer):
                 bsource = b64image
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
+            log.debug('Image loaded')
 
-            x, y = event.position
+            if event.position:
+                x, y = event.position
+            else:
+                x = 0
+                y = 0
             # x = x / width
             # y = y / height
             
@@ -178,6 +183,7 @@ class DetectorService(Service, DetectorServicer):
             req = DetectTextsRequest(
                 user=request.user, data=request.data, confidence=request.confidence
             )
+            log.debug('Detecting texts')
             res = await self.detectTexts(req, context)
 
             suggestions = []
@@ -233,6 +239,7 @@ class DetectorService(Service, DetectorServicer):
                         )
 
             # Mathing objects
+            log.debug('Detecting objects')
             req = DetectObjectsRequest(
                 user=request.user,
                 data=request.data,
@@ -303,6 +310,7 @@ class DetectorService(Service, DetectorServicer):
             x = x / width
             y = y / height
             
+            log.debug('Adding position')
             suggestions.append(DetectorSuggestion(
                 event=PydanticObjectId(request.event),
                 by_position=Position(x=x,y=y),
@@ -313,6 +321,8 @@ class DetectorService(Service, DetectorServicer):
                 confidence=0.5
             ))
             ret = []
+            
+            log.debug('Serializing results')
             for su in suggestions:
                 ret.append(Conversions.serialize(su))
 

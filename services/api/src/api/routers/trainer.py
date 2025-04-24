@@ -16,7 +16,7 @@ from starlette.responses import Response
 # LOCAL IMPORTS
 from common.clients.trainer import TrainerClient
 from api.routers.auth import CurrentUser
-from common.models.trainer import TrainImageObject, TrainLesson
+from common.models.trainer import TrainImageObject
 
 
 # INITIALIZATION
@@ -35,81 +35,6 @@ async def get_trainer(request: Request) -> TrainerClient:
 Trainer = Annotated[TrainerClient, Depends(get_trainer)]
 
 
-@router.get(
-    "/lesson/{recordId}",
-    operation_id="trainerLesson",
-    description="Checks if a recorder is running",
-    response_model=TrainLesson,
-)
-async def lesson(user: CurrentUser, trainer: Trainer, recordId: PydanticObjectId):
-    try:
-
-        found = await trainer.recordHasLesson(user, recordId)
-        print(recordId)
-        if found is None:
-            found = await trainer.recordCreateLesson(user, recordId)
-        return found
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
-
-
-@router.post(
-    "/lesson/detector",
-    operation_id="trainerLessonSetDetector",
-    response_model=TrainLesson,
-)
-async def lesson_set_detector(
-    user: CurrentUser,
-    trainer: Trainer,
-    detectorId: PydanticObjectId,
-    lessonId: PydanticObjectId,
-):
-    try:
-        found = await trainer.lessonSetDetector(user, lessonId, detectorId)
-        return found
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
-
-
-@router.post(
-    "/lesson/text/confidence",
-    operation_id="trainerLessonSetTextConfidence",
-    response_model=TrainLesson,
-)
-async def lesson_set_text_confidence(
-    user: CurrentUser,
-    trainer: Trainer,
-    lessonId: PydanticObjectId,
-    confidence:float
-):
-    try:
-        found = await trainer.lessonSetTextConfidence(user, lessonId, confidence)
-        return found
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
-
-
-
-@router.post(
-    "/lesson/object/confidence",
-    operation_id="trainerLessonSetObjectConfidence",
-    response_model=TrainLesson,
-)
-async def lesson_set_object_confidence(
-    user: CurrentUser,
-    trainer: Trainer,
-    lessonId: PydanticObjectId,
-    confidence:float
-):
-    try:
-        found = await trainer.lessonSetObjectConfidence(user, lessonId, confidence)
-        return found
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
-
-
-
-
 
 class TrainImageObjectUpdatePayload(BaseModel):
     id: PydanticObjectId
@@ -124,11 +49,11 @@ class TrainImageObjectUpdatePayload(BaseModel):
 
 
 @router.put(
-    "/lesson/image/object/update",
-    operation_id="trainerLessonImageObjectUpdate",
+    "/image/object/update",
+    operation_id="trainerImageObjectUpdate",
     response_model=bool,
 )
-async def lesson_image_object_update(
+async def image_object_update(
     user: CurrentUser, trainer: Trainer, payload: TrainImageObjectUpdatePayload
 ):
     try:
@@ -141,7 +66,8 @@ async def lesson_image_object_update(
 
 
 class TrainImageObjectPayload(BaseModel):
-    lessonId: PydanticObjectId
+    recordId: PydanticObjectId
+    detectorId: PydanticObjectId
     frame: int
     labels: List[str]
     xstart: float
@@ -154,17 +80,18 @@ class TrainImageObjectPayload(BaseModel):
 
 
 @router.post(
-    "/lesson/image/object",
-    operation_id="trainerLessonImageObject",
+    "/image/object/create",
+    operation_id="trainerImageObjectCreate",
     response_model=TrainImageObject,
 )
-async def lesson_image_object(
+async def image_object_create(
     user: CurrentUser, trainer: Trainer, payload: TrainImageObjectPayload
 ):
     try:
         found = await trainer.trainImageObject(
             user,
-            payload.lessonId,
+            payload.detectorId,
+            payload.recordId,
             payload.frame,
             payload.labels,
             payload.xstart,
@@ -185,27 +112,27 @@ class TrainImageObjectListResponse(BaseModel):
     objects: List[TrainImageObject]
 
 @router.get(
-    "/lesson/image/object/list/{lessonId}",
-    operation_id="trainerLessonImageObjectList",
+    "/image/object/list",
+    operation_id="trainerImageObjectList",
     response_model=TrainImageObjectListResponse,
 )
-async def lesson_image_object_list(
-    user: CurrentUser, trainer: Trainer, lessonId: PydanticObjectId, frame:int = -1
+async def image_object_list(
+    user: CurrentUser, trainer: Trainer,detectorId:PydanticObjectId, recordId: PydanticObjectId, frame:int = -1
 ):
     try:
         log.debug('Loading lesosn image for frame: {0}'.format(frame))
-        total, ret = await trainer.trainImageObjectList(user,lessonId,frame)
+        total, ret = await trainer.trainImageObjectList(user,detectorId,recordId,frame)
         return TrainImageObjectListResponse(total=total,objects=ret)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
 @router.get(
-    "/lesson/image/object/count/detector/{detectorId}",
-    operation_id="trainerLessonImageObjectCountByDetector",
+    "/image/object/count/detector/{detectorId}",
+    operation_id="trainerImageObjectCountByDetector",
     response_model=int,
 )
-async def lesson_image_object_count_by_detector(
+async def image_object_count_by_detector(
     user: CurrentUser, trainer: Trainer, detectorId: PydanticObjectId
 ):
     try:
@@ -216,11 +143,11 @@ async def lesson_image_object_count_by_detector(
 
 
 @router.post(
-    "/lesson/image/object/to/detector/{detectorId}",
-    operation_id="trainerLessonImageObjectToDetector",
+    "/image/object/to/detector/{detectorId}",
+    operation_id="trainerImageObjectToDetector",
     response_model=int,
 )
-async def lesson_image_object_to_detector(
+async def image_object_to_detector(
     user: CurrentUser, trainer: Trainer, detectorId: PydanticObjectId
 ):
     try:
@@ -231,11 +158,11 @@ async def lesson_image_object_to_detector(
 
 
 @router.delete(
-    "/lesson/image/object/remove/{objectId}",
-    operation_id="trainerLessonImageObjectRemove",
+    "/image/object/remove/{objectId}",
+    operation_id="trainerImageObjectRemove",
     response_model=bool,
 )
-async def lesson_image_object_remove(user:CurrentUser,trainer:Trainer,objectId:PydanticObjectId):
+async def image_object_remove(user:CurrentUser,trainer:Trainer,objectId:PydanticObjectId):
     try:
         return await trainer.trainImageObjectRemove(user,objectId)
     except Exception as e:

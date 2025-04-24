@@ -11,7 +11,8 @@
 
 export interface TrainImageObject { 
     _id?: string | null;
-    lesson: string;
+    record: string;
+    detector: string;
     frame: number;
     labels?: Array<string>;
     xstart: number;

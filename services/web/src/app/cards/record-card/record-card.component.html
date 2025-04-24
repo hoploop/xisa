@@ -12,7 +12,6 @@
     <div translate>recorder.summary</div>
     <div class="d-flex mt-1 align-items-center">
         <div class="badge bg-info">{{record.name}}</div>
-        <div class="badge bg-info ms-1"><span translate>recorder.detector</span><span>{{record|recordLoadDetectorName|async}}</span></div>
         <div class="badge bg-info ms-1"><span translate>recorder.duration</span><span>{{record|recordDuration}}</span></div>
         <div class="badge bg-info ms-1"><span translate>recorder.events</span><span>{{record._id|recordEventsCount|async}}</span></div>
         <div class="badge bg-info ms-1"><span translate>recorder.frames</span><span>{{record._id|recordFramesCount|async}}</span></div>

@@ -4,6 +4,7 @@ import platform, sys
 from datetime import time
 from enum import Enum
 import json
+import subprocess
 import logging
 import os
 import re
@@ -70,10 +71,23 @@ class Runtime:
         self.platformSystem: str = platform.system()
         self.platformRelease: str = platform.release()
         self.pythonVersion: str = sys.version
+        self.mouse_swapped:bool = self.is_mouse_swapped()
         log.debug('Platform: {0}'.format(self.platformSystem))
         log.debug('Platform version: {0}'.format(self.platformRelease))
         log.debug('Python version: {0}'.format(self.pythonVersion))
         log.debug('Screen size: {0}x{1}'.format(self.screenWidth,self.screenHeight))
+        
+    
+
+    def is_mouse_swapped(self):
+        try:
+            output = subprocess.check_output(
+                ["defaults", "read", "-g", "com.apple.mouse.swapLeftRightButton"],
+                stderr=subprocess.STDOUT
+            ).decode().strip()
+            return output == "1"
+        except subprocess.CalledProcessError:
+            return False  # default behavior
 
 class Selector(BaseModel):
     type: str
@@ -574,9 +588,15 @@ class MousePressOperation(Operation):
         elif self.button == MouseOperationButton.RIGHT:
             but = 'right'
             
+        if runtime.mouse_swapped:
+            if but == 'right':
+                but ='left'
+            elif but == 'left':
+                but = 'right'
+            
         guiX = (x+w/2)*runtime.screenWidth
         guiY = (y+h/2)*runtime.screenHeight
-        pyautogui.mouseDown(guiX, guiY,but, duration=1)
+        pyautogui.mouseDown(guiX, guiY,button=but)#, duration=0.02)
         return True
 
 
@@ -604,9 +624,18 @@ class MouseReleaseOperation(Operation):
             but = 'middle'
         elif self.button == MouseOperationButton.RIGHT:
             but = 'right'
+            
+        
+        if runtime.mouse_swapped:
+            if but == 'right':
+                but ='left'
+            elif but == 'left':
+                but = 'right'
+                
+        
         guiX = (x+w/2)*runtime.screenWidth
         guiY = (y+h/2)*runtime.screenHeight
-        pyautogui.mouseUp(guiX, guiY,but, duration=1)
+        pyautogui.mouseUp(guiX, guiY,button=but)#, duration=0.02)
         return True
 
 

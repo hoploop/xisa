@@ -170,6 +170,7 @@ async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload
 async def frame_suggestions(user:CurrentUser,detector: Detector,recorder:Recorder,detectorId:PydanticObjectId,eventId:PydanticObjectId, confidence:float):
     try:
         event = await recorder.loadEvent(user,eventId)
+        log.debug(str(event))
         data = await recorder.loadRecordFrameBase64(user,event.record,event.frame)
         return  await detector.suggestStep(user,data,detectorId,eventId,confidence)
     except Exception as e:

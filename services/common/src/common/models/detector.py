@@ -11,8 +11,8 @@ from pydantic import BaseModel, Field
 
 # LOCAL IMPORTS
 from common.models.base import Position
-from common.models.defaults import empty_list, utc_now 
-from common.models.trainer import TrainLesson
+from common.models.defaults import empty_list, utc_now
+from common.models.trainer import TrainImageObject 
 
 # INITIALIZATION
 log = logging.getLogger(__name__)
@@ -101,7 +101,7 @@ class Detector(Document):
         
     @before_event(Delete)
     async def remove_related(self):
-        await TrainLesson.find_all(TrainLesson.detector == self.id).delete()
+        await TrainImageObject.find_all(TrainImageObject.detector == self.id).delete()
         await DetectorImage.find_all(DetectorImage.detector == self.id).delete()
         await DetectorLabel.find_all(DetectorLabel.detector == self.id).delete()
      

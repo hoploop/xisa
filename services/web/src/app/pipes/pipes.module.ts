@@ -18,7 +18,6 @@ import { RecordEventsCountPipe } from './record-events-count.pipe';
 import { RecordVideoPipe } from './record-video.pipe';
 import { RecordSizePipe } from './record-size.pipe';
 import { RecordActionNamePipe } from './record-action-name.pipe';
-import { RecordLoadDetectorNamePipe } from './record-load-detector-name.pipe';
 import { DetectorLabelRemovablePipe } from './detector-label-removable.pipe';
 
 
@@ -35,7 +34,6 @@ import { DetectorLabelRemovablePipe } from './detector-label-removable.pipe';
     RecordEventNamePipe,
     RecordActionNamePipe,
     RecordVideoPipe,
-    RecordLoadDetectorNamePipe,
     RecordFramePipe,
     RecordEventsCountPipe,
     RecordDurationPipe,
@@ -62,7 +60,6 @@ import { DetectorLabelRemovablePipe } from './detector-label-removable.pipe';
     RecordActionNamePipe,
     RecordVideoPipe,
     RecordFramePipe,
-    RecordLoadDetectorNamePipe,
     RecordEventsCountPipe,
     RecordDurationPipe,
     RecordFramesCountPipe,

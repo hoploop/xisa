@@ -12,7 +12,7 @@ from pydantic import Field
 from common.models.base import Position
 from common.models.defaults import empty_list, utc_now
 from common.models.player import Replay
-from common.models.trainer import TrainLesson
+from common.models.trainer import TrainImageObject
 
 
 class OS(Document):
@@ -108,6 +108,13 @@ class KeyReleaseEvent(Event):
 class KeyComboPressEvent(Event):
     type: Literal["key.combo.press"] = "key.combo.press"
     keys: List[str]
+    
+class AppStartedEvent(Event):
+    type: Literal["app.started"] = "app.started"
+    name: str
+class AppStoppedEvent(Event):
+    type: Literal["app.stopped"] = "app.stopped"
+    name: str
 
 
 EVENT_TYPES = Union[
@@ -121,7 +128,9 @@ EVENT_TYPES = Union[
     KeyComboPressEvent,
     KeyPressEvent,
     KeyReleaseEvent,
-    KeyTypeEvent
+    KeyTypeEvent,
+    AppStartedEvent,
+    AppStoppedEvent
     
 ]
 
@@ -146,7 +155,7 @@ class Record(Document):
 
     @before_event(Delete)
     async def remove_related(self):
-        await TrainLesson.find_all(TrainLesson.record == self.id).delete()
+        await TrainImageObject.find_all(TrainImageObject.record == self.id).delete()
         await Event.find_many(Event.record == self.id, with_children=True).delete()
         await Action.find_many(Action.record == self.id, with_children=True).delete()
         await Replay.find_many(Replay.record == self.id).delete()

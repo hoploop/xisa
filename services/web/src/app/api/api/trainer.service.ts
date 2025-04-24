@@ -26,8 +26,6 @@ import { TrainImageObjectListResponse } from '../model/train-image-object-list-r
 import { TrainImageObjectPayload } from '../model/train-image-object-payload';
 // @ts-ignore
 import { TrainImageObjectUpdatePayload } from '../model/train-image-object-update-payload';
-// @ts-ignore
-import { TrainLesson } from '../model/train-lesson';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -104,18 +102,17 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson
-     * Checks if a recorder is running
-     * @param recordId 
+     * Image Object Count By Detector
+     * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLesson(recordId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainLesson>;
-    public trainerLesson(recordId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainLesson>>;
-    public trainerLesson(recordId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainLesson>>;
-    public trainerLesson(recordId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (recordId === null || recordId === undefined) {
-            throw new Error('Required parameter recordId was null or undefined when calling trainerLesson.');
+    public trainerImageObjectCountByDetector(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public trainerImageObjectCountByDetector(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public trainerImageObjectCountByDetector(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public trainerImageObjectCountByDetector(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling trainerImageObjectCountByDetector.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -161,8 +158,8 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/${this.configuration.encodeParam({name: "recordId", value: recordId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TrainLesson>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/trainer/image/object/count/detector/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<number>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -176,17 +173,17 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson Image Object
+     * Image Object Create
      * @param trainImageObjectPayload 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainImageObject>;
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainImageObject>>;
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainImageObject>>;
-    public trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public trainerImageObjectCreate(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainImageObject>;
+    public trainerImageObjectCreate(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainImageObject>>;
+    public trainerImageObjectCreate(trainImageObjectPayload: TrainImageObjectPayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainImageObject>>;
+    public trainerImageObjectCreate(trainImageObjectPayload: TrainImageObjectPayload, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (trainImageObjectPayload === null || trainImageObjectPayload === undefined) {
-            throw new Error('Required parameter trainImageObjectPayload was null or undefined when calling trainerLessonImageObject.');
+            throw new Error('Required parameter trainImageObjectPayload was null or undefined when calling trainerImageObjectCreate.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -241,7 +238,7 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/image/object`;
+        let localVarPath = `/trainer/image/object/create`;
         return this.httpClient.request<TrainImageObject>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -257,92 +254,33 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson Image Object Count By Detector
+     * Image Object List
      * @param detectorId 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public trainerLessonImageObjectCountByDetector(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public trainerLessonImageObjectCountByDetector(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public trainerLessonImageObjectCountByDetector(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public trainerLessonImageObjectCountByDetector(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (detectorId === null || detectorId === undefined) {
-            throw new Error('Required parameter detectorId was null or undefined when calling trainerLessonImageObjectCountByDetector.');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (OAuth2PasswordBearer) required
-        localVarCredential = this.configuration.lookupCredential('OAuth2PasswordBearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/trainer/lesson/image/object/count/detector/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<number>('get', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Lesson Image Object List
-     * @param lessonId 
+     * @param recordId 
      * @param frame 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObjectList(lessonId: string, frame?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainImageObjectListResponse>;
-    public trainerLessonImageObjectList(lessonId: string, frame?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainImageObjectListResponse>>;
-    public trainerLessonImageObjectList(lessonId: string, frame?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainImageObjectListResponse>>;
-    public trainerLessonImageObjectList(lessonId: string, frame?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (lessonId === null || lessonId === undefined) {
-            throw new Error('Required parameter lessonId was null or undefined when calling trainerLessonImageObjectList.');
+    public trainerImageObjectList(detectorId: string, recordId: string, frame?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainImageObjectListResponse>;
+    public trainerImageObjectList(detectorId: string, recordId: string, frame?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainImageObjectListResponse>>;
+    public trainerImageObjectList(detectorId: string, recordId: string, frame?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainImageObjectListResponse>>;
+    public trainerImageObjectList(detectorId: string, recordId: string, frame?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (detectorId === null || detectorId === undefined) {
+            throw new Error('Required parameter detectorId was null or undefined when calling trainerImageObjectList.');
+        }
+        if (recordId === null || recordId === undefined) {
+            throw new Error('Required parameter recordId was null or undefined when calling trainerImageObjectList.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (detectorId !== undefined && detectorId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>detectorId, 'detectorId');
+        }
+        if (recordId !== undefined && recordId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>recordId, 'recordId');
+        }
         if (frame !== undefined && frame !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>frame, 'frame');
@@ -391,7 +329,7 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/image/object/list/${this.configuration.encodeParam({name: "lessonId", value: lessonId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/trainer/image/object/list`;
         return this.httpClient.request<TrainImageObjectListResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -407,17 +345,17 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson Image Object Remove
+     * Image Object Remove
      * @param objectId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObjectRemove(objectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public trainerLessonImageObjectRemove(objectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public trainerLessonImageObjectRemove(objectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public trainerLessonImageObjectRemove(objectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public trainerImageObjectRemove(objectId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public trainerImageObjectRemove(objectId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public trainerImageObjectRemove(objectId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public trainerImageObjectRemove(objectId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (objectId === null || objectId === undefined) {
-            throw new Error('Required parameter objectId was null or undefined when calling trainerLessonImageObjectRemove.');
+            throw new Error('Required parameter objectId was null or undefined when calling trainerImageObjectRemove.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -463,7 +401,7 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/image/object/remove/${this.configuration.encodeParam({name: "objectId", value: objectId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/trainer/image/object/remove/${this.configuration.encodeParam({name: "objectId", value: objectId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<boolean>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -478,17 +416,17 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson Image Object To Detector
+     * Image Object To Detector
      * @param detectorId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObjectToDetector(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
-    public trainerLessonImageObjectToDetector(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
-    public trainerLessonImageObjectToDetector(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
-    public trainerLessonImageObjectToDetector(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public trainerImageObjectToDetector(detectorId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<number>;
+    public trainerImageObjectToDetector(detectorId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<number>>;
+    public trainerImageObjectToDetector(detectorId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<number>>;
+    public trainerImageObjectToDetector(detectorId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (detectorId === null || detectorId === undefined) {
-            throw new Error('Required parameter detectorId was null or undefined when calling trainerLessonImageObjectToDetector.');
+            throw new Error('Required parameter detectorId was null or undefined when calling trainerImageObjectToDetector.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -534,7 +472,7 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/image/object/to/detector/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        let localVarPath = `/trainer/image/object/to/detector/${this.configuration.encodeParam({name: "detectorId", value: detectorId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
         return this.httpClient.request<number>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -549,17 +487,17 @@ export class TrainerService implements TrainerServiceInterface {
     }
 
     /**
-     * Lesson Image Object Update
+     * Image Object Update
      * @param trainImageObjectUpdatePayload 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
-    public trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
-    public trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
-    public trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<boolean>;
+    public trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<boolean>>;
+    public trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<boolean>>;
+    public trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (trainImageObjectUpdatePayload === null || trainImageObjectUpdatePayload === undefined) {
-            throw new Error('Required parameter trainImageObjectUpdatePayload was null or undefined when calling trainerLessonImageObjectUpdate.');
+            throw new Error('Required parameter trainImageObjectUpdatePayload was null or undefined when calling trainerImageObjectUpdate.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -614,269 +552,11 @@ export class TrainerService implements TrainerServiceInterface {
             }
         }
 
-        let localVarPath = `/trainer/lesson/image/object/update`;
+        let localVarPath = `/trainer/image/object/update`;
         return this.httpClient.request<boolean>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: trainImageObjectUpdatePayload,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Lesson Set Detector
-     * @param detectorId 
-     * @param lessonId 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public trainerLessonSetDetector(detectorId: string, lessonId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainLesson>;
-    public trainerLessonSetDetector(detectorId: string, lessonId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainLesson>>;
-    public trainerLessonSetDetector(detectorId: string, lessonId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainLesson>>;
-    public trainerLessonSetDetector(detectorId: string, lessonId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (detectorId === null || detectorId === undefined) {
-            throw new Error('Required parameter detectorId was null or undefined when calling trainerLessonSetDetector.');
-        }
-        if (lessonId === null || lessonId === undefined) {
-            throw new Error('Required parameter lessonId was null or undefined when calling trainerLessonSetDetector.');
-        }
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (detectorId !== undefined && detectorId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>detectorId, 'detectorId');
-        }
-        if (lessonId !== undefined && lessonId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>lessonId, 'lessonId');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (OAuth2PasswordBearer) required
-        localVarCredential = this.configuration.lookupCredential('OAuth2PasswordBearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/trainer/lesson/detector`;
-        return this.httpClient.request<TrainLesson>('post', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Lesson Set Object Confidence
-     * @param lessonId 
-     * @param confidence 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public trainerLessonSetObjectConfidence(lessonId: string, confidence: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainLesson>;
-    public trainerLessonSetObjectConfidence(lessonId: string, confidence: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainLesson>>;
-    public trainerLessonSetObjectConfidence(lessonId: string, confidence: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainLesson>>;
-    public trainerLessonSetObjectConfidence(lessonId: string, confidence: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (lessonId === null || lessonId === undefined) {
-            throw new Error('Required parameter lessonId was null or undefined when calling trainerLessonSetObjectConfidence.');
-        }
-        if (confidence === null || confidence === undefined) {
-            throw new Error('Required parameter confidence was null or undefined when calling trainerLessonSetObjectConfidence.');
-        }
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (lessonId !== undefined && lessonId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>lessonId, 'lessonId');
-        }
-        if (confidence !== undefined && confidence !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>confidence, 'confidence');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (OAuth2PasswordBearer) required
-        localVarCredential = this.configuration.lookupCredential('OAuth2PasswordBearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/trainer/lesson/object/confidence`;
-        return this.httpClient.request<TrainLesson>('post', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Lesson Set Text Confidence
-     * @param lessonId 
-     * @param confidence 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public trainerLessonSetTextConfidence(lessonId: string, confidence: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TrainLesson>;
-    public trainerLessonSetTextConfidence(lessonId: string, confidence: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TrainLesson>>;
-    public trainerLessonSetTextConfidence(lessonId: string, confidence: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TrainLesson>>;
-    public trainerLessonSetTextConfidence(lessonId: string, confidence: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (lessonId === null || lessonId === undefined) {
-            throw new Error('Required parameter lessonId was null or undefined when calling trainerLessonSetTextConfidence.');
-        }
-        if (confidence === null || confidence === undefined) {
-            throw new Error('Required parameter confidence was null or undefined when calling trainerLessonSetTextConfidence.');
-        }
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (lessonId !== undefined && lessonId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>lessonId, 'lessonId');
-        }
-        if (confidence !== undefined && confidence !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>confidence, 'confidence');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (OAuth2PasswordBearer) required
-        localVarCredential = this.configuration.lookupCredential('OAuth2PasswordBearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-        let localVarTransferCache: boolean | undefined = options && options.transferCache;
-        if (localVarTransferCache === undefined) {
-            localVarTransferCache = true;
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/trainer/lesson/text/confidence`;
-        return this.httpClient.request<TrainLesson>('post', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

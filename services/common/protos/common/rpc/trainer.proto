@@ -6,13 +6,7 @@ service Trainer {
     // Performs synchronous ping of service
     rpc ping(Ping) returns (Pong);
     
-    rpc recordHasLesson(RecordHasLessonRequest) returns (RecordHasLessonResponse);
-    rpc recordCreateLesson(RecordCreateLessonRequest) returns (RecordCreateLessonResponse);
-    rpc lessonSetTextConfidence(LessonSetTextConfidenceRequest) returns (LessonSetTextConfidenceResponse);
-    rpc lessonSetObjectConfidence(LessonSetObjectConfidenceRequest) returns (LessonSetObjectConfidenceResponse);
-    rpc lessonSetDetector(LessonSetDetectorRequest) returns (LessonSetDetectorResponse);
-    rpc trainImageObjectUpdate(TrainImageObjectUpdateRequest) returns (TrainImageObjectUpdateResponse);
-    
+    rpc trainImageObjectUpdate(TrainImageObjectUpdateRequest) returns (TrainImageObjectUpdateResponse);    
     rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
     rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
     rpc trainImageObjectCountByDetector(TrainImageObjectCountByDetectorRequest) returns (TrainImageObjectCountByDetectorResponse);
@@ -23,6 +17,7 @@ service Trainer {
 message TrainImageObjectToDetectorRequest {
     string user = 1;
     string detector = 2;
+    string record = 3;
 }
 
 message TrainImageObjectToDetectorResponse {
@@ -63,7 +58,7 @@ message TrainImageObjectUpdateResponse {
 
 message TrainImageObjectRequest {
     string user = 1;
-    string lesson = 2;
+    string detector = 2;
     int32 frame = 3;
     repeated string labels = 4;
     float xstart = 5;
@@ -73,6 +68,7 @@ message TrainImageObjectRequest {
     bool train = 9;
     bool test = 10;
     bool val = 11;
+    string record = 12;
 }
 
 message TrainImageObjectResponse {
@@ -81,72 +77,13 @@ message TrainImageObjectResponse {
     Serialized object = 3;
 }
 
-message LessonSetTextConfidenceRequest {
-    string user = 1;
-    string lesson = 2;
-    float confidence = 3;
-}
-
-message LessonSetTextConfidenceResponse {
-    bool status = 1;
-    optional string message = 2;
-    Serialized lesson = 3;
-}
-
-
-message LessonSetObjectConfidenceRequest {
-    string user = 1;
-    string lesson = 2;
-    float confidence = 3;
-}
-
-message LessonSetObjectConfidenceResponse {
-    bool status = 1;
-    optional string message = 2;
-    Serialized lesson = 3;
-}
-
-
-message LessonSetDetectorRequest {
-    string user = 1;
-    string detector = 2;
-    string lesson = 3;
-}
-
-message LessonSetDetectorResponse {
-    bool status = 1;
-    optional string message = 2;
-    Serialized lesson = 3;
-}
-
-message RecordHasLessonRequest {
-    string user = 1;
-    string record = 2;
-}
-
-message RecordHasLessonResponse {
-    bool status = 1;
-    optional string message = 2;
-    optional Serialized lesson = 3;
-}
-
-
-message RecordCreateLessonRequest {
-    string user = 1;
-    string record = 2;
-}
-
-message RecordCreateLessonResponse {
-    bool status = 1;
-    optional string message = 2;
-    Serialized lesson = 3;
-}
 
 
 message TrainImageObjectListRequest {
     string user = 1;
-    string lesson = 2;
-    optional int32 frame = 3;
+    string detector = 2;
+    string record = 3;
+    optional int32 frame = 4;
 }
 
 message TrainImageObjectListResponse {

@@ -24,7 +24,7 @@ export class DetectorLearnModalComponent
 
     this.log.debug('Preparing the training objects');
     this.ctx.api.trainer
-      .trainerLessonImageObjectToDetector(this.detector._id)
+      .trainerImageObjectToDetector(this.detector._id)
       .subscribe({
         next: (result) => {
           if (this.detector._id) {

@@ -13,8 +13,9 @@ from common.clients.recorder import RecorderClient
 from common.models import MODELS
 from common.models.auth import User
 from common.models.detector import Detector, DetectorImageMode, DetectorLabel
-from common.models.trainer import TrainImageObject, TrainLesson
-from common.rpc.trainer_pb2 import LessonSetDetectorRequest, LessonSetDetectorResponse, LessonSetObjectConfidenceRequest, LessonSetObjectConfidenceResponse, LessonSetTextConfidenceRequest, LessonSetTextConfidenceResponse, RecordCreateLessonRequest, RecordCreateLessonResponse, RecordHasLessonRequest, RecordHasLessonResponse, TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
+from common.models.recorder import Record
+from common.models.trainer import TrainImageObject
+from common.rpc.trainer_pb2 import  TrainImageObjectCountByDetectorRequest, TrainImageObjectCountByDetectorResponse, TrainImageObjectListRequest, TrainImageObjectListResponse, TrainImageObjectRemoveRequest, TrainImageObjectRemoveResponse, TrainImageObjectRequest, TrainImageObjectResponse, TrainImageObjectToDetectorRequest, TrainImageObjectToDetectorResponse, TrainImageObjectUpdateRequest, TrainImageObjectUpdateResponse
 from common.rpc.trainer_pb2_grpc import TrainerServicer
 from common.service import ClientConfig, Service
 from common.service import ServiceConfig
@@ -47,72 +48,14 @@ class TrainerService(Service, TrainerServicer):
         await self.detector.startup()
         await self.recorder.startup()
          
-    async def recordHasLesson(self, request: RecordHasLessonRequest, context) -> RecordHasLessonResponse:
-        try:
-            found = await TrainLesson.find_many(TrainLesson.record == PydanticObjectId(request.record)).first_or_none()
-            if not found:
-                found = await TrainLesson(record=PydanticObjectId(request.record)).insert()
-            return RecordHasLessonResponse(status=True,lesson=Conversions.serialize(found))
-            
-        except Exception as e:
-            log.warning(str(e))
-            return RecordHasLessonResponse(status=False,message=str(e))
-        
-    async def recordCreateLesson(self, request: RecordCreateLessonRequest, context) -> RecordCreateLessonResponse:
-        try:
-            lesson = await TrainLesson(record=PydanticObjectId(request.record)).insert()
-            return RecordHasLessonRequest(status=True,lesson=Conversions.serialize(lesson))
-        except Exception as e:
-            log.warning(str(e))
-            return RecordCreateLessonResponse(status=False,message=str(e))
-        
-    async def lessonSetObjectConfidence(self, request:LessonSetObjectConfidenceRequest, context) ->LessonSetObjectConfidenceResponse:
-        try:
-            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
-            if lesson is None:
-                return LessonSetObjectConfidenceResponse(status=False,message="trainer.errors.lesson_not_found")
-            lesson.objectConfidence = request.confidence
-            await lesson.save()
-            return LessonSetObjectConfidenceResponse(status=True,lesson=Conversions.serialize(lesson))
-        except Exception as e:
-            log.warning(str(e))
-            return LessonSetObjectConfidenceResponse(status=False,message=str(e))
-        
-    async def lessonSetTextConfidence(self, request:LessonSetTextConfidenceRequest, context) -> LessonSetTextConfidenceResponse:
-        try:
-            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
-            if lesson is None:
-                return LessonSetTextConfidenceResponse(status=False,message="trainer.errors.lesson_not_found")
-            lesson.textConfidence = request.confidence
-            await lesson.save()
-            return LessonSetTextConfidenceResponse(status=True,lesson=Conversions.serialize(lesson))
-        except Exception as e:
-            log.warning(str(e))
-            return LessonSetTextConfidenceResponse(status=False,message=str(e))
-        
-        
-    async def lessonSetDetector(self, request: LessonSetDetectorRequest, context) -> LessonSetDetectorResponse:
-        
-        try:
-            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
-            detector = await Detector.find_many(Detector.id == PydanticObjectId(request.detector)).first_or_none()
-            if lesson is None:
-                return LessonSetDetectorResponse(status=False,message="workspace.trainer.lesson.errors.not_found")
-            if detector is None:
-                return LessonSetDetectorResponse(status=False,message="workspace.detector.errors.not_found")
-            lesson.detector= detector.id
-            await lesson.save()
-            return LessonSetDetectorResponse(status=True,lesson=Conversions.serialize(lesson))
-        except Exception as e:
-            log.warning(str(e))
-            return RecordCreateLessonResponse(status=False,message=str(e))
         
     async def trainImageObjectList(self, request:TrainImageObjectListRequest, context) -> TrainImageObjectListResponse:
         try:
-            lessonId = PydanticObjectId(request.lesson)
-            qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False)
+            detectorId = PydanticObjectId(request.detector)
+            recordId = PydanticObjectId(request.record)
+            qry = And(TrainImageObject.detector == detectorId,TrainImageObject.record== recordId, TrainImageObject.archived == False)
             if request.frame >=0:
-                qry = And(TrainImageObject.lesson == lessonId, TrainImageObject.archived == False,TrainImageObject.frame == request.frame)
+                qry = And(TrainImageObject.detector == detectorId,TrainImageObject.record== recordId, TrainImageObject.archived == False,TrainImageObject.frame == request.frame)
             tios = await TrainImageObject.find_many(qry).to_list()
             ret = []
             total = 0
@@ -128,7 +71,7 @@ class TrainerService(Service, TrainerServicer):
         try:
             found = await TrainImageObject.find_many(TrainImageObject.id == PydanticObjectId(request.id)).first_or_none()
             if not found:
-                return TrainImageObjectRemoveResponse(status=False,message='workspace.trainer.lesson.errors.object_not_found')
+                return TrainImageObjectRemoveResponse(status=False,message='trainer.lesson.errors.object_not_found')
             await found.delete()
             return TrainImageObjectRemoveResponse(status=True)
         except Exception as e:
@@ -138,12 +81,7 @@ class TrainerService(Service, TrainerServicer):
     async def trainImageObjectCountByDetector(self, request: TrainImageObjectCountByDetectorRequest, context) -> TrainImageObjectCountByDetectorResponse:
         try:
             detectorId= PydanticObjectId(request.detector)
-            log.debug('Finding lesson by detector: '+str(detectorId))
-            total = 0
-            async for lesson in TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)):
-                log.debug('Listing lesson')
-                ptotal = await TrainImageObject.find_many(TrainImageObject.lesson == lesson.id, TrainImageObject.archived == False).count()
-                total += ptotal
+            total = await TrainImageObject.find_many(TrainImageObject.detector == detectorId, TrainImageObject.archived == False).count()
             return TrainImageObjectCountByDetectorResponse(status=True,total=total)
         except Exception as e:
             log.warning(str(e))
@@ -170,15 +108,18 @@ class TrainerService(Service, TrainerServicer):
         
     async def trainImageObject(self, request:TrainImageObjectRequest, context) -> TrainImageObjectResponse:
         try:
-            lesson = await TrainLesson.find_many(TrainLesson.id == PydanticObjectId(request.lesson)).first_or_none()
-            if lesson is None:
-                return TrainImageObjectResponse(status=False,message="workspace.trainer.lesson.errors.not_found")
-            detector = await Detector.find_many(Detector.id == PydanticObjectId(lesson.detector)).first_or_none()
+            
+            detector = await Detector.find_many(Detector.id == PydanticObjectId(request.detector)).first_or_none()
             if detector is None:
-                return TrainImageObjectResponse(status=False,message="workspace.detector.errors.not_found")
+                return TrainImageObjectResponse(status=False,message="detector.errors.not_found")
+            
+            record = await Record.find_many(Record.id == PydanticObjectId(request.record)).first_or_none()
+            if record is None:
+                return TrainImageObjectResponse(status=False,message="record.errors.not_found")
             
             tio = await TrainImageObject(
-                lesson=lesson.id,
+                record=record.id,
+                detector=detector.id,
                 frame=request.frame,
                 labels=request.labels,
                 xstart=request.xstart,
@@ -199,26 +140,26 @@ class TrainerService(Service, TrainerServicer):
         try:
             detectorId = PydanticObjectId(request.detector)
             user = await User.find(User.id == PydanticObjectId(request.user)).first_or_none()
-            lessons = await TrainLesson.find(Or(TrainLesson.detector == detectorId,TrainLesson.detector == request.detector)).to_list()
             total = 0
-            for lesson in lessons:
-                tios = await TrainImageObject.find(TrainImageObject.lesson == lesson.id, TrainImageObject.archived==False).to_list()
-                for tio in tios:
-                    imageData = await self.recorder.loadRecordFrameBase64(user,lesson.record,tio.frame) ##str base 64
-                    modes = []
-                    if tio.test:
-                        modes.append(DetectorImageMode.test)
-                    if tio.train:
-                        modes.append(DetectorImageMode.train)
-                    if tio.val:
-                        modes.append(DetectorImageMode.val)
-                    detectorImages = await self.detector.uploadDetectorImage(user,lesson.detector,imageData,modes)
-                    for detectorImage in detectorImages:
-                        for label in tio.labels:
-                            await self.detector.addDetectorImageLabel(user,detectorImage.id,tio.xstart,tio.xend,tio.ystart,tio.yend,label)
-                            total += 1
-                    tio.archived = True
-                    await tio.save()
+        
+            tios = await TrainImageObject.find(TrainImageObject.detector == detectorId, TrainImageObject.archived==False).to_list()
+            for tio in tios:
+                
+                imageData = await self.recorder.loadRecordFrameBase64(user,PydanticObjectId(request.record),tio.frame) ##str base 64
+                modes = []
+                if tio.test:
+                    modes.append(DetectorImageMode.test)
+                if tio.train:
+                    modes.append(DetectorImageMode.train)
+                if tio.val:
+                    modes.append(DetectorImageMode.val)
+                detectorImages = await self.detector.uploadDetectorImage(user,detectorId,imageData,modes)
+                for detectorImage in detectorImages:
+                    for label in tio.labels:
+                        await self.detector.addDetectorImageLabel(user,detectorImage.id,tio.xstart,tio.xend,tio.ystart,tio.yend,label)
+                        total += 1
+                tio.archived = True
+                await tio.save()
             
             return TrainImageObjectToDetectorResponse(status=True,total=total)
         except Exception as e:

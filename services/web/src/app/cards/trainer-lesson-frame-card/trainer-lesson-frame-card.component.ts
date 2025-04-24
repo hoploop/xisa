@@ -68,7 +68,7 @@ export class TrainerLessonFrameCardComponent
   get imageUrl(): string {
     return (
       environment.imageUrl +
-      this.frame.lesson.record +
+      this.frame.record._id +
       '/' +
       this.frame.count.toString()
     );
@@ -111,19 +111,20 @@ export class TrainerLessonFrameCardComponent
   }
 
   boxAdd(box: ImageAnnotatorBox) {
-    if (!this.frame.lesson._id) return;
+    if (!this.frame.detector._id) return;
     let boxes = this.boxes.getValue();
     boxes.push(box);
     this.boxes.next(boxes);
     this.ctx
       .openModal<DetectorLabel[] | undefined>(
         DetectorLabelSelectModalComponent,
-        { detectorId: this.frame.lesson.detector },
+        { detectorId: this.frame.detector._id},
         {size: 'lg',centered:true}
       )
       .subscribe({
         next: (result) => {
-          if (!this.frame.lesson._id) return;
+          if (!this.frame.record._id) return;
+          if (!this.frame.detector._id) return;
 
           if (result == undefined || result.length == 0) {
             this.boxRemove(box);
@@ -135,8 +136,9 @@ export class TrainerLessonFrameCardComponent
           }
 
           this.ctx.api.trainer
-            .trainerLessonImageObject({
-              lessonId: this.frame.lesson._id,
+            .trainerImageObjectCreate({
+              recordId: this.frame.record._id,
+              detectorId: this.frame.detector._id,
               frame: this.frame.count,
               labels: labels,
               xstart: box.x,
@@ -166,11 +168,11 @@ export class TrainerLessonFrameCardComponent
   boxClick(box: ImageAnnotatorBox) {}
 
   boxDoubleClick(box: ImageAnnotatorBox) {
-    if (!this.frame.lesson._id) return;
+    if (!this.frame.detector._id) return;
     this.ctx
       .openModal<DetectorLabel[] | undefined>(
         DetectorLabelSelectModalComponent,
-        { detectorId: this.frame.lesson.detector, selected: box.labels },
+        { detectorId: this.frame.detector._id, selected: box.labels },
         {size: 'lg',centered:true}
       )
       .subscribe({
@@ -181,7 +183,7 @@ export class TrainerLessonFrameCardComponent
               let toi = this.trainBoxes.get(box.id);
               if (toi && toi?._id) {
                 this.ctx.api.trainer
-                  .trainerLessonImageObjectRemove(toi._id)
+                  .trainerImageObjectRemove(toi._id)
                   .subscribe({
                     next: (resultb) => {
                       let rmIndex = this.frame.train.findIndex((item) => {
@@ -201,7 +203,7 @@ export class TrainerLessonFrameCardComponent
             let toi = this.trainBoxes.get(box.id);
             if (toi && toi._id) {
               this.ctx.api.trainer
-                .trainerLessonImageObjectUpdate({
+                .trainerImageObjectUpdate({
                   id: toi._id,
                   labels: toi.labels || [],
                   val: toi.val || true,
@@ -223,12 +225,11 @@ export class TrainerLessonFrameCardComponent
   }
 
   boxUpdate(box: ImageAnnotatorBox) {
-    if (!this.frame.lesson._id) return;
     if (this.trainBoxes.has(box.id)) {
       let toi = this.trainBoxes.get(box.id);
       if (toi && toi._id) {
         this.ctx.api.trainer
-          .trainerLessonImageObjectUpdate({
+          .trainerImageObjectUpdate({
             id: toi._id,
             labels: toi.labels || [],
             val: toi.val || true,
@@ -360,12 +361,12 @@ export class TrainerLessonFrameCardComponent
 
   loadTrainBoxLabel(value: string): Observable<DetectorLabel | undefined> {
     return new Observable<DetectorLabel | undefined>((observer) => {
-      if (!this.frame.lesson.detector) {
+      if (!this.frame.detector._id) {
         observer.next(undefined);
         observer.complete();
       } else {
         this.ctx.api.detector
-          .detectorLabel(this.frame.lesson.detector, value)
+          .detectorLabel(this.frame.detector._id, value)
           .subscribe({
             next: (result) => {
               observer.next(result);
@@ -382,12 +383,12 @@ export class TrainerLessonFrameCardComponent
 
   loadActions(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      if (!this.frame.lesson._id) {
+      if (!this.frame.record._id) {
         observer.next(true);
         observer.complete();
       } else {
         this.ctx.api.recorder
-          .recorderActionListByFrame(this.frame.lesson.record,this.frame.count)
+          .recorderActionListByFrame(this.frame.record._id,this.frame.count)
           .subscribe({
             next: (result) => {
               this.frame.actions = result;
@@ -406,7 +407,7 @@ export class TrainerLessonFrameCardComponent
 
   loadTrainImages(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      if (!this.frame.lesson._id) {
+      if (!this.frame.detector._id || !this.frame.record._id) {
         observer.next(true);
         observer.complete();
       } else {
@@ -414,7 +415,7 @@ export class TrainerLessonFrameCardComponent
           'Loading train objects for frame: ' + this.frame.count.toString()
         );
         this.ctx.api.trainer
-          .trainerLessonImageObjectList(this.frame.lesson._id, this.frame.count)
+          .trainerImageObjectList(this.frame.detector._id, this.frame.record._id,this.frame.count)
           .subscribe({
             next: (result) => {
               this.frame.train = result.objects;
@@ -431,8 +432,9 @@ export class TrainerLessonFrameCardComponent
 
   loadSuggestions(confidence: number = 0.1): Observable<boolean> {
     return new Observable<boolean>((observer) => {
+      this.log.debug("Loading suggestions");
       this.suggestionLoading.next(true);
-      if (!this.frame.lesson.detector) {
+      if (!this.frame.record._id) {
         observer.next(true);
         observer.complete();
         this.suggestionLoading.next(false);
@@ -441,10 +443,10 @@ export class TrainerLessonFrameCardComponent
         this.frame.suggestions = [];
         for (let i = 0; i < this.frame.events.length; i++) {
           let eventId = this.frame.events[i]._id;
-          if (eventId) {
+          if (eventId && this.frame.detector._id) {
             calls.push(
               this.loadSuggestionsByEventId(
-                this.frame.lesson.detector,
+                this.frame.detector._id,
                 eventId,
                 confidence
               )
@@ -493,9 +495,10 @@ export class TrainerLessonFrameCardComponent
     } else {
       pos = [suggestion.by_position.x, suggestion.by_position.y];
     }
+    if (this.frame.record._id)
     this.ctx.api.recorder
       .recorderActionCreate({
-        recordId: this.frame.lesson.record,
+        recordId: this.frame.record._id,
         eventId: suggestion.event,
         byLabel: suggestion.by_label,
         byText: suggestion.by_text,

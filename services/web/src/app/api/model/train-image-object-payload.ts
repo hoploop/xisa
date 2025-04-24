@@ -10,7 +10,8 @@
 
 
 export interface TrainImageObjectPayload { 
-    lessonId: string;
+    recordId: string;
+    detectorId: string;
     frame: number;
     labels: Array<string>;
     xstart: number;

@@ -1,11 +1,12 @@
 import {
   Action,
   DetectObject,
+  Detector,
   DetectorSuggestion,
   DetectText,
   RecorderEventList200ResponseInner,
   TrainImageObject,
-  TrainLesson,
+  Record,
 } from '@api/index';
 
 export class Frame {
@@ -16,7 +17,8 @@ export class Frame {
     public milliseconds: number,
     public suggestions: DetectorSuggestion[],
     public train: TrainImageObject[],
-    public lesson: TrainLesson,
+    public record: Record,
+    public detector: Detector,
     public texts: DetectText[],
     public objects: DetectObject[]
   ) {}

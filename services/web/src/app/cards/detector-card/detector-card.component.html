@@ -23,7 +23,6 @@
               <app-fa-icon [icon]="FAIconType.clapperBoard"></app-fa-icon>
               <div class="ms-2 d-flex flex-column align-items-start justify-content-center">
                 <div>{{record.name}}</div>
-                <small><span translate>recorder.detector</span><span>{{record|recordLoadDetectorName|async}}</span></small>
                 <small><span translate>recorder.duration</span><span>{{record|recordDuration}}</span></small>
                 <small><span translate>recorder.events</span><span>{{record._id|recordEventsCount|async}}</span></small>
                 <small><span translate>recorder.frames</span><span>{{record._id|recordFramesCount|async}}</span></small>

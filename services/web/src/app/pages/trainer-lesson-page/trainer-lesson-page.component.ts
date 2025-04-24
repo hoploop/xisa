@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Detector, Project, TrainLesson, Record } from '@api/index';
+import { Detector, Project, Record } from '@api/index';
 import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
 
@@ -13,7 +13,6 @@ export class TrainerLessonPageComponent
   extends BaseComponent
   implements OnInit
 {
-  lesson?: TrainLesson;
   project?: Project;
   detector?: Detector;
   record?: Record;
@@ -51,29 +50,7 @@ export class TrainerLessonPageComponent
         },
       });
 
-      this.ctx.api.trainer.trainerLesson(recordId).subscribe({
-        next: (result) => {
-          if (result.detector && result._id) {
-            this.ctx.api.trainer
-              .trainerLessonSetDetector(detectorId, result._id)
-              .subscribe({
-                next: (resultb) => {
-                  this.lesson = resultb;
-                  this.log.info('Lesson loaded');
-                },
-                error: (resultb) => {
-                  this.log.warn(resultb.error.detail);
-                },
-              });
-          } else {
-            this.log.info('Lesson loaded');
-            this.lesson = result;
-          }
-        },
-        error: (result) => {
-          this.log.warn(result.error.detail);
-        },
-      });
+
     }
   }
 }

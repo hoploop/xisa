@@ -19,7 +19,7 @@ export class DetectorTrainCountPipe  implements PipeTransform {
       if (value == undefined || value == null) {
         observer.next(0);
       } else {
-        this.ctx.api.trainer.trainerLessonImageObjectCountByDetector(value).subscribe({
+        this.ctx.api.trainer.trainerImageObjectCountByDetector(value).subscribe({
           next: (result) => {
             observer.next(result);
           },

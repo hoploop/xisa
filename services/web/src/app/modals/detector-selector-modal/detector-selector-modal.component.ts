@@ -41,7 +41,7 @@ export class DetectorSelectorModalComponent
   create() {}
 
   dismiss() {
-    this.ctx.closeModal(undefined);
+    this.ctx.dismissModal();
   }
 
   load() {

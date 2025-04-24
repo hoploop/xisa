@@ -16,8 +16,6 @@ import { DetectorTrainSuggestionCardComponent } from './detector-train-suggestio
 import { RecordEventCardComponent } from './record-event-card/record-event-card.component';
 import { RecordListCardComponent } from './record-list-card/record-list-card.component';
 import { RecordFrameScrollerCardComponent } from './record-frame-scroller-card/record-frame-scroller-card.component';
-import { RecordStudioCardComponent } from './record-studio-card/record-studio-card.component';
-import { RecordFrameCardComponent } from './record-frame-card/record-frame-card.component';
 import { FormsModule } from '@angular/forms';
 import { MenuCardComponent } from './menu-card/menu-card.component';
 import { AutoCardComponent } from './auto-card/auto-card.component';
@@ -50,8 +48,6 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordEventCardComponent,
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
-    RecordStudioCardComponent,
-    RecordFrameCardComponent,
     MenuCardComponent,
     AutoCardComponent,
     DetectorCardComponent,
@@ -90,8 +86,6 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordEventCardComponent,
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
-    RecordStudioCardComponent,
-    RecordFrameCardComponent,
     MenuCardComponent,
     AutoCardComponent,
     DetectorCardComponent,

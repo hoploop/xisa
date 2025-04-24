@@ -16,7 +16,6 @@ import { TrainImageObject } from '../model/models';
 import { TrainImageObjectListResponse } from '../model/models';
 import { TrainImageObjectPayload } from '../model/models';
 import { TrainImageObjectUpdatePayload } from '../model/models';
-import { TrainLesson } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -28,77 +27,47 @@ export interface TrainerServiceInterface {
     configuration: Configuration;
 
     /**
-     * Lesson
-     * Checks if a recorder is running
-     * @param recordId 
+     * Image Object Count By Detector
+     * 
+     * @param detectorId 
      */
-    trainerLesson(recordId: string, extraHttpRequestParams?: any): Observable<TrainLesson>;
+    trainerImageObjectCountByDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
-     * Lesson Image Object
+     * Image Object Create
      * 
      * @param trainImageObjectPayload 
      */
-    trainerLessonImageObject(trainImageObjectPayload: TrainImageObjectPayload, extraHttpRequestParams?: any): Observable<TrainImageObject>;
+    trainerImageObjectCreate(trainImageObjectPayload: TrainImageObjectPayload, extraHttpRequestParams?: any): Observable<TrainImageObject>;
 
     /**
-     * Lesson Image Object Count By Detector
+     * Image Object List
      * 
      * @param detectorId 
-     */
-    trainerLessonImageObjectCountByDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
-
-    /**
-     * Lesson Image Object List
-     * 
-     * @param lessonId 
+     * @param recordId 
      * @param frame 
      */
-    trainerLessonImageObjectList(lessonId: string, frame?: number, extraHttpRequestParams?: any): Observable<TrainImageObjectListResponse>;
+    trainerImageObjectList(detectorId: string, recordId: string, frame?: number, extraHttpRequestParams?: any): Observable<TrainImageObjectListResponse>;
 
     /**
-     * Lesson Image Object Remove
+     * Image Object Remove
      * 
      * @param objectId 
      */
-    trainerLessonImageObjectRemove(objectId: string, extraHttpRequestParams?: any): Observable<boolean>;
+    trainerImageObjectRemove(objectId: string, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
-     * Lesson Image Object To Detector
+     * Image Object To Detector
      * 
      * @param detectorId 
      */
-    trainerLessonImageObjectToDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
+    trainerImageObjectToDetector(detectorId: string, extraHttpRequestParams?: any): Observable<number>;
 
     /**
-     * Lesson Image Object Update
+     * Image Object Update
      * 
      * @param trainImageObjectUpdatePayload 
      */
-    trainerLessonImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, extraHttpRequestParams?: any): Observable<boolean>;
-
-    /**
-     * Lesson Set Detector
-     * 
-     * @param detectorId 
-     * @param lessonId 
-     */
-    trainerLessonSetDetector(detectorId: string, lessonId: string, extraHttpRequestParams?: any): Observable<TrainLesson>;
-
-    /**
-     * Lesson Set Object Confidence
-     * 
-     * @param lessonId 
-     * @param confidence 
-     */
-    trainerLessonSetObjectConfidence(lessonId: string, confidence: number, extraHttpRequestParams?: any): Observable<TrainLesson>;
-
-    /**
-     * Lesson Set Text Confidence
-     * 
-     * @param lessonId 
-     * @param confidence 
-     */
-    trainerLessonSetTextConfidence(lessonId: string, confidence: number, extraHttpRequestParams?: any): Observable<TrainLesson>;
+    trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, extraHttpRequestParams?: any): Observable<boolean>;
 
 }

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
   Detector,
-  TrainLesson,
   Record,
   Project,
   RecorderEventList200ResponseInner,
@@ -11,7 +10,7 @@ import {
 } from '@api/index';
 import { Frame } from '@models/record-frame';
 import { BaseComponent } from '@utils/base/base.component';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-trainer-lesson-card',
@@ -23,7 +22,6 @@ export class TrainerLessonCardComponent
   extends BaseComponent
   implements OnInit
 {
-  @Input() lesson!: TrainLesson;
   @Input() detector!: Detector;
   @Input() record!: Record;
   @Input() project!: Project;
@@ -51,7 +49,6 @@ export class TrainerLessonCardComponent
     this.frame.next(undefined);
     setTimeout(() => {
       this.frame.next(frame);
-
     }, 5);
   }
 
@@ -70,56 +67,48 @@ export class TrainerLessonCardComponent
     });
   }
 
-
-
-
-
-
-
-
   loadFrames() {
-    if (!this.lesson) return;
+    if (!this.record._id) return;
     let delta = 0;
     if (this.record && this.record.start && this.record.end) {
       let start = new Date(this.record.start).getTime();
       let end = new Date(this.record.end).getTime();
       delta = end - start;
     }
-    this.ctx.api.recorder.recorderFrameCount(this.lesson.record).subscribe({
+    this.ctx.api.recorder.recorderFrameCount(this.record._id).subscribe({
       next: (result) => {
-        if (this.lesson) {
-          let totalFrames = result;
-          let deltaFrame = delta / totalFrames;
-          let ms = 0;
-          for (let i = 0; i < totalFrames; i++) {
-            let newFrame: Frame = new Frame(
-              i,
-              [],
-              [],
-              ms,
-              [],
-              [],
-              this.lesson,
-              [],
-              []
-            );
+        let totalFrames = result;
+        let deltaFrame = delta / totalFrames;
+        let ms = 0;
+        for (let i = 0; i < totalFrames; i++) {
+          let newFrame: Frame = new Frame(
+            i,
+            [],
+            [],
+            ms,
+            [],
+            [],
+            this.record,
+            this.detector,
+            [],
+            []
+          );
 
-            for (let j = 0; j < this.events.length; j++) {
-              if (this.events[j].frame == i) {
-                let newEvent = this.events[j];
-                newFrame.events.push(newEvent);
-              }
+          for (let j = 0; j < this.events.length; j++) {
+            if (this.events[j].frame == i) {
+              let newEvent = this.events[j];
+              newFrame.events.push(newEvent);
             }
-
-            this.frames.push(newFrame);
-
-            ms += deltaFrame;
           }
-          if (this.frames.length > 0) {
-            this.frame.next(this.frames[0]);
-          }
-          this.loading.next(undefined);
+
+          this.frames.push(newFrame);
+
+          ms += deltaFrame;
         }
+        if (this.frames.length > 0) {
+          this.frame.next(this.frames[0]);
+        }
+        this.loading.next(undefined);
       },
       error: (result) => {
         this.loading.next(undefined);

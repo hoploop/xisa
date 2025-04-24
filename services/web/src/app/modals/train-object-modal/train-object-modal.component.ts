@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DetectorLabel, TrainImageObject, TrainLesson } from '@api/index';
+import { DetectorLabel, TrainImageObject } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 import { Frame } from '@models/record-frame';
@@ -15,7 +15,6 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
   @Input() box!: ImageAnnotatorBox;
   @Input() train!: TrainImageObject;
   @Input() frame!: Frame;
-  @Input() lesson!: TrainLesson;
   @Input() enableCreate: boolean = true;
   labels: DetectorLabel[] = [];
   selected: DetectorLabel[] = [];
@@ -54,11 +53,11 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
   }
 
   addNewLabel() {
-    if (!this.lesson.detector) return;
+    if (!this.frame.detector._id) return;
     this.loading.next(this.ctx.translate.instant('detector.class.adding'));
     this.error.next(undefined);
     this.ctx.api.detector
-      .detectorLabelAdd(this.lesson.detector, this.newLabel)
+      .detectorLabelAdd(this.frame.detector._id, this.newLabel)
       .subscribe({
         next: (result) => {
           this.loading.next(undefined);
@@ -97,7 +96,7 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
     if (!this.train._id) return;
     let labels = this.labelsToStringList(this.selected);
     this.ctx.api.trainer
-      .trainerLessonImageObjectUpdate({
+      .trainerImageObjectUpdate({
         id: this.train._id,
         labels: labels,
         val: true,
@@ -119,18 +118,16 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
 
   remove() {
     if (this.train._id)
-      this.ctx.api.trainer
-        .trainerLessonImageObjectRemove(this.train._id)
-        .subscribe({
-          next: (result) => {
-            this.frame.train.splice(
-              this.frame.train.findIndex((item) => item._id == this.train._id),
-              1
-            );
-            this.ctx.closeModal(undefined);
-          },
-          error: (result) => {},
-        });
+      this.ctx.api.trainer.trainerImageObjectRemove(this.train._id).subscribe({
+        next: (result) => {
+          this.frame.train.splice(
+            this.frame.train.findIndex((item) => item._id == this.train._id),
+            1
+          );
+          this.ctx.closeModal(undefined);
+        },
+        error: (result) => {},
+      });
   }
 
   select(label: DetectorLabel) {
@@ -154,11 +151,11 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
 
   loadLabel(value: string): Observable<DetectorLabel> {
     return new Observable<DetectorLabel>((observer) => {
-      if (!this.lesson.detector) {
+      if (!this.frame.detector._id) {
         observer.error('Detector not specified');
       } else {
         this.ctx.api.detector
-          .detectorLabel(this.lesson.detector, value)
+          .detectorLabel(this.frame.detector._id, value)
           .subscribe({
             next: (result) => {
               observer.next(result);
@@ -172,13 +169,13 @@ export class TrainObjectModalComponent extends BaseComponent implements OnInit {
   }
 
   load() {
-    if (!this.lesson.detector) return;
+    if (!this.frame.detector._id) return;
 
     this.loading.next(this.ctx.translate.instant('detector.class.loadings'));
     this.error.next(undefined);
     this.ctx.api.detector
       .detectorLabelList(
-        this.lesson.detector,
+        this.frame.detector._id,
         this.skip,
         this.limit,
         this.search

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DetectorSuggestion, TrainLesson } from '@api/index';
+import { DetectorSuggestion, Record } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 
@@ -12,7 +12,7 @@ import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
 export class AutoSuggestionModalComponent extends BaseComponent {
   @Input() box!: ImageAnnotatorBox;
   @Input() suggestion!: DetectorSuggestion;
-  @Input() lesson!: TrainLesson;
+  @Input() record!: Record;
 
   dismiss() {
     this.ctx.dismissModal();
@@ -23,10 +23,10 @@ export class AutoSuggestionModalComponent extends BaseComponent {
     if (this.suggestion.by_position) {
       position = [this.suggestion.by_position.x, this.suggestion.by_position.y];
     }
-    console.log(position);
+    if (this.record._id)
     this.ctx.api.recorder
       .recorderActionCreate({
-        recordId: this.lesson.record,
+        recordId: this.record._id,
         eventId: this.suggestion.event,
         byLabel: this.suggestion.by_label,
         byText: this.suggestion.by_text,

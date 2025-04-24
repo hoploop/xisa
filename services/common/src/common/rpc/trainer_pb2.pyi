@@ -7,12 +7,14 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class TrainImageObjectToDetectorRequest(_message.Message):
-    __slots__ = ("user", "detector")
+    __slots__ = ("user", "detector", "record")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
     user: str
     detector: str
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
+    record: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., record: _Optional[str] = ...) -> None: ...
 
 class TrainImageObjectToDetectorResponse(_message.Message):
     __slots__ = ("status", "message", "total")
@@ -73,9 +75,9 @@ class TrainImageObjectUpdateResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
 class TrainImageObjectRequest(_message.Message):
-    __slots__ = ("user", "lesson", "frame", "labels", "xstart", "xend", "ystart", "yend", "train", "test", "val")
+    __slots__ = ("user", "detector", "frame", "labels", "xstart", "xend", "ystart", "yend", "train", "test", "val", "record")
     USER_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
     FRAME_FIELD_NUMBER: _ClassVar[int]
     LABELS_FIELD_NUMBER: _ClassVar[int]
     XSTART_FIELD_NUMBER: _ClassVar[int]
@@ -85,8 +87,9 @@ class TrainImageObjectRequest(_message.Message):
     TRAIN_FIELD_NUMBER: _ClassVar[int]
     TEST_FIELD_NUMBER: _ClassVar[int]
     VAL_FIELD_NUMBER: _ClassVar[int]
+    RECORD_FIELD_NUMBER: _ClassVar[int]
     user: str
-    lesson: str
+    detector: str
     frame: int
     labels: _containers.RepeatedScalarFieldContainer[str]
     xstart: float
@@ -96,7 +99,8 @@ class TrainImageObjectRequest(_message.Message):
     train: bool
     test: bool
     val: bool
-    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ..., labels: _Optional[_Iterable[str]] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., train: bool = ..., test: bool = ..., val: bool = ...) -> None: ...
+    record: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., frame: _Optional[int] = ..., labels: _Optional[_Iterable[str]] = ..., xstart: _Optional[float] = ..., xend: _Optional[float] = ..., ystart: _Optional[float] = ..., yend: _Optional[float] = ..., train: bool = ..., test: bool = ..., val: bool = ..., record: _Optional[str] = ...) -> None: ...
 
 class TrainImageObjectResponse(_message.Message):
     __slots__ = ("status", "message", "object")
@@ -108,111 +112,17 @@ class TrainImageObjectResponse(_message.Message):
     object: _base_pb2.Serialized
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., object: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
 
-class LessonSetTextConfidenceRequest(_message.Message):
-    __slots__ = ("user", "lesson", "confidence")
-    USER_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
-    user: str
-    lesson: str
-    confidence: float
-    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
-
-class LessonSetTextConfidenceResponse(_message.Message):
-    __slots__ = ("status", "message", "lesson")
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    status: bool
-    message: str
-    lesson: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
-
-class LessonSetObjectConfidenceRequest(_message.Message):
-    __slots__ = ("user", "lesson", "confidence")
-    USER_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
-    user: str
-    lesson: str
-    confidence: float
-    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
-
-class LessonSetObjectConfidenceResponse(_message.Message):
-    __slots__ = ("status", "message", "lesson")
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    status: bool
-    message: str
-    lesson: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
-
-class LessonSetDetectorRequest(_message.Message):
-    __slots__ = ("user", "detector", "lesson")
+class TrainImageObjectListRequest(_message.Message):
+    __slots__ = ("user", "detector", "record", "frame")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    user: str
-    detector: str
-    lesson: str
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., lesson: _Optional[str] = ...) -> None: ...
-
-class LessonSetDetectorResponse(_message.Message):
-    __slots__ = ("status", "message", "lesson")
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    status: bool
-    message: str
-    lesson: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
-
-class RecordHasLessonRequest(_message.Message):
-    __slots__ = ("user", "record")
-    USER_FIELD_NUMBER: _ClassVar[int]
     RECORD_FIELD_NUMBER: _ClassVar[int]
-    user: str
-    record: str
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ...) -> None: ...
-
-class RecordHasLessonResponse(_message.Message):
-    __slots__ = ("status", "message", "lesson")
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    status: bool
-    message: str
-    lesson: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
-
-class RecordCreateLessonRequest(_message.Message):
-    __slots__ = ("user", "record")
-    USER_FIELD_NUMBER: _ClassVar[int]
-    RECORD_FIELD_NUMBER: _ClassVar[int]
-    user: str
-    record: str
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ...) -> None: ...
-
-class RecordCreateLessonResponse(_message.Message):
-    __slots__ = ("status", "message", "lesson")
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
-    status: bool
-    message: str
-    lesson: _base_pb2.Serialized
-    def __init__(self, status: bool = ..., message: _Optional[str] = ..., lesson: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
-
-class TrainImageObjectListRequest(_message.Message):
-    __slots__ = ("user", "lesson", "frame")
-    USER_FIELD_NUMBER: _ClassVar[int]
-    LESSON_FIELD_NUMBER: _ClassVar[int]
     FRAME_FIELD_NUMBER: _ClassVar[int]
     user: str
-    lesson: str
+    detector: str
+    record: str
     frame: int
-    def __init__(self, user: _Optional[str] = ..., lesson: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., record: _Optional[str] = ..., frame: _Optional[int] = ...) -> None: ...
 
 class TrainImageObjectListResponse(_message.Message):
     __slots__ = ("status", "message", "total", "objects")

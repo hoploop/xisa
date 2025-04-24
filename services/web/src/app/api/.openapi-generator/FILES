@@ -23,6 +23,8 @@ encoder.ts
 git_push.sh
 index.ts
 model/action.ts
+model/app-started-event.ts
+model/app-stopped-event.ts
 model/detect-object.ts
 model/detect-text.ts
 model/detector-image-label-add.ts
@@ -69,7 +71,6 @@ model/train-image-object-list-response.ts
 model/train-image-object-payload.ts
 model/train-image-object-update-payload.ts
 model/train-image-object.ts
-model/train-lesson.ts
 model/validation-error-loc-inner.ts
 model/validation-error.ts
 param.ts

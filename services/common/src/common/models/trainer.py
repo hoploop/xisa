@@ -12,7 +12,8 @@ from common.models.defaults import empty_list, utc_now
 
 
 class TrainImageObject(Document):
-    lesson: PydanticObjectId
+    record: PydanticObjectId
+    detector: PydanticObjectId
     frame: int
     labels: List[str] = Field(default_factory=empty_list)
     xstart: float
@@ -31,18 +32,3 @@ class TrainImageObject(Document):
         self.updated = utc_now()
 
 
-class TrainLesson(Document):
-    record: PydanticObjectId
-    detector: Optional[PydanticObjectId] = None
-    textConfidence: float = Field(default=0.1)
-    objectConfidence: float = Field(default=0.1)
-    created: datetime = Field(default_factory=utc_now)
-    updated: datetime = Field(default_factory=utc_now)
-
-    @before_event(Update, SaveChanges, Insert)
-    async def update_last(self):
-        self.updated = utc_now()
-
-    @before_event(Delete)
-    async def remove_related(self):
-        await TrainImageObject.find_all(TrainImageObject.lesson == self.id).delete()
