@@ -52,13 +52,14 @@ message UpdateRecordActionRequest {
     string user = 1;
     string id = 2;
     string event = 3;
-    optional string byLabel = 4;
-    optional string byText = 5;
-    optional string byRegex = 6;
-    repeated int32 byOrder = 7;
-    repeated float byPosition = 8;
-    optional float confidence = 9;
-    optional string image = 10;
+    string detector = 4;
+    optional string byLabel = 5;
+    optional string byText = 6;
+    optional string byRegex = 7;
+    repeated int32 byOrder = 8;
+    repeated float byPosition = 9;
+    optional float confidence = 10;
+    optional string image = 11;
 }
 
 message UpdateRecordActionResponse {
@@ -70,14 +71,15 @@ message UpdateRecordActionResponse {
 message CreateRecordActionRequest {
     string user = 1;
     string record = 2;
-    string event = 3;
-    optional string byLabel = 4;
-    optional string byText = 5;
-    optional string byRegex = 6;
-    repeated int32 byOrder = 7;
-    repeated float byPosition = 8;
-    optional float confidence = 9;
-    optional string image = 10;
+    string detector = 3;
+    string event = 4;
+    optional string byLabel = 5;
+    optional string byText = 6;
+    optional string byRegex = 7;
+    repeated int32 byOrder = 8;
+    repeated float byPosition = 9;
+    optional float confidence = 10;
+    optional string image = 11;
 }
 
 message CreateRecordActionResponse {

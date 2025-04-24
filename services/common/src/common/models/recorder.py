@@ -22,6 +22,7 @@ class OS(Document):
 
 class Action(Document):
     record: PydanticObjectId
+    detector: Optional[PydanticObjectId] = None
     event: PydanticObjectId
     by_label: Optional[str] = None
     by_text: Optional[str] = None

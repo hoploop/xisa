@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from common.models import MODELS
 from common.models.base import Position
 from common.models.defaults import utc_now
+from common.models.detector import Detector
 from common.models.recorder import OS, Action, Event, Record
 from common.rpc.recorder_pb2 import (
     CountRecordActionRequest,
@@ -623,10 +624,18 @@ class RecorderService(Service, RecorderServicer):
     ) -> CreateRecordActionResponse:
         try:
             recordId = PydanticObjectId(request.record)
+            
             record = await Record.find(Record.id == recordId).first_or_none()
             if not record:
                 return CreateRecordActionResponse(
-                    status=False, message="workspace.record.errors.not_found"
+                    status=False, message="record.errors.not_found"
+                )
+                
+            detectorId = PydanticObjectId(request.detector)
+            detector = await Detector.find(Detector.id == detectorId).first_or_none()
+            if not detector:
+                return CreateRecordActionResponse(
+                    status=False, message="detector.errors.not_found"
                 )
             eventId = PydanticObjectId(request.event)
             event = await Event.find(
@@ -634,13 +643,14 @@ class RecorderService(Service, RecorderServicer):
             ).first_or_none()
             if not event:
                 return CreateRecordActionResponse(
-                    status=False, message="workspace.record.event.errors.not_found"
+                    status=False, message="record.event.errors.not_found"
                 )
 
             position = None
             if request.byPosition is not None and len(request.byPosition)>1:
                 position = Position(x=request.byPosition[0],y=request.byPosition[1])
             action = await Action(
+                detector=detectorId,
                 record=recordId,
                 event=eventId,
                 by_label=request.byLabel,
@@ -811,6 +821,12 @@ class RecorderService(Service, RecorderServicer):
     ) -> UpdateRecordActionResponse:
         try:
             actionId = PydanticObjectId(request.id)
+            detectorId = PydanticObjectId(request.detector)
+            detector = await Detector.find(Detector.id == detectorId).first_or_none()
+            if not detector:
+                return CreateRecordActionResponse(
+                    status=False, message="detector.errors.not_found"
+                )
             found = await Action.find(Action.id == actionId).first_or_none()
             if not found:
                 return UpdateRecordActionResponse(
@@ -822,6 +838,7 @@ class RecorderService(Service, RecorderServicer):
                 position = Position(x=request.byPosition[0],y=request.byPosition[1])                
                 
             found.event = PydanticObjectId(request.event)
+            found.detector = detectorId
             found.by_label = request.byLabel
             found.by_text = request.byText
             found.by_regex = request.byRegex

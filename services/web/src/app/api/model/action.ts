@@ -13,6 +13,7 @@ import { Position } from './position';
 export interface Action { 
     _id?: string | null;
     record: string;
+    detector?: string | null;
     event: string;
     by_label?: string | null;
     by_text?: string | null;

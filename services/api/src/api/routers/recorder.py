@@ -389,6 +389,7 @@ async def action_remove(
 
 class RecordActionCreatePayload(BaseModel):
     recordId:PydanticObjectId
+    detectorId: PydanticObjectId
     eventId:PydanticObjectId
     byLabel: Optional[str]=None
     byText: Optional[str]=None
@@ -408,7 +409,7 @@ async def action_create(
     payload: RecordActionCreatePayload, user: CurrentUser, recorder: Recorder
 ):
     try:
-        return await recorder.createRecordAction(user,payload.recordId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
+        return await recorder.createRecordAction(user,payload.detectorId,payload.recordId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
     except Exception as e:
         log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
@@ -416,6 +417,7 @@ async def action_create(
 
 class RecordActionUpdatePayload(BaseModel):
     actionId:PydanticObjectId
+    detectorId: PydanticObjectId
     eventId:PydanticObjectId
     byLabel: Optional[str]=None
     byText: Optional[str]=None
@@ -435,7 +437,7 @@ async def action_update(
     payload: RecordActionUpdatePayload, user: CurrentUser, recorder: Recorder
 ):
     try:
-        return await recorder.updateRecordAction(user,payload.actionId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
+        return await recorder.updateRecordAction(user,payload.actionId,payload.detectorId,payload.eventId,payload.byLabel,payload.byText,payload.byRegex,payload.byOrder,payload.byPosition,payload.confidence,payload.image)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 

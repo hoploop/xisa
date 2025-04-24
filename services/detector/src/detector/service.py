@@ -176,8 +176,6 @@ class DetectorService(Service, DetectorServicer):
             else:
                 x = 0
                 y = 0
-            # x = x / width
-            # y = y / height
             
             # Matching texts
             req = DetectTextsRequest(

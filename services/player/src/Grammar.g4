@@ -3,7 +3,6 @@ grammar Grammar;
 root: stmt*;
 
 stmt: createDetector
-    | useDetector
     | createSelectorByLabel
     | createSelectorByText
     | createSelectorByRegex
@@ -15,6 +14,7 @@ stmt: createDetector
 
 createDetector: ID EQ DETECTOR ORPAR STRING CRPAR DCOMMA;
 useDetector: USE ID (ORPAR FLOAT CRPAR)? DCOMMA;
+createAndUseDetector: USE ORPAR STRING (COMMA FLOAT)? CRPAR DCOMMA;
 createSelectorByPosition: ID EQ selectorByPosition DCOMMA;
 createSelectorByLabel: ID EQ selectorByLabel DCOMMA;
 createSelectorByText: ID EQ selectorByText DCOMMA;
@@ -44,6 +44,8 @@ runOperation
 operation  
         : wait
         | waitSelector
+        | useDetector
+        | createAndUseDetector
         | mousePress
         | mousePressSelector
         | mouseReleaseSelector
@@ -116,7 +118,7 @@ LABEL: 'label';
 USE: 'use';
 SEQUENCE: 'sequence';
 DETECTOR: 'detector';
-ID: [a-zA-Z]+[a-zA-Z0-9]*; 
+ID: [a-zA-Z_]+[a-zA-Z0-9_]*; 
 STRING: '"' (ESC | ~["\\\r\n]) * '"';  // Match strings with escape sequences
 ESC: '\\' [bfnrt"\\]; // Define escape sequences for the string
 ORPAR: '(';

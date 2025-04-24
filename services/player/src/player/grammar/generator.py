@@ -1,9 +1,27 @@
 from typing import List, Tuple
-from player.models import CreateOperationStatement, CreateSelectorStatement, KeyPressOperation, KeyReleaseOperation, KeyTypeOperation, LabelSelector, MouseClickOperation, MouseDoubleClickOperation, MouseOperationButton, MousePressOperation, MouseReleaseOperation, MouseScrollOperation, Operation, OperationReference, PositionSelector, RegexSelector, RunOperationStatement, Selector, SelectorReference, Statement, TextSelector
+from player.models import CreateAndUseDetectorOperation, CreateDetectorStatement, CreateOperationStatement, CreateSelectorStatement, KeyPressOperation, KeyReleaseOperation, KeyTypeOperation, LabelSelector, MouseClickOperation, MouseDoubleClickOperation, MouseOperationButton, MousePressOperation, MouseReleaseOperation, MouseScrollOperation, Operation, OperationReference, PositionSelector, RegexSelector, RunOperationStatement, Selector, SelectorReference, Statement, TextSelector, UseDetectorOperation
 from common.models.recorder import Action, Event, KeyPressEvent, KeyReleaseEvent, KeyTypeEvent, MouseButton, MouseClickEvent, MouseDoubleClickEvent, MousePressEvent, MouseReleaseEvent, MouseScrollEvent
 
 
 class GrammarGenerator:
+    
+    def generateDetectorChange(self,detectorId:str,declarative:bool=True,starterId: int = 0,confidence:float=0.1) -> Tuple[List[Statement],List[Statement],int]:
+        if declarative:
+            starterId, selector_id = self.getNextId(starterId)
+            stmt1 = CreateDetectorStatement(key=selector_id,value=detectorId)
+            starterId, operation_id = self.getNextId(starterId)
+            op1 = UseDetectorOperation(key=selector_id,confidence=confidence)
+            stmt2 = CreateOperationStatement(id=operation_id,operation=op1)
+            stmt3 = RunOperationStatement(operation=OperationReference(reference=operation_id))
+            
+            decs = [stmt1,stmt2]
+            exs = [stmt3]
+            return decs, exs , starterId
+        else:
+            
+            decs = []
+            exs = [RunOperationStatement(operation=CreateAndUseDetectorOperation(value=detectorId,confidence=confidence))]
+            return decs, exs , starterId
     
     def generateFromAction(self,action:Action, event: Event,declarative:bool=True,starterId:int=0)->Tuple[List[Statement],List[Statement],int]:
         if action.by_label is not None and action.by_label.strip()!='':

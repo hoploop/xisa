@@ -245,6 +245,7 @@ class RecorderClient(Client):
     async def createRecordAction(
         self,
         user: User,
+        detectorId: PydanticObjectId,
         recordId: PydanticObjectId,
         eventId: PydanticObjectId,
         byLabel: Optional[str] = None,
@@ -257,6 +258,7 @@ class RecorderClient(Client):
     ) -> Action:
         req = CreateRecordActionRequest(
             user=str(user.id),
+            detector=str(detectorId),
             record=str(recordId),
             event=str(eventId),
             byLabel=byLabel,
@@ -381,6 +383,7 @@ class RecorderClient(Client):
         self,
         user: User,
         actionId: PydanticObjectId,
+        detectorId: PydanticObjectId,
         eventId: PydanticObjectId,
         byLabel: Optional[str] = None,
         byText: Optional[str] = None,
@@ -394,6 +397,7 @@ class RecorderClient(Client):
             user=str(user.id),
             id=str(actionId),
             event=str(eventId),
+            detector=str(detectorId),
             byLabel=byLabel,
             byText=byText,
             byRegex=byRegex,

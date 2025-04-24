@@ -8,7 +8,7 @@ from beanie import PydanticObjectId
 # LOCAL IMPORTS
 from common.clients.api import ApiClient
 from common.models import MODELS
-from player.models import CreateSequenceStatement
+from player.models import CreateSequenceStatement, OperationReference, RunOperationStatement
 from common.models.player import Replay
 from common.models.recorder import Action, Event, Record
 from common.rpc.player_pb2 import (
@@ -157,12 +157,26 @@ class PlayerService(Service, PlayerServicer):
             starterId = 0
             gdecs = []
             gexs = []
+            
+            currentDetector = None
+            
             for action in actions:
                 event = None
                 if action.event:
                     event = await Event.find(
                         Event.id == action.event, with_children=True
                     ).first_or_none()
+                    
+                    if action.detector and currentDetector is not None and currentDetector != action.detector:
+                        decs,exs,starterId = self.grammar_generator.generateDetectorChange(str(action.detector),request.declarative,starterId,action.confidence)
+                        gdecs.extend(decs)
+                        gexs.extend(exs)
+                        currentDetector = action.detector
+                    if action.detector and currentDetector is None:
+                        decs,exs,starterId = self.grammar_generator.generateDetectorChange(str(action.detector),request.declarative,starterId,action.confidence)
+                        gdecs.extend(decs)
+                        gexs.extend(exs)
+                        currentDetector = action.detector
                     if event.synthetic == request.synthetic:
                         frameCount = event.frame
                         decs, exs, starterId = (
@@ -184,7 +198,8 @@ class PlayerService(Service, PlayerServicer):
                 starterId, sequenceId = self.grammar_generator.getNextId(starterId)
                 statements = gexs
                 seq = CreateSequenceStatement(id=sequenceId, statements=statements)
-                ex = seq.render()
+                dec+=  '\r\n'+seq.render()
+                ex = RunOperationStatement(operation=OperationReference(reference=sequenceId)).render()
             else:
 
                 for cex in gexs:

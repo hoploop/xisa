@@ -495,9 +495,10 @@ export class TrainerLessonFrameCardComponent
     } else {
       pos = [suggestion.by_position.x, suggestion.by_position.y];
     }
-    if (this.frame.record._id)
+    if (this.frame.record._id && this.frame.detector._id)
     this.ctx.api.recorder
       .recorderActionCreate({
+        detectorId: this.frame.detector._id,
         recordId: this.frame.record._id,
         eventId: suggestion.event,
         byLabel: suggestion.by_label,

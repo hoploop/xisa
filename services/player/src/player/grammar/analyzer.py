@@ -1,7 +1,9 @@
+import logging
 from typing import List
 
 
 from player.models import (
+    CreateAndUseDetectorOperation,
     CreateDetectorStatement,
     CreateOperationStatement,
     CreateSelectorStatement,
@@ -20,6 +22,7 @@ from player.models import (
     MouseReleaseOperation,
     MouseScrollOperation,
     Operation,
+    OperationReference,
     PositionSelector,
     RegexSelector,
     RunOperationStatement,
@@ -27,13 +30,14 @@ from player.models import (
     SelectorReference,
     Statement,
     TextSelector,
-    UseDetectorStatement,
+    UseDetectorOperation,
     WaitOperation,
 )
 from player.grammar.GrammarVisitor import GrammarVisitor
 from player.grammar.GrammarParser import GrammarParser
 
 
+log = logging.getLogger(__name__)
 class PlayerAnalyzer(GrammarVisitor):
     
     def buildGrammarCtx(self,ctx) -> GrammarContext:
@@ -50,8 +54,6 @@ class PlayerAnalyzer(GrammarVisitor):
     def visitStmt(self, ctx: GrammarParser.StmtContext) -> Statement:
         if ctx.createDetector():
             return self.visitCreateDetector(ctx.createDetector())
-        elif ctx.useDetector():
-            return self.visitUseDetector(ctx.useDetector())
         elif ctx.createOperation():
             return self.visitCreateOperation(ctx.createOperation())
         elif ctx.createSelectorByLabel():
@@ -66,6 +68,14 @@ class PlayerAnalyzer(GrammarVisitor):
             return self.visitRunOperation(ctx.runOperation())
         elif ctx.createSequence():
             return self.visitCreateSequence(ctx.createSequence())
+        
+        
+    def visitCreateAndUseDetector(self, ctx) -> CreateAndUseDetectorOperation:
+        value = str(ctx.STRING().getText())[1:-1]
+        conf = 0.1
+        if ctx.FLOAT():
+            conf = float(ctx.FLOAT().getText())
+        return CreateAndUseDetectorOperation(confidence=conf,ctx=self.buildGrammarCtx(ctx),value=value)
 
     # Visit a parse tree produced by GrammarParser#createDetector.
     def visitCreateDetector(
@@ -73,18 +83,18 @@ class PlayerAnalyzer(GrammarVisitor):
     ) -> CreateDetectorStatement:
         id = str(ctx.ID().getText())
         source = str(ctx.STRING().getText())[1:-1]
-        return CreateDetectorStatement(id=id, value=source,ctx=self.buildGrammarCtx(ctx))
+        return CreateDetectorStatement(key=id, value=source,ctx=self.buildGrammarCtx(ctx))
 
     # Visit a parse tree produced by GrammarParser#useDetector.
     def visitUseDetector(
         self, ctx: GrammarParser.UseDetectorContext
-    ) -> UseDetectorStatement:
+    ) -> UseDetectorOperation:
         id = str(ctx.ID().getText())
         conf = 0.1
         if ctx.FLOAT():
             conf = float(str(ctx.FLOAT().getText()))
 
-        return UseDetectorStatement(id=id, confidence=conf,ctx=self.buildGrammarCtx(ctx))
+        return UseDetectorOperation(key=id, confidence=conf,ctx=self.buildGrammarCtx(ctx))
 
     # Visit a parse tree produced by GrammarParser#createSelectorByPosition.
     def visitCreateSelectorByPosition(
@@ -139,7 +149,6 @@ class PlayerAnalyzer(GrammarVisitor):
         elif ctx.selectorByImage():
             return self.visitSelectorByImage(ctx.selectorByImage())
 
-      # Visit a parse tree produced by GrammarParser#selectorByLabel.
     def visitSelectorByImage(
         self, ctx: GrammarParser.SelectorByImageContext
     ) -> ImageSelector:
@@ -216,12 +225,19 @@ class PlayerAnalyzer(GrammarVisitor):
     def visitRunOperation(
         self, ctx: GrammarParser.RunOperationContext
     ) -> RunOperationStatement:
-        op = self.visitOperation(ctx.operation())
-        print(op)
+        if ctx.operation():
+            op = self.visitOperation(ctx.operation())
+        else:
+            op = OperationReference(ctx=self.buildGrammarCtx(ctx),reference=str(ctx.ID().getText()))
         return RunOperationStatement(operation=op,ctx=self.buildGrammarCtx(ctx))
 
     # Visit a parse tree produced by GrammarParser#operation.
     def visitOperation(self, ctx: GrammarParser.OperationContext) -> Operation:
+        log.debug(str(ctx))
+        if ctx.createAndUseDetector():
+            return self.visitCreateAndUseDetector(ctx.createAndUseDetector())
+        if ctx.useDetector():
+            return self.visitUseDetector(ctx.useDetector())
         if ctx.keyPress():
             return self.visitKeyPress(ctx.keyPress())
         elif ctx.keyRelease():
@@ -414,7 +430,7 @@ class PlayerAnalyzer(GrammarVisitor):
     
      # Visit a parse tree produced by GrammarParser#keyPressSelector.
     def visitKeyCombo(self, ctx:GrammarParser.KeyComboContext):
-        sel = self.visitSelector(ctx.selector)
+        sel = self.visitSelector(ctx.selector())
         values = []
         for strCtx in ctx.STRING():
             values.append(str(strCtx.getText())[1:-1])
@@ -434,14 +450,14 @@ class PlayerAnalyzer(GrammarVisitor):
     
     # Visit a parse tree produced by GrammarParser#keyPressSelector.
     def visitKeyPressSelector(self, ctx:GrammarParser.KeyPressSelectorContext):
-        sel = self.visitSelector(ctx.selector)
+        sel = self.visitSelector(ctx.selector())
         value = str(ctx.STRING().getText())[1:-1]
         return KeyPressOperation(value=value,ctx=self.buildGrammarCtx(ctx),selector=sel)
 
 
     # Visit a parse tree produced by GrammarParser#keyReleaseSelector.
     def visitKeyReleaseSelector(self, ctx:GrammarParser.KeyReleaseSelectorContext):
-        sel = self.visitSelector(ctx.selector)
+        sel = self.visitSelector(ctx.selector())
         value = str(ctx.STRING().getText())[1:-1]
         return KeyReleaseOperation(value=value,ctx=self.buildGrammarCtx(ctx),selector=sel)
 

@@ -54,6 +54,12 @@ export class MenuCardComponent
     this.router.navigate(['record/page', this.record._id]);
   }
 
+  homeDetector() {
+    if (!this.project) return;
+    this.router.navigate(['detector/list', this.project._id]);
+  }
+
+
   train() {
     if (!this.project) return;
     if (!this.record) return;

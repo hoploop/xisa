@@ -29,6 +29,11 @@ class GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by GrammarParser#createAndUseDetector.
+    def visitCreateAndUseDetector(self, ctx:GrammarParser.CreateAndUseDetectorContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by GrammarParser#createSelectorByPosition.
     def visitCreateSelectorByPosition(self, ctx:GrammarParser.CreateSelectorByPositionContext):
         return self.visitChildren(ctx)

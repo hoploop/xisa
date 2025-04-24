@@ -11,6 +11,7 @@
 
 export interface RecordActionUpdatePayload { 
     actionId: string;
+    detectorId: string;
     eventId: string;
     byLabel?: string | null;
     byText?: string | null;

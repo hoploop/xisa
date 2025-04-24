@@ -7,6 +7,7 @@ import { RootContext } from "./GrammarParser.js";
 import { StmtContext } from "./GrammarParser.js";
 import { CreateDetectorContext } from "./GrammarParser.js";
 import { UseDetectorContext } from "./GrammarParser.js";
+import { CreateAndUseDetectorContext } from "./GrammarParser.js";
 import { CreateSelectorByPositionContext } from "./GrammarParser.js";
 import { CreateSelectorByLabelContext } from "./GrammarParser.js";
 import { CreateSelectorByTextContext } from "./GrammarParser.js";
@@ -17,6 +18,7 @@ import { SelectorByLabelContext } from "./GrammarParser.js";
 import { SelectorByTextContext } from "./GrammarParser.js";
 import { SelectorByRegexContext } from "./GrammarParser.js";
 import { SelectorByPositionContext } from "./GrammarParser.js";
+import { SelectorByImageContext } from "./GrammarParser.js";
 import { SelectorOrderContext } from "./GrammarParser.js";
 import { CreateSequenceContext } from "./GrammarParser.js";
 import { RunOperationContext } from "./GrammarParser.js";
@@ -33,6 +35,8 @@ import { MouseReleaseContext } from "./GrammarParser.js";
 import { MouseReleaseSelectorContext } from "./GrammarParser.js";
 import { MouseScrollContext } from "./GrammarParser.js";
 import { MouseScrollSelectorContext } from "./GrammarParser.js";
+import { KeyComboContext } from "./GrammarParser.js";
+import { KeyComboSelectorContext } from "./GrammarParser.js";
 import { KeyPressContext } from "./GrammarParser.js";
 import { KeyReleaseContext } from "./GrammarParser.js";
 import { KeyTypeContext } from "./GrammarParser.js";
@@ -75,6 +79,12 @@ export default class GrammarVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitUseDetector?: (ctx: UseDetectorContext) => Result;
+	/**
+	 * Visit a parse tree produced by `GrammarParser.createAndUseDetector`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCreateAndUseDetector?: (ctx: CreateAndUseDetectorContext) => Result;
 	/**
 	 * Visit a parse tree produced by `GrammarParser.createSelectorByPosition`.
 	 * @param ctx the parse tree
@@ -135,6 +145,12 @@ export default class GrammarVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitSelectorByPosition?: (ctx: SelectorByPositionContext) => Result;
+	/**
+	 * Visit a parse tree produced by `GrammarParser.selectorByImage`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSelectorByImage?: (ctx: SelectorByImageContext) => Result;
 	/**
 	 * Visit a parse tree produced by `GrammarParser.selectorOrder`.
 	 * @param ctx the parse tree
@@ -231,6 +247,18 @@ export default class GrammarVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitMouseScrollSelector?: (ctx: MouseScrollSelectorContext) => Result;
+	/**
+	 * Visit a parse tree produced by `GrammarParser.keyCombo`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitKeyCombo?: (ctx: KeyComboContext) => Result;
+	/**
+	 * Visit a parse tree produced by `GrammarParser.keyComboSelector`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitKeyComboSelector?: (ctx: KeyComboSelectorContext) => Result;
 	/**
 	 * Visit a parse tree produced by `GrammarParser.keyPress`.
 	 * @param ctx the parse tree

@@ -44,6 +44,15 @@ class GrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by GrammarParser#createAndUseDetector.
+    def enterCreateAndUseDetector(self, ctx:GrammarParser.CreateAndUseDetectorContext):
+        pass
+
+    # Exit a parse tree produced by GrammarParser#createAndUseDetector.
+    def exitCreateAndUseDetector(self, ctx:GrammarParser.CreateAndUseDetectorContext):
+        pass
+
+
     # Enter a parse tree produced by GrammarParser#createSelectorByPosition.
     def enterCreateSelectorByPosition(self, ctx:GrammarParser.CreateSelectorByPositionContext):
         pass

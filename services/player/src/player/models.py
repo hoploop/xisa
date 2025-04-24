@@ -531,11 +531,19 @@ class OperationReference(Operation):
         return get_indent(indent)+self.reference
     
     def execute(self, runtime):
-        if self.reference not in runtime.registry.operations:
+        if self.reference not in runtime.registry.operations and self.reference not in runtime.registry.sequences:
             raise RuntimeException('player.runtime.errors.operation_not_found',self.ctx)
+        if self.reference in runtime.registry.operations:
+            op = runtime.registry.operations[self.reference]
+            return op.execute(runtime)
+        else:
+            seq = runtime.registry.sequences[self.reference]
+            ret = None
+            for stmt in seq:
+                ret = stmt.execute(runtime)
+            return ret
+            
         
-        op = runtime.registry.operations[self.reference]
-        return op.execute(runtime)
 
 
 class WaitOperation(Operation):
@@ -737,6 +745,7 @@ class KeyPressOperation(Operation):
         guiX = (x+w/2)*runtime.screenWidth
         guiY = (y+h/2)*runtime.screenHeight
         #pyautogui.click(guiX,guiY)
+        log.debug('Pressing key: {0}'.format(self.value))
         pyautogui.keyDown(self.value)
         return True
     
@@ -810,6 +819,49 @@ class KeyReleaseOperation(Operation):
         return True
 
 
+class UseDetectorOperation(Operation):
+    type: Literal["operation.use.detector"] = "operation.use.detector"
+    key: str
+    confidence: float = Field(default=0.1)
+
+    def render(self,indent:int=0):
+        tconf = "{:.2f}".format(self.confidence)
+        return get_indent(indent)+"use({0},{1});".format(self.key, tconf)
+    
+    def execute(self,runtime:Runtime):
+        if self.id not in runtime.registry.detectors:
+            raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
+            
+        log.debug('Setting current detector: {0}'.format({self.key}))
+        runtime.registry.current_detector = runtime.registry.detectors[self.key]
+        
+        log.debug('Setting current detector confidence: {0}'.format(self.confidence))
+        runtime.registry.current_detector_confidence = self.confidence
+        return runtime.registry.detectors[self.key]
+
+
+class CreateAndUseDetectorOperation(Operation):
+    type: Literal["statement.create.use.detector"] = "statement.create.use.detector"
+    value: str
+    confidence: float = Field(default=0.1)
+
+    def render(self,indent:int=0):
+        tconf = "{:.2f}".format(self.confidence)
+        return get_indent(indent)+'use("{0}",{1});'.format(self.value, tconf)
+    
+    def execute(self,runtime:Runtime):
+        model_path = os.path.join(os.getcwd(),self.detector_path,self.value)
+        
+        if not os.path.exists(model_path):
+            raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
+            
+        log.debug('Setting current detector: {0}'.format({self.id}))
+        model = YOLO(model_path)
+        
+        log.debug('Setting current detector confidence: {0}'.format(self.confidence))
+        runtime.registry.current_detector_confidence = self.confidence
+        return model 
+
 OPERATION_TYPES = Union[
     MousePressOperation,
     MouseClickOperation,
@@ -821,7 +873,9 @@ OPERATION_TYPES = Union[
     KeyTypeOperation,
     KeyComboOperation,
     WaitOperation,
-    OperationReference
+    OperationReference,
+    UseDetectorOperation,
+    CreateAndUseDetectorOperation
 ]
 
 OPERATIONS = Annotated[OPERATION_TYPES, Field(discriminator="type")] 
@@ -840,48 +894,28 @@ class Statement(BaseModel):
 
 class CreateDetectorStatement(Statement):
     type: Literal["statement.create.detector"] = "statement.create.detector"
-    id: str
+    key: str
     value: str
 
     def render(self,indent:int=0):
-        return get_indent(indent)+'{0} = detector("{1}");'.format(self.id, self.value)
+        return get_indent(indent)+'{0} = detector("{1}");'.format(self.key, self.value)
     
     def execute(self,runtime:Runtime):
         model_path = os.path.join(os.getcwd(),self.detector_path,self.value)
         if not os.path.exists(model_path):
             raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
         
-        if id in runtime.registry.detectors:
-            log.warning('Detector has been already registered with id: {0}'.format(id))
+        if self.key in runtime.registry.detectors:
+            log.warning('Detector has been already registered with id: {0}'.format(self.key))
         
         log.debug('Loading detector object model from path: {0}'.format(model_path))
         model = YOLO(model_path)
         
-        log.debug('Storing the detector object model to registry with id: {0}'.format(id))
-        runtime.registry.detectors[id] = model
+        log.debug('Storing the detector object model to registry with id: {0}'.format(self.key))
+        runtime.registry.detectors[self.key] = model
         return model
 
 
-class UseDetectorStatement(Statement):
-    type: Literal["statement.use.detector"] = "statement.use.detector"
-    id: str
-    confidence: float = Field(default=0.1)
-
-    def render(self,indent:int=0):
-        tconf = "{:.2f}".format(self.confidence)
-        return get_indent(indent)+"{0} = use({1},{2});".format(self.id, self.value, tconf)
-    
-    def execute(self,runtime:Runtime):
-        if self.id not in runtime.registry.detectors:
-            raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
-            
-        log.debug('Setting current detector: {0}'.format({self.id}))
-        runtime.registry.current_detector = runtime.registry.detectors[self.id]
-        
-        log.debug('Setting current detector confidence: {0}'.format(self.confidence))
-        runtime.registry.current_detector_confidence = self.confidence
-        return runtime.registry.detectors[self.id]
-        
 
 
 class CreateSelectorStatement(Statement):
@@ -953,3 +987,4 @@ class RunOperationStatement(Statement):
     
     def execute(self, runtime):
         return self.operation.execute(runtime)
+    
