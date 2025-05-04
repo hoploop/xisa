@@ -13,8 +13,8 @@ stmt: createDetector
     ;
 
 createDetector: ID EQ DETECTOR ORPAR STRING CRPAR DCOMMA;
-useDetector: USE ID (ORPAR FLOAT CRPAR)? DCOMMA;
-createAndUseDetector: USE ORPAR STRING (COMMA FLOAT)? CRPAR DCOMMA;
+useDetector: USE ORPAR ID (COMMA FLOAT)? CRPAR;
+createAndUseDetector: USE ORPAR STRING (COMMA FLOAT)? CRPAR;
 createSelectorByPosition: ID EQ selectorByPosition DCOMMA;
 createSelectorByLabel: ID EQ selectorByLabel DCOMMA;
 createSelectorByText: ID EQ selectorByText DCOMMA;

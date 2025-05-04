@@ -12,5 +12,7 @@ export class HomePageComponent extends BaseComponent implements OnInit{
 
   ngOnInit(): void {
       this.ctx.beat.area.next(MenuArea.UNKNOWN);
+      this.ctx.beat.project.next(undefined);
+      this.ctx.beat.record.next(undefined);
   }
 }

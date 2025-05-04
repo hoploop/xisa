@@ -20,6 +20,7 @@ export class DetectorListPageComponent extends BaseComponent implements OnInit {
             this.project = result;
             this.ctx.beat.project.next(result);
             this.ctx.beat.area.next(MenuArea.PROJECT);
+            this.ctx.beat.record.next(undefined);
           },
           error: (result)=>{
             this.log.warn(result.error.detail);

@@ -10,6 +10,7 @@ export class SwitchComponent {
   @Input() value:boolean = false;
   @Output() valueChange = new EventEmitter<boolean>();
   @Input() textOn?:string;
+  @Input() disabled:boolean = false;
   @Input() textOff?:string;
   @Input() small:boolean = false;
   @Input() large:boolean = false;

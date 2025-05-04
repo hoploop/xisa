@@ -8,6 +8,7 @@
     class="form-check-input"
     type="checkbox"
     role="switch"
+    [disabled]="disabled"
     id="flexSwitchCheckChecked"
     [ngModel]="value"
     (ngModelChange)="onChange($event)"

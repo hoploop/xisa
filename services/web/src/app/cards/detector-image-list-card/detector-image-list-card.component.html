@@ -30,9 +30,9 @@
           <div class="d-flex flex-column ms-2">
             <!--<div>{{image._id}}</div>-->
             <span [translate]="'detector.image.labels_n'" [translateParams]="{'n':image|detectorImageLabelCount|async}"></span>
-            <app-switch [value]="image.mode == DetectorImageMode.Train">Train</app-switch>
-            <app-switch [value]="image.mode == DetectorImageMode.Test">Test</app-switch>
-            <app-switch [value]="image.mode == DetectorImageMode.Val">Val</app-switch>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Train">Train</app-switch>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Test">Test</app-switch>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Val">Val</app-switch>
           </div>
 
           <span class="ms-auto">

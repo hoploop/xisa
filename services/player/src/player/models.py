@@ -749,8 +749,6 @@ class KeyPressOperation(Operation):
         pyautogui.keyDown(self.value)
         return True
     
-
-
 class KeyComboOperation(Operation):
     type: Literal["operation.key.combo"] = "operation.key.combo"
     values: List[str]
@@ -826,7 +824,7 @@ class UseDetectorOperation(Operation):
 
     def render(self,indent:int=0):
         tconf = "{:.2f}".format(self.confidence)
-        return get_indent(indent)+"use({0},{1});".format(self.key, tconf)
+        return get_indent(indent)+"use({0},{1})".format(self.key, tconf)
     
     def execute(self,runtime:Runtime):
         if self.id not in runtime.registry.detectors:
@@ -837,8 +835,7 @@ class UseDetectorOperation(Operation):
         
         log.debug('Setting current detector confidence: {0}'.format(self.confidence))
         runtime.registry.current_detector_confidence = self.confidence
-        return runtime.registry.detectors[self.key]
-
+        return True
 
 class CreateAndUseDetectorOperation(Operation):
     type: Literal["statement.create.use.detector"] = "statement.create.use.detector"
@@ -847,7 +844,7 @@ class CreateAndUseDetectorOperation(Operation):
 
     def render(self,indent:int=0):
         tconf = "{:.2f}".format(self.confidence)
-        return get_indent(indent)+'use("{0}",{1});'.format(self.value, tconf)
+        return get_indent(indent)+'use("{0}",{1})'.format(self.value, tconf)
     
     def execute(self,runtime:Runtime):
         model_path = os.path.join(os.getcwd(),self.detector_path,self.value)
@@ -857,10 +854,11 @@ class CreateAndUseDetectorOperation(Operation):
             
         log.debug('Setting current detector: {0}'.format({self.id}))
         model = YOLO(model_path)
+        runtime.registry.current_detector = model
         
         log.debug('Setting current detector confidence: {0}'.format(self.confidence))
         runtime.registry.current_detector_confidence = self.confidence
-        return model 
+        return True 
 
 OPERATION_TYPES = Union[
     MousePressOperation,
@@ -901,7 +899,7 @@ class CreateDetectorStatement(Statement):
         return get_indent(indent)+'{0} = detector("{1}");'.format(self.key, self.value)
     
     def execute(self,runtime:Runtime):
-        model_path = os.path.join(os.getcwd(),self.detector_path,self.value)
+        model_path = os.path.join(os.getcwd(),runtime.detector_path,self.value)
         if not os.path.exists(model_path):
             raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
         
@@ -913,9 +911,7 @@ class CreateDetectorStatement(Statement):
         
         log.debug('Storing the detector object model to registry with id: {0}'.format(self.key))
         runtime.registry.detectors[self.key] = model
-        return model
-
-
+        return True
 
 
 class CreateSelectorStatement(Statement):
@@ -932,7 +928,7 @@ class CreateSelectorStatement(Statement):
         
         log.debug('Storing selector to the registry with id: {0}'.format(self.id))
         runtime.registry.selectors[self.id] = self.selector
-        return self.selector
+        return True
 
 
 class CreateOperationStatement(Statement):
@@ -949,7 +945,7 @@ class CreateOperationStatement(Statement):
         
         log.debug('Storing operation to the registry with id: {0}'.format(self.id))
         runtime.registry.operations[self.id] = self.operation
-        return self.operation
+        return True
 
 
 class CreateSequenceStatement(Statement):
@@ -975,7 +971,7 @@ class CreateSequenceStatement(Statement):
         
         log.debug('Storing sequence to the registry with id: {0}'.format(self.id))
         runtime.registry.sequences[self.id] = self.statements
-        return self.statements
+        return True
 
 
 class RunOperationStatement(Statement):

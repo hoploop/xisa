@@ -11,6 +11,7 @@ import { BaseComponent } from '@utils/base/base.component';
 export class ProjectListPageComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.ctx.beat.project.next(undefined);
+    this.ctx.beat.record.next(undefined);
     this.ctx.beat.area.next(MenuArea.PROJECTS);
   }
 }

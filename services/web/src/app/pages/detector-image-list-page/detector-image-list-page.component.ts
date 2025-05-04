@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Detector } from '@api/index';
+import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
@@ -20,6 +21,14 @@ export class DetectorImageListPageComponent
       this.ctx.api.detector.detectorLoad(detectorId).subscribe({
         next: (result) => {
           this.detector = result;
+          this.ctx.api.project.projectLoad(result.project).subscribe({
+            next: (resultb)=>{
+              this.ctx.beat.project.next(resultb);
+              this.ctx.beat.record.next(undefined);
+              this.ctx.beat.area.next(MenuArea.PROJECT);
+            }
+          })
+
         },
         error: (result) => {
           this.log.warn(result.error.detail);

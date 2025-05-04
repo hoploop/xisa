@@ -50,6 +50,10 @@ export class DetectorImageListCardComponent extends BaseComponent implements OnI
     })
   }
 
+  update(){
+
+  }
+
   load(){
     if (!this.detector._id) return;
     this.loading.next(this.ctx.translate.instant("detector.image.loadings"));
