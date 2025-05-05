@@ -12,7 +12,6 @@ import { DetectorImageListPageComponent } from './detector-image-list-page/detec
 import { DetectorListPageComponent } from './detector-list-page/detector-list-page.component';
 import { RecordListPageComponent } from './record-list-page/record-list-page.component';
 import { RecordPageComponent } from './record-page/record-page.component';
-import { AutoPageComponent } from './auto-page/auto-page.component';
 import { PlayerPageComponent } from './player-page/player-page.component';
 import { TrainerPageComponent } from './trainer-page/trainer-page.component';
 import { MenuPageComponent } from './menu-page/menu-page.component';
@@ -31,7 +30,6 @@ import { TrainerLessonPageComponent } from './trainer-lesson-page/trainer-lesson
     DetectorListPageComponent,
     RecordListPageComponent,
     RecordPageComponent,
-    AutoPageComponent,
     PlayerPageComponent,
     TrainerPageComponent,
     MenuPageComponent,
@@ -54,7 +52,6 @@ import { TrainerLessonPageComponent } from './trainer-lesson-page/trainer-lesson
     DetectorListPageComponent,
     RecordListPageComponent,
     RecordPageComponent,
-    AutoPageComponent,
     PlayerPageComponent,
     TrainerPageComponent,
     MenuPageComponent,

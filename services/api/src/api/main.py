@@ -27,6 +27,7 @@ from api.routers import player
 from api.routers import detector
 from api.routers import train
 from api.routers import recorder
+from api.routers import operator
 from api.service import ApiService, ApiServiceConfig
 from common.utils.mongodb import Mongodb, MongodbConfig
 from api.routers import trainer
@@ -46,6 +47,7 @@ class MainConfig(Config):
     recorder: ClientConfig
     translations: str
     detector: ClientConfig
+    operator: ClientConfig
     player: ClientConfig
     trainer: ClientConfig
     service: ApiServiceConfig
@@ -153,5 +155,6 @@ app.include_router(recorder.router, tags=["recorder"], prefix="/recorder")
 app.include_router(player.router, tags=["player"], prefix="/player")
 app.include_router(train.router, tags=["train"], prefix="/train")
 app.include_router(trainer.router, tags=["trainer"], prefix="/trainer")
+app.include_router(operator.router, tags=["operator"], prefix="/operator")
 
 #use_route_names_as_operation_ids(app)

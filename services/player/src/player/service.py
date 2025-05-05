@@ -1,4 +1,5 @@
 # PYTHON IMPORTS
+from datetime import datetime
 import logging
 
 from beanie import PydanticObjectId
@@ -9,7 +10,7 @@ from beanie import PydanticObjectId
 from common.clients.api import ApiClient
 from common.models import MODELS
 from player.models import CreateSequenceStatement, OperationReference, RunOperationStatement
-from common.models.player import Replay
+from common.models.player import PlayerStepSession, Replay
 from common.models.recorder import Action, Event, Record
 from common.rpc.player_pb2 import (
     PlayerRawScriptExecuteRequest,
@@ -50,7 +51,7 @@ class PlayerService(Service, PlayerServicer):
         Service.__init__(self)
         self.config: PlayerServiceConfig = config
         self.grammar_generator: GrammarGenerator = GrammarGenerator()
-        self.api = ApiClient(self.config.api)
+        self.api: ApiClient = ApiClient(self.config.api)
 
     async def start(self):
         await Mongodb.initialize(self.config.database, MODELS)
@@ -107,6 +108,7 @@ class PlayerService(Service, PlayerServicer):
         self, request: PlayerScriptExecuteRequest, context
     ) -> PlayerScriptExecuteResponse:
         try:
+            
             found = await Replay.find_many(
                 Replay.record == PydanticObjectId(request.record)
             ).first_or_none()
@@ -114,23 +116,66 @@ class PlayerService(Service, PlayerServicer):
                 return PlayerScriptLoadResponse(
                     status=False, message="player.errors.replay_not_found"
                 )
-            runtime = Runtime()
+            runtime = Runtime(self.config.detectors)
             executor = Executor()
             stmts = executor.loadScript(found.script)
+            stmt_counter = 0
             for stmt in stmts:
-                stmt.execute(runtime)
-                return PlayerScriptExecuteResponse(status=True)
+                stmt_counter +=1
+                
+                current_line = stmt.ctx.line
+                current_column = stmt.ctx.column
+                
+                log.debug('Executing: {0}'.format(stmt))
+                a = datetime.now()
+                try:
+                    stmt.execute(runtime)
+                    b = datetime.now()
+                    delta = b - a
+                    duration = int(delta.total_seconds() * 1000) # milliseconds
+                    update = PlayerStepSession(execution=request.execution,total=len(stmts),progress=stmt_counter,message=stmt.render(),line=current_line,column=current_column,status=True,duration=duration)
+                    await self.api.updateSession(request.session,update)
+                except Exception as e:
+                    log.warning(str(e))
+                    b = datetime.now()
+                    delta = b - a
+                    duration = int(delta.total_seconds() * 1000) # milliseconds
+                    update = PlayerStepSession(execution=request.execution,total=len(stmts),progress=stmt_counter,message=str(e),line=current_line,column=current_column,status=False,duration=duration)
+                    await self.api.updateSession(request.session,update)
+            return PlayerScriptExecuteResponse(status=True)
         except Exception as e:
             log.warning(str(e))
             return PlayerScriptExecuteResponse(status=False, message=str(e))
         
     async def playerRawScriptExecute(self, request:PlayerRawScriptExecuteRequest, context) -> PlayerRawScriptExecuteResponse:
         try:
-            runtime = Runtime()
+            runtime = Runtime(self.config.detectors)
             executor = Executor()
             stmts = executor.loadScript(request.script)
+            stmt_counter = 0
             for stmt in stmts:
-                stmt.execute(runtime)
+                stmt_counter +=1
+                
+                current_line = stmt.ctx.line
+                current_column = stmt.ctx.column
+                
+                log.debug('Executing: {0}'.format(stmt))
+                a = datetime.now()
+                try:
+                    stmt.execute(runtime)
+                    b = datetime.now()
+                    delta = b - a
+                    duration = int(delta.total_seconds() * 1000) # milliseconds
+                    update = PlayerStepSession(execution=request.execution,total=len(stmts),progress=stmt_counter,message=stmt.render(),line=current_line,column=current_column,status=True,duration=duration)
+                    await self.api.updateSession(request.session,update)
+                except Exception as e:
+                    log.warning(str(e))
+                    b = datetime.now()
+                    delta = b - a
+                    duration = int(delta.total_seconds() * 1000) # milliseconds
+                    update = PlayerStepSession(execution=request.execution,total=len(stmts),progress=stmt_counter,message=str(e),line=current_line,column=current_column,status=False,duration=duration)
+                    await self.api.updateSession(request.session,update)
+                
             return PlayerRawScriptExecuteResponse(status=True)
         except Exception as e:
             log.warning(str(e))

@@ -4,6 +4,7 @@ import { AuthLoginModalComponent } from '@modals/auth-login-modal/auth-login-mod
 import { AuthLogoutModalComponent } from '@modals/auth-logout-modal/auth-logout-modal.component';
 import { AuthRegisterModalComponent } from '@modals/auth-register-modal/auth-register-modal.component';
 import { DetectorSelectorModalComponent } from '@modals/detector-selector-modal/detector-selector-modal.component';
+import { OperatorChatModalComponent } from '@modals/operator-chat-modal/operator-chat-modal.component';
 import { RecordVideoModalComponent } from '@modals/record-video-modal/record-video-modal.component';
 import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
@@ -113,6 +114,13 @@ export class MenuCardComponent
         this.ctx.beat.auth.logged.next(false);
       },
     });
+  }
+
+  operator(){
+    this.ctx.openModal(OperatorChatModalComponent,{},{size:'lg',centered:true}).subscribe({
+      next: (result)=>{},
+      error: (result)=>{}
+    })
   }
 
   logout() {

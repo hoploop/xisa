@@ -31,6 +31,9 @@ export class ContextService {
 
   private activeModal?:NgbActiveModal;
 
+  public get newUID(): string {
+    return uuid();
+  }
 
   public get session(): string {
     let found = localStorage.getItem(StorageKeys.session);

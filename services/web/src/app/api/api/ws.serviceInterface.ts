@@ -11,7 +11,7 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { DetectorTrainingSession } from '../model/models';
+import { ResponseWebsocketModelsWsModelsGet } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -26,6 +26,6 @@ export interface WsServiceInterface {
      * Websocket Models
      * 
      */
-    websocketModelsWsModelsGet(extraHttpRequestParams?: any): Observable<DetectorTrainingSession>;
+    websocketModelsWsModelsGet(extraHttpRequestParams?: any): Observable<ResponseWebsocketModelsWsModelsGet>;
 
 }

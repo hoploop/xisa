@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ommon/rpc/player.proto\x1a\x15\x63ommon/rpc/base.proto\"I\n\x19PlayerScriptUpdateRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x0e\n\x06script\x18\x03 \x01(\t\"N\n\x1aPlayerScriptUpdateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"N\n\x1dPlayerRawScriptExecuteRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06script\x18\x02 \x01(\t\x12\x0f\n\x07session\x18\x03 \x01(\t\"R\n\x1ePlayerRawScriptExecuteResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"K\n\x1aPlayerScriptExecuteRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x0f\n\x07session\x18\x03 \x01(\t\"O\n\x1bPlayerScriptExecuteResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"8\n\x18PlayerScriptExistRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x19PlayerScriptExistResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05\x66ound\x18\x03 \x01(\x08\x42\n\n\x08_message\"7\n\x17PlayerScriptLoadRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x18PlayerScriptLoadResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message\"c\n\x1bPlayerScriptGenerateRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65\x63larative\x18\x03 \x01(\x08\x12\x11\n\tsynthetic\x18\x04 \x01(\x08\"`\n\x1cPlayerScriptGenerateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message2\x84\x04\n\x06Player\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12J\n\x11playerScriptExist\x12\x19.PlayerScriptExistRequest\x1a\x1a.PlayerScriptExistResponse\x12G\n\x10playerScriptLoad\x12\x18.PlayerScriptLoadRequest\x1a\x19.PlayerScriptLoadResponse\x12P\n\x13playerScriptExecute\x12\x1b.PlayerScriptExecuteRequest\x1a\x1c.PlayerScriptExecuteResponse\x12M\n\x12playerScriptUpdate\x12\x1a.PlayerScriptUpdateRequest\x1a\x1b.PlayerScriptUpdateResponse\x12S\n\x14playerScriptGenerate\x12\x1c.PlayerScriptGenerateRequest\x1a\x1d.PlayerScriptGenerateResponse\x12Y\n\x16playerRawScriptExecute\x12\x1e.PlayerRawScriptExecuteRequest\x1a\x1f.PlayerRawScriptExecuteResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ommon/rpc/player.proto\x1a\x15\x63ommon/rpc/base.proto\"I\n\x19PlayerScriptUpdateRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x0e\n\x06script\x18\x03 \x01(\t\"N\n\x1aPlayerScriptUpdateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"a\n\x1dPlayerRawScriptExecuteRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06script\x18\x02 \x01(\t\x12\x0f\n\x07session\x18\x03 \x01(\t\x12\x11\n\texecution\x18\x04 \x01(\t\"R\n\x1ePlayerRawScriptExecuteResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"^\n\x1aPlayerScriptExecuteRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x0f\n\x07session\x18\x03 \x01(\t\x12\x11\n\texecution\x18\x04 \x01(\t\"O\n\x1bPlayerScriptExecuteResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message\"8\n\x18PlayerScriptExistRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x19PlayerScriptExistResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\r\n\x05\x66ound\x18\x03 \x01(\x08\x42\n\n\x08_message\"7\n\x17PlayerScriptLoadRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\"\\\n\x18PlayerScriptLoadResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message\"c\n\x1bPlayerScriptGenerateRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06record\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65\x63larative\x18\x03 \x01(\x08\x12\x11\n\tsynthetic\x18\x04 \x01(\x08\"`\n\x1cPlayerScriptGenerateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06script\x18\x03 \x01(\tB\n\n\x08_message2\x84\x04\n\x06Player\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12J\n\x11playerScriptExist\x12\x19.PlayerScriptExistRequest\x1a\x1a.PlayerScriptExistResponse\x12G\n\x10playerScriptLoad\x12\x18.PlayerScriptLoadRequest\x1a\x19.PlayerScriptLoadResponse\x12P\n\x13playerScriptExecute\x12\x1b.PlayerScriptExecuteRequest\x1a\x1c.PlayerScriptExecuteResponse\x12M\n\x12playerScriptUpdate\x12\x1a.PlayerScriptUpdateRequest\x1a\x1b.PlayerScriptUpdateResponse\x12S\n\x14playerScriptGenerate\x12\x1c.PlayerScriptGenerateRequest\x1a\x1d.PlayerScriptGenerateResponse\x12Y\n\x16playerRawScriptExecute\x12\x1e.PlayerRawScriptExecuteRequest\x1a\x1f.PlayerRawScriptExecuteResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,25 +37,25 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PLAYERSCRIPTUPDATERESPONSE']._serialized_start=125
   _globals['_PLAYERSCRIPTUPDATERESPONSE']._serialized_end=203
   _globals['_PLAYERRAWSCRIPTEXECUTEREQUEST']._serialized_start=205
-  _globals['_PLAYERRAWSCRIPTEXECUTEREQUEST']._serialized_end=283
-  _globals['_PLAYERRAWSCRIPTEXECUTERESPONSE']._serialized_start=285
-  _globals['_PLAYERRAWSCRIPTEXECUTERESPONSE']._serialized_end=367
-  _globals['_PLAYERSCRIPTEXECUTEREQUEST']._serialized_start=369
-  _globals['_PLAYERSCRIPTEXECUTEREQUEST']._serialized_end=444
-  _globals['_PLAYERSCRIPTEXECUTERESPONSE']._serialized_start=446
-  _globals['_PLAYERSCRIPTEXECUTERESPONSE']._serialized_end=525
-  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_start=527
-  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_end=583
-  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_start=585
-  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_end=677
-  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_start=679
-  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_end=734
-  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_start=736
-  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_end=828
-  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_start=830
-  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_end=929
-  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_start=931
-  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_end=1027
-  _globals['_PLAYER']._serialized_start=1030
-  _globals['_PLAYER']._serialized_end=1546
+  _globals['_PLAYERRAWSCRIPTEXECUTEREQUEST']._serialized_end=302
+  _globals['_PLAYERRAWSCRIPTEXECUTERESPONSE']._serialized_start=304
+  _globals['_PLAYERRAWSCRIPTEXECUTERESPONSE']._serialized_end=386
+  _globals['_PLAYERSCRIPTEXECUTEREQUEST']._serialized_start=388
+  _globals['_PLAYERSCRIPTEXECUTEREQUEST']._serialized_end=482
+  _globals['_PLAYERSCRIPTEXECUTERESPONSE']._serialized_start=484
+  _globals['_PLAYERSCRIPTEXECUTERESPONSE']._serialized_end=563
+  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_start=565
+  _globals['_PLAYERSCRIPTEXISTREQUEST']._serialized_end=621
+  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_start=623
+  _globals['_PLAYERSCRIPTEXISTRESPONSE']._serialized_end=715
+  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_start=717
+  _globals['_PLAYERSCRIPTLOADREQUEST']._serialized_end=772
+  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_start=774
+  _globals['_PLAYERSCRIPTLOADRESPONSE']._serialized_end=866
+  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_start=868
+  _globals['_PLAYERSCRIPTGENERATEREQUEST']._serialized_end=967
+  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_start=969
+  _globals['_PLAYERSCRIPTGENERATERESPONSE']._serialized_end=1065
+  _globals['_PLAYER']._serialized_start=1068
+  _globals['_PLAYER']._serialized_end=1584
 # @@protoc_insertion_point(module_scope)

@@ -93,14 +93,14 @@
           <li>
             <a class="dropdown-item pointer" (click)="navigateAutoPage()">
               <app-fa-icon [icon]="FAIconType.robot"></app-fa-icon>
-              <span class="ms-2" translate>auto.title</span>
+              <span class="ms-2" translate>player.automate.title</span>
             </a>
           </li>
 
           <!-- Play -->
           <li>
             <a class="dropdown-item pointer" (click)="navigatePlayerPage()">
-              <app-fa-icon [icon]="FAIconType.play"></app-fa-icon>
+              <app-fa-icon [icon]="FAIconType.clock"></app-fa-icon>
               <span class="ms-2" translate>player.title</span>
             </a>
           </li>
@@ -111,6 +111,13 @@
 
   <div class="ms-auto d-flex align-items-center">
     <ng-content select="[end]"></ng-content>
+    <button
+    class="btn btn-sm me-2 btn-outline-light border-0 rounded-0 h-100 pb-2 pt-2 item"
+    *ngIf="(logged | async) == true"
+    (click)="operator()">
+    <app-fa-icon [icon]="FAIconType.robot"></app-fa-icon>
+    <span class="ms-1">Operator</span>
+  </button>
     <button
       class="btn btn-sm me-2 btn-outline-light border-0 rounded-0 h-100 pb-2 pt-2 item"
       *ngIf="(logged | async) == true"

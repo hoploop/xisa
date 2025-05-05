@@ -18,7 +18,6 @@ import { RecordListCardComponent } from './record-list-card/record-list-card.com
 import { RecordFrameScrollerCardComponent } from './record-frame-scroller-card/record-frame-scroller-card.component';
 import { FormsModule } from '@angular/forms';
 import { MenuCardComponent } from './menu-card/menu-card.component';
-import { AutoCardComponent } from './auto-card/auto-card.component';
 import { DetectorCardComponent } from './detector-card/detector-card.component';
 import { HomeCardComponent } from './home-card/home-card.component';
 import { PlayerCardComponent } from './player-card/player-card.component';
@@ -31,7 +30,8 @@ import { TrainerLessonSuggestionCardComponent } from './trainer-lesson-suggestio
 import { TrainerLessonEventCardComponent } from './trainer-lesson-event-card/trainer-lesson-event-card.component';
 import { TrainerLessonTrainCardComponent } from './trainer-lesson-train-card/trainer-lesson-train-card.component';
 import { TrainerLessonActionCardComponent } from './trainer-lesson-action-card/trainer-lesson-action-card.component';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { AceEditorModule } from 'ngx-ace-editor-wrapper';
+import { AceModule } from 'ngx-ace-wrapper';
 
 
 @NgModule({
@@ -49,7 +49,6 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
     MenuCardComponent,
-    AutoCardComponent,
     DetectorCardComponent,
     HomeCardComponent,
     PlayerCardComponent,
@@ -69,8 +68,10 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     TranslateModule,
     PipesModule,
     MomentModule,
-    MonacoEditorModule,
-    FormsModule
+    FormsModule,
+    AceEditorModule,
+    AceModule
+
 
   ],
   exports: [
@@ -87,7 +88,6 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
     RecordListCardComponent,
     RecordFrameScrollerCardComponent,
     MenuCardComponent,
-    AutoCardComponent,
     DetectorCardComponent,
     HomeCardComponent,
     PlayerCardComponent,

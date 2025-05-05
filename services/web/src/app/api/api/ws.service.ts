@@ -17,7 +17,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { DetectorTrainingSession } from '../model/detector-training-session';
+import { ResponseWebsocketModelsWsModelsGet } from '../model/response-websocket-models-ws-models-get';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -98,9 +98,9 @@ export class WsService implements WsServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public websocketModelsWsModelsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DetectorTrainingSession>;
-    public websocketModelsWsModelsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DetectorTrainingSession>>;
-    public websocketModelsWsModelsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DetectorTrainingSession>>;
+    public websocketModelsWsModelsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ResponseWebsocketModelsWsModelsGet>;
+    public websocketModelsWsModelsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ResponseWebsocketModelsWsModelsGet>>;
+    public websocketModelsWsModelsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ResponseWebsocketModelsWsModelsGet>>;
     public websocketModelsWsModelsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -140,7 +140,7 @@ export class WsService implements WsServiceInterface {
         }
 
         let localVarPath = `/ws/models`;
-        return this.httpClient.request<DetectorTrainingSession>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ResponseWebsocketModelsWsModelsGet>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

@@ -24,14 +24,16 @@ class PlayerScriptUpdateResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
 class PlayerRawScriptExecuteRequest(_message.Message):
-    __slots__ = ("user", "script", "session")
+    __slots__ = ("user", "script", "session", "execution")
     USER_FIELD_NUMBER: _ClassVar[int]
     SCRIPT_FIELD_NUMBER: _ClassVar[int]
     SESSION_FIELD_NUMBER: _ClassVar[int]
+    EXECUTION_FIELD_NUMBER: _ClassVar[int]
     user: str
     script: str
     session: str
-    def __init__(self, user: _Optional[str] = ..., script: _Optional[str] = ..., session: _Optional[str] = ...) -> None: ...
+    execution: str
+    def __init__(self, user: _Optional[str] = ..., script: _Optional[str] = ..., session: _Optional[str] = ..., execution: _Optional[str] = ...) -> None: ...
 
 class PlayerRawScriptExecuteResponse(_message.Message):
     __slots__ = ("status", "message")
@@ -42,14 +44,16 @@ class PlayerRawScriptExecuteResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
 
 class PlayerScriptExecuteRequest(_message.Message):
-    __slots__ = ("user", "record", "session")
+    __slots__ = ("user", "record", "session", "execution")
     USER_FIELD_NUMBER: _ClassVar[int]
     RECORD_FIELD_NUMBER: _ClassVar[int]
     SESSION_FIELD_NUMBER: _ClassVar[int]
+    EXECUTION_FIELD_NUMBER: _ClassVar[int]
     user: str
     record: str
     session: str
-    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., session: _Optional[str] = ...) -> None: ...
+    execution: str
+    def __init__(self, user: _Optional[str] = ..., record: _Optional[str] = ..., session: _Optional[str] = ..., execution: _Optional[str] = ...) -> None: ...
 
 class PlayerScriptExecuteResponse(_message.Message):
     __slots__ = ("status", "message")

@@ -12,6 +12,7 @@ body {
 .pointer {
   cursor: pointer !important;
 }
+
 .item-danger {
   border-left: 4px solid var(--bs-danger);
 }
@@ -19,8 +20,6 @@ body {
 .item-warning {
   border-left: 4px solid var(--bs-warning);
 }
-
-
 
 .item-info {
   border-left: 4px solid var(--bs-info);

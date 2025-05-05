@@ -14,13 +14,17 @@ import { UtilsModule } from '@utils/utils.module';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { NgIconsModule } from '@ng-icons/core';
 import { NGIcons } from '@constants/icons';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { RouterModule } from '@angular/router';
 import { routes } from './app.routes';
 import { PagesModule } from '@pages/pages.module';
 import { ModalsModule } from '@modals/modals.module';
 import { CardsModule } from '@cards/cards.module';
+import { AceModule } from 'ngx-ace-wrapper';
+import { ACE_CONFIG } from 'ngx-ace-wrapper';
+import { AceConfigInterface } from 'ngx-ace-wrapper';
 
+const DEFAULT_ACE_CONFIG: AceConfigInterface = {
+};
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
     basePath: environment.apiUrl,
@@ -48,7 +52,7 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     CardsModule,
     UtilsModule,
     PagesModule,
-    MonacoEditorModule.forRoot(),
+    AceModule,
     ApiModule.forRoot(apiConfigFactory),
     NgIconsModule.withIcons(NGIcons),
     RouterModule.forRoot(routes),
@@ -66,7 +70,10 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
       },
     }),
   ],
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(),{
+    provide: ACE_CONFIG,
+    useValue: DEFAULT_ACE_CONFIG
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

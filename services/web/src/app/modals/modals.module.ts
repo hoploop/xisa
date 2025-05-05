@@ -30,6 +30,8 @@ import { AuthLoginModalComponent } from './auth-login-modal/auth-login-modal.com
 import { AuthLogoutModalComponent } from './auth-logout-modal/auth-logout-modal.component';
 import { AuthRegisterModalComponent } from './auth-register-modal/auth-register-modal.component';
 import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unregister-modal.component';
+import { PlayerRawExecutionModalComponent } from './player-raw-execution-modal/player-raw-execution-modal.component';
+import { OperatorChatModalComponent } from './operator-chat-modal/operator-chat-modal.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unreg
     AuthLogoutModalComponent,
     AuthRegisterModalComponent,
     AuthUnregisterModalComponent,
+    PlayerRawExecutionModalComponent,
+    OperatorChatModalComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +96,8 @@ import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unreg
     AuthLogoutModalComponent,
     AuthRegisterModalComponent,
     AuthUnregisterModalComponent,
+    PlayerRawExecutionModalComponent,
+    OperatorChatModalComponent,
   ],
 })
 export class ModalsModule {}

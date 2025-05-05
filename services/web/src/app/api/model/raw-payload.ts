@@ -11,5 +11,6 @@
 
 export interface RawPayload { 
     script: string;
+    execution?: string;
 }
 

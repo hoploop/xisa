@@ -43,8 +43,23 @@ export interface PlayerServiceInterface {
      * Run Script
      * 
      * @param recordId 
+     * @param execution 
      */
-    playerRunScript(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
+    playerRunScript(recordId: string, execution?: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Script Exist
+     * 
+     * @param recordId 
+     */
+    playerScriptExist(recordId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Script Load
+     * 
+     * @param recordId 
+     */
+    playerScriptLoad(recordId: string, extraHttpRequestParams?: any): Observable<string>;
 
     /**
      * Update Script
@@ -52,6 +67,6 @@ export interface PlayerServiceInterface {
      * @param recordId 
      * @param script 
      */
-    playerUpdateScript(recordId: string, script: string, extraHttpRequestParams?: any): Observable<string>;
+    playerUpdateScript(recordId: string, script: string, extraHttpRequestParams?: any): Observable<boolean>;
 
 }

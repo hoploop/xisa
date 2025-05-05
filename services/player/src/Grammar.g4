@@ -33,7 +33,7 @@ selectorByRegex: REGEX ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByPosition: POSITION ORPAR number COMMA number CRPAR; 
 selectorByImage: IMAGE ORPAR STRING COMMA FLOAT (COMMA selectorOrder)? (COMMA GRAY)?  CRPAR;
 selectorOrder: INT (COMMA INT)*;
-createSequence: ID EQ SEQUENCE OCPAR (stmt)* CCPAR;
+createSequence: ID EQ SEQUENCE OCPAR (stmt)* CCPAR DCOMMA;
 
 
 runOperation
@@ -129,3 +129,10 @@ CCPAR: '}';
 INT:   [0-9]+;
 FLOAT: [0-9]?'.'[0-9]+;
 WS : [ \t\n\r]+ -> skip ;
+COMMENT
+    : '/*' .*? '*/' -> skip
+;
+
+LINE_COMMENT
+    : '//' ~[\r\n]* -> skip
+;

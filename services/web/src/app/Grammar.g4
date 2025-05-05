@@ -3,8 +3,6 @@ grammar Grammar;
 root: stmt*;
 
 stmt: createDetector
-    | useDetector
-    | createAndUseDetector
     | createSelectorByLabel
     | createSelectorByText
     | createSelectorByRegex
@@ -15,8 +13,8 @@ stmt: createDetector
     ;
 
 createDetector: ID EQ DETECTOR ORPAR STRING CRPAR DCOMMA;
-useDetector: USE ID (ORPAR FLOAT CRPAR)? DCOMMA;
-createAndUseDetector: USE ORPAR STRING (COMMA FLOAT)? CRPAR DCOMMA;
+useDetector: USE ORPAR ID (COMMA FLOAT)? CRPAR;
+createAndUseDetector: USE ORPAR STRING (COMMA FLOAT)? CRPAR;
 createSelectorByPosition: ID EQ selectorByPosition DCOMMA;
 createSelectorByLabel: ID EQ selectorByLabel DCOMMA;
 createSelectorByText: ID EQ selectorByText DCOMMA;
@@ -35,7 +33,7 @@ selectorByRegex: REGEX ORPAR STRING  (COMMA selectorOrder)? CRPAR;
 selectorByPosition: POSITION ORPAR number COMMA number CRPAR; 
 selectorByImage: IMAGE ORPAR STRING COMMA FLOAT (COMMA selectorOrder)? (COMMA GRAY)?  CRPAR;
 selectorOrder: INT (COMMA INT)*;
-createSequence: ID EQ SEQUENCE OCPAR (stmt)* CCPAR;
+createSequence: ID EQ SEQUENCE OCPAR (stmt)* CCPAR DCOMMA;
 
 
 runOperation
@@ -46,6 +44,8 @@ runOperation
 operation  
         : wait
         | waitSelector
+        | useDetector
+        | createAndUseDetector
         | mousePress
         | mousePressSelector
         | mouseReleaseSelector
@@ -129,3 +129,10 @@ CCPAR: '}';
 INT:   [0-9]+;
 FLOAT: [0-9]?'.'[0-9]+;
 WS : [ \t\n\r]+ -> skip ;
+COMMENT
+    : '/*' .*? '*/' -> skip
+;
+
+LINE_COMMENT
+    : '//' ~[\r\n]* -> skip
+;

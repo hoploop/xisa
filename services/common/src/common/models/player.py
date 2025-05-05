@@ -84,3 +84,16 @@ class Replay(Document):
     @before_event(Update, SaveChanges)
     async def update_last(self):
         self.updated = utc_now()
+
+class PlayerStepSession(BaseModel):
+    type:Literal['player.step.session'] = 'player.step.session'
+    created: datetime = Field(default_factory=utc_now)
+    updated: datetime = Field(default_factory=utc_now)
+    duration:int
+    execution:str
+    message:str
+    total:int
+    progress:int
+    line: int
+    column: int
+    status: bool

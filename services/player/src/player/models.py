@@ -65,7 +65,8 @@ class RuntimeRegistry():
         
 class Runtime:
     
-    def __init__(self):
+    def __init__(self,detector_path):
+        self.detector_path = detector_path
         self.registry = RuntimeRegistry()
         self.screenWidth, self.screenHeight = pyautogui.size()
         self.platformSystem: str = platform.system()
@@ -531,12 +532,14 @@ class OperationReference(Operation):
         return get_indent(indent)+self.reference
     
     def execute(self, runtime):
+        log.debug('Running reference')
         if self.reference not in runtime.registry.operations and self.reference not in runtime.registry.sequences:
             raise RuntimeException('player.runtime.errors.operation_not_found',self.ctx)
         if self.reference in runtime.registry.operations:
             op = runtime.registry.operations[self.reference]
             return op.execute(runtime)
         else:
+            log.debug('Runnning sequence')
             seq = runtime.registry.sequences[self.reference]
             ret = None
             for stmt in seq:
@@ -827,7 +830,7 @@ class UseDetectorOperation(Operation):
         return get_indent(indent)+"use({0},{1})".format(self.key, tconf)
     
     def execute(self,runtime:Runtime):
-        if self.id not in runtime.registry.detectors:
+        if self.key not in runtime.registry.detectors:
             raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
             
         log.debug('Setting current detector: {0}'.format({self.key}))
@@ -846,14 +849,16 @@ class CreateAndUseDetectorOperation(Operation):
         tconf = "{:.2f}".format(self.confidence)
         return get_indent(indent)+'use("{0}",{1})'.format(self.value, tconf)
     
+    
+    
     def execute(self,runtime:Runtime):
-        model_path = os.path.join(os.getcwd(),self.detector_path,self.value)
+        model_path = os.path.join(os.getcwd(),runtime.detector_path,self.value)
         
         if not os.path.exists(model_path):
             raise RuntimeException('player.runtime.errors.detector_not_found',self.ctx)
             
-        log.debug('Setting current detector: {0}'.format({self.id}))
-        model = YOLO(model_path)
+        log.debug('Setting current detector: {0}'.format({self.value}))
+        model = YOLO(model_path,task='detect')
         runtime.registry.current_detector = model
         
         log.debug('Setting current detector confidence: {0}'.format(self.confidence))
@@ -907,7 +912,7 @@ class CreateDetectorStatement(Statement):
             log.warning('Detector has been already registered with id: {0}'.format(self.key))
         
         log.debug('Loading detector object model from path: {0}'.format(model_path))
-        model = YOLO(model_path)
+        model = YOLO(model_path,task='detect')
         
         log.debug('Storing the detector object model to registry with id: {0}'.format(self.key))
         runtime.registry.detectors[self.key] = model
