@@ -7,6 +7,7 @@ import json
 import subprocess
 import logging
 import os
+from PIL import Image
 import re
 from typing import Annotated, List, Literal, Union
 
@@ -42,8 +43,8 @@ def default_grammar_ctx():
 class RuntimeException(Exception):
     
     def __init__(self,message:str,ctx):
-        self.line = ctx.start.line
-        self.column = ctx.start.column
+        self.line = ctx.line
+        self.column = ctx.column
         self.message = message
         
     def __repr__(self):
@@ -245,7 +246,16 @@ class TextSelector(Selector):
         
         log.debug("Detecting text elements")
         # Get verbose data including boxes, confidences, line and page numbers
-        text_results = pytesseract.image_to_data(img, output_type=Output.DICT)
+        '''
+        PSM MODES
+        3: Fully automatic page segmentation.
+        6: Assume a single uniform block of text.
+        7: Treat the image as a single text line.
+        11: Sparse text.
+        13: Raw line.
+        '''
+        
+        text_results = pytesseract.image_to_data(img, output_type=Output.DICT,config='--psm 6')
         text_matches = []
         n_boxes = len(text_results["text"])
         for i in range(n_boxes):
@@ -263,7 +273,7 @@ class TextSelector(Selector):
                 word = text_results["word_num"][i]
 
                 
-                if re.match(self.value, text):
+                if self.value == text:
                     text_matches.append(
                         (text, conf, x, y, w, h, page, block, par, line, word)
                     )
@@ -545,9 +555,6 @@ class OperationReference(Operation):
             for stmt in seq:
                 ret = stmt.execute(runtime)
             return ret
-            
-        
-
 
 class WaitOperation(Operation):
     type: Literal["operation.wait"] = "operation.wait"
