@@ -415,6 +415,7 @@ class DetectorService(Service, DetectorServicer):
                 self.CACHE_YOLOS[path] = model
             else:
                 model = self.CACHE_YOLOS[path]
+            log.debug("YOLO Model loaded")
 
             log.debug("Loading image")
             if "," in b64image:
@@ -424,6 +425,7 @@ class DetectorService(Service, DetectorServicer):
             img = Image.open(BytesIO(self.decode_base64(bsource)))
             width, height = img.size
             grid = ImageGrid(width, height)
+            log.debug('Image loaded')
 
             log.debug(
                 "Start detection with model: {0} and confidence {1}".format(

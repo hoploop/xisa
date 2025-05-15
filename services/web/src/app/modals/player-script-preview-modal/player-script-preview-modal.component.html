@@ -27,7 +27,7 @@
         <app-fa-icon [icon]="FAIconType.play"></app-fa-icon>
       </button>
       <div style="height: 300px;" class="mt-2 w-100">
-        <ngx-monaco-editor style="height: 100%; width:100%" [options]="editorOptions" [(ngModel)]="script"></ngx-monaco-editor>
+        <ace style="height: 100%; width:100%"  [(value)]="script"></ace>
       </div>
   </div>
   </ng-content>

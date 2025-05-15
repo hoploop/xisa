@@ -24,7 +24,6 @@ import { RecordFormModalComponent } from './record-form-modal/record-form-modal.
 import { RecordFrameSelectorModalComponent } from './record-frame-selector-modal/record-frame-selector-modal.component';
 import { PlayerScriptPreviewModalComponent } from './player-script-preview-modal/player-script-preview-modal.component';
 import { RecordVideoModalComponent } from './record-video-modal/record-video-modal.component';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { AuthCheckModalComponent } from './auth-check-modal/auth-check-modal.component';
 import { AuthLoginModalComponent } from './auth-login-modal/auth-login-modal.component';
 import { AuthLogoutModalComponent } from './auth-logout-modal/auth-logout-modal.component';
@@ -32,6 +31,7 @@ import { AuthRegisterModalComponent } from './auth-register-modal/auth-register-
 import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unregister-modal.component';
 import { PlayerRawExecutionModalComponent } from './player-raw-execution-modal/player-raw-execution-modal.component';
 import { OperatorChatModalComponent } from './operator-chat-modal/operator-chat-modal.component';
+import { AceModule } from 'ngx-ace-wrapper';
 
 @NgModule({
   declarations: [
@@ -68,8 +68,9 @@ import { OperatorChatModalComponent } from './operator-chat-modal/operator-chat-
     FormsModule,
     TranslateModule,
     PipesModule,
-    MonacoEditorModule,
-    CardsModule
+    CardsModule,
+    AceModule
+
   ],
   exports: [
     ProjectFormModalComponent,

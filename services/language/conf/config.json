@@ -4,6 +4,9 @@
     "model":"o200k_base",
     "path":"data"
   },
+  "annoy":{
+    "path":"data/milvus.db"
+  },
   "security": {
     "key": "${SERVER_KEY}",
     "cert": "${SERVER_CERT}",
