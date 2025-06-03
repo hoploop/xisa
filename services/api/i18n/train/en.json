@@ -1,9 +1,0 @@
-{
-    "train":{
-        "image":{
-            "upload":"Upload",
-            "uploading":"Uploading...",
-            "downloading":"Downloading..."
-        }
-    } 
-}
