@@ -11,7 +11,7 @@
         [icon]="FAIconType.squareCheck"
       ></app-fa-icon>
       <small class="ms-2"><span>{{ action | recordActionName | async }}</span></small>
-
+      {{action|json}}
     </div>
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary btn-sm" (click)="remove()">

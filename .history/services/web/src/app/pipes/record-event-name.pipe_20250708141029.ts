@@ -21,7 +21,7 @@ export class RecordEventNamePipe implements PipeTransform {
         x = value.position[0].toFixed(3);
         y = value.position[1].toFixed(3);
         pars['x'] = x;
-          pars['y'] = y;
+        pars['y'] = y;
 
     }
 
@@ -93,8 +93,8 @@ export class RecordEventNamePipe implements PipeTransform {
 
       case  MouseScrollEventTypeEnum.MouseScroll:
         if (value.position && value.dx && value.dy){
-          pars['dx'] =value.dx;// Math.round(value.dx);
-          pars['dy'] =value.dy; // Math.round(value.dy);
+          pars['dx'] = value.dx.toFixed(3);
+          pars['dy'] = value.dy.toFixed(3);
         }
         return this.ctx.translate.instant("recorder.event.types.mouse_scroll",pars);
       default:

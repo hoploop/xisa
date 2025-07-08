@@ -276,10 +276,10 @@ class DetectorService(Service, DetectorServicer):
                                     event=PydanticObjectId(request.event),
                                     by_label=matched.name,
                                     confidence=matched.confidence,
-                                    x=matched.x,
-                                    y=matched.y,
-                                    w=matched.w,
-                                    h=matched.h,
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
                                 )
                             )
 
@@ -289,10 +289,10 @@ class DetectorService(Service, DetectorServicer):
                                     event=PydanticObjectId(request.event),
                                     by_label=matched.name,
                                     by_order=[matched.row, matched.col],
-                                    x=matched.x,
-                                    y=matched.y,
-                                    w=matched.w,
-                                    h=matched.h,
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
                                     confidence=matched.confidence,
                                 )
                             )

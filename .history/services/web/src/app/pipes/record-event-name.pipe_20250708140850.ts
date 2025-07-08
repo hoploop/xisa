@@ -20,8 +20,6 @@ export class RecordEventNamePipe implements PipeTransform {
     if (value.position){
         x = value.position[0].toFixed(3);
         y = value.position[1].toFixed(3);
-        pars['x'] = x;
-          pars['y'] = y;
 
     }
 
@@ -29,22 +27,37 @@ export class RecordEventNamePipe implements PipeTransform {
     switch (value.type){
       case KeyComboPressEventTypeEnum.KeyComboPress:
         pars['value']=value.keys.toString();
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         return this.ctx.translate.instant("recorder.event.types.key_combo_press",pars); //keys
       case KeyPressEventTypeEnum.KeyPress:
         pars['value']=value.key;
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         return this.ctx.translate.instant("recorder.event.types.key_press",pars); //key
         case KeyTypeEventTypeEnum.KeyType:
           pars['value']=value.key;
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
           return this.ctx.translate.instant("recorder.event.types.key_type",pars); //key
       case KeyReleaseEventTypeEnum.KeyRelease:
         pars['value']=value.key;
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         return this.ctx.translate.instant("recorder.event.types.key_release",pars); //key
       case MouseClickEventTypeEnum.MouseClick:
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         if (value.button == MouseButton.Left){
           return this.ctx.translate.instant("recorder.event.types.mouse_click_left",pars); //position
         }
@@ -56,7 +69,10 @@ export class RecordEventNamePipe implements PipeTransform {
         }
 
       case MouseDoubleClickEventTypeEnum.MouseDoubleClick:
-
+          if (value.position){
+            pars['x'] = Math.round(value.position[0]);
+            pars['y'] = Math.round(value.position[1]);
+          }
           if (value.button == MouseButton.Left){
             return this.ctx.translate.instant("recorder.event.types.mouse_double_click_left",pars); //position
           }
@@ -68,7 +84,10 @@ export class RecordEventNamePipe implements PipeTransform {
           }
 
       case MousePressEventTypeEnum.MousePress:
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         if (value.button == MouseButton.Left){
           return this.ctx.translate.instant("recorder.event.types.mouse_press_left",pars);
         }
@@ -80,7 +99,10 @@ export class RecordEventNamePipe implements PipeTransform {
         }
 
       case MouseReleaseEventTypeEnum.MouseRelease:
-
+        if (value.position){
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+        }
         if (value.button == MouseButton.Left){
           return this.ctx.translate.instant("recorder.event.types.mouse_release_left",pars);
         }
@@ -93,8 +115,10 @@ export class RecordEventNamePipe implements PipeTransform {
 
       case  MouseScrollEventTypeEnum.MouseScroll:
         if (value.position && value.dx && value.dy){
-          pars['dx'] =value.dx;// Math.round(value.dx);
-          pars['dy'] =value.dy; // Math.round(value.dy);
+          pars['x'] = Math.round(value.position[0]);
+          pars['y'] = Math.round(value.position[1]);
+          pars['dx'] = Math.round(value.dx);
+          pars['dy'] = Math.round(value.dy);
         }
         return this.ctx.translate.instant("recorder.event.types.mouse_scroll",pars);
       default:

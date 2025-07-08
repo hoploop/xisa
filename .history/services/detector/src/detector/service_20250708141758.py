@@ -189,11 +189,11 @@ class DetectorService(Service, DetectorServicer):
             if res.status == True:
                 matched = None
                 for text in res.texts:
-                    nx = text.x
-                    ny = text.y
-                    nw = text.w
-                    nh = text.h
-                   
+                    nx = text.x * width
+                    ny = text.y * height
+                    nw = text.w * width
+                    nh = text.h * height
+
                     if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
                         matched = text
                         log.debug(
@@ -215,10 +215,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=PydanticObjectId(request.event),
                                 by_text=matched.value,
                                 confidence=matched.confidence,
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=nx/width,
+                                y=ny/height,
+                                w=nw/width,
+                                h=nh/height,
                             )
                         )
 
@@ -228,10 +228,10 @@ class DetectorService(Service, DetectorServicer):
                                 event=PydanticObjectId(request.event),
                                 by_text=matched.value,
                                 by_order=[matched.line, matched.block],
-                                x=nx,
-                                y=ny,
-                                w=nw,
-                                h=nh,
+                                x=nx/width,
+                                y=ny/height,
+                                w=nw/width,
+                                h=nh/height,
                                 confidence=matched.confidence,
                             )
                         )
@@ -276,10 +276,10 @@ class DetectorService(Service, DetectorServicer):
                                     event=PydanticObjectId(request.event),
                                     by_label=matched.name,
                                     confidence=matched.confidence,
-                                    x=matched.x,
-                                    y=matched.y,
-                                    w=matched.w,
-                                    h=matched.h,
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
                                 )
                             )
 
@@ -289,18 +289,24 @@ class DetectorService(Service, DetectorServicer):
                                     event=PydanticObjectId(request.event),
                                     by_label=matched.name,
                                     by_order=[matched.row, matched.col],
-                                    x=matched.x,
-                                    y=matched.y,
-                                    w=matched.w,
-                                    h=matched.h,
+                                    x=matched.x/width,
+                                    y=matched.y/height,
+                                    w=matched.w/width,
+                                    h=matched.h/height,
                                     confidence=matched.confidence,
                                 )
                             )
             
-            xs = x-(20/width)
-            ys = y-(20/height)
-            w = 40/width
-            h = 40/height
+            xs = x-(10/width)
+            ys = y-(10/height)
+            w = 2*width/100
+            h = 2*height/100
+            #xs = xs / width            
+            #ys = ys / height
+            #w = w/width
+            #h = h/height
+            x = x / width
+            y = y / height
             
             log.debug('Adding position')
             suggestions.append(DetectorSuggestion(
