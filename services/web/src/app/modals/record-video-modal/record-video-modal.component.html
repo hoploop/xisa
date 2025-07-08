@@ -1,0 +1,16 @@
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.video"></app-fa-icon>
+    <span class="ms-2" translate>recorder.studio.video</span>
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
+    <div class="d-flex justify-content-center w-100">
+      <video #videoPlayer class="mt-2" width="500" controls>
+      </video>
+    </div>
+  </ng-content>
+</app-modal>
+
+

@@ -1,0 +1,74 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "paths": {
+      "@environments/*": [
+        "./src/environments/*"
+      ],
+      "@api/*": [
+        "./src/app/api/*"
+      ],
+      "@auth/*": [
+        "./src/app/auth/*"
+      ],
+      "@constants/*": [
+        "./src/app/constants/*"
+      ],
+      "@utils/*": [
+        "./src/app/utils/*"
+      ],
+      "@services/*": [
+        "./src/app/services/*"
+      ],
+      "@grammar/*": [
+        "./src/app/grammar/*"
+      ],
+      "@guards/*": [
+        "./src/app/guards/*"
+      ],
+      "@pages/*": [
+        "./src/app/pages/*"
+      ],
+      "@modals/*": [
+        "./src/app/modals/*"
+      ],
+      "@pipes/*": [
+        "./src/app/pipes/*"
+      ],
+      "@cards/*": [
+        "./src/app/cards/*"
+      ],
+      "@models/*": [
+        "./src/app/models/*"
+      ]
+    },
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

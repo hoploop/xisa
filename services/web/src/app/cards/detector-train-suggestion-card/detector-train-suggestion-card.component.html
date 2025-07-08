@@ -1,0 +1,22 @@
+<div class="card mb-1">
+  <div class="card-body">
+    <div class="d-flex align-items-center">
+      <app-fa-icon [icon]="FAIconType.user"></app-fa-icon>
+      <span class="ms-2" [translate]="'detector.training.by_label'"  [translateParams]="{'label':label.name}"></span>
+      <div class="ms-auto">
+        <button *ngIf="!train" class="btn btn-success btn-sm" (click)="onAccept.next([box,label])">
+          <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.accept</span>
+        </button>
+        <button *ngIf="!train" class="btn ms-1 btn-danger btn-sm" (click)="onReject.next([box,label])">
+          <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.reject</span>
+        </button>
+        <button *ngIf="train" class="btn ms-1 btn-danger btn-sm" (click)="onRemove.next(train)">
+          <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.remove</span>
+        </button>
+      </div>
+  </div>
+</div>
+</div>

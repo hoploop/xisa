@@ -1,0 +1,19 @@
+<div class="canvas-container">
+  <div class="w-100 d-flex justify-content-center" *ngIf="!(loaded|async)">
+    <app-fa-icon [icon]="FAIconType.circleNotch" [animation]="'spin'"></app-fa-icon>
+    <span class="ms-2">Loading...</span>
+  </div>
+  <canvas
+    class="w-100"
+    width="100%"
+    height="100%"
+    #canvasElement
+    (dblclick)="onMouseDoubleClick($event)"
+    (mousedown)="onMouseDown($event)"
+    (mouseleave)="onMouseLeave($event)"
+    (keyup)="onKeyUp($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp($event)"
+  ></canvas>
+
+</div>

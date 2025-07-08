@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+message Ping {
+  bool status = 1;
+}
+
+message Pong {
+  bool status = 2;
+}
+
+
+message Serialized {
+  string signature = 1;
+  string data = 2;
+}
+
+message Step {
+  int32 order = 1;
+  optional string scenario = 2;
+  optional string event = 3;
+  repeated string byClass = 4;
+  repeated string byText = 5;
+  repeated int32 byOrder = 6;
+  float duration = 7;
+  int32 retry = 8;
+}

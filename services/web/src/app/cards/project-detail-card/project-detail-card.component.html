@@ -1,0 +1,16 @@
+<div  class="card mt-1 btn btn-outline-primary item-primary" (click)="goToProject()">
+  <div class="card-body">
+    <div class="d-flex w-100 align-items-center">
+      <div class="d-flex justify-content-center">
+        <h2>
+          <app-fa-icon [icon]="FAIconType.folder"></app-fa-icon>
+        </h2>
+      </div>
+      <div class="d-flex w-100 ms-4 flex-column align-items-start">
+        <span><strong>{{project.name}}</strong></span>
+        <div><span [translate]="'project.records_n'" [translateParams]="{'n':project._id|projectRecordCount|async}"></span></div>
+        <div><span [translate]="'project.detectors_n'" [translateParams]="{'n':project._id|projectDetectorCount|async}"></span></div>
+      </div>
+    </div>
+</div>
+</div>

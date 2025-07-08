@@ -1,0 +1,21 @@
+.tree-node {
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 1px solid #ddd;
+  margin-left: 0.5rem;
+}
+
+.tree-line::before {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  left: -0.75rem;
+  width: 10px;
+  height: 1px;
+  background: #ccc;
+}
+
+mark {
+  background-color: yellow;
+  padding: 0 2px;
+}

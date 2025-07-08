@@ -1,0 +1,75 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Workspace {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+    rpc loadProject(LoadProjectRequest) returns (LoadProjectResponse);
+    rpc createProject(CreateProjectRequest) returns (CreateProjectResponse);
+    rpc updateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
+    rpc deleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
+    rpc listProject(ListProjectRequest) returns (ListProjectResponse);
+}
+
+message CreateProjectRequest {
+    string user = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message CreateProjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized project = 3;
+}
+
+message LoadProjectRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message LoadProjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized project = 3;
+}
+
+
+message ListProjectRequest {
+    string user = 1;
+    int32 skip = 2;
+    int32 limit = 3;
+    optional string search = 4;
+}
+
+message ListProjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+    repeated Serialized projects = 4;
+}
+
+
+message UpdateProjectRequest {
+    string id = 1;
+    string user = 2;
+    string name = 3;
+    string description = 4;
+}
+
+message UpdateProjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized project = 3;
+}
+
+message DeleteProjectRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message DeleteProjectResponse {
+    bool status = 1;
+    optional string message = 2;
+}

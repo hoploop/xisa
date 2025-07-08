@@ -1,0 +1,28 @@
+<div class="card border-0">
+  <img src="assets/project.jpg" height="200px" width="auto" class="card-img-top object-fit-cover" alt="...">
+
+
+  <div class="card-body">
+    <h6>
+      <app-fa-icon [icon]="FAIconType.folderTree"></app-fa-icon>
+      <span class="ms-1" translate>project.list</span>
+    </h6>
+    <div translate>recorder.summary</div>
+    <div class="d-flex mt-3">
+      <span>
+        <button class="btn btn-primary btn-sm" (click)="create()">
+          <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
+          <span class="ms-2" translate>project.create</span>
+        </button>
+      </span>
+      <span class="ms-auto">
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'project.search'"></app-search>
+      </span>
+    </div>
+    <div class="d-flex flex-column">
+      <app-project-detail-card [project]="project" *ngFor="let project of projects"></app-project-detail-card>
+    </div>
+
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>

@@ -1,0 +1,18 @@
+<div class="card mb-1">
+  <div class="card-body">
+    <div class="d-flex align-items-center">
+      <app-fa-icon [icon]="FAIconType.user"></app-fa-icon>
+      <span class="ms-2" [translate]="'detector.suggestion.by_user_class'"  [translateParams]="{'class':label.name}"></span>
+      <div class="ms-auto">
+        <button class="btn btn-success btn-sm" (click)="onAccept.next(box)">
+          <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.accept</span>
+        </button>
+        <button class="btn ms-1 btn-danger btn-sm" (click)="onReject.next(box)">
+          <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.reject</span>
+        </button>
+      </div>
+  </div>
+</div>
+</div>

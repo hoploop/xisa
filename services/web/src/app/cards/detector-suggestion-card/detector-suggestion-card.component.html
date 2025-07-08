@@ -1,0 +1,35 @@
+<div class="card border-0 bg-light">
+  <div class="card-body p-2">
+    <div class="d-flex align-items-center" *ngIf="event">
+      <app-fa-icon (click)="toggleCheck()" *ngIf="!checked" [icon]="FAIconType.square"></app-fa-icon>
+      <app-fa-icon (click)="toggleCheck()" *ngIf="checked" [icon]="FAIconType.squareCheck"></app-fa-icon>
+      <small class="ms-1"><span>{{event|recordEventName}}</span></small>
+    </div>
+    <div class="d-flex align-items-start flex-nowrap">
+      <small>
+      <app-fa-icon [icon]="FAIconType.handPointer"></app-fa-icon>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order &&  suggestion.by_order.length == 0"  [translate]="'detector.suggestion.by_class'"  [translateParams]="{'class':suggestion.by_label}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'detector.suggestion.by_classes_order_1'" [translateParams]="{'class':suggestion.by_label,'order':suggestion.by_order[0]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_label && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'detector.suggestion.by_classes_order_2'" [translateParams]="{'class':suggestion.by_label,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 0"  [translate]="'detector.suggestion.by_text'" [translateParams]="{'text':suggestion.by_text}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'detector.suggestion.by_texts_order_1'" [translateParams]="{'text':suggestion.by_text,'order':suggestion.by_order[0]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_text && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'detector.suggestion.by_texts_order_2'" [translateParams]="{'text':suggestion.by_text,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_regex && suggestion.by_order && suggestion.by_order.length == 0"  [translate]="'detector.suggestion.by_regex'" [translateParams]="{'regex':suggestion.by_regex}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_regex && suggestion.by_order && suggestion.by_order.length == 1" [translate]="'detector.suggestion.by_regex_order_1'" [translateParams]="{'regex':suggestion.by_regex,'order':suggestion.by_order[0]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_regex && suggestion.by_order && suggestion.by_order.length == 2" [translate]="'detector.suggestion.by_regex_order_2'" [translateParams]="{'regex':suggestion.by_regex,'row':suggestion.by_order[0],'col':suggestion.by_order[1]}"></span>
+      <span class="ms-2" *ngIf="suggestion.by_position" [translate]="'detector.suggestion.by_position'" [translateParams]="{'x':suggestion.by_position.x|number: '0.1-3','y':suggestion.by_position.y|number: '0.1-3'}"></span>
+      <span class="ms-2 me-2 text-muted"><small>{{(suggestion.confidence|number: '0.1-3')}}%</small></span>
+      <div class="ms-auto d-flex flex-nowrap ">
+        <button class="btn btn-success btn-sm" (click)="onAccept.next(suggestion)">
+          <app-fa-icon [icon]="FAIconType.check"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.accept</span>
+        </button>
+        <button class="btn ms-1 btn-danger btn-sm" (click)="onReject.next(suggestion)">
+          <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+          <span class="ms-1" translate>detector.suggestion.reject</span>
+        </button>
+      </div>
+    </small>
+  </div>
+</div>
+</div>

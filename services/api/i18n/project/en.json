@@ -1,0 +1,26 @@
+{
+  "project": {
+    "records_n": "Recordings: {{n}}",
+    "detectors_n": "Detectors: {{n}}",
+    "detectors": "Detectors",
+    "recordings": "Recordings",
+    "list": "Projects",
+    "create": "New project",
+    "update": "Update project",
+    "loadings": "Loading projects...",
+    "search": "Search project",
+    "loading": "Loading project...",
+    "save": "Save",
+    "saving": "Saving project...",
+    "removing": "Removing project...",
+    "remove": "Remove",
+    "cancel": "Cancel",
+    "name": "Name",
+    "description": "Description",
+    "errors": {
+      "already_existing": "Project already exists",
+      "not_found": "Project not found",
+      "delete_not_allowed": "You cannot remove this project"
+    }
+  }
+}

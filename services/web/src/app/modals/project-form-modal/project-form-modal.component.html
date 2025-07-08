@@ -1,0 +1,28 @@
+
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.folder"></app-fa-icon>
+    <span *ngIf="!project._id" class="ms-1" translate>project.create</span>
+    <span *ngIf="project._id" class="ms-1" translate>project.update</span>
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
+    <div class="d-flex flex-column">
+      <input type="text" class="form-control" [ngModel]="project.name" (ngModelChange)="onNameChange($event)" [placeholder]="'project.name'|translate"/>
+      <textarea class="form-control mt-1" [ngModel]="project.description"  (ngModelChange)="onDescriptionChange($event)" [placeholder]="'project.description'|translate"></textarea>
+      <button class="mt-1 btn btn-primary w-100" (click)="save()" [disabled]="(valid|async) == false">
+        <app-fa-icon [icon]="FAIconType.save"></app-fa-icon>
+        <span class="ms-1" translate>project.save</span>
+      </button>
+      <button class="mt-1 btn btn-danger w-100" *ngIf="project._id" (click)="remove()">
+        <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
+        <span class="ms-1" translate>project.remove</span>
+      </button>
+      <button class="mt-1 btn btn-secondary w-100" (click)="cancel()">
+        <app-fa-icon [icon]="FAIconType.xmark"></app-fa-icon>
+        <span class="ms-1" translate>project.cancel</span>
+      </button>
+    </div>
+  </ng-content>
+</app-modal>

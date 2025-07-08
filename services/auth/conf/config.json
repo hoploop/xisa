@@ -1,0 +1,40 @@
+{
+  "address": "${AUTH_RPC_HOST}:${AUTH_RPC_PORT}",
+  "security": {
+    "key": "${SERVER_KEY}",
+    "cert": "${SERVER_CERT}",
+    "chain": "${SERVER_PEM}",
+    "cn": "pin"
+  },
+  "database": {
+    "uri": "${DATABASE_URI}",
+    "name": "pin",
+   "filesystem":"fs"
+  },
+  "service": {
+    "security": {
+      "key": "${SERVER_KEY}",
+      "cert": "${SERVER_CERT}",
+      "chain": "${SERVER_PEM}",
+      "cn": "pin"
+    },
+    "auth": {
+      "address": "${AUTH_RPC_HOST}:${AUTH_RPC_PORT}",
+      "cert": "${CLIENT_CERT}",
+      "key": "${CLIENT_KEY}",
+      "chain": "pin"
+    },
+    "language": {
+      "address": "${LANGUAGE_RPC_HOST}:${LANGUAGE_RPC_PORT}",
+      "cert": "${CLIENT_CERT}",
+      "key": "${CLIENT_KEY}",
+      "chain": "pin"
+    },
+    "api": {
+      "address": "${API_RPC_HOST}:${API_RPC_PORT}",
+      "cert": "${CLIENT_CERT}",
+      "key": "${CLIENT_KEY}",
+      "chain": "pin"
+    }
+  }
+}

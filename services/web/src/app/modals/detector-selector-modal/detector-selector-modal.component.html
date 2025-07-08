@@ -1,0 +1,48 @@
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.eye"></app-fa-icon>
+    <span class="ms-2" translate>detector.select</span>
+  </ng-content>
+
+
+  <ng-content body>
+    <div class="d-flex flex-column m-1">
+      <app-search
+        [value]="search"
+        (valueChange)="onSearchChange($event)"
+        [placeholder]="'detector.search' | translate"
+      ></app-search>
+      <div
+        class="btn btn-primary mt-1 btn-sm"
+        *ngIf="enableCreate"
+        (click)="create()"
+      >
+        <app-fa-icon [icon]="FAIconType.plus"></app-fa-icon>
+        <span class="ms-1" translate>detector.create</span>
+      </div>
+      <div
+        class="mt-1 d-flex justify-content-center align-items-center"
+        *ngIf="detectors.length == 0 && !(loading | async) && !(error | async)"
+      >
+        <span translate>detector.empty</span>
+      </div>
+      <app-loader class="p-1" [loading]="loading" [error]="error"></app-loader>
+      <div
+        class="btn btn-primary btn-sm mt-1"
+        *ngIf="detector"
+        (click)="select(detector)"
+      >
+        {{ detector.name }}
+      </div>
+      <ng-container *ngFor="let otherDetector of detectors">
+        <div
+          class="btn btn-primary btn-sm mt-1"
+          (click)="select(otherDetector)"
+          *ngIf="detector == undefined || otherDetector._id != detector._id"
+        >
+          {{ otherDetector.name }}
+        </div>
+      </ng-container>
+    </div>
+  </ng-content>
+</app-modal>

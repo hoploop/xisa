@@ -1,0 +1,29 @@
+<div class="card bg-darker shadow rounded-0 border-0 mt-2">
+  <div class="card-body p-0">
+    <div class="d-flex justify-content-center w-100 ps-2 pe-2 mb-1">
+      <span class="text-white">
+        <span class="pointer" (click)="collapsed.next(!collapsed.getValue())">
+          <app-fa-icon
+            *ngIf="!(collapsed | async)"
+            [icon]="FAIconType.chevronDown"></app-fa-icon>
+          <app-fa-icon
+            *ngIf="collapsed | async"
+            [icon]="FAIconType.chevronUp"></app-fa-icon>
+        </span>
+      </span>
+    </div>
+    <div
+      class="d-flex flex-column w-100 p-1 overflow-auto scrollable scroll-safe ps-2 pe-2"
+      *ngIf="!(collapsed | async)">
+      <div
+        class="d-flex w-100 h-100 align-items-stretch flex-nowrap w-100 pb-3">
+        <ng-content *ngFor="let frame of frames; let i = index">
+          <app-record-event-card
+            (click)="selectFrame(frame)"
+            [class.ms-1]="i > 0"
+            [frame]="frame"></app-record-event-card>
+        </ng-content>
+      </div>
+    </div>
+  </div>
+</div>

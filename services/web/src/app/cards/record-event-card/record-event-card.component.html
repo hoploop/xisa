@@ -1,0 +1,14 @@
+<div class="card border-0 pointer h-100" [ngClass]="frame.calculateButtonClass">
+  <img [style.max-height.px]="200" [style.width.px]="200" *ngIf="imageUrl" class="card-img-top object-fit-cover" [src]="imageUrl" />
+  <div class="card-body p-0">
+    <div class="d-flex flex-column p-1">
+    <span class="smaller ms-1"
+    [translate]="'recorder.frame.title_n'"
+    [translateParams]="{ n: frame.count }"></span>
+
+    <span class="smaller ms-1">Instant:{{ frame.milliseconds / 1000 | number : "0.0-3" }}s</span>
+    <span class="smaller ms-1">Events:{{ frame.events.length}}</span>
+  </div>
+  </div>
+
+</div>
