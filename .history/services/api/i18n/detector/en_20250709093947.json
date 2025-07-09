@@ -1,0 +1,119 @@
+{
+  "detector": {
+    "edit":"Edit",
+    "errors": {
+      "not_found": "Detector not found",
+      "already_existing": "Another detector with this username already found",
+      "original_not_found": "Original detector not found"
+    },
+    "suggestion": {
+      "titles": "Suggestions",
+      "title": "Suggestion",
+      "empty": "No suggestions available, try to add some custom objects or try with another frame",
+      "title_n": "Suggestions ({{n}})",
+      "by_class": "I suggest you to select this element by object class '{{class}}'",
+      "by_classes_order_1": "I suggest you to select this element by object class '{{class}}' and then select by order {{order}}",
+      "by_classes_order_2": "I suggest you to select this element by object class '{{class}}' and then select by row {{row}} and col {{col}}",
+      "by_text": "I suggest you to select this element by text '{{text}}'",
+      "by_texts_order_1": "I suggest you to select this element by text '{{text}}' and then select by order {{order}}",
+      "by_texts_order_2": "I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
+      "by_regex": "I suggest you to select this element by text matching the regular expression '{{regex}}'",
+      "by_position": "I suggest you to select this element by relative position ({{x}},{{y}})",
+      "by_regex_order_1": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by order {{order}}",
+      "by_regex_order_2": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by row {{row}} and col {{col}}",
+      "accept": "Accept",
+      "reject": "Reject",
+      "remove": "Remove",
+      "by_user_class": "You are suggesting to use a select by class '{{class}}'"
+    },
+    "text":{
+      "confidence":"Text detection confidence: {{value}}",
+      "settings":"Text detections settings",
+      "accept":"Accept",
+      "cancel":"Cancel"
+    },
+    "object":{
+      "confidence":"Object detection confidence: {{value}}",
+      "settings":"Object detections settings",
+      "accept":"Accept",
+      "cancel":"Cancel",
+      "path":"Best path weights: {{value}}",
+      "remove":"Remove"
+    },
+    "training": {
+      "titles": "Train new objects",
+      "title": "Train new object",
+      "all_done": "All objects are already detected by current detector",
+      "empty": "There are no new objects to be trained for detection",
+      "loading": "Training...",
+      "by_label": "You are adding a box with label '{{label}}' to the detection objects training",
+      "loading_objects": "Loading training objects.."
+    },
+    
+    "detected_object": "Detected object",
+    "detected_text": "Detected text",
+    "detected_objects": "I detected {{n}} objects",
+    "detected_texts": "I detected {{n}} text boxes",
+    "detected_no_objects": "I detected no objects, probably I need more training or you have to create a custom box",
+    "detected_no_texts": "I detected no text boxes, probably there is no text in the event area or font is too small or difficult to parse",
+    "class": {
+      "loadings": "Loading detector classes...",
+      "selects": "Select detector classes",
+      "search": "Search detector class",
+      "search_add":"Search or add a detector class",
+      "empty": "No detector classes",
+      "add": "Add detector class",
+      "adding": "Adding new detector class",
+      "name": "Detector class name",
+      "confirm": "Save selected classes",
+      "cancel": "Cancel",
+      "errors": { "already_existing": "Detector class already existing","not_found":"Detector class not found","has_images":"This detector class has images connected" }
+    },
+    "images_n": "Images: {{n}}",
+    "classes_n": "Classes: {{n}}",
+    "epochs_n": "Epochs: {{n}}",
+    "trains_n": "Objects to train: {{n}}",
+    "settings": "Detector Settings",
+    "image": {
+      "loadings": "Loading detector images...",
+      "empty": "No images",
+      "list": "Images",
+      "labels_n": "Labels: {{n}}",
+      "search": "Search",
+      "removing": "Removing image...",
+      "training": "Is training image",
+      "evaluating": "Is eval image",
+      "testing": "Is testing image",
+      "title_n": "Detector images ({{n}})",
+      "errors": {
+        "not_found": "Detector Image not found",
+        "label_not_found": "Image label not found"
+      }
+    },
+    "train": {
+      "by_user_class": "You are suggesting to train detector to detect by class '{{class}}'",
+      "action":"Train"
+    },
+    "label": {
+      "errors": {
+        "not_found": "Detctor Label not found"
+      }
+    },
+    "select": "Select detector",
+    "description": "Description",
+    "name": "Name",
+    "list": "Detectors",
+    "create": "New detector",
+    "loading": "Loading detector...",
+    "loadings": "Loading detectors...",
+    "search": "Search detector",
+    "empty": "No detectors",
+    "update": "Edit detector",
+    "saving": "Saving detector...",
+    "save": "Save",
+    "remove": "Delete",
+    "removing": "Removing detector...",
+    "cancel": "Cancel",
+    "learn": "Learn"
+  }
+}

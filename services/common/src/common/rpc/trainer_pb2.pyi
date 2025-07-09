@@ -1,20 +1,110 @@
 from common.rpc import base_pb2 as _base_pb2
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class TrainImageObjectToDetectorRequest(_message.Message):
-    __slots__ = ("user", "detector", "record")
+class TrainSessionStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    IDLE: _ClassVar[TrainSessionStatus]
+    RUNNING: _ClassVar[TrainSessionStatus]
+    COMPLETED: _ClassVar[TrainSessionStatus]
+    ERROR: _ClassVar[TrainSessionStatus]
+IDLE: TrainSessionStatus
+RUNNING: TrainSessionStatus
+COMPLETED: TrainSessionStatus
+ERROR: TrainSessionStatus
+
+class TrainSessionDetectorRunningRequest(_message.Message):
+    __slots__ = ("user", "detector")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
-    RECORD_FIELD_NUMBER: _ClassVar[int]
     user: str
     detector: str
-    record: str
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., record: _Optional[str] = ...) -> None: ...
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
+
+class TrainSessionDetectorRunningResponse(_message.Message):
+    __slots__ = ("status", "message", "running")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    RUNNING_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    running: bool
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., running: bool = ...) -> None: ...
+
+class TrainSessionListRequest(_message.Message):
+    __slots__ = ("user", "detector", "skip", "limit")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    SKIP_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    skip: int
+    limit: int
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., skip: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
+
+class TrainSessionListResponse(_message.Message):
+    __slots__ = ("status", "message", "total", "sessions")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_FIELD_NUMBER: _ClassVar[int]
+    SESSIONS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    total: int
+    sessions: _containers.RepeatedCompositeFieldContainer[_base_pb2.Serialized]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., sessions: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
+
+class TrainSessionCreateRequest(_message.Message):
+    __slots__ = ("user", "detector")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
+
+class TrainSessionCreateResponse(_message.Message):
+    __slots__ = ("status", "message", "id")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    id: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class TrainSessionUpdateRequest(_message.Message):
+    __slots__ = ("user", "id", "status", "error")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    status: TrainSessionStatus
+    error: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ..., status: _Optional[_Union[TrainSessionStatus, str]] = ..., error: _Optional[str] = ...) -> None: ...
+
+class TrainSessionUpdateResponse(_message.Message):
+    __slots__ = ("status", "message")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    def __init__(self, status: bool = ..., message: _Optional[str] = ...) -> None: ...
+
+class TrainImageObjectToDetectorRequest(_message.Message):
+    __slots__ = ("user", "detector")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DETECTOR_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    detector: str
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ...) -> None: ...
 
 class TrainImageObjectToDetectorResponse(_message.Message):
     __slots__ = ("status", "message", "total")

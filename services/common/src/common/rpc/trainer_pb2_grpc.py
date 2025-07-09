@@ -70,6 +70,26 @@ class TrainerStub(object):
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorResponse.FromString,
                 _registered_method=True)
+        self.trainSessionCreate = channel.unary_unary(
+                '/Trainer/trainSessionCreate',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionCreateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionCreateResponse.FromString,
+                _registered_method=True)
+        self.trainSessionUpdate = channel.unary_unary(
+                '/Trainer/trainSessionUpdate',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateResponse.FromString,
+                _registered_method=True)
+        self.trainSessionList = channel.unary_unary(
+                '/Trainer/trainSessionList',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.FromString,
+                _registered_method=True)
+        self.trainSessionDetectorRunning = channel.unary_unary(
+                '/Trainer/trainSessionDetectorRunning',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningResponse.FromString,
+                _registered_method=True)
 
 
 class TrainerServicer(object):
@@ -118,6 +138,30 @@ class TrainerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def trainSessionCreate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def trainSessionUpdate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def trainSessionList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def trainSessionDetectorRunning(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_TrainerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -155,6 +199,26 @@ def add_TrainerServicer_to_server(servicer, server):
                     servicer.trainImageObjectToDetector,
                     request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorRequest.FromString,
                     response_serializer=common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorResponse.SerializeToString,
+            ),
+            'trainSessionCreate': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainSessionCreate,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionCreateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionCreateResponse.SerializeToString,
+            ),
+            'trainSessionUpdate': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainSessionUpdate,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateResponse.SerializeToString,
+            ),
+            'trainSessionList': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainSessionList,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.SerializeToString,
+            ),
+            'trainSessionDetectorRunning': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainSessionDetectorRunning,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -346,6 +410,114 @@ class Trainer(object):
             '/Trainer/trainImageObjectToDetector',
             common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorRequest.SerializeToString,
             common_dot_rpc_dot_trainer__pb2.TrainImageObjectToDetectorResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainSessionCreate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainSessionCreate',
+            common_dot_rpc_dot_trainer__pb2.TrainSessionCreateRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainSessionCreateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainSessionUpdate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainSessionUpdate',
+            common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainSessionUpdateResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainSessionList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainSessionList',
+            common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainSessionDetectorRunning(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainSessionDetectorRunning',
+            common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningResponse.FromString,
             options,
             channel_credentials,
             insecure,

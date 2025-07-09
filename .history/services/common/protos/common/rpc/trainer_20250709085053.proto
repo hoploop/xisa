@@ -1,0 +1,146 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Trainer {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+    
+    rpc trainImageObjectUpdate(TrainImageObjectUpdateRequest) returns (TrainImageObjectUpdateResponse);    
+    rpc trainImageObject(TrainImageObjectRequest) returns (TrainImageObjectResponse);
+    rpc trainImageObjectList(TrainImageObjectListRequest) returns (TrainImageObjectListResponse);
+    rpc trainImageObjectCountByDetector(TrainImageObjectCountByDetectorRequest) returns (TrainImageObjectCountByDetectorResponse);
+    rpc trainImageObjectRemove(TrainImageObjectRemoveRequest) returns (TrainImageObjectRemoveResponse);
+    rpc trainImageObjectToDetector(TrainImageObjectToDetectorRequest) returns (TrainImageObjectToDetectorResponse);
+    rpc trainSessionCreate(TrainSessionCreateRequest) returns (TrainSessionCreateResponse);
+    rpc trainSessionUpdate(TrainSessionUpdateRequest) returns (TrainSessionUpdateResponse);
+    rpc trainSessionList(TrainSessionListRequest) returns (TrainSessionListResponse);
+    rpc trainSessionDetectorRunning(TrainSessionDetectorRunningRequest) returns (TrainSessionDetectorRunningResponse);
+}
+
+
+enum TrainSessionStatus {
+    IDLE = 0;
+    RUNNING =1;
+    COMPLETED = 2
+    ERROR = 3;
+}
+
+
+message TrainSessionListRequest {
+    string user = 1;
+    string detector = 2;
+    int32 skip = 3;
+    int32 limit = 4;    
+}
+
+message TrainSessionCreateRequest {
+    string user = 1;
+    string detector = 2;
+}
+
+message TrainSessionCreateResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message TrainSessionUpdateRequest {
+    string user = 1;
+    string id = 2;
+    optional TrainSessionStatus status = 3;
+    optional string error = 3;
+}
+
+message TrainSessionUpdateResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message TrainImageObjectToDetectorRequest {
+    string user = 1;
+    string detector = 2;
+}
+
+message TrainImageObjectToDetectorResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+}
+message TrainImageObjectRemoveRequest {
+    string user = 1;
+    string id = 2;
+}
+
+message TrainImageObjectRemoveResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message TrainImageObjectUpdateRequest {
+    string user = 1;
+    repeated string labels = 2;
+    string id = 3;
+    bool train = 4;
+    bool test = 5;
+    bool val = 6;
+    float xstart = 7;
+    float xend = 8;
+    float ystart = 9;
+    float yend = 10;
+}
+
+message TrainImageObjectUpdateResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+
+message TrainImageObjectRequest {
+    string user = 1;
+    string detector = 2;
+    int32 frame = 3;
+    repeated string labels = 4;
+    float xstart = 5;
+    float xend = 6;
+    float ystart = 7;
+    float yend = 8;
+    bool train = 9;
+    bool test = 10;
+    bool val = 11;
+    string record = 12;
+}
+
+message TrainImageObjectResponse {
+    bool status = 1;
+    optional string message = 2;
+    Serialized object = 3;
+}
+
+
+
+message TrainImageObjectListRequest {
+    string user = 1;
+    string detector = 2;
+    string record = 3;
+    optional int32 frame = 4;
+}
+
+message TrainImageObjectListResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+    repeated Serialized objects = 4;
+}
+
+
+
+message TrainImageObjectCountByDetectorRequest {
+    string user = 1;
+    string detector = 2;
+}
+
+message TrainImageObjectCountByDetectorResponse {
+    bool status = 1;
+    optional string message = 2;
+    int32 total = 3;
+}

@@ -48,5 +48,8 @@ export * from './train-image-object';
 export * from './train-image-object-list-response';
 export * from './train-image-object-payload';
 export * from './train-image-object-update-payload';
+export * from './train-session';
+export * from './train-session-list-response';
+export * from './train-session-status';
 export * from './validation-error';
 export * from './validation-error-loc-inner';

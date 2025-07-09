@@ -16,6 +16,8 @@ import { TrainImageObject } from '../model/models';
 import { TrainImageObjectListResponse } from '../model/models';
 import { TrainImageObjectPayload } from '../model/models';
 import { TrainImageObjectUpdatePayload } from '../model/models';
+import { TrainSessionListResponse } from '../model/models';
+import { TrainSessionStatus } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -69,5 +71,37 @@ export interface TrainerServiceInterface {
      * @param trainImageObjectUpdatePayload 
      */
     trainerImageObjectUpdate(trainImageObjectUpdatePayload: TrainImageObjectUpdatePayload, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Session Update
+     * 
+     * @param sessionId 
+     * @param status 
+     * @param error 
+     */
+    trainerSessioUpdate(sessionId: string, status: TrainSessionStatus, error?: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Session Create
+     * 
+     * @param detectorId 
+     */
+    trainerSessionCreate(detectorId: string, extraHttpRequestParams?: any): Observable<string>;
+
+    /**
+     * Session Detector Running
+     * 
+     * @param detectorId 
+     */
+    trainerSessionDetectorRunning(detectorId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
+    /**
+     * Session List
+     * 
+     * @param detectorId 
+     * @param skip 
+     * @param limit 
+     */
+    trainerSessionList(detectorId: string, skip?: number, limit?: number, extraHttpRequestParams?: any): Observable<TrainSessionListResponse>;
 
 }

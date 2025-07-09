@@ -75,6 +75,9 @@ model/train-image-object-list-response.ts
 model/train-image-object-payload.ts
 model/train-image-object-update-payload.ts
 model/train-image-object.ts
+model/train-session-list-response.ts
+model/train-session-status.ts
+model/train-session.ts
 model/validation-error-loc-inner.ts
 model/validation-error.ts
 param.ts
