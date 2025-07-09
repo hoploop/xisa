@@ -1,0 +1,7 @@
+services:
+  - name: auth
+    host: 127.0.0.1
+    port: 8003
+  
+check_interval: 5  # seconds
+restart_command: "/usr/bin/systemctl restart {service}"

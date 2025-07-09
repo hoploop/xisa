@@ -1,0 +1,20 @@
+<div class="card border-0" [style.margin-bottom.px]="marginBottom|async">
+  <div class="card-body">
+    <h6>
+      <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+      <span class="ms-2" translate>trainer.train_with_recording</span>
+    </h6>
+    <div class="d-flex">
+      <span class="badge bg-info">Project: {{project.name}}</span>
+      <span class="badge bg-info ms-1">Detector: {{detector.name}}</span>
+      <span class="badge bg-info ms-1">Recording: {{record.name}}</span>
+      <span *ngIf="frame|async as cFrame" class="badge bg-info ms-1">Frame: {{cFrame.count}}</span>
+    </div>
+    <ng-container *ngIf="frame|async as cFrame">
+      <app-trainer-lesson-frame-card [frame]="cFrame"></app-trainer-lesson-frame-card>
+    </ng-container>
+  </div>
+</div>
+<app-resize-listener class="fixed-bottom" (resized)="onResize($event)">
+  <app-record-frame-scroller-card (selectedFrame)="selectFrame($event)" [frames]="frames"></app-record-frame-scroller-card>
+</app-resize-listener>

@@ -16,6 +16,24 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class LoadDetectorLabelRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class LoadDetectorLabelResponse(_message.Message):
+    __slots__ = ("status", "message", "label")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    label: _base_pb2.Serialized
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., label: _Optional[_Union[_base_pb2.Serialized, _Mapping]] = ...) -> None: ...
+
 class CanRemoveDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "id")
     USER_FIELD_NUMBER: _ClassVar[int]

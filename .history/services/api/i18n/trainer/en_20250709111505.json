@@ -1,0 +1,16 @@
+{
+    "trainer":{
+        "title":"Train",
+        "errors":{
+            "lesson_not_found":"Train Lesson not found",
+            "session_not_found":"Trains session not found"
+        },
+        "suggestion":{
+            "use_for_automation":"Use for automation",
+            "loading":"Suggestions loading..."
+        },
+        "action":{
+            "remove_from_automation":"Remove from automation"
+        }
+    }
+}

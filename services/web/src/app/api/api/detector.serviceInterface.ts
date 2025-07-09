@@ -195,6 +195,13 @@ export interface DetectorServiceInterface {
     detectorLabelList(detectorId: string, skip?: number, limit?: number, search?: string, requestBody?: Array<string | null>, extraHttpRequestParams?: any): Observable<DetectorLabelListResponse>;
 
     /**
+     * Label Load
+     * 
+     * @param labelId 
+     */
+    detectorLabelLoad(labelId: string, extraHttpRequestParams?: any): Observable<DetectorLabel>;
+
+    /**
      * Label Remove
      * Removes a label from a detector
      * @param labelId 

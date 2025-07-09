@@ -25,17 +25,21 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x63ommon/rpc/api.proto\x1a\x15\x63ommon/rpc/base.proto\"F\n\x14UpdateSessionRequest\x12\x0f\n\x07session\x18\x01 \x01(\t\x12\x1d\n\x08\x64ocument\x18\x02 \x01(\x0b\x32\x0b.Serialized\"I\n\x15UpdateSessionResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message2[\n\x03\x41pi\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12>\n\rupdateSession\x12\x15.UpdateSessionRequest\x1a\x16.UpdateSessionResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x63ommon/rpc/api.proto\x1a\x15\x63ommon/rpc/base.proto\"5\n\x12NannyUpdateRequest\x12\x0f\n\x07service\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\x08\"%\n\x13NannyUpdateResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\"F\n\x14UpdateSessionRequest\x12\x0f\n\x07session\x18\x01 \x01(\t\x12\x1d\n\x08\x64ocument\x18\x02 \x01(\x0b\x32\x0b.Serialized\"I\n\x15UpdateSessionResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_message2\x95\x01\n\x03\x41pi\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12>\n\rupdateSession\x12\x15.UpdateSessionRequest\x1a\x16.UpdateSessionResponse\x12\x38\n\x0bnannyUpdate\x12\x13.NannyUpdateRequest\x1a\x14.NannyUpdateResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common.rpc.api_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_UPDATESESSIONREQUEST']._serialized_start=47
-  _globals['_UPDATESESSIONREQUEST']._serialized_end=117
-  _globals['_UPDATESESSIONRESPONSE']._serialized_start=119
-  _globals['_UPDATESESSIONRESPONSE']._serialized_end=192
-  _globals['_API']._serialized_start=194
-  _globals['_API']._serialized_end=285
+  _globals['_NANNYUPDATEREQUEST']._serialized_start=47
+  _globals['_NANNYUPDATEREQUEST']._serialized_end=100
+  _globals['_NANNYUPDATERESPONSE']._serialized_start=102
+  _globals['_NANNYUPDATERESPONSE']._serialized_end=139
+  _globals['_UPDATESESSIONREQUEST']._serialized_start=141
+  _globals['_UPDATESESSIONREQUEST']._serialized_end=211
+  _globals['_UPDATESESSIONRESPONSE']._serialized_start=213
+  _globals['_UPDATESESSIONRESPONSE']._serialized_end=286
+  _globals['_API']._serialized_start=289
+  _globals['_API']._serialized_end=438
 # @@protoc_insertion_point(module_scope)

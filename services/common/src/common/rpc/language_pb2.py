@@ -25,21 +25,25 @@ _sym_db = _symbol_database.Default()
 from common.rpc import base_pb2 as common_dot_rpc_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/language.proto\x1a\x15\x63ommon/rpc/base.proto\"3\n\x15LanguageEncodeRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"Z\n\x16LanguageEncodeResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06tokens\x18\x03 \x03(\x05\x42\n\n\x08_message\"5\n\x15LanguageDecodeRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06tokens\x18\x03 \x03(\x05\"X\n\x16LanguageDecodeResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0c\n\x04text\x18\x03 \x01(\tB\n\n\x08_message2\xa6\x01\n\x08Language\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12\x41\n\x0elanguageEncode\x12\x16.LanguageEncodeRequest\x1a\x17.LanguageEncodeResponse\x12\x41\n\x0elanguageDecode\x12\x16.LanguageDecodeRequest\x1a\x17.LanguageDecodeResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/rpc/language.proto\x1a\x15\x63ommon/rpc/base.proto\"6\n\x18LanguageTranslateRequest\x12\x0c\n\x04lang\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\")\n\x19LanguageTranslateResponse\x12\x0c\n\x04text\x18\x01 \x01(\t\"3\n\x15LanguageEncodeRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"Z\n\x16LanguageEncodeResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0e\n\x06tokens\x18\x03 \x03(\x05\x42\n\n\x08_message\"5\n\x15LanguageDecodeRequest\x12\x0c\n\x04user\x18\x01 \x01(\t\x12\x0e\n\x06tokens\x18\x03 \x03(\x05\"X\n\x16LanguageDecodeResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\x14\n\x07message\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0c\n\x04text\x18\x03 \x01(\tB\n\n\x08_message2\xf2\x01\n\x08Language\x12\x14\n\x04ping\x12\x05.Ping\x1a\x05.Pong\x12\x41\n\x0elanguageEncode\x12\x16.LanguageEncodeRequest\x1a\x17.LanguageEncodeResponse\x12\x41\n\x0elanguageDecode\x12\x16.LanguageDecodeRequest\x1a\x17.LanguageDecodeResponse\x12J\n\x11languageTranslate\x12\x19.LanguageTranslateRequest\x1a\x1a.LanguageTranslateResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common.rpc.language_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_LANGUAGEENCODEREQUEST']._serialized_start=52
-  _globals['_LANGUAGEENCODEREQUEST']._serialized_end=103
-  _globals['_LANGUAGEENCODERESPONSE']._serialized_start=105
-  _globals['_LANGUAGEENCODERESPONSE']._serialized_end=195
-  _globals['_LANGUAGEDECODEREQUEST']._serialized_start=197
-  _globals['_LANGUAGEDECODEREQUEST']._serialized_end=250
-  _globals['_LANGUAGEDECODERESPONSE']._serialized_start=252
-  _globals['_LANGUAGEDECODERESPONSE']._serialized_end=340
-  _globals['_LANGUAGE']._serialized_start=343
-  _globals['_LANGUAGE']._serialized_end=509
+  _globals['_LANGUAGETRANSLATEREQUEST']._serialized_start=52
+  _globals['_LANGUAGETRANSLATEREQUEST']._serialized_end=106
+  _globals['_LANGUAGETRANSLATERESPONSE']._serialized_start=108
+  _globals['_LANGUAGETRANSLATERESPONSE']._serialized_end=149
+  _globals['_LANGUAGEENCODEREQUEST']._serialized_start=151
+  _globals['_LANGUAGEENCODEREQUEST']._serialized_end=202
+  _globals['_LANGUAGEENCODERESPONSE']._serialized_start=204
+  _globals['_LANGUAGEENCODERESPONSE']._serialized_end=294
+  _globals['_LANGUAGEDECODEREQUEST']._serialized_start=296
+  _globals['_LANGUAGEDECODEREQUEST']._serialized_end=349
+  _globals['_LANGUAGEDECODERESPONSE']._serialized_start=351
+  _globals['_LANGUAGEDECODERESPONSE']._serialized_end=439
+  _globals['_LANGUAGE']._serialized_start=442
+  _globals['_LANGUAGE']._serialized_end=684
 # @@protoc_insertion_point(module_scope)

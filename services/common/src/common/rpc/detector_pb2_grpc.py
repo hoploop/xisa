@@ -150,6 +150,11 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.FromString,
                 _registered_method=True)
+        self.loadDetectorLabel = channel.unary_unary(
+                '/Detector/loadDetectorLabel',
+                request_serializer=common_dot_rpc_dot_detector__pb2.LoadDetectorLabelRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.LoadDetectorLabelResponse.FromString,
+                _registered_method=True)
         self.addDetectorLabel = channel.unary_unary(
                 '/Detector/addDetectorLabel',
                 request_serializer=common_dot_rpc_dot_detector__pb2.AddDetectorLabelRequest.SerializeToString,
@@ -309,6 +314,12 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def loadDetectorLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def addDetectorLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -444,6 +455,11 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.existsDetectorLabel,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.SerializeToString,
+            ),
+            'loadDetectorLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.loadDetectorLabel,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.LoadDetectorLabelRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.LoadDetectorLabelResponse.SerializeToString,
             ),
             'addDetectorLabel': grpc.unary_unary_rpc_method_handler(
                     servicer.addDetectorLabel,
@@ -1082,6 +1098,33 @@ class Detector(object):
             '/Detector/existsDetectorLabel',
             common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.ExistsDetectorLabelResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def loadDetectorLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/loadDetectorLabel',
+            common_dot_rpc_dot_detector__pb2.LoadDetectorLabelRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.LoadDetectorLabelResponse.FromString,
             options,
             channel_credentials,
             insecure,

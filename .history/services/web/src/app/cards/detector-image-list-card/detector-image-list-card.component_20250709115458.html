@@ -1,0 +1,53 @@
+
+<div class="card">
+  <div class="card-header">
+    <app-fa-icon [icon]="FAIconType.images"></app-fa-icon>
+    <span class="ms-2" [translate]="'detector.image.title_n'" [translateParams]="{'n':total}"></span>
+  </div>
+  <div class="card-body">
+    <div class="d-flex">
+      <span>
+        <app-pagination
+  [totalItems]="total"
+  [itemsPerPage]="limit"
+  [currentPage]="page"
+  (pageChange)="onnPageChange($event)">
+</app-pagination>
+      </span>
+      <span class="ms-auto">
+        <app-search [value]="search" (valueChange)="onChangeSearch($event)" [placeholder]="'detector.image.search'"></app-search>
+      </span>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" *ngIf="total == 0" translate>detector.image.empty</div>
+    <div class="d-flex flex-column" *ngIf="total > 0">
+      <div  class="card mt-1" *ngFor="let image of images">
+        <div class="d-flex card-body">
+          <div class="d-flex justify-content-center align-items-center card mb-2">
+            <div class="card-body p-1">
+              <img [style.max-height.px]="150"  *ngIf="image.data" [src]="image.data"/>
+            </div>
+          </div>
+          <div class="d-flex flex-column ms-2">
+            <!--<div>{{image._id}}</div>-->
+            <span [translate]="'detector.image.labels_n'" [translateParams]="{'n':image|detectorImageLabelCount|async}"></span>
+            <ng-container *ngIf="(image._id|detectorImageLabels|async) as labels">
+              <span *ngFor="let label of labels" class="badge bg-info me-1">{{label.label|detectorLabelLoad}}</span>
+              </ng-container>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Train">Train</app-switch>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Test">Test</app-switch>
+            <app-switch [disabled]="true" [value]="image.mode == DetectorImageMode.Val">Val</app-switch>
+          </div>
+
+          <span class="ms-auto">
+            <span class="ms-2 text-muted"><small>{{image.created|amCalendar}}</small></span>
+          <button class="btn btn-primary btn-sm ms-2" (click)="remove(image)">
+            <app-fa-icon [icon]="FAIconType.trash"></app-fa-icon>
+          </button>
+        </span>
+      </div>
+      </div>
+    </div>
+
+  </div>
+  <app-loader [cardFooter]="true" [error]="error" [loading]="loading"></app-loader>
+</div>

@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Nanny {
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+
+    rpc nannyStatus(NannyStatusRequest) returns (NannyStatusResponse);
+
+}
+
+message NannyStatusRequest {
+
+}
+
+message NannyServiceStatus {
+    string name = 1;
+    bool status = 2;
+}
+
+message NannyStatusResponse {
+    repeated NannyServiceStatus services = 1;
+}

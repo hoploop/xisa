@@ -50,6 +50,11 @@ class LanguageStub(object):
                 request_serializer=common_dot_rpc_dot_language__pb2.LanguageDecodeRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_language__pb2.LanguageDecodeResponse.FromString,
                 _registered_method=True)
+        self.languageTranslate = channel.unary_unary(
+                '/Language/languageTranslate',
+                request_serializer=common_dot_rpc_dot_language__pb2.LanguageTranslateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_language__pb2.LanguageTranslateResponse.FromString,
+                _registered_method=True)
 
 
 class LanguageServicer(object):
@@ -74,6 +79,12 @@ class LanguageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def languageTranslate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_LanguageServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -91,6 +102,11 @@ def add_LanguageServicer_to_server(servicer, server):
                     servicer.languageDecode,
                     request_deserializer=common_dot_rpc_dot_language__pb2.LanguageDecodeRequest.FromString,
                     response_serializer=common_dot_rpc_dot_language__pb2.LanguageDecodeResponse.SerializeToString,
+            ),
+            'languageTranslate': grpc.unary_unary_rpc_method_handler(
+                    servicer.languageTranslate,
+                    request_deserializer=common_dot_rpc_dot_language__pb2.LanguageTranslateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_language__pb2.LanguageTranslateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -174,6 +190,33 @@ class Language(object):
             '/Language/languageDecode',
             common_dot_rpc_dot_language__pb2.LanguageDecodeRequest.SerializeToString,
             common_dot_rpc_dot_language__pb2.LanguageDecodeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def languageTranslate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Language/languageTranslate',
+            common_dot_rpc_dot_language__pb2.LanguageTranslateRequest.SerializeToString,
+            common_dot_rpc_dot_language__pb2.LanguageTranslateResponse.FromString,
             options,
             channel_credentials,
             insecure,

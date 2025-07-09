@@ -5,6 +5,20 @@ from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Opti
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class NannyUpdateRequest(_message.Message):
+    __slots__ = ("service", "status")
+    SERVICE_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    service: str
+    status: bool
+    def __init__(self, service: _Optional[str] = ..., status: bool = ...) -> None: ...
+
+class NannyUpdateResponse(_message.Message):
+    __slots__ = ("status",)
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    def __init__(self, status: bool = ...) -> None: ...
+
 class UpdateSessionRequest(_message.Message):
     __slots__ = ("session", "document")
     SESSION_FIELD_NUMBER: _ClassVar[int]

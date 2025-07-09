@@ -45,6 +45,11 @@ class ApiStub(object):
                 request_serializer=common_dot_rpc_dot_api__pb2.UpdateSessionRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_api__pb2.UpdateSessionResponse.FromString,
                 _registered_method=True)
+        self.nannyUpdate = channel.unary_unary(
+                '/Api/nannyUpdate',
+                request_serializer=common_dot_rpc_dot_api__pb2.NannyUpdateRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_api__pb2.NannyUpdateResponse.FromString,
+                _registered_method=True)
 
 
 class ApiServicer(object):
@@ -63,6 +68,12 @@ class ApiServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def nannyUpdate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ApiServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -75,6 +86,11 @@ def add_ApiServicer_to_server(servicer, server):
                     servicer.updateSession,
                     request_deserializer=common_dot_rpc_dot_api__pb2.UpdateSessionRequest.FromString,
                     response_serializer=common_dot_rpc_dot_api__pb2.UpdateSessionResponse.SerializeToString,
+            ),
+            'nannyUpdate': grpc.unary_unary_rpc_method_handler(
+                    servicer.nannyUpdate,
+                    request_deserializer=common_dot_rpc_dot_api__pb2.NannyUpdateRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_api__pb2.NannyUpdateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -131,6 +147,33 @@ class Api(object):
             '/Api/updateSession',
             common_dot_rpc_dot_api__pb2.UpdateSessionRequest.SerializeToString,
             common_dot_rpc_dot_api__pb2.UpdateSessionResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def nannyUpdate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Api/nannyUpdate',
+            common_dot_rpc_dot_api__pb2.NannyUpdateRequest.SerializeToString,
+            common_dot_rpc_dot_api__pb2.NannyUpdateResponse.FromString,
             options,
             channel_credentials,
             insecure,

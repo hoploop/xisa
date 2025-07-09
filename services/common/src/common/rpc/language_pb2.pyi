@@ -6,6 +6,20 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Optional as _Op
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class LanguageTranslateRequest(_message.Message):
+    __slots__ = ("lang", "text")
+    LANG_FIELD_NUMBER: _ClassVar[int]
+    TEXT_FIELD_NUMBER: _ClassVar[int]
+    lang: str
+    text: str
+    def __init__(self, lang: _Optional[str] = ..., text: _Optional[str] = ...) -> None: ...
+
+class LanguageTranslateResponse(_message.Message):
+    __slots__ = ("text",)
+    TEXT_FIELD_NUMBER: _ClassVar[int]
+    text: str
+    def __init__(self, text: _Optional[str] = ...) -> None: ...
+
 class LanguageEncodeRequest(_message.Message):
     __slots__ = ("user", "text")
     USER_FIELD_NUMBER: _ClassVar[int]
