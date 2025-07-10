@@ -17,6 +17,7 @@ import { TrainerPageComponent } from './trainer-page/trainer-page.component';
 import { MenuPageComponent } from './menu-page/menu-page.component';
 import { DetectorPageComponent } from './detector-page/detector-page.component';
 import { TrainerLessonPageComponent } from './trainer-lesson-page/trainer-lesson-page.component';
+import { DetectorTrainSessionListPageComponent } from './detector-train-session-list-page/detector-train-session-list-page.component';
 
 
 
@@ -34,7 +35,8 @@ import { TrainerLessonPageComponent } from './trainer-lesson-page/trainer-lesson
     TrainerPageComponent,
     MenuPageComponent,
     DetectorPageComponent,
-    TrainerLessonPageComponent
+    TrainerLessonPageComponent,
+    DetectorTrainSessionListPageComponent
   ],
   imports: [
     CommonModule,

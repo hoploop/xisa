@@ -4,6 +4,8 @@ api.module.ts
 api/api.ts
 api/auth.service.ts
 api/auth.serviceInterface.ts
+api/default.service.ts
+api/default.serviceInterface.ts
 api/detector.service.ts
 api/detector.serviceInterface.ts
 api/operator.service.ts

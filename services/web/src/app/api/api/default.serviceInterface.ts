@@ -11,7 +11,6 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { HTTPValidationError } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -23,10 +22,9 @@ export interface DefaultServiceInterface {
     configuration: Configuration;
 
     /**
-     * Custom Static File
+     * Nannystatus
      * 
-     * @param filename 
      */
-    customStaticFileI18nFilenameGet(filename: string, extraHttpRequestParams?: any): Observable<any>;
+    nannyStatusStatusGet(extraHttpRequestParams?: any): Observable<object>;
 
 }

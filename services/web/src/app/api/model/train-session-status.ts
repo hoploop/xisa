@@ -10,9 +10,9 @@
 
 
 export enum TrainSessionStatus {
-    NUMBER_0 = 0,
-    NUMBER_1 = 1,
-    NUMBER_2 = 2,
-    NUMBER_3 = 3
+    Idle = 'IDLE',
+    Running = 'RUNNING',
+    Completed = 'COMPLETED',
+    Error = 'ERROR'
 }
 
