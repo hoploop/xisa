@@ -267,6 +267,13 @@ export interface DetectorServiceInterface {
     detectorTrain(detectorId: string, epochs?: number, size?: number, extraHttpRequestParams?: any): Observable<boolean>;
 
     /**
+     * Train Result
+     * 
+     * @param filename 
+     */
+    detectorTrainResult(filename: string, extraHttpRequestParams?: any): Observable<any>;
+
+    /**
      * Update
      * 
      * @param detectorId 

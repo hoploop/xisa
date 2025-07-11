@@ -16,6 +16,24 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class TrainResultRequest(_message.Message):
+    __slots__ = ("user", "filename")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    FILENAME_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    filename: str
+    def __init__(self, user: _Optional[str] = ..., filename: _Optional[str] = ...) -> None: ...
+
+class TrainResultResponse(_message.Message):
+    __slots__ = ("data", "content_type", "found")
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
+    FOUND_FIELD_NUMBER: _ClassVar[int]
+    data: bytes
+    content_type: str
+    found: bool
+    def __init__(self, data: _Optional[bytes] = ..., content_type: _Optional[str] = ..., found: bool = ...) -> None: ...
+
 class LoadDetectorLabelRequest(_message.Message):
     __slots__ = ("user", "id")
     USER_FIELD_NUMBER: _ClassVar[int]
@@ -349,16 +367,16 @@ class ListDetectorImageLabelResponse(_message.Message):
     def __init__(self, status: bool = ..., message: _Optional[str] = ..., total: _Optional[int] = ..., labels: _Optional[_Iterable[_Union[_base_pb2.Serialized, _Mapping]]] = ...) -> None: ...
 
 class UploadDetectorImageRequest(_message.Message):
-    __slots__ = ("user", "detector", "data", "modes")
+    __slots__ = ("user", "detector", "file", "modes")
     USER_FIELD_NUMBER: _ClassVar[int]
     DETECTOR_FIELD_NUMBER: _ClassVar[int]
-    DATA_FIELD_NUMBER: _ClassVar[int]
+    FILE_FIELD_NUMBER: _ClassVar[int]
     MODES_FIELD_NUMBER: _ClassVar[int]
     user: str
     detector: str
-    data: str
+    file: str
     modes: _containers.RepeatedScalarFieldContainer[DetectorImageMode]
-    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., data: _Optional[str] = ..., modes: _Optional[_Iterable[_Union[DetectorImageMode, str]]] = ...) -> None: ...
+    def __init__(self, user: _Optional[str] = ..., detector: _Optional[str] = ..., file: _Optional[str] = ..., modes: _Optional[_Iterable[_Union[DetectorImageMode, str]]] = ...) -> None: ...
 
 class UploadDetectorImageResponse(_message.Message):
     __slots__ = ("status", "message", "images")

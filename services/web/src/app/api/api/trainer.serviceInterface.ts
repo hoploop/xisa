@@ -104,4 +104,11 @@ export interface TrainerServiceInterface {
      */
     trainerSessionList(detectorId: string, skip?: number, limit?: number, extraHttpRequestParams?: any): Observable<TrainSessionListResponse>;
 
+    /**
+     * Session Remove
+     * 
+     * @param sessionId 
+     */
+    trainerSessionRemove(sessionId: string, extraHttpRequestParams?: any): Observable<boolean>;
+
 }

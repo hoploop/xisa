@@ -12,14 +12,10 @@
 export interface DetectorTrainingSession { 
     type?: DetectorTrainingSessionTypeEnum;
     detector: string;
-    epoch_progress: number;
-    epoch_total: number;
-    box_loss: number;
-    class_loss: number;
-    object_loss: number;
-    created?: string;
-    updated?: string;
-    user: string;
+    total?: number;
+    progress?: number;
+    message?: string | null;
+    error?: string | null;
 }
 export enum DetectorTrainingSessionTypeEnum {
     DetectorTrainingSession = 'detector.training.session'

@@ -1,0 +1,27 @@
+{
+    "trainer":{
+        "project_s":"Project: {{s}}",
+        "detector_s":"Detector: {{s}}",
+        "record_s":"Recording: {{s}}",
+        "frame_n":"Frame: {{n}}",
+        "train_with_recording":"Train a detector with a recording",
+        "title":"Train",
+        "errors":{
+            "lesson_not_found":"Train Lesson not found",
+            "session_not_found":"Trains session not found"
+        },
+        "suggestion":{
+            "use_for_automation":"Use for automation",
+            "loading":"Suggestions loading..."
+        },
+        "action":{
+            "remove_from_automation":"Remove from automation"
+            
+        },
+        "session":{
+            "list":"Train sessions",
+            "search":"Search",
+            "empty":"No train sessions"
+        }
+    }
+}

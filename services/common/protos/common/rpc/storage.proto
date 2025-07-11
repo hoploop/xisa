@@ -1,0 +1,83 @@
+syntax = "proto3";
+import "common/rpc/base.proto";
+
+service Storage {
+    
+    // Performs synchronous ping of service
+    rpc ping(Ping) returns (Pong);
+    rpc storageSave(StorageSaveRequest) returns (StorageSaveResponse);
+    rpc storageLoad(StorageLoadRequest) returns (StorageLoadResponse);
+    rpc storageLoadById(StorageLoadByIdRequest) returns (StorageLoadByIdResponse);
+    rpc storageExists(StorageExistsRequest) returns (StorageExistsResponse);
+    rpc storageRemove(StorageRemoveRequest) returns (StorageRemoveResponse);
+    rpc storageRemoveFolder(StorageRemoveFolderRequest) returns (StorageRemoveFolderResponse);
+}
+
+message StorageExistsRequest {
+    string filename = 1;
+    string folder = 2;
+}
+
+message StorageExistsResponse {
+    bool status = 1;
+    optional string message = 2;
+    string exists = 3;
+}
+
+message StorageSaveRequest {
+    string filename = 1;
+    string folder = 2;
+    bytes data = 3;
+    optional string content_type = 4;
+}
+
+message StorageSaveResponse {
+    bool status = 1;
+    optional string message = 2;
+    string id = 3;
+}
+
+
+message StorageLoadByIdRequest {
+    string id = 1;
+}
+
+message StorageLoadByIdResponse {
+    bool status = 1;
+    optional string message = 2;
+    bytes data = 3;
+    optional string content_type = 4;
+    int32 size = 5;
+}
+
+message StorageLoadRequest {
+    string filename = 1;
+    string folder = 2;
+}
+
+message StorageLoadResponse {
+    bool status = 1;
+    optional string message = 2;
+    bytes data = 3;
+    optional string content_type = 4;
+    int32 size = 5;
+}
+
+message StorageRemoveRequest {
+    string filename = 1;
+    string folder = 2;
+}
+
+message StorageRemoveResponse {
+    bool status = 1;
+    optional string message = 2;
+}
+
+message StorageRemoveFolderRequest {
+    string folder = 1;
+}
+
+message StorageRemoveFolderResponse {
+     bool status = 1;
+    optional string message = 2;
+}

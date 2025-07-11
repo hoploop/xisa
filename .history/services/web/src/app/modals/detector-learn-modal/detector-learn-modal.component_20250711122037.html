@@ -1,0 +1,40 @@
+
+
+<app-modal [loading]="loading" [error]="error">
+  <ng-content header>
+    <app-fa-icon [icon]="FAIconType.university"></app-fa-icon>
+    <span class="ms-1" translate>detector.learn</span>
+  </ng-content>
+  <button type="button" class="btn-close" (click)="dismiss()" aria-label="Close"></button>
+
+  <ng-content body>
+    <div *ngIf="progress !=-1" class="progress mb-1 " role="progressbar" aria-label="Example with label" [attr.aria-valuenow]="progress" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="progress">{{progress}}%</div>
+    </div>
+    <div class="d-flex flex-column w-100 mt-2">
+      <label for="rangeInput" class="form-label text-nowrap">
+        <span [translate]="'detector.epochs_n'" [translateParams]="{'n':epochs}"></span>
+      </label>
+      <input
+        type="range"
+        class="form-range"
+        id="rangeInput"
+        [(ngModel)]="epochs"
+        min="0"
+        max="100"
+        step="1"
+      />
+    </div>
+    <div class="mt-1 mb-1 d-flex flex-column" *ngIf="logs.length > 0" style="max-height:200px; overflow-y:auto">
+      <div *ngFor="let log of logs">{{logs}}</div>
+    </div>
+    <div class="d-flex w-100 justify-content-end align-items-center mt-2">
+      <button class="btn btn-primary btn-sm ms-1" [disabled]="progress >=0 && progress < 100" (click)="train()">
+        <app-fa-icon [icon]="FAIconType.play"></app-fa-icon>
+        <span class="ms-1" translate>detector.training.titles</span>
+      </button>
+    </div>
+  </ng-content>
+</app-modal>
+
+

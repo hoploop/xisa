@@ -85,6 +85,11 @@ class TrainerStub(object):
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.FromString,
                 _registered_method=True)
+        self.trainSessionRemove = channel.unary_unary(
+                '/Trainer/trainSessionRemove',
+                request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveResponse.FromString,
+                _registered_method=True)
         self.trainSessionDetectorRunning = channel.unary_unary(
                 '/Trainer/trainSessionDetectorRunning',
                 request_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionDetectorRunningRequest.SerializeToString,
@@ -156,6 +161,12 @@ class TrainerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def trainSessionRemove(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def trainSessionDetectorRunning(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -214,6 +225,11 @@ def add_TrainerServicer_to_server(servicer, server):
                     servicer.trainSessionList,
                     request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.FromString,
                     response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.SerializeToString,
+            ),
+            'trainSessionRemove': grpc.unary_unary_rpc_method_handler(
+                    servicer.trainSessionRemove,
+                    request_deserializer=common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveResponse.SerializeToString,
             ),
             'trainSessionDetectorRunning': grpc.unary_unary_rpc_method_handler(
                     servicer.trainSessionDetectorRunning,
@@ -491,6 +507,33 @@ class Trainer(object):
             '/Trainer/trainSessionList',
             common_dot_rpc_dot_trainer__pb2.TrainSessionListRequest.SerializeToString,
             common_dot_rpc_dot_trainer__pb2.TrainSessionListResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def trainSessionRemove(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Trainer/trainSessionRemove',
+            common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveRequest.SerializeToString,
+            common_dot_rpc_dot_trainer__pb2.TrainSessionRemoveResponse.FromString,
             options,
             channel_credentials,
             insecure,

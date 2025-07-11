@@ -16,8 +16,6 @@ api/project.service.ts
 api/project.serviceInterface.ts
 api/recorder.service.ts
 api/recorder.serviceInterface.ts
-api/train.service.ts
-api/train.serviceInterface.ts
 api/trainer.service.ts
 api/trainer.serviceInterface.ts
 api/ws.service.ts

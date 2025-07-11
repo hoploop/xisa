@@ -15,6 +15,7 @@ export interface TrainSession {
     detector: string;
     user: string;
     status?: TrainSessionStatus;
+    results?: string | null;
     created?: string;
     updated?: string;
     errors?: Array<string>;

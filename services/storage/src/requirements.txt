@@ -1,8 +1,0 @@
-transformers 
-sentence-transformers 
-faiss-cpu 
-torch
-pdfplumber
-python-docx
-docs
-bs4

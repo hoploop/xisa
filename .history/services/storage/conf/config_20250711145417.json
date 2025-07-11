@@ -1,0 +1,17 @@
+{
+  "address": "${STORAGE_RPC_HOST}:${STORAGE_RPC_PORT}",
+  "path":"data/",
+  "security": {
+    "key": "${SERVER_KEY}",
+    "cert": "${SERVER_CERT}",
+    "chain": "${SERVER_PEM}",
+    "cn": "pin"
+  },
+  "database": {
+    "uri": "${DATABASE_URI}",
+    "name": "pin",
+    "filesystem": "fs"
+  }
+ 
+  
+}

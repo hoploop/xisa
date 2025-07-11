@@ -13,7 +13,7 @@ import { DetectorImageMode } from './detector-image-mode';
 export interface DetectorImage { 
     _id?: string | null;
     detector: string;
-    data: string;
+    storage: string;
     width: number;
     height: number;
     mode?: DetectorImageMode;
