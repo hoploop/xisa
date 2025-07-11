@@ -16,6 +16,24 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class DetectorImageRequest(_message.Message):
+    __slots__ = ("user", "id")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    id: str
+    def __init__(self, user: _Optional[str] = ..., id: _Optional[str] = ...) -> None: ...
+
+class DetectorImageResponse(_message.Message):
+    __slots__ = ("data", "content_type", "found")
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    CONTENT_TYPE_FIELD_NUMBER: _ClassVar[int]
+    FOUND_FIELD_NUMBER: _ClassVar[int]
+    data: bytes
+    content_type: str
+    found: bool
+    def __init__(self, data: _Optional[bytes] = ..., content_type: _Optional[str] = ..., found: bool = ...) -> None: ...
+
 class TrainResultRequest(_message.Message):
     __slots__ = ("user", "filename")
     USER_FIELD_NUMBER: _ClassVar[int]

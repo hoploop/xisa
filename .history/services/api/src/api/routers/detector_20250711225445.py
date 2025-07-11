@@ -557,7 +557,8 @@ async def train_result(user: CurrentUser,filename: str, detector: Detector):
 @router.get("/image",operation_id="detectorImage")
 async def image(user: CurrentUser,id: PydanticObjectId, detector: Detector):
     try:
-        res = await detector.detectorImage(user,id)
+        log.debug("Getting results file: "+filename)
+        res = await detector.trainResult(user,filename)
         
         if not res.found:
             raise HTTPException(status_code=404, detail="File not found")
@@ -567,7 +568,7 @@ async def image(user: CurrentUser,id: PydanticObjectId, detector: Detector):
             content=res.data,
             media_type=res.content_type,
             headers={
-                "Content-Disposition": f"inline; filename={str(id)}"
+                "Content-Disposition": f"inline; filename={filename}"
             }
         )
 

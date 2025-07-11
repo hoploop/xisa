@@ -39,7 +39,7 @@ service Detector {
 
 message DetectorImageRequest {
   string user = 1;
-  string id = 3;
+  string filename = 3;
 }
 
 message DetectorImageResponse {
@@ -47,7 +47,6 @@ message DetectorImageResponse {
   string content_type = 2;
   bool found = 3;
 }
-
 message TrainResultRequest {
   string user = 1;
   string filename = 3;

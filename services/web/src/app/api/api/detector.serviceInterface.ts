@@ -83,6 +83,13 @@ export interface DetectorServiceInterface {
     detectorFrameUpload(recordId: string, detectorId: string, frame: number, detectorImageMode: Array<DetectorImageMode>, extraHttpRequestParams?: any): Observable<Array<DetectorImage>>;
 
     /**
+     * Image
+     * 
+     * @param id 
+     */
+    detectorImage(id: string, extraHttpRequestParams?: any): Observable<any>;
+
+    /**
      * Image Count
      * 
      * @param detectorId 

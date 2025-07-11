@@ -1132,8 +1132,7 @@ class DetectorService(Service, DetectorServicer):
 
     async def detectorImage(self, request:DetectorImageRequest, context) -> DetectorImageResponse:
         try:
-            data,content_type,size = await self.storage.loadById(PydanticObjectId(request.id))
-            return DetectorImageResponse(found=True,data=data,content_type=content_type)
+            
         except Exception:
             log.warning(str(e))
             return DetectorImageResponse(found=False)

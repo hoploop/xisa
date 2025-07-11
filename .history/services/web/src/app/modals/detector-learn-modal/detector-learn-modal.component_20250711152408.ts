@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Detector, DetectorTrainingSession } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 import { filter } from 'rxjs';
@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
 })
 export class DetectorLearnModalComponent
   extends BaseComponent
-  implements OnInit, OnDestroy,OnChanges
+  implements OnInit, OnDestroy, AfterViewChecked
 {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -20,14 +20,13 @@ export class DetectorLearnModalComponent
   progress: number = -1;
   logs: string[] = [];
 
- ngOnChanges(changes: SimpleChanges) {
-    if (changes['messages']) {
-      this.scrollToBottom();
-    }
+   ngAfterViewChecked() {
+    this.scrollToBottom();
   }
 
-  private scrollToBottom() {
-    this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+  private scrollToBottom(): void {
+    const container = this.scrollContainer.nativeElement;
+    container.scrollTop = container.scrollHeight;
   }
 
   train() {
@@ -86,7 +85,6 @@ export class DetectorLearnModalComponent
           }
           if (res.message && res.message!=""){
             this.logs.push(res.message);
-            this.scrollToBottom();
           }
         },
       })

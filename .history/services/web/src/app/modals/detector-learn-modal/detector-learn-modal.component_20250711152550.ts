@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Detector, DetectorTrainingSession } from '@api/index';
 import { BaseComponent } from '@utils/base/base.component';
 import { filter } from 'rxjs';

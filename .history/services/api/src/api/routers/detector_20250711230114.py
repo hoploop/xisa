@@ -567,7 +567,7 @@ async def image(user: CurrentUser,id: PydanticObjectId, detector: Detector):
             content=res.data,
             media_type=res.content_type,
             headers={
-                "Content-Disposition": f"inline; filename={str(id)}"
+                "Content-Disposition": f"inline; filename={filename}"
             }
         )
 

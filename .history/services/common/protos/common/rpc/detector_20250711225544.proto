@@ -39,7 +39,7 @@ service Detector {
 
 message DetectorImageRequest {
   string user = 1;
-  string id = 3;
+  string filename = 3;
 }
 
 message DetectorImageResponse {
