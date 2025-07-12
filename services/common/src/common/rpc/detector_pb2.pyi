@@ -16,6 +16,40 @@ TRAIN: DetectorImageMode
 VAL: DetectorImageMode
 TEST: DetectorImageMode
 
+class DetectContour(_message.Message):
+    __slots__ = ("x", "y", "w", "h", "confidence")
+    X_FIELD_NUMBER: _ClassVar[int]
+    Y_FIELD_NUMBER: _ClassVar[int]
+    W_FIELD_NUMBER: _ClassVar[int]
+    H_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    x: float
+    y: float
+    w: float
+    h: float
+    confidence: float
+    def __init__(self, x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class DetectContoursRequest(_message.Message):
+    __slots__ = ("user", "data", "confidence")
+    USER_FIELD_NUMBER: _ClassVar[int]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    user: str
+    data: str
+    confidence: float
+    def __init__(self, user: _Optional[str] = ..., data: _Optional[str] = ..., confidence: _Optional[float] = ...) -> None: ...
+
+class DetectContoursResponse(_message.Message):
+    __slots__ = ("status", "message", "contours")
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    CONTOURS_FIELD_NUMBER: _ClassVar[int]
+    status: bool
+    message: str
+    contours: _containers.RepeatedCompositeFieldContainer[DetectContour]
+    def __init__(self, status: bool = ..., message: _Optional[str] = ..., contours: _Optional[_Iterable[_Union[DetectContour, _Mapping]]] = ...) -> None: ...
+
 class DetectorImageRequest(_message.Message):
     __slots__ = ("user", "id")
     USER_FIELD_NUMBER: _ClassVar[int]

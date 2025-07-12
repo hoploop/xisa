@@ -27,8 +27,10 @@ index.ts
 model/action.ts
 model/app-started-event.ts
 model/app-stopped-event.ts
+model/detect-contour.ts
 model/detect-object.ts
 model/detect-text.ts
+model/detector-contours-payload.ts
 model/detector-image-label-add.ts
 model/detector-image-label-list-response.ts
 model/detector-image-label.ts

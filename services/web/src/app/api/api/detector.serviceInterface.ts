@@ -11,9 +11,11 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { DetectContour } from '../model/models';
 import { DetectObject } from '../model/models';
 import { DetectText } from '../model/models';
 import { Detector } from '../model/models';
+import { DetectorContoursPayload } from '../model/models';
 import { DetectorImage } from '../model/models';
 import { DetectorImageLabel } from '../model/models';
 import { DetectorImageLabelAdd } from '../model/models';
@@ -36,6 +38,22 @@ import { Configuration }                                     from '../configurat
 export interface DetectorServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * Contours
+     * Performs the detection of contours from base64 image
+     * @param detectorContoursPayload 
+     */
+    detectorContours(detectorContoursPayload: DetectorContoursPayload, extraHttpRequestParams?: any): Observable<Array<DetectContour>>;
+
+    /**
+     * Contours From Frame
+     * Performs the detection of contours from recording frame image
+     * @param recordId 
+     * @param frame 
+     * @param confidence 
+     */
+    detectorContoursFromFrame(recordId: string, frame: number, confidence: number, extraHttpRequestParams?: any): Observable<Array<DetectContour>>;
 
     /**
      * Count

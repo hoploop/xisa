@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
 from common.clients.detector import DetectorClient
-from common.models.detector import DetectObject, DetectText, Detector as DetectorDocument, DetectorLabel, DetectorSuggestion
+from common.models.detector import DetectContour, DetectObject, DetectText, Detector as DetectorDocument, DetectorLabel, DetectorSuggestion
 from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
 from api.routers.recorder import Recorder
 
@@ -127,6 +127,22 @@ async def objects(user:CurrentUser,detector: Detector,detectorId: PydanticObject
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
+class DetectorContoursPayload(BaseModel):
+    data: str
+    confidence: float = 0.7
+
+@router.post(
+    "/contours",
+    description="Performs the detection of contours from base64 image",
+    operation_id="detectorContours",
+    response_model=List[DetectContour]
+)
+async def contours(user:CurrentUser,detector: Detector,payload:DetectorContoursPayload):
+    try:
+        return await detector.detectContours(user,payload.data,payload.confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 @router.post(
     "/frame/objects/{recordId}",
@@ -140,6 +156,23 @@ async def objects_from_frame(user:CurrentUser,detector: Detector,recorder:Record
         return await detector.detectObjects(user,detectorId,data,confidence)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
+
+
+@router.post(
+    "/frame/contours/{recordId}",
+    description="Performs the detection of contours from recording frame image",
+    operation_id="detectorContoursFromFrame",
+    response_model=List[DetectContour]
+)
+async def contours_from_frame(user:CurrentUser,detector: Detector,recorder:Recorder,recordId: PydanticObjectId,frame:int, confidence:float):
+    try:
+        
+        log.info("Detecting contours: {0},{1}".format(recordId,frame))
+        data = await recorder.loadRecordFrameBase64(user,recordId,frame)
+        return await detector.detectContours(user,data,confidence)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 class DetectorTextsPayload(BaseModel):
     data: str

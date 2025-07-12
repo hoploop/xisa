@@ -180,6 +180,11 @@ class DetectorStub(object):
                 request_serializer=common_dot_rpc_dot_detector__pb2.DetectorImageRequest.SerializeToString,
                 response_deserializer=common_dot_rpc_dot_detector__pb2.DetectorImageResponse.FromString,
                 _registered_method=True)
+        self.detectContours = channel.unary_unary(
+                '/Detector/detectContours',
+                request_serializer=common_dot_rpc_dot_detector__pb2.DetectContoursRequest.SerializeToString,
+                response_deserializer=common_dot_rpc_dot_detector__pb2.DetectContoursResponse.FromString,
+                _registered_method=True)
 
 
 class DetectorServicer(object):
@@ -360,6 +365,12 @@ class DetectorServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def detectContours(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DetectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -507,6 +518,11 @@ def add_DetectorServicer_to_server(servicer, server):
                     servicer.detectorImage,
                     request_deserializer=common_dot_rpc_dot_detector__pb2.DetectorImageRequest.FromString,
                     response_serializer=common_dot_rpc_dot_detector__pb2.DetectorImageResponse.SerializeToString,
+            ),
+            'detectContours': grpc.unary_unary_rpc_method_handler(
+                    servicer.detectContours,
+                    request_deserializer=common_dot_rpc_dot_detector__pb2.DetectContoursRequest.FromString,
+                    response_serializer=common_dot_rpc_dot_detector__pb2.DetectContoursResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1292,6 +1308,33 @@ class Detector(object):
             '/Detector/detectorImage',
             common_dot_rpc_dot_detector__pb2.DetectorImageRequest.SerializeToString,
             common_dot_rpc_dot_detector__pb2.DetectorImageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def detectContours(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Detector/detectContours',
+            common_dot_rpc_dot_detector__pb2.DetectContoursRequest.SerializeToString,
+            common_dot_rpc_dot_detector__pb2.DetectContoursResponse.FromString,
             options,
             channel_credentials,
             insecure,

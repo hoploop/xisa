@@ -34,7 +34,27 @@ service Detector {
     rpc suggestStep(SuggestStepRequest) returns (SuggestStepResponse);
     rpc trainResult(TrainResultRequest) returns (TrainResultResponse);
     rpc detectorImage(DetectorImageRequest) returns (DetectorImageResponse);
+    rpc detectContours(DetectContoursRequest) returns (DetectContoursResponse);
+}
 
+message DetectContour {
+    float x = 1;
+    float y = 2;
+    float w = 3;
+    float h = 4;
+    float confidence = 5;
+}
+
+message DetectContoursRequest {
+    string user = 1;
+    string data = 2;
+    optional float confidence = 4;
+}
+
+message DetectContoursResponse {
+    bool status = 1;
+    optional string message = 2;
+    repeated DetectContour contours = 3;
 }
 
 message DetectorImageRequest {

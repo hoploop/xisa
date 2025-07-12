@@ -9,6 +9,8 @@ import shutil
 
 # LIBRARY IMPORTS
 from beanie import PydanticObjectId
+import cv2
+import numpy
 from pydantic import Field
 from beanie.operators import And, Or, In, RegEx, NotIn
 import pytesseract
@@ -52,6 +54,9 @@ from common.rpc.detector_pb2 import (
     CountDetectorRequest,
     CountDetectorResponse,
     CreateDetectorResponse,
+    DetectContour,
+    DetectContoursRequest,
+    DetectContoursResponse,
     DetectObject,
     DetectObjectsRequest,
     DetectObjectsResponse,
@@ -400,6 +405,44 @@ class DetectorService(Service, DetectorServicer):
         except Exception as e:
             log.warning(str(e))
             return DetectTextsResponse(status=False, message=str(e))
+        
+    async def detectContours(self, request: DetectContoursRequest, context) -> DetectContoursResponse:
+        try:
+            b64image = request.data
+            if "," in b64image:
+                bsource = b64image.split(",")[1]
+            else:
+                bsource = b64image
+            img = Image.open(BytesIO(self.decode_base64(bsource)))
+            imgGray = img.convert('L')
+            grayImg = numpy.array(imgGray)
+            width, height = img.size
+            edges = cv2.Canny(grayImg,100,200)
+            contours, _ = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+            elements = []
+            max_area = (width * height) / 100
+            
+            for contour in contours:
+                area = cv2.contourArea(contour)
+                if area > 100:
+                    x,y,w,h = cv2.boundingRect(contour)
+                    area_confidence = min (area/max_area,1.0)
+                    if w <=0 or h<=0:
+                        continue
+                    
+                    roi_edges = edges[y:y+h,x:x+w]
+                    edge_strength = numpy.mean(roi_edges)/255.0 if roi_edges.size > 0 else 0.0
+                    confidence = 0.7 * area_confidence + 0.3 * edge_strength
+                    x_rel = x/width
+                    y_rel = y/height
+                    w_rel = w/width
+                    h_rel = h/height
+                    elements.append(DetectContour(x=x_rel,y=y_rel,w=w_rel,h=h_rel,confidence=confidence))
+            return DetectContoursResponse(status=True,contours=elements)
+            
+        except Exception as e:
+            log.warning(str(e))
+            return DetectContoursResponse(status=False,message=str(e))
 
     async def detectObjects(
         self, request: DetectObjectsRequest, context

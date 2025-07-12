@@ -126,6 +126,16 @@ class DetectObject(BaseModel):
     row: int
     col: int
     
+
+    
+class DetectContour(BaseModel):
+    x: float
+    y: float
+    w: float
+    h: float
+    confidence:float
+    
+    
 class DetectText(BaseModel):
     x: float
     y: float

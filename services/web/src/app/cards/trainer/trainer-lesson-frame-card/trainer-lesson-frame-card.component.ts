@@ -54,6 +54,7 @@ export class TrainerLessonFrameCardComponent
 
   ngOnInit(): void {
     setTimeout(() => {
+      this.loadContours(0.3);
       let calls = [];
       calls.push(this.loadSuggestions());
       calls.push(this.loadTrainImages());
@@ -428,6 +429,19 @@ export class TrainerLessonFrameCardComponent
           });
       }
     });
+  }
+
+
+  loadContours(confidence:number = 0.1){
+    if (!this.frame.record._id) return;
+    this.ctx.api.detector.detectorContoursFromFrame(this.frame.record._id,this.frame.count,0.2).subscribe({
+      next: (result)=>{
+        this.log.info(result);
+      },
+      error: (error)=>{
+        this.log.error(error);
+      }
+    })
   }
 
   loadSuggestions(confidence: number = 0.1): Observable<boolean> {

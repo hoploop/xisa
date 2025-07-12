@@ -10,6 +10,7 @@ from beanie import PydanticObjectId
 
 from common.models.auth import User
 from common.models.detector import (
+    DetectContour,
     DetectObject,
     DetectText,
     Detector,
@@ -31,6 +32,7 @@ from common.rpc.detector_pb2 import (
     CountDetectorImageRequest,
     CountDetectorRequest,
     CreateDetectorRequest,
+    DetectContoursRequest,
     DetectObjectsRequest,
     DetectTextsRequest,
     DetectorImageRequest,
@@ -110,6 +112,35 @@ class DetectorClient(Client):
                     name=obj.name,
                     row=obj.row,
                     col=obj.col,
+                )
+            )
+        return ret
+    
+
+    async def detectContours(
+        self,
+        user: User,
+        data: str,
+        confidence: float = 0.7,
+    ) -> List[DetectContour]:
+        log.info("Detecting contours")
+        req = DetectContoursRequest(
+            user=str(user.id),
+            data=data,
+            confidence=confidence,
+        )
+        res = await self.client.detectContours(req)
+        if res.status == False:
+            raise Exception(res.message)
+        ret = []
+        for obj in res.contours:
+            ret.append(
+                DetectContour(
+                    x=obj.x,
+                    y=obj.y,
+                    w=obj.w,
+                    h=obj.h,
+                    confidence=obj.confidence,
                 )
             )
         return ret
