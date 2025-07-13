@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Project, Record } from '@api/index';
-import { RecordControllerModalComponent } from '@modals/record-controller-modal/record-controller-modal.component';
-import { RecordFormModalComponent } from '@modals/record-form-modal/record-form-modal.component';
+import { RecordControllerModalComponent } from '@modals/record/record-controller-modal/record-controller-modal.component';
+import { RecordFormModalComponent } from '@modals/record/record-form-modal/record-form-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({

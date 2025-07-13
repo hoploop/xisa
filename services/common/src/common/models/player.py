@@ -9,7 +9,7 @@ from beanie import Delete, Document, PydanticObjectId, before_event, Update, Sav
 from pydantic import BaseModel, Field
 
 # LOCAL IMPORTS
-from common.models.base import Position
+from common.models.base import Box, Position
 from common.models.defaults import empty_list, utc_now
 
 
@@ -47,6 +47,7 @@ class Step(Document):
     by_text: Optional[str] = None
     by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
+    by_contour: Optional[Box] = None
     by_position: Optional[Position] = None
     event: PydanticObjectId
     duration: float = 1.0

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Detector, Project } from '@api/index';
-import { DetectorFormModalComponent } from '@modals/detector-form-modal/detector-form-modal.component';
-import { DetectorLearnModalComponent } from '@modals/detector-learn-modal/detector-learn-modal.component';
+import { DetectorFormModalComponent } from '@modals/detector/detector-form-modal/detector-form-modal.component';
+import { DetectorLearnModalComponent } from '@modals/detector/detector-learn-modal/detector-learn-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({

@@ -29,7 +29,7 @@ from common.clients.storage import StorageClient
 from common.clients.trainer import TrainerClient
 from common.models import MODELS
 from common.models.auth import User
-from common.models.base import Position
+from common.models.base import Box, Position
 from common.models.detector import (
     Detector,
     DetectorLabel,
@@ -323,13 +323,50 @@ class DetectorService(Service, DetectorServicer):
                                     confidence=matched.confidence,
                                 )
                             )
+                            
+             # Mathing contouts
+            log.debug("Detecting contours")
+            req = DetectContoursRequest(
+                user=request.user,
+                data=request.data,
+                confidence=request.confidence,
+            )
+            res: DetectContoursResponse = await self.detectContours(req, context)
 
+
+            if res.status == True:
+                matches = []
+                for ctr in res.contours:
+                    
+                    nx = ctr.x  # * width
+                    ny = ctr.y  # * height
+                    nw = ctr.w  # * width
+                    nh = ctr.h  # * height
+                    conf = ctr.confidence
+                    row = ctr.row
+                    col = ctr.col
+
+                    if x > nx and x < (nx + nw) and y > ny and y < (ny + nh):
+                        suggestions.append(
+                        DetectorSuggestion(
+                            event=PydanticObjectId(request.event),
+                            by_contour=Box(x=ctr.x,y=ctr.y,w=ctr.w,h=ctr.h),
+                            by_order= [row,col],
+                            confidence=conf,
+                            x=nx,
+                            y=ny,
+                            w=nw,
+                            h=nh,
+                        )
+                        )
+
+                      
             xs = x - (20 / width)
             ys = y - (20 / height)
             w = 40 / width
             h = 40 / height
 
-            log.debug("Adding position")
+            log.debug("Adding actual position")
             suggestions.append(
                 DetectorSuggestion(
                     event=PydanticObjectId(request.event),
@@ -417,11 +454,18 @@ class DetectorService(Service, DetectorServicer):
             imgGray = img.convert('L')
             grayImg = numpy.array(imgGray)
             width, height = img.size
-            edges = cv2.Canny(grayImg,100,200)
-            contours, _ = cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+            blurred = cv2.GaussianBlur(grayImg,(5,5),0)
+            med_val = numpy.median(grayImg) 
+            lower = int(max(0 ,0.7*med_val))
+            upper = int(min(255,1.3*med_val))
+            edges = cv2.Canny(blurred,lower,upper)
+            
+            grid = ImageGrid(width, height)
+            contours, _ = cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             elements = []
             max_area = (width * height) / 100
-            
+            boxes=[]
+            matches = []
             for contour in contours:
                 area = cv2.contourArea(contour)
                 if area > 100:
@@ -433,11 +477,30 @@ class DetectorService(Service, DetectorServicer):
                     roi_edges = edges[y:y+h,x:x+w]
                     edge_strength = numpy.mean(roi_edges)/255.0 if roi_edges.size > 0 else 0.0
                     confidence = 0.7 * area_confidence + 0.3 * edge_strength
-                    x_rel = x/width
-                    y_rel = y/height
-                    w_rel = w/width
-                    h_rel = h/height
-                    elements.append(DetectContour(x=x_rel,y=y_rel,w=w_rel,h=h_rel,confidence=confidence))
+                    
+                    boxes.append((x, y, w, h))
+                    matches.append((x, y, w, h,confidence))
+            log.debug("Found contours: {0}".format(len(boxes)))
+            if len(boxes) > 1:
+                best_rows, best_cols = grid.optimal_grid_size(boxes)
+            for box in matches:
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
+                conf = box[4]
+                if len(boxes) > 1:
+                    row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
+                else:
+                    row = 0
+                    col = 0
+                        
+                x_rel = x/width
+                y_rel = y/height
+                w_rel = w/width
+                h_rel = h/height
+                elements.append(DetectContour(x=x_rel,y=y_rel,w=w_rel,h=h_rel,confidence=conf,row=row,col=col))
+          
             return DetectContoursResponse(status=True,contours=elements)
             
         except Exception as e:

@@ -173,7 +173,7 @@ class Client:
         client_config: ClientConfig,
         retry_attempts: int = 5,
         retry_backoff: float = 1.0,
-        monitor_interval: float = 8.0,
+        monitor_interval: float = 3.0,
     ):
         self.config = client_config
         self.retry_attempts = retry_attempts

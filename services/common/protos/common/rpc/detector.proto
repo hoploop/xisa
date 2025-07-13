@@ -43,6 +43,8 @@ message DetectContour {
     float w = 3;
     float h = 4;
     float confidence = 5;
+    int32 row = 8;
+    int32 col = 9;
 }
 
 message DetectContoursRequest {

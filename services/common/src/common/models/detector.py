@@ -10,7 +10,7 @@ from beanie import Delete, Document, Insert, PydanticObjectId, SaveChanges, Upda
 from pydantic import BaseModel, Field
 
 # LOCAL IMPORTS
-from common.models.base import Position
+from common.models.base import Box, Position
 from common.models.defaults import empty_list, utc_now
 from common.models.trainer import TrainImageObject, TrainSession 
 
@@ -22,6 +22,7 @@ class DetectorSuggestion(Document):
     by_text: Optional[str] = None
     by_regex: Optional[str] = None
     by_order: List[int] = Field(default_factory=empty_list)
+    by_contour: Optional[Box] = None
     by_position: Optional[Position] = None
     event:PydanticObjectId
     confidence:float
@@ -133,6 +134,8 @@ class DetectContour(BaseModel):
     y: float
     w: float
     h: float
+    row:int
+    col: int
     confidence:float
     
     

@@ -1,6 +1,8 @@
 import { DetectorLabel } from '@api/index';
 import { ImageAnnotatorSettings } from './image-annotator-settings';
 import { v4 as uuid } from 'uuid';
+import { Subject } from 'rxjs';
+
 
 
 export enum ImageAnnotatorMouseOverType {
@@ -30,6 +32,7 @@ export class ImageAnnotatorBox {
   public selectedColor: string = 'rgba(255,255,255,0.4)';
   public defaultColor: string = 'rgba(255,255,255,0.2)';
   public selectedBorderSize: number = 2;
+  public doubleClick = new Subject<boolean>();
   id = uuid();
 
   constructor(

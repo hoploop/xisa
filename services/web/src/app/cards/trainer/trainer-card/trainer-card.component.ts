@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Detector, Project } from '@api/index';
-import { DetectorSelectorModalComponent } from '@modals/detector-selector-modal/detector-selector-modal.component';
+import { DetectorSelectorModalComponent } from '@modals/detector/detector-selector-modal/detector-selector-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({

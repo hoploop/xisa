@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Detector, TrainSession, TrainSessionStatus } from '@api/index';
-import { DetectorTrainLabModalComponent } from '@modals/detector-train-lab-modal/detector-train-lab-modal.component';
+import { DetectorTrainLabModalComponent } from '@modals/detector/detector-train-lab-modal/detector-train-lab-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({

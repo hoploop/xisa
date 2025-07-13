@@ -1,14 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
   Action,
+  DetectContour,
+  DetectObject,
   DetectorImageLabel,
   DetectorLabel,
   DetectorSuggestion,
+  DetectText,
   RecorderEventList200ResponseInner,
   TrainImageObject,
 } from '@api/index';
 import { environment } from '@environments/environment';
-import { DetectorLabelSelectModalComponent } from '@modals/detector-label-select-modal/detector-label-select-modal.component';
+import { DetectorContourModalComponent } from '@modals/detector/detector-contour-modal/detector-contour-modal.component';
+import { DetectorLabelSelectModalComponent } from '@modals/detector/detector-label-select-modal/detector-label-select-modal.component';
 import { Frame } from '@models/record-frame';
 import { BaseComponent } from '@utils/base/base.component';
 import { ImageAnnotatorBox } from '@utils/image-annotator/image-annotator-box';
@@ -34,6 +38,13 @@ export class TrainerLessonFrameCardComponent
   eventBoxes = new Map<string, RecorderEventList200ResponseInner>();
   suggestionLoading = new BehaviorSubject<boolean>(false);
 
+  contours: DetectContour[] = [];
+  objects: DetectObject[] = [];
+  texts: DetectText[] = [];
+  contoursToggled: boolean = false;
+  objectsToggled: boolean = false;
+  textsToggled:boolean = false;
+
   visibleSuggestions = new Map<string, DetectorSuggestion>();
   visibleEvents = new Map<string, RecorderEventList200ResponseInner>();
   visibleTrains = new Map<string, TrainImageObject>();
@@ -52,13 +63,54 @@ export class TrainerLessonFrameCardComponent
     canCreateBox: true,
   });
 
+  toggleContours(){
+    if (this.contoursToggled){
+      this.contoursToggled = false;
+      this.render();
+    }else{
+      this.contoursToggled = true;
+      this.objectsToggled = false;
+      this.textsToggled = false;
+      this.renderContours();
+    }
+  }
+
+   toggleObjects(){
+    if (this.objectsToggled){
+      this.objectsToggled = false;
+      this.render();
+    }else{
+      this.objectsToggled = true;
+      this.contoursToggled = false;
+      this.textsToggled = false;
+      this.renderObjects();
+    }
+  }
+
+
+   toggleTexts(){
+    if (this.textsToggled){
+      this.textsToggled = false;
+      this.render();
+    }else{
+      this.textsToggled = true;
+      this.contoursToggled = false;
+      this.objectsToggled = false;
+      this.renderTexts();
+
+    }
+  }
+
   ngOnInit(): void {
     setTimeout(() => {
-      this.loadContours(0.3);
       let calls = [];
       calls.push(this.loadSuggestions());
       calls.push(this.loadTrainImages());
       calls.push(this.loadActions());
+      calls.push(this.loadContours());
+      calls.push(this.loadObjects());
+      calls.push(this.loadTexts());
+
 
       forkJoin(calls).subscribe((results) => {
         this.render();
@@ -168,7 +220,17 @@ export class TrainerLessonFrameCardComponent
 
   boxClick(box: ImageAnnotatorBox) {}
 
+  contourDetails(contour:DetectContour){
+    this.ctx.openModal<undefined>(DetectorContourModalComponent,{contour:contour}).subscribe({
+      next: (result)=>{},
+      error: (result)=>{}
+    });
+  }
+
+
+
   boxDoubleClick(box: ImageAnnotatorBox) {
+    return;
     if (!this.frame.detector._id) return;
     this.ctx
       .openModal<DetectorLabel[] | undefined>(
@@ -297,6 +359,47 @@ export class TrainerLessonFrameCardComponent
         this.visibleEventsBoxes.set(evt_box.id, key);
         ret.push(evt_box);
       }
+    }
+    return ret;
+  }
+
+  loadContourBoxes(): ImageAnnotatorBox[] {
+    let ret: ImageAnnotatorBox[] = [];
+    for (let contour of this.contours){
+      let ctr_box = new ImageAnnotatorBox(contour.x,contour.y,contour.w,contour.h,true);
+      ctr_box.canResize = false;
+      ctr_box.canMove = false;
+      ctr_box.showCross = true;
+      ctr_box.doubleClick.subscribe(result=>{
+        this.contourDetails(contour);
+      })
+      ret.push(ctr_box);
+    }
+    return ret;
+  }
+
+
+  loadObjectBoxes(): ImageAnnotatorBox[] {
+    let ret: ImageAnnotatorBox[] = [];
+    for (let obj of this.objects){
+      let ctr_box = new ImageAnnotatorBox(obj.x,obj.y,obj.w,obj.h,true);
+      ctr_box.canResize = false;
+      ctr_box.canMove = false;
+      ctr_box.showCross = true;
+      ret.push(ctr_box);
+    }
+    return ret;
+  }
+
+
+  loadTextBoxes(): ImageAnnotatorBox[] {
+    let ret: ImageAnnotatorBox[] = [];
+    for (let txt of this.texts){
+      let ctr_box = new ImageAnnotatorBox(txt.x,txt.y,txt.w,txt.h,true);
+      ctr_box.canResize = false;
+      ctr_box.canMove = false;
+      ctr_box.showCross = true;
+      ret.push(ctr_box);
     }
     return ret;
   }
@@ -431,17 +534,63 @@ export class TrainerLessonFrameCardComponent
     });
   }
 
+  loadContours(confidence:number = 0.1): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      if (!this.frame.record._id) {
+        observer.next(true);
+        observer.complete();
+      } else {
+        this.ctx.api.detector.detectorContoursFromFrame(this.frame.record._id,this.frame.count,0.2).subscribe({
+          next: (result)=>{
+            this.contours = result;
+            this.log.info(result);
+          },
+          error: (error)=>{
+            this.log.error(error);
+          }}
+        );
+      }});
 
-  loadContours(confidence:number = 0.1){
-    if (!this.frame.record._id) return;
-    this.ctx.api.detector.detectorContoursFromFrame(this.frame.record._id,this.frame.count,0.2).subscribe({
-      next: (result)=>{
-        this.log.info(result);
-      },
-      error: (error)=>{
-        this.log.error(error);
-      }
-    })
+  }
+
+  loadTexts(confidence:number = 0.1): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      if (!this.frame.record._id) {
+        observer.next(true);
+        observer.complete();
+      } else {
+        this.ctx.api.detector.detectorFrameTexts(this.frame.record._id,this.frame.count,0.2).subscribe({
+          next: (result)=>{
+            this.texts = result;
+            this.log.info(result);
+          },
+          error: (error)=>{
+            this.log.error(error);
+          }}
+        );
+      }});
+
+  }
+
+
+
+  loadObjects(confidence:number = 0.1): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      if (!this.frame.record._id || !this.frame.detector._id) {
+        observer.next(true);
+        observer.complete();
+      } else {
+        this.ctx.api.detector.detectorObjectsFromFrame(this.frame.record._id,this.frame.detector._id,this.frame.count,0.2).subscribe({
+          next: (result)=>{
+            this.objects = result;
+            this.log.info(result);
+          },
+          error: (error)=>{
+            this.log.error(error);
+          }}
+        );
+      }});
+
   }
 
   loadSuggestions(confidence: number = 0.1): Observable<boolean> {
@@ -607,8 +756,6 @@ export class TrainerLessonFrameCardComponent
     // Populate boxes
     let newBoxes: ImageAnnotatorBox[] = [];
     let eventBoxes = this.loadEventBoxes();
-    //let objectBoxes = this.loadObjectBoxes();
-    //let textBoxes = this.loadTextBoxes();
     let trainBoxes = this.loadTrainBoxes();
     let suggestionBoxes = this.loadSuggestionBoxes();
     newBoxes = newBoxes.concat(eventBoxes, trainBoxes, suggestionBoxes);
@@ -617,6 +764,44 @@ export class TrainerLessonFrameCardComponent
 
     this.boxes.next(newBoxes);
   }
+
+  renderContours(){
+    // Reset boxes
+    this.boxes.next([]);
+
+    // Populate boxes
+    let contourBoxes = this.loadContourBoxes();
+
+    // Update boxes
+
+    this.boxes.next(contourBoxes);
+  }
+
+  renderObjects(){
+    // Reset boxes
+    this.boxes.next([]);
+
+    // Populate boxes
+    let objectBoxes = this.loadObjectBoxes();
+
+    // Update boxes
+
+    this.boxes.next(objectBoxes);
+  }
+
+
+  renderTexts(){
+    // Reset boxes
+    this.boxes.next([]);
+
+    // Populate boxes
+    let textBoxes = this.loadTextBoxes();
+
+    // Update boxes
+
+    this.boxes.next(textBoxes);
+  }
+
 
   removeTrain(value: TrainImageObject){
     let index = this.frame.train.indexOf(value);

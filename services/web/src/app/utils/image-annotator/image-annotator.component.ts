@@ -381,6 +381,8 @@ export class ImageAnnotatorComponent
         boxOver = box;
         overType = boxOverType;
         this.doubleClicked.next(box);
+        box.doubleClick.next(true);
+
         break;
       }
     }

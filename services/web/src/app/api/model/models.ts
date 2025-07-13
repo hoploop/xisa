@@ -1,6 +1,7 @@
 export * from './action';
 export * from './app-started-event';
 export * from './app-stopped-event';
+export * from './box';
 export * from './detect-contour';
 export * from './detect-object';
 export * from './detect-text';

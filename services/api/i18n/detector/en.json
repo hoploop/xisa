@@ -2,6 +2,9 @@
   "detector": {
     "edit":"Edit",
     "clone":"Clone",
+    "objects_n":"Objects: {{n}}",
+    "texts_n":"Texts: {{n}}",
+    "contours_n":"Contours: {{n}}",
     "errors": {
       "not_found": "Detector not found",
       "already_existing": "Another detector with this username already found",
@@ -21,6 +24,7 @@
       "by_texts_order_2": "I suggest you to select this element by text '{{text}}' and then select by row {{row}} and col {{col}}",
       "by_regex": "I suggest you to select this element by text matching the regular expression '{{regex}}'",
       "by_position": "I suggest you to select this element by relative position ({{x}},{{y}})",
+      "by_contour":"I suggest you to select this element by contour in {{row}} {{col}}",
       "by_regex_order_1": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by order {{order}}",
       "by_regex_order_2": "I suggest you to select this element by text matching the regular expression '{{regex}}' and then select by row {{row}} and col {{col}}",
       "accept": "Accept",
@@ -54,6 +58,7 @@
     
     "detected_object": "Detected object",
     "detected_text": "Detected text",
+    "detected_contour": "Detected contour",
     "detected_objects": "I detected {{n}} objects",
     "detected_texts": "I detected {{n}} text boxes",
     "detected_no_objects": "I detected no objects, probably I need more training or you have to create a custom box",

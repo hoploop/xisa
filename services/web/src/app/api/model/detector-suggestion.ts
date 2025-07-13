@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { Position } from './position';
+import { Box } from './box';
 
 
 export interface DetectorSuggestion { 
@@ -16,6 +17,7 @@ export interface DetectorSuggestion {
     by_text?: string | null;
     by_regex?: string | null;
     by_order?: Array<number>;
+    by_contour?: Box | null;
     by_position?: Position | null;
     event: string;
     confidence: number;

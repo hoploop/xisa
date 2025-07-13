@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PlayerRawExecutionModalComponent } from '@modals/player-raw-execution-modal/player-raw-execution-modal.component';
+import { PlayerRawExecutionModalComponent } from '@modals/player/player-raw-execution-modal/player-raw-execution-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 import { Record } from '@api/index';
 import 'brace';

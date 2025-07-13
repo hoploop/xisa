@@ -140,6 +140,8 @@ class DetectorClient(Client):
                     y=obj.y,
                     w=obj.w,
                     h=obj.h,
+                    row=obj.row,
+                    col=obj.col,
                     confidence=obj.confidence,
                 )
             )

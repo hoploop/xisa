@@ -17,18 +17,22 @@ VAL: DetectorImageMode
 TEST: DetectorImageMode
 
 class DetectContour(_message.Message):
-    __slots__ = ("x", "y", "w", "h", "confidence")
+    __slots__ = ("x", "y", "w", "h", "confidence", "row", "col")
     X_FIELD_NUMBER: _ClassVar[int]
     Y_FIELD_NUMBER: _ClassVar[int]
     W_FIELD_NUMBER: _ClassVar[int]
     H_FIELD_NUMBER: _ClassVar[int]
     CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    ROW_FIELD_NUMBER: _ClassVar[int]
+    COL_FIELD_NUMBER: _ClassVar[int]
     x: float
     y: float
     w: float
     h: float
     confidence: float
-    def __init__(self, x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ..., confidence: _Optional[float] = ...) -> None: ...
+    row: int
+    col: int
+    def __init__(self, x: _Optional[float] = ..., y: _Optional[float] = ..., w: _Optional[float] = ..., h: _Optional[float] = ..., confidence: _Optional[float] = ..., row: _Optional[int] = ..., col: _Optional[int] = ...) -> None: ...
 
 class DetectContoursRequest(_message.Message):
     __slots__ = ("user", "data", "confidence")

@@ -9,13 +9,10 @@
  */
 
 
-export interface DetectContour { 
+export interface Box { 
     x: number;
     y: number;
     w: number;
     h: number;
-    row: number;
-    col: number;
-    confidence: number;
 }
 

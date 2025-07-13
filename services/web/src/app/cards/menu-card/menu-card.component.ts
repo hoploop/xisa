@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Detector, Project, Record } from '@api/index';
-import { AuthLoginModalComponent } from '@modals/auth-login-modal/auth-login-modal.component';
-import { AuthLogoutModalComponent } from '@modals/auth-logout-modal/auth-logout-modal.component';
-import { AuthRegisterModalComponent } from '@modals/auth-register-modal/auth-register-modal.component';
-import { DetectorSelectorModalComponent } from '@modals/detector-selector-modal/detector-selector-modal.component';
+import { AuthLoginModalComponent } from '@modals/auth/auth-login-modal/auth-login-modal.component';
+import { AuthLogoutModalComponent } from '@modals/auth/auth-logout-modal/auth-logout-modal.component';
+import { AuthRegisterModalComponent } from '@modals/auth/auth-register-modal/auth-register-modal.component';
+import { DetectorSelectorModalComponent } from '@modals/detector/detector-selector-modal/detector-selector-modal.component';
 import { OperatorChatModalComponent } from '@modals/operator-chat-modal/operator-chat-modal.component';
-import { RecordVideoModalComponent } from '@modals/record-video-modal/record-video-modal.component';
+import { RecordVideoModalComponent } from '@modals/record/record-video-modal/record-video-modal.component';
 import { MenuArea } from '@models/menu-area-enum';
 import { BaseComponent } from '@utils/base/base.component';
 

@@ -4,35 +4,36 @@ import { ProjectFormModalComponent } from './project-form-modal/project-form-mod
 import { UtilsModule } from '@utils/utils.module';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { DetectorFormModalComponent } from './detector-form-modal/detector-form-modal.component';
-import { DetectorLabelSelectModalComponent } from './detector-label-select-modal/detector-label-select-modal.component';
+import { DetectorFormModalComponent } from './detector/detector-form-modal/detector-form-modal.component';
+import { DetectorLabelSelectModalComponent } from './detector/detector-label-select-modal/detector-label-select-modal.component';
 import { PipesModule } from '@pipes/pipes.module';
-import { DetectorLearnModalComponent } from './detector-learn-modal/detector-learn-modal.component';
-import { DetectorSelectorModalComponent } from './detector-selector-modal/detector-selector-modal.component';
-import { DetectorSettingsModalComponent } from './detector-settings-modal/detector-settings-modal.component';
-import { DetectorSuggestionListModalComponent } from './detector-suggestion-list-modal/detector-suggestion-list-modal.component';
+import { DetectorLearnModalComponent } from './detector/detector-learn-modal/detector-learn-modal.component';
+import { DetectorSelectorModalComponent } from './detector/detector-selector-modal/detector-selector-modal.component';
+import { DetectorSettingsModalComponent } from './detector/detector-settings-modal/detector-settings-modal.component';
+import { DetectorSuggestionListModalComponent } from './detector/detector-suggestion-list-modal/detector-suggestion-list-modal.component';
 import { CardsModule } from '@cards/cards.module';
-import { DetectorTextSettingsModalComponent } from './detector-text-settings-modal/detector-text-settings-modal.component';
-import { RecordActionModalComponent } from './record-action-modal/record-action-modal.component';
-import { DetectorObjectModalComponent } from './detector-object-modal/detector-object-modal.component';
-import { DetectorTextModalComponent } from './detector-text-modal/detector-text-modal.component';
-import { RecordEventModalComponent } from './record-event-modal/record-event-modal.component';
-import { AutoSuggestionModalComponent } from './auto-suggestion-modal/auto-suggestion-modal.component';
+import { DetectorTextSettingsModalComponent } from './detector/detector-text-settings-modal/detector-text-settings-modal.component';
+import { RecordActionModalComponent } from './record/record-action-modal/record-action-modal.component';
+import { DetectorObjectModalComponent } from './detector/detector-object-modal/detector-object-modal.component';
+import { DetectorTextModalComponent } from './detector/detector-text-modal/detector-text-modal.component';
+import { RecordEventModalComponent } from './record/record-event-modal/record-event-modal.component';
+import { AutoSuggestionModalComponent } from './auth/auto-suggestion-modal/auto-suggestion-modal.component';
 import { TrainObjectModalComponent } from './train-object-modal/train-object-modal.component';
-import { RecordControllerModalComponent } from './record-controller-modal/record-controller-modal.component';
-import { RecordFormModalComponent } from './record-form-modal/record-form-modal.component';
-import { RecordFrameSelectorModalComponent } from './record-frame-selector-modal/record-frame-selector-modal.component';
-import { PlayerScriptPreviewModalComponent } from './player-script-preview-modal/player-script-preview-modal.component';
-import { RecordVideoModalComponent } from './record-video-modal/record-video-modal.component';
-import { AuthCheckModalComponent } from './auth-check-modal/auth-check-modal.component';
-import { AuthLoginModalComponent } from './auth-login-modal/auth-login-modal.component';
-import { AuthLogoutModalComponent } from './auth-logout-modal/auth-logout-modal.component';
-import { AuthRegisterModalComponent } from './auth-register-modal/auth-register-modal.component';
-import { AuthUnregisterModalComponent } from './auth-unregister-modal/auth-unregister-modal.component';
-import { PlayerRawExecutionModalComponent } from './player-raw-execution-modal/player-raw-execution-modal.component';
+import { RecordControllerModalComponent } from './record/record-controller-modal/record-controller-modal.component';
+import { RecordFormModalComponent } from './record/record-form-modal/record-form-modal.component';
+import { RecordFrameSelectorModalComponent } from './record/record-frame-selector-modal/record-frame-selector-modal.component';
+import { PlayerScriptPreviewModalComponent } from './player/player-script-preview-modal/player-script-preview-modal.component';
+import { RecordVideoModalComponent } from './record/record-video-modal/record-video-modal.component';
+import { AuthCheckModalComponent } from './auth/auth-check-modal/auth-check-modal.component';
+import { AuthLoginModalComponent } from './auth/auth-login-modal/auth-login-modal.component';
+import { AuthLogoutModalComponent } from './auth/auth-logout-modal/auth-logout-modal.component';
+import { AuthRegisterModalComponent } from './auth/auth-register-modal/auth-register-modal.component';
+import { AuthUnregisterModalComponent } from './auth/auth-unregister-modal/auth-unregister-modal.component';
+import { PlayerRawExecutionModalComponent } from './player/player-raw-execution-modal/player-raw-execution-modal.component';
 import { OperatorChatModalComponent } from './operator-chat-modal/operator-chat-modal.component';
 import { AceModule } from 'ngx-ace-wrapper';
-import { DetectorTrainLabModalComponent } from './detector-train-lab-modal/detector-train-lab-modal.component';
+import { DetectorTrainLabModalComponent } from './detector/detector-train-lab-modal/detector-train-lab-modal.component';
+import { DetectorContourModalComponent } from './detector/detector-contour-modal/detector-contour-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { DetectorTrainLabModalComponent } from './detector-train-lab-modal/detec
     PlayerRawExecutionModalComponent,
     OperatorChatModalComponent,
     DetectorTrainLabModalComponent,
+    DetectorContourModalComponent,
   ],
   imports: [
     CommonModule,
@@ -101,7 +103,8 @@ import { DetectorTrainLabModalComponent } from './detector-train-lab-modal/detec
     AuthUnregisterModalComponent,
     PlayerRawExecutionModalComponent,
     OperatorChatModalComponent,
-    DetectorTrainLabModalComponent
+    DetectorTrainLabModalComponent,
+    DetectorContourModalComponent
   ],
 })
 export class ModalsModule {}

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Detector, Project, Record } from '@api/index';
-import { DetectorSelectorModalComponent } from '@modals/detector-selector-modal/detector-selector-modal.component';
-import { RecordFormModalComponent } from '@modals/record-form-modal/record-form-modal.component';
-import { RecordVideoModalComponent } from '@modals/record-video-modal/record-video-modal.component';
+import { DetectorSelectorModalComponent } from '@modals/detector/detector-selector-modal/detector-selector-modal.component';
+import { RecordFormModalComponent } from '@modals/record/record-form-modal/record-form-modal.component';
+import { RecordVideoModalComponent } from '@modals/record/record-video-modal/record-video-modal.component';
 import { BaseComponent } from '@utils/base/base.component';
 
 @Component({
