@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Project, Record } from '@api/index';
-import { MenuArea } from '@models/menu-area-enum';
+import { MenuArea } from '@home/menu-area-enum';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

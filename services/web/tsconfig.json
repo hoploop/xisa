@@ -21,6 +21,12 @@
       "@services/*": [
         "./src/app/services/*"
       ],
+       "@project/*": [
+        "./src/app/project/*"
+      ],
+      "@operator/*": [
+        "./src/app/operator/*"
+      ],
       "@grammar/*": [
         "./src/app/grammar/*"
       ],
@@ -33,11 +39,20 @@
       "@modals/*": [
         "./src/app/modals/*"
       ],
-      "@pipes/*": [
-        "./src/app/pipes/*"
+       "@detect/*": [
+        "./src/app/detect/*"
       ],
-      "@cards/*": [
-        "./src/app/cards/*"
+       "@train/*": [
+        "./src/app/train/*"
+      ],
+         "@home/*": [
+        "./src/app/home/*"
+      ],
+       "@play/*": [
+        "./src/app/play/*"
+      ],
+       "@record/*": [
+        "./src/app/record/*"
       ],
       "@models/*": [
         "./src/app/models/*"

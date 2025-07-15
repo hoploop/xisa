@@ -1,7 +1,5 @@
 # PYTHON IMPORTS
-import base64
 from io import BytesIO
-import json
 import logging
 import traceback
 import os
@@ -9,13 +7,7 @@ import shutil
 
 # LIBRARY IMPORTS
 from beanie import PydanticObjectId
-import cv2
-import numpy
-from pydantic import Field
 from beanie.operators import And, Or, In, RegEx, NotIn
-import pytesseract
-from pytesseract import Output
-from ultralytics import YOLO
 from PIL import Image
 
 # from PIL import ImageFile
@@ -54,13 +46,10 @@ from common.rpc.detector_pb2 import (
     CountDetectorRequest,
     CountDetectorResponse,
     CreateDetectorResponse,
-    DetectContour,
     DetectContoursRequest,
     DetectContoursResponse,
-    DetectObject,
     DetectObjectsRequest,
     DetectObjectsResponse,
-    DetectText,
     DetectTextsRequest,
     DetectTextsResponse,
     DetectorImageRequest,
@@ -107,6 +96,11 @@ from common.utils.imaging import ImageGrid
 from common.utils.mongodb import Mongodb
 from detector.config import DetectorServiceConfig
 from detector.manager import DetectorManager
+from detector.controllers.graphics import GraphicsController
+from detector.controllers.detector import DetectorController
+from detector.controllers.object import ObjectController
+from detector.controllers.contour import ContourController
+from detector.controllers.text import TextController
 
 # INITIALIZATION
 log = logging.getLogger(__name__)
@@ -181,14 +175,9 @@ class DetectorService(Service, DetectorServicer):
                 User.id == PydanticObjectId(request.user)
             ).first_or_none()
             event = await self.recorder.loadEvent(user, PydanticObjectId(request.event))
-
-            b64image = request.data
-            log.debug("Loading image")
-            if "," in b64image:
-                bsource = b64image.split(",")[1]
-            else:
-                bsource = b64image
-            img = Image.open(BytesIO(self.decode_base64(bsource)))
+            
+            log.debug ("Loading image")
+            img = GraphicsController.load_pil_image_from_base64_string(request.data)            
             width, height = img.size
             log.debug("Image loaded")
 
@@ -394,113 +383,18 @@ class DetectorService(Service, DetectorServicer):
         self, request: DetectTextsRequest, context
     ) -> DetectTextsResponse:
         try:
-            b64image = request.data
-            log.debug("Loading image")
-            if "," in b64image:
-                bsource = b64image.split(",")[1]
-            else:
-                bsource = b64image
-            img = Image.open(BytesIO(self.decode_base64(bsource)))
-            width, height = img.size
-
-            log.debug("Detecting text elements")
-            confidence_level = int(round(request.confidence * 100))
-            # Get verbose data including boxes, confidences, line and page numbers
-            text_results = pytesseract.image_to_data(img, output_type=Output.DICT)
-            n_boxes = len(text_results["text"])
-            texts = []
-            for i in range(n_boxes):
-                confidence = int(text_results["conf"][i])
-                text = text_results["text"][i]
-                if confidence >= confidence_level and text.strip() != "":
-                    x = text_results["left"][i] / width
-                    y = text_results["top"][i] / height
-                    w = text_results["width"][i] / width
-                    h = text_results["height"][i] / height
-                    page = text_results["page_num"][i]
-                    block = text_results["block_num"][i]
-                    par = text_results["par_num"][i]
-                    line = text_results["line_num"][i]
-                    word = text_results["word_num"][i]
-                    texts.append(
-                        DetectText(
-                            x=x,
-                            y=y,
-                            w=w,
-                            h=h,
-                            page=page,
-                            block=block,
-                            par=par,
-                            line=line,
-                            word=word,
-                            value=text,
-                            confidence=confidence / 100,
-                        )
-                    )
+            img = GraphicsController.load_pil_image_from_base64_string(request.data)
+            texts = TextController.detect_texts(img,request.confidence)
             return DetectTextsResponse(status=True, texts=texts)
-
         except Exception as e:
             log.warning(str(e))
             return DetectTextsResponse(status=False, message=str(e))
         
     async def detectContours(self, request: DetectContoursRequest, context) -> DetectContoursResponse:
         try:
-            b64image = request.data
-            if "," in b64image:
-                bsource = b64image.split(",")[1]
-            else:
-                bsource = b64image
-            img = Image.open(BytesIO(self.decode_base64(bsource)))
-            imgGray = img.convert('L')
-            grayImg = numpy.array(imgGray)
-            width, height = img.size
-            blurred = cv2.GaussianBlur(grayImg,(5,5),0)
-            med_val = numpy.median(grayImg) 
-            lower = int(max(0 ,0.7*med_val))
-            upper = int(min(255,1.3*med_val))
-            edges = cv2.Canny(blurred,lower,upper)
-            
-            grid = ImageGrid(width, height)
-            contours, _ = cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-            elements = []
-            max_area = (width * height) / 100
-            boxes=[]
-            matches = []
-            for contour in contours:
-                area = cv2.contourArea(contour)
-                if area > 100:
-                    x,y,w,h = cv2.boundingRect(contour)
-                    area_confidence = min (area/max_area,1.0)
-                    if w <=0 or h<=0:
-                        continue
-                    
-                    roi_edges = edges[y:y+h,x:x+w]
-                    edge_strength = numpy.mean(roi_edges)/255.0 if roi_edges.size > 0 else 0.0
-                    confidence = 0.7 * area_confidence + 0.3 * edge_strength
-                    
-                    boxes.append((x, y, w, h))
-                    matches.append((x, y, w, h,confidence))
-            log.debug("Found contours: {0}".format(len(boxes)))
-            if len(boxes) > 1:
-                best_rows, best_cols = grid.optimal_grid_size(boxes)
-            for box in matches:
-                x = box[0]
-                y = box[1]
-                w = box[2]
-                h = box[3]
-                conf = box[4]
-                if len(boxes) > 1:
-                    row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
-                else:
-                    row = 0
-                    col = 0
-                        
-                x_rel = x/width
-                y_rel = y/height
-                w_rel = w/width
-                h_rel = h/height
-                elements.append(DetectContour(x=x_rel,y=y_rel,w=w_rel,h=h_rel,confidence=conf,row=row,col=col))
-          
+            img = GraphicsController.load_pil_image_from_base64_string(request.data)
+            edges, contours, hierarchy = ContourController.detect_contours(img)
+            elements = ContourController.build_contours(img,edges,contours)
             return DetectContoursResponse(status=True,contours=elements)
             
         except Exception as e:
@@ -511,99 +405,11 @@ class DetectorService(Service, DetectorServicer):
         self, request: DetectObjectsRequest, context
     ) -> DetectObjectsResponse:
         try:
-            log.debug("Loading detector")
-            b64image = request.data
-            detector_id = PydanticObjectId(request.detector)
-            detector = await Detector.find_many(
-                Detector.id == detector_id
-            ).first_or_none()
-            if not detector:
-                return DetectObjectsResponse(
-                    status=False, message="detector.errors.not_found"
-                )
-
-            log.debug("Loading YOLO Model")
-            if detector.best is None:
-                path = os.path.join(
-                    self.config.path, str(detector_id), self.config.name
-                )
-                if not os.path.exists(path):
-                    return DetectObjectsResponse(
-                        status=False, message="detector.errors.not_found"
-                    )
-            else:
-                path = detector.best
-
-            if path not in self.CACHE_YOLOS:
-                model = YOLO(path)
-                self.CACHE_YOLOS[path] = model
-            else:
-                model = self.CACHE_YOLOS[path]
-            log.debug("YOLO Model loaded")
-
-            log.debug("Loading image")
-            if "," in b64image:
-                bsource = b64image.split(",")[1]
-            else:
-                bsource = b64image
-            img = Image.open(BytesIO(self.decode_base64(bsource)))
-            width, height = img.size
-            grid = ImageGrid(width, height)
-            log.debug("Image loaded")
-
-            log.debug(
-                "Start detection with model: {0} and confidence {1}".format(
-                    path, request.confidence or 0.7
-                )
-            )
-            visual_results = model(
-                img, conf=request.confidence or 0.7
-            )  # predict on an image
-
-            boxes = []
-            for result in visual_results:
-                detections = json.loads(result.to_json())
-                for detection in detections:
-                    x = detection["box"]["x1"]
-                    y = detection["box"]["y1"]
-                    w = detection["box"]["x2"] - detection["box"]["x1"]
-                    h = detection["box"]["y2"] - detection["box"]["y1"]
-                    boxes.append((x, y, w, h))
-            log.debug("Found boxes: {0}".format(len(boxes)))
-            if len(boxes) > 1:
-                best_rows, best_cols = grid.optimal_grid_size(boxes)
-
-            objects = []
-            for result in visual_results:
-                detections = json.loads(result.to_json())
-                for detection in detections:
-                    confidence = detection["confidence"]
-                    code = detection["class"]
-                    name = detection["name"]
-                    x = detection["box"]["x1"]
-                    y = detection["box"]["y1"]
-                    w = detection["box"]["x2"] - detection["box"]["x1"]
-                    h = detection["box"]["y2"] - detection["box"]["y1"]
-                    if len(boxes) > 1:
-                        row, col = grid.classify_box(best_rows, best_cols, x, y, w, h)
-                    else:
-                        row = 0
-                        col = 0
-                    objects.append(
-                        DetectObject(
-                            x=x,
-                            y=y,
-                            w=w,
-                            h=h,
-                            confidence=confidence,
-                            code=code,
-                            name=name,
-                            row=row,
-                            col=col,
-                        )
-                    )
+            detector = await DetectorController.load_detector(request.detector)
+            model = ObjectController.load_yolo(self.config.path,self.config.name,detector)
+            img = GraphicsController.load_pil_image_from_base64_string(request.data)
+            objects = ObjectController.detect_objects(model,img,request.confidence)
             return DetectObjectsResponse(status=True, objects=objects)
-
         except Exception as e:
             log.warning(str(e))
             return DetectObjectsResponse(status=False, message=str(e))
@@ -654,19 +460,14 @@ class DetectorService(Service, DetectorServicer):
         self, request: ListDetectorImageRequest, context
     ) -> ListDetectorImageResponse:
         try:
-            detector_id = PydanticObjectId(request.detector)
-            found = await Detector.find_many(Detector.id == detector_id).first_or_none()
-            if not found:
-                return ListDetectorImageResponse(
-                    status=False, message="detector.errors.not_found"
-                )
-
+            found = await DetectorController.load_detector(request.detector)
+            
             total = await DetectorImage.find_many(
-                DetectorImage.detector == detector_id
+                DetectorImage.detector == found.id
             ).count()
 
             images = (
-                await DetectorImage.find(DetectorImage.detector == detector_id)
+                await DetectorImage.find(DetectorImage.detector == found.id)
                 .skip(request.skip)
                 .limit(request.limit)
                 # .sort(-DetectorImage.updated)
@@ -730,12 +531,8 @@ class DetectorService(Service, DetectorServicer):
         self, request: UpdateDetectorRequest, context
     ) -> UpdateDetectorResponse:
         try:
-            detector_id = PydanticObjectId(request.id)
-            found = await Detector.find_many(Detector.id == detector_id).first_or_none()
-            if not found:
-                return UpdateDetectorResponse(
-                    status=False, message="detector.errors.not_found"
-                )
+           
+            found = await DetectorController.load_detector(request.id)
             others_found = await Detector.find_many(
                 Detector.project == found.project,
                 Detector.name == request.name,
@@ -759,14 +556,7 @@ class DetectorService(Service, DetectorServicer):
         self, request: LoadDetectorRequest, context
     ) -> LoadDetectorResponse:
         try:
-            detector_id = PydanticObjectId(request.id)
-            detector = await Detector.find_many(
-                Detector.id == detector_id
-            ).first_or_none()
-            if detector is None:
-                return LoadDetectorResponse(
-                    status=False, message="detector.errors.not_found"
-                )
+            detector = await DetectorController.load_detector(request.id)
             return LoadDetectorResponse(
                 status=True, detector=Conversions.serialize(detector)
             )
@@ -888,19 +678,7 @@ class DetectorService(Service, DetectorServicer):
             log.warning(str(e))
             return ExistsDetectorLabelResponse(status=False, message=str(e))
 
-    def decode_base64(self, b64image: str):
-        # Add padding if needed
-        padding = len(b64image) % 4
-        if padding != 0:
-            b64image += "=" * (4 - padding)
-
-        try:
-            # Decode the Base64 string to bytes
-            decoded_bytes = base64.decodebytes(bytes(b64image, "utf-8"))
-            return decoded_bytes
-        except Exception as e:
-            log.warning("Error decoding base64:", e)
-            return None
+    
 
     async def removeDetector(
         self, request: RemoveDetectorRequest, context
@@ -1096,7 +874,6 @@ class DetectorService(Service, DetectorServicer):
     ) -> ListDetectorImageLabelResponse:
         try:
             image_id = PydanticObjectId(request.image)
-            user_id = PydanticObjectId(request.user)
             search = request.search
             skip = request.skip
             limit = request.limit
@@ -1187,17 +964,7 @@ class DetectorService(Service, DetectorServicer):
         self, request: CountDetectorImageLabelRequest, context
     ) -> CountDetectorImageLabelResponse:
         try:
-            image_id = PydanticObjectId(request.image)
-            found = await DetectorImage.find_many(
-                DetectorImage.id == image_id
-            ).first_or_none()
-            if found is None:
-                return CountDetectorImageLabelResponse(
-                    status=False, message="detector.image.errors.not_found"
-                )
-            total = await DetectorImageLabel.find_many(
-                DetectorImageLabel.image == image_id
-            ).count()
+            total = await ObjectController.count_image_labels(request.image)
             return CountDetectorImageLabelResponse(status=True, total=total)
 
         except Exception as e:
@@ -1208,17 +975,7 @@ class DetectorService(Service, DetectorServicer):
         self, request: RemoveDetectorImageLabelRequest, context
     ) -> RemoveDetectorImageLabelResponse:
         try:
-            detector_image_label_id = PydanticObjectId(request.label)
-            found = await DetectorImageLabel.find_many(
-                DetectorImageLabel.id == detector_image_label_id
-            ).first_or_none()
-            if found is None:
-                return RemoveDetectorImageLabelResponse(
-                    status=False,
-                    message="detector.image.errors.label_not_found",
-                )
-            await found.delete()
-
+            await ObjectController.remove_image_label(request.label)
             return RemoveDetectorImageLabelResponse(status=True)
         except Exception as e:
             log.warning(str(e))

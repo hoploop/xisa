@@ -1,6 +1,6 @@
 # PYTHON IMPORTS
 import logging
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Tuple
 from beanie import PydanticObjectId
 import base64
 
@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from api.routers.auth import CurrentUser
 from api.routers import GetSession
 from common.clients.detector import DetectorClient
-from common.models.detector import DetectContour, DetectObject, DetectText, Detector as DetectorDocument, DetectorLabel, DetectorSuggestion
+from common.models.detector import DetectContour, DetectContourNode, DetectObject, DetectText, Detector as DetectorDocument, DetectorLabel, DetectorSuggestion
 from common.models.detector import DetectorImage,DetectorImageLabel,DetectorImageMode
 from api.routers.recorder import Recorder
 
@@ -155,6 +155,7 @@ async def objects_from_frame(user:CurrentUser,detector: Detector,recorder:Record
         data = await recorder.loadRecordFrameBase64(user,recordId,frame)
         return await detector.detectObjects(user,detectorId,data,confidence)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -171,6 +172,7 @@ async def contours_from_frame(user:CurrentUser,detector: Detector,recorder:Recor
         data = await recorder.loadRecordFrameBase64(user,recordId,frame)
         return await detector.detectContours(user,data,confidence)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
@@ -188,6 +190,7 @@ async def texts(user:CurrentUser,detector: Detector,payload:DetectorTextsPayload
     try:
         return await detector.detectTexts(user,payload.data,payload.confidence)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -207,6 +210,7 @@ async def frame_suggestions(user:CurrentUser,detector: Detector,recorder:Recorde
         data = await recorder.loadRecordFrameBase64(user,event.record,event.frame)
         return  await detector.suggestStep(user,data,detectorId,eventId,confidence)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -222,6 +226,7 @@ async def frame_texts(user:CurrentUser,detector: Detector,recorder:Recorder,reco
         data = await recorder.loadRecordFrameBase64(user,recordId,frame)
         return await detector.detectTexts(user,data,confidence)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -242,6 +247,7 @@ async def create(
     try:
         return await detector.createDetector(user,projectId,name,description,origin)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -265,6 +271,7 @@ async def train(
     try:
         return await detector.trainDetector(user,detectorId,session,epochs=epochs,image_size=size)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 
@@ -287,6 +294,7 @@ async def image_list(
         total, images = await detector.listDetectorImage(user,detectorId,skip,limit)
         return DetectorImageListResponse(total=total, images=images)
     except Exception as e:
+        log.warning(str(e))
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=str(e))
 
 

@@ -20,6 +20,7 @@ export const environment = {
       folders: [
        'http://localhost:8000/i18n/auth/',
         'http://localhost:8000/i18n/train/',
+        'http://localhost:8000/i18n/detect/',
         'http://localhost:8000/i18n/menu/',
         'http://localhost:8000/i18n/detector/',
         'http://localhost:8000/i18n/recorder/',

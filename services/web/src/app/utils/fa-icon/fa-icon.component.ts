@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FAIconType, FAIconValues } from '@constants/icons';
-import { AnimationProp, IconDefinition, RotateProp } from '@fortawesome/angular-fontawesome';
+import { AnimationProp, IconDefinition, RotateProp, SizeProp } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-fa-icon',
@@ -13,6 +13,7 @@ export class FaIconComponent {
   @Input() animation: AnimationProp | undefined = undefined;
   @Input() rotate:RotateProp | undefined = undefined;
   @Output() click = new EventEmitter<any>();
+  @Input() size: SizeProp = "1x";
 
   get realIcon(): IconDefinition {
     return FAIconValues[this.icon];

@@ -16,12 +16,17 @@ import { NgIconsModule } from '@ng-icons/core';
 import { NGIcons } from '@constants/icons';
 import { RouterModule } from '@angular/router';
 import { routes } from './app.routes';
-import { PagesModule } from '@pages/pages.module';
-import { ModalsModule } from '@modals/modals.module';
-import { CardsModule } from '@cards/cards.module';
 import { AceModule } from 'ngx-ace-wrapper';
 import { ACE_CONFIG } from 'ngx-ace-wrapper';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
+import { AuthModule } from '@auth/auth.module';
+import { ProjectModule } from '@project/project.module';
+import { TrainModule } from '@train/train.module';
+import { RecordModule } from '@record/record.module';
+import { PlayModule } from '@play/play.module';
+import { OperatorModule } from '@operator/operator.module';
+import { DetectModule } from '@detect/detect.module';
+import { HomeModule } from '@home/home.module';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
 };
@@ -48,10 +53,15 @@ export function HttpLoaderFactory(_httpBackend: HttpBackend) {
     BrowserAnimationsModule,
     FontAwesomeModule,
     MomentModule,
-    ModalsModule,
-    CardsModule,
     UtilsModule,
-    PagesModule,
+    AuthModule,
+    ProjectModule,
+    TrainModule,
+    RecordModule,
+    HomeModule,
+    DetectModule,
+    PlayModule,
+    OperatorModule,
     AceModule,
     ApiModule.forRoot(apiConfigFactory),
     NgIconsModule.withIcons(NGIcons),

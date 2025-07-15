@@ -32,6 +32,7 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { TreeviewComponent } from './treeview/treeview.component';
 import { TreeNodeComponent } from './tree-node/tree-node.component';
 import { IconComponent } from './icon/icon.component';
+import { MockupComponent } from './mockup/mockup.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { IconComponent } from './icon/icon.component';
     TreeviewComponent,
     TreeNodeComponent,
     IconComponent,
+    MockupComponent,
   ],
   imports: [
     CommonModule,
@@ -85,7 +87,8 @@ import { IconComponent } from './icon/icon.component';
     InfiniteProgressBarComponent,
     SwitchComponent,
     PaginationComponent,
-    TreeviewComponent
+    TreeviewComponent,
+    MockupComponent
   ],
 })
 export class UtilsModule {

@@ -4,7 +4,7 @@
     "clone":"Clone",
     "objects_n":"Objects: {{n}}",
     "texts_n":"Texts: {{n}}",
-    "contours_n":"Contours: {{n}}",
+    "contours_n":"Contours: {{n}}", 
     "errors": {
       "not_found": "Detector not found",
       "already_existing": "Another detector with this username already found",

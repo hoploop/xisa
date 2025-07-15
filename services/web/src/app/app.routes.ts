@@ -1,19 +1,19 @@
 import { Routes } from "@angular/router";
-import { TreeviewComponent } from "@utils/treeview/treeview.component";
-import { HomePageComponent } from "@pages/home-page/home-page.component";
-import { ProjectListPageComponent } from "@pages/project-list-page/project-list-page.component";
-import { AuthGuard } from "@guards/auth.guard";
-import { AuthLoginRequiredPageComponent } from "@pages/auth-login-required-page/auth-login-required-page.component";
-import { ProjectPageComponent } from "@pages/project-page/project-page.component";
-import { DetectorImageListPageComponent } from "@pages/detector-image-list-page/detector-image-list-page.component";
-import { DetectorListPageComponent } from "@pages/detector-list-page/detector-list-page.component";
-import { RecordListPageComponent } from "@pages/record-list-page/record-list-page.component";
-import { RecordPageComponent } from "@pages/record-page/record-page.component";
-import { TrainerPageComponent } from "@pages/trainer-page/trainer-page.component";
-import { PlayerPageComponent } from "@pages/player-page/player-page.component";
-import { DetectorPageComponent } from "@pages/detector-page/detector-page.component";
-import { TrainerLessonPageComponent } from "@pages/trainer-lesson-page/trainer-lesson-page.component";
-import { DetectorTrainSessionListPageComponent } from "@pages/detector-train-session-list-page/detector-train-session-list-page.component";
+import { HomePageComponent } from "@home/home-page/home-page.component";
+import { ProjectListPageComponent } from "@project/project-list-page/project-list-page.component";
+import { AuthGuard } from "@auth/auth.guard";
+import { AuthLoginRequiredPageComponent } from "@auth/auth-login-required-page/auth-login-required-page.component";
+import { ProjectPageComponent } from "@project/project-page/project-page.component";
+import { DetectorImageListPageComponent } from "@detect/detector-image-list-page/detector-image-list-page.component";
+import { DetectorListPageComponent } from "@detect/detector-list-page/detector-list-page.component";
+import { RecordListPageComponent } from "@record/record-list-page/record-list-page.component";
+import { RecordPageComponent } from "@record/record-page/record-page.component";
+import { TrainerPageComponent } from "@train/trainer-page/trainer-page.component";
+import { PlayerPageComponent } from "@play/player-page/player-page.component";
+import { DetectorPageComponent } from "@detect/detector-page/detector-page.component";
+import { TrainerLessonPageComponent } from "@train/trainer-lesson-page/trainer-lesson-page.component";
+import { DetectorTrainSessionListPageComponent } from "@detect/detector-train-session-list-page/detector-train-session-list-page.component";
+import { MockupComponent } from "@utils/mockup/mockup.component";
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -31,5 +31,5 @@ export const routes: Routes = [
   { path: 'detector/train/sessions/:detector_id', component: DetectorTrainSessionListPageComponent, canActivate: [AuthGuard] },
   { path: 'detector/image/list/:detector_id', component: DetectorImageListPageComponent, canActivate: [AuthGuard] },
   { path: 'trainer/lesson/:detector_id/:record_id', component: TrainerLessonPageComponent, canActivate: [AuthGuard] },
-  { path: 'mockup',component:TreeviewComponent}
+  { path: 'mockup',component:MockupComponent}
 ];

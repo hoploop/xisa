@@ -137,7 +137,21 @@ class DetectContour(BaseModel):
     row:int
     col: int
     confidence:float
+
+class DetectContourNode(BaseModel):
+    index: int
+    x: float
+    y: float
+    w: float
+    h: float
+    confidence:float
+    children: List["DetectContourNode"] = Field(default_factory=empty_list)
     
+    def add_child(self, child: "DetectContourNode"):
+        self.children.append(child)
+        
+    
+DetectContourNode.model_rebuild()    
     
 class DetectText(BaseModel):
     x: float

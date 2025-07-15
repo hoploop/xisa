@@ -9,4 +9,5 @@ import { BIconType } from '@constants/icons';
 })
 export class BIconComponent {
   @Input() icon:string = BIconType.person;
+  @Input() size:string = "1rem";
 }
